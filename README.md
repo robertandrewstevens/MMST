@@ -1,6 +1,6 @@
 # MMST
 
-Modern Multivariate Statistical Techniques:  Regression, Classification, and Manifold Learning by Alan Julian Izenman
+*Modern Multivariate Statistical Techniques:  Regression, Classification, and Manifold Learning* by Alan Julian Izenman
 
 1 Introduction and Preview
 
@@ -16,7 +16,7 @@ Modern Multivariate Statistical Techniques:  Regression, Classification, and Man
 
 7 Linear Dimensionality Reduction
 
-8 Linear Discriminant Analysis 237
+8 Linear Discriminant Analysis
 
 9 Recursive Partitioning and Tree-Based Methods
 
@@ -34,4 +34,4 @@ Modern Multivariate Statistical Techniques:  Regression, Classification, and Man
 
 16 Nonlinear Dimensionality Reduction and Manifold Learning 
 
-17 Correspondence Analysis 633
+17 Correspondence Analysis
