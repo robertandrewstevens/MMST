@@ -1,0 +1,28 @@
+---
+title: "MMST-Table1.1"
+author: "Robert A. Stevens"
+date: "August 1, 2015"
+output: pdf_document
+---
+
+*Modern Multivariate Statistical Techniques:  Regression, Classification, and Manifold Learning* by Alan Julian Izenman
+
+## TABLE 1.1. Application areas of data mining
+
+**Marketing:** Predict new purchasing trends. Identify “loyal” customers. Predict what types of customers will respond to direct mailings, telemarketing calls, advertising campaigns, or promotions. Given customers who have purchased product A, B, or C, identify those who are likely to purchase product D and, in general, which products sell together (popularly called market basket analysis).
+
+**Banking:** Predict which customers will likely switch from one credit card company to another. Evaluate loan policies using customer characteristics. Predict behavioral use of automated teller machines (ATMs).
+
+**Financial Markets:** Identify relationships between financial indicators. Track changes in an investment portfolio and predict price turning points. Analyze volatility patterns in high-frequency stock transactions using volume, price, and time of each transaction.
+
+**Insurance:** Identify characteristics of buyers of new policies. Find unusual claim patterns. Identify “risky” customers.
+
+**Healthcare:** Identify successful medical treatments and procedures by examining insurance claims and billing data. Identify people “at risk” for certain illnesses so that treatment can be started before the condition becomes serious. Predict doctor visits from patient characteristics. Use healthcare data to help employers choose between HMOs.
+
+**Molecular Biology:** Collect, organize, and integrate the enormous quantities of data on bioinformatics, functional genomics, proteomics, gene expression monitoring, and microarrays. Analyze amino acid sequences and deoxyribonucleic acid (DNA) microarrays. Use gene expression to characterize biological function. Predict protein structure and identify related proteins.
+
+**Astronomy:** Catalogue (as stars, galaxies, etc.) hundreds of millions of objects in the sky using hundreds of attributes, such as position, size, shape, age, brightness, and color. Identify patterns and relationships of objects in the sky.
+
+**Forensic Accounting:** Identify fraudulent behavior in credit card usage by looking for transactions that do not fit a particular cardholder’s buying habits. Identify fraud in insurance and medical claims. Identify instances of tax evasion. Detect illegal activities that can lead to suspected money laundering operations. Identify stock market behaviors that indicate possible insider-trading operations.
+
+**Sports:** Identify in realtime which players and which designed plays are most effective at specific points in the game and in relation to combinations of opposing players. Identify the exact moment when intriguing play patterns occurred. Discover game patterns hidden behind summary statistics.
