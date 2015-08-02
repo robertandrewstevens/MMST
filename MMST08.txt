@@ -1,0 +1,1098 @@
+8
+Linear Discriminant Analysis
+8.1 Introduction
+Suppose we are given a learning set L of multivariate observations (i.e., input values in Rr), and suppose each observation is known to have come from one of K predefined classes having similar characteristics. These classes may be identified, for example, as species of plants, levels of credit wor- thiness of customers, presence or absence of a specific medical condition, different types of tumors, views on Internet censorship, or whether an e- mail message is spam or non-spam. To distinguish the known classes from each other, we associate a unique class label (or output value) with each class; the observations are then described as labeled observations.
+In each of these situations, there are two main goals:
+Discrimination: Use the information in a learning set of labeled observa- tions to construct a classifier (or classification rule) that will separate the predefined classes as much as possible.
+Classification: Given a set of measurements on a new unlabeled observa- tion, use the classifier to predict the class of that observation.
+A classifier is a combination of the input variables. In the machine learn- ing literature, discrimination and classification are described as supervised
+A.J. Izenman, Modern Multivariate Statistical Techniques, Springer Texts in Statistics, 237 DOI 10.1007/978-0-387-78189-1_8, © Springer Science+Business Media New York 2013
+￼
+238 8. Linear Discriminant Analysis
+learning techniques; together, they are also referred to as tasks of class prediction.
+Whether these goals are at all achievable depends upon the information provided by the input variables. When there are two classes (i.e., K = 2), we need only one classifier, and when there are more than two classes, we need at least two (and at most K − 1) classifiers to differentiate between the classes and to predict the class of a future observation.
+Consider the following medical diagnosis example. If a patient enters the emergency room with severe stomach pains and symptoms consistent with both food poisoning and appendicitis, a decision has to be made as to which illness is more likely for that patient; only then can the patient be treated. For this example, the problem is that the appropriate treatment for one cause of illness is the opposite treatment for the other: appendicitis requires surgery, whereas food poisoning does not, and an incorrect diagnosis could lead to a fatal result. In light of the results from the clinical tests, the physician has to decide upon a course of treatment to maximize the like- lihood of success. If the combination of test results points in a particular direction, surgery is recommended; otherwise, the physician recommends a non-surgical treatment. A classifier is constructed from past experience based upon the test results of previously treated patients (the learning set). The more reliable the classifier, the greater the chance for a successful diagnostic outcome for a future patient.
+Similarly, a credit card company or a bank uses loan histories of past cus- tomers to decide whether a new customer would be a good or bad credit risk; a post office uses handwriting samples of a large number of individ- uals to design an automated method for distinguishing between different handwritten digits and letters; molecular biologists use gene expression data to distinguish between known classes of tumors; political scientists use frequencies of word usage to identify the authorship of different politi- cal tracts; and a person who uses e-mail would certainly like to have a filter that recognizes whether a message is spam or not.
+In this chapter, we focus upon the most basic type of classifier: a linear combination of the input variables. This problem has been of interest to statisticians since R.A. Fisher introduced the linear discriminant function (Fisher, 1936).
+8.1.1 Example: Wisconsin Diagnostic Breast Cancer Data
+Breast cancer is the second largest cause of cancer deaths among women. Three methods of diagnosing breast cancer are currently available: mam- mography; fine needle aspirate (FNA) with visual interpretation; and sur- gical biopsy. Although biopsies are the most accurate in distinguishing
+TABLE 8.1. Ten variables for the Wisconsin breast cancer study.
+radius Radius of an individual nucleus
+texture Variance of gray levels inside the boundary of the nucleus peri Distance around the perimeter of the nucleus
+area Area of the nucleus
+smooth Smoothness of the contour of a nucleus as measured by the
+local variation of radial segments
+comp A measure of the compactness of a cell nucleus using the
+formula (peri)2/area
+scav Severity of concavities or indentations in a cell nucleus using a
+size measurement that emphasizes small indentations ncav Number of concave points or indentations in a cell nucleus symt Symmetry of a cell nucleus
+fracd Fractal dimension (of the boundary) of a cell
+malignant lumps from benign ones, they are invasive, time consuming, and costly.
+A computer imaging system has recently been developed at the Uni- versity of Wisconsin-Madison (Street, Wolberg, and Mangasarian, 1993; Mangasarian, Street, and Wolberg, 1995) with the goal of developing a procedure that diagnoses FNAs with very high accuracy. A small-gauge needle is used to extract a fluid sample (i.e., FNA) from a patient’s breast lump or mass (detected by self-examination and/or mammography); the FNA is placed on a glass slide and stained to highlight the nuclei of the constituent cells; an image from the FNA is transferred to a workstation by a video camera mounted on a microscope; and the exact boundaries of the nuclei are determined.
+Ten variables of the nucleus of each cell are computed from fluid samples. They are listed in Table 8.1. The variables are constructed so that larger values would typically indicate a higher likelihood of malignancy. For each image consisting of 10–40 nuclei, the mean value (mv), extreme value (i.e., largest or worst value, biggest size, most irregular shape) (ev), and standard deviation (sd) of each of these cellular features are computed, resulting in a total of 30 real-valued variables. The 30 variables are
+(1) radius.mv, (2) texture.mv, (3) peri.mv, (4) area.mv, (5) smooth.mv, (6) comp.mv, (7) scav.mv, (8) ncav.mv, (9) symt.mv, (10) fracd.mv, (11) radius.sd, (12) texture.sd, (13) peri.sd, (14) area.sd, (15) smooth.sd, (16) comp.sd, (17) scav.sd, (18) ncav.sd, (19) symt.sd, (20) fracd.sd, (21) radius.ev, (22) texture.ev, (23) peri.ev, (24) area.ev, (25) smooth.ev, (26) comp.ev, (27) scav.ev, (28) ncav.ev, (29) symt.ev, (30) fracd.ev.
+8.1 Introduction 239
+￼￼￼￼
+240 8. Linear Discriminant Analysis
+Because all 30 variables consist of nonnegative measurements with skewed histograms, we took natural logarithms of each variable before analyzing the data. Data values of zero were replaced by the value 0.001 prior to transforming. When we refer to variables in this example, we mean the transformed variables.
+The data set1 consists of 569 cases (images), of which 212 were diagnosed as malignant (confirmed by biopsy) and 357 as benign (confirmed by biopsy or by subsequent periodic medical examinations). Many pairs of the 30 variables are highly correlated; for example, 19 correlations are between 0.8 and 0.9, and 25 correlations are greater than 0.9 (six of which are greater than 0.99). The problem is how best to separate the malignant from the benign lumps (without performing surgery); a secondary problem is how to do this using as few variables as possible.
+To discriminate between the benign and malignant lumps, a linear dis- criminant function (LDF) can be derived by estimating the coefficients for an optimal linear combination of the 30 input variables. From the resulting LDF, we compute a score for each of the 569 tumors, and we then separate the scores by group.
+Histograms of the scores on the LDF for the benign (group 0) and ma- lignant (group 1) tumors are displayed in the left panel of Figure 8.1, and kernel density estimates of the scores of the two groups (group 0 is the left curve and group 1 is the right curve) are displayed in the right panel. We can see a certain amount of overlap in the distribution of the LDF of the two groups, showing that perfect discrimination between benign and malignant tumors cannot be attained using the LDF with these data.
+8.2 Classes and Features
+We assume that the population P is partitioned into K unordered classes, groups, or subpopulations, which we denote by Π1, Π2, . . . , ΠK . Each item in P is classified into one (and only one) of those classes. Measurements on a sample of items are to be used to help assign future unclassified items to one of the designated classes. The random r-vector X, given by
+X = (X1,···,Xr)τ, (8.1) represents the r measurements on an item (i.e., X ∈ Rr). The variables
+X1, X2, . . . , Xr are likely to be chosen because of their suspected ability
+1The original data can be found in the file wdbc at the book’s web- site and in the file breast-cancer-wisconsin/wdbc.data at the website http://www.ics.uci.edu/pub/machine-learning-databases/.
+￼￼
+−4−20246 group0
+−4−20246 −4−20246 group1 LD1
+FIGURE 8.1. Left panel: Histograms of the scores on the (first) linear discriminant function of the wdbc data set. Upper panel shows the histogram for the benign images (group 0) and the lower panel shows the histogram for the malignant images (group 1). Right panel: Kernel density estimates of the two sets of scores on the (first) linear discriminant function (LD1).
+to distinguish between the K classes. The variables in (8.1) are called dis- criminating or feature variables, and the vector X is the feature vector.
+It may sometimes be appropriate to include in an analysis the additional classes of ΠD and ΠO to signify that decisions could not be made due to either an element of doubt (D) in the assignment or indications that certain items constitute outliers (O) and could not possibly belong to any of the designated classes.
+8.3 Binary Classification
+Consider, first, the binary classification problem (K = 2) where we wish to discriminate between two classes Π1 and Π2, such as the “malignant” and “benign” tumors in the breast cancer example.
+8.3.1 Bayes’s Rule Classifier
+Let
+P(X∈Πi)=πi, i=1,2, (8.2)
+be the prior probabilities that a randomly selected observation X = x belongs to either Π1 or Π2. Suppose also that the conditional multivariate probability density of X for the ith class is
+P(X=x|X∈Πi)=fi(x), i=1,2. (8.3)
+We note that there is no requirement that the {fi(·)} be continuous; they could be discrete or be finite mixture distributions or even have singu-
+8.3 Binary Classification 241
+￼￼￼￼￼￼￼￼￼￼0.0 0.3 0.0 0.3
+0.0 0.1 0.2 0.3 0.4
+242 8. Linear Discriminant Analysis
+lar covariance matrices. From (8.2) and (8.3), Bayes’s theorem yields the posterior probability,
+p(Πi|x) = P(X ∈ Πi|X = x) = fi(x)πi , (8.4) f1(x)π1 + f2(x)π2
+that the observed x belongs to Πi, i = 1,2.
+For a given x, a reasonable classification strategy is to assign x to that class with the higher posterior probability. This strategy is called the Bayes’s rule classifier. In other words, we assign x to Π1 if
+p(Π1|x) > 1, (8.5) p(Π2 |x)
+and we assign x to Π2 otherwise. The ratio p(Π1|x)/p(Π2|x) is referred to as the “odds-ratio” that Π1 rather than Π2 is the correct class given the information in x. Substituting (8.4) into (8.5), the Bayes’s rule classifier assigns x to Π1 if
+f1(x) > π2 , (8.6) f2 (x) π1
+and to Π2 otherwise. On the boundary {x ∈ Rr|f1(x)/f2(x) = π2/π1}, we randomize (e.g., by tossing a fair coin) between assigning x to either Π1 or Π2.
+8.3.2 Gaussian Linear Discriminant Analysis
+We now make the Bayes’s rule classifier more specific by following Fisher’s (1936) assumption that both multivariate probability densities in (8.3) are multivariate Gaussian (see Section 3.3.2) having arbitrary mean vectors and a common covariance matrix. That is, we take f1(·) to be a Nr(μ1, Σ1) den- sity and f2(·) to be a Nr(μ2,Σ2) density, and we make the homogeneity assumption that Σ1 = Σ2 = ΣXX.
+The ratio of the two densities is given by
+￼￼￼￼f (x) exp{−1(x−μ )τΣ−1 (x−μ )}
+1 = 2 1 XX 1 , (8.7)
+￼￼￼f2(x) exp{−1(x−μ )τΣ−1 (x−μ )} 2 2 XX 2
+￼where the normalization factors (2π)−r/2|ΣXX|−1/2 in both numerator and denominator cancel due to the equal covariance matrices of both classes. Taking logarithms (a monotonically increasing function) of (8.7), we have that
+log f1(x) = (μ −μ )τΣ−1 x− 1(μ −μ )τΣ−1 (μ +μ ) (8.8) ef2(x) 12XX212XX12
+= (μ −μ )τΣ−1 (x−μ ̄), (8.9) 1 2 XX
+￼￼
+where μ ̄ = (μ1 + μ2)/2. The second term in the right-hand side of (8.8) can be written as
+(μ −μ )τΣ−1 (μ +μ )=μτΣ−1 μ −μτΣ−1 μ . 1 2 XX 1 2 1 XX 1 2 XX 2
+It follows that
+(8.10)
+(8.11)
+(8.12) (8.13)
+􏰇f (x)π 􏰢
+L(x)=log 1 1 =b +bτx
+is a linear function of x, where
+b=Σ−1 (μ −μ )
+ef(x)π 0 22
+XX 1 2
+b0 = −1{μτ1Σ−1 μ1 − μτ2Σ−1 μ2} + loge(π2/π1).
+8.3 Binary Classification 243
+￼￼2XX XX
+Thus, we assign x to Π1 if the logarithm of the ratio of the two posterior
+probabilities is greater than zero; that is,
+if L(x) > 0, assign x to Π1. (8.14)
+Otherwise, we assign x to Π2. Note that on the boundary {x ∈ Rr|L(x) = 0}, the resulting equation is linear in x and, therefore, defines a hyperplane that divides the two classes. The rule (8.14) is generally referred to as Gaussian linear discriminant analysis (LDA).
+The part of the function L(x) in (8.11) that depends upon x, U=bτx=(μ −μ)τΣ−1 x, (8.15)
+1 2 XX
+is known as Fisher’s linear discriminant function (LDF). Fisher actually
+derived the LDF using a nonparametric argument that involved no distri-
+butional assumptions. He looked for that linear combination, aτ X, of the
+feature vector X that separated the two classes as much as possible. In
+particular, he showed that a ∝ Σ−1 (μ − μ ) maximized the squared dif- XX 1 2
+ference of the two class means of aτ X relative to the within-class variation of that difference (see Exercise 8.3).
+Total Misclassification Probability
+The LDF partitions the feature space Rr into disjoint classification re- gions R1 and R2. If x falls into region R1, it is classified as belonging to Π1, whereas if x falls into region R2, it is classified into Π2. We now calculate the probability of misclassifying x.
+Misclassification occurs either if x is assigned to Π2, but actually belongs to Π1, or if x is assigned to Π1, but actually belongs to Π2. Define
+Δ2 =(μ −μ )τΣ−1 (μ −μ ) (8.16) 1 2 XX 1 2
+244 8. Linear Discriminant Analysis
+to be the squared Mahalanobis distance between Π1 and Π2. From (8.15),
+E(U|X∈Πi)=bτμi=(μ1−μ2)τΣ−1 μi XX
+where
+and
+(8.17) (8.18)
+(8.19)
+(8.20)
+and
+for i = 1, 2. The total misclassification probability is, therefore,
+var(U|X ∈ Πi) = bτΣXXb = Δ2, P(Δ)=P(X∈R2|X∈Π1)π1 +P(X∈R1|X∈Π2)π2,
+P(X∈R2|X∈Π1) = P(L(X)<0|X∈Π1)
+􏰃Δ1π􏰄 = P Z<− − log 2
+2 Δ eπ1
+￼￼￼􏰃Δ1π􏰄 = Φ − − log 2
+2 Δ eπ1
+￼￼￼P(X∈R1|X∈Π2) = P(L(X)>0|X∈Π2)
+􏰃Δ1π􏰄 = P Z> − log 2
+2 Δ eπ1
+￼￼￼􏰃Δ1π􏰄 = Φ − + log 2 .
+(8.21) In calculating these probabilities, we use the fact that L(X) = b0 + U , and
+then standardize U by setting
+U − E(U|X ∈ Πi)
+Z= 􏰐 ∼N(0,1).
+var(U|X ∈ Πi)
+In (8.20) and (8.21), Φ(·) is the cumulative standard Gaussian distribution
+function. If π1 = π2 = 1/2, then
+P(X ∈ R2|X ∈ Π1) = P(X ∈ R1|X ∈ Π2) = Φ(−Δ/2),
+and, hence, P(Δ) = 2Φ (−Δ/2).
+A graph of P(Δ) against Δ shows a downward-sloping curve, as one would expect; it has the value 1 when Δ = 0 (i.e., the two populations are identical) and tends to zero as Δ increases. In other words, the greater the distance between the two population means, the less likely one is to misclassify x.
+Sampling Scenarios
+Usually, the 2r + r(r + 1)/2 distinct parameters in μ1, μ2, and ΣXX will be unknown, but can be estimated from learning data on X. Assume, then,
+￼￼￼2 Δ eπ1
+￼￼
+we have a random sample, {X1j,j = 1,2,...,n1} (with values {x1j,j = 1, 2, . . . , n1}), taken from Π1 and an independent random sample, {X2j , j = 1,2,...,n2} (with values {x2j,j = 1,2,...,n2}), taken from Π2.
+The following different scenarios are possible when sampling from popu- lation P:
+1. Conditional sampling, where a sample of fixed size n = n1 + n2 is randomly selected from P, and at a fixed x there are ni(x) observations from Πi, i = 1,2. This sampling scenario often appears in bioassays.
+2. Mixture sampling, where a sample of fixed size n = n1 + n2 is randomly selected from P so that n1 and n2 are randomly selected. This is quite common in discrimination studies.
+3. Separate sampling, where a sample of fixed size ni is randomly selected from Πi, i = 1, 2, and n = n1+n2. Overall, this is the most popular scenario.
+In all three cases, ML estimates of b0 and b can be obtained (Anderson, 1982).
+Sample Estimates
+The ML estimates of μi, i = 1, 2, and ΣXX are ni
+respectively, where and
+S(i) XX
+j=1
+Σ􏰡XX = n−1SXX,
+SXX = S(1) + S(2) , XX XX
+ni
+= 􏰏(xij − x ̄i)(xij − x ̄i)τ ,
+j=1
+i = 1, 2,
+μ􏰡 =x ̄ =n−1􏰏x , i=1,2, i i i ij
+(8.22)
+(8.23) (8.24)
+(8.25)
+where n = n1 + n2 . If we wish to compute an unbiased estimator of ΣX X , we can divide SXX in (8.24) by its degrees of freedom n−2 = n1 +n2 −2 (rather than by n) to make Σ􏰡XX.
+The prior probabilities, π1 and π2, may be known or can be closely approximated in certain situations from past experience. If π1 and π2 are unknown, they can be estimated by
+π􏰡i=ni, i=1,2, (8.26) n
+respectively. Substituting these estimates into L(x) in (8.11) yields
+L􏰡 ( x ) = 􏰡b 0 + b􏰡 τ x , ( 8 . 2 7 )
+8.3 Binary Classification 245
+￼
+246
+8. Linear Discriminant Analysis
+where
+b􏰡=Σ􏰡−1 (x ̄1−x ̄2) XX
+􏰡b =−1{x ̄τΣ􏰡−1 x ̄ −x ̄τΣ􏰡−1 x ̄ }+log n1 −log n2 0 21XX1 2XX2 en en
+(8.28) (8.29)
+￼￼￼are the ML estimates of b and b0, respectively. The classification rule as- signs x to Π1 if L􏰡(x) > 0, and assigns x to Π2 otherwise.
+The second term of L􏰡(x),
+b􏰡τx=(x ̄1−x ̄2)τΣ􏰡−1 x, (8.30)
+estimates Fisher’s LDF. For large samples (ni → ∞, i = 1, 2), the distri- bution of b􏰡 is Gaussian (Wald, 1944). This result allows us to study the
+separation of two given training samples, as well as the assumptions of normality and covariance matrix homogeneity, by drawing a histogram or normal probability plot of the LDF evaluated for every observation in the training samples. Nonparametric density estimates of the LDF scores for each class are especially useful in this regard; see, for example, Figure 8.1.
+Example: Wisconsin Breast Cancer Data (Continued)
+For the Wisconsin Diagnostic Breast Cancer Data, we estimate the priors π1 and π2 by π􏰡1 = n1/n = 357/569 = 0.6274 and π􏰡2 = n2/n = 212/569 = 0.3726, respectively. The coefficients of the LDF are estimated by first computing x ̄1, x ̄2, and the pooled covariance matrix Σ􏰡XX, and then using (8.28). The results are given in Table 8.2.
+The leave-one-out cross-validation (CV/n) procedure drops one obser- vation from the data set, reestimates the LDF from the remaining n − 1 observations, and then classifies the omitted observation; the procedure is repeated 569 times for each observation in the data set. The confusion table for classifying the 569 observations is given in Table 8.3. In this table, the row totals are the true classifications, and the column totals are the pre- dicted classifications using Fisher’s LDF and leave-one-out cross-validation.
+From Table 8.3, we see that LDA leads to too many malignant tumors being misdiagnosed as “benign”: of the 212 malignant tumors, 192 are correctly classified and 20 are not; and of the 357 benign tumors, 353 are correctly classified and 4 are not. The misclassification rate for Fisher’s LDF in this example is, therefore, estimated by CV/n as 24/569 = 0.042, or 4.2%.
+For comparison, the apparent error rate (i.e., the error rate obtained by classifying each observation using the LDF, then dividing the number of misclassified observations by n) is given by 19/569 = 0.033, or 3.3%, which is clearly an overly optimistic estimate of the LDF misclassification rate.
+XX
+TABLE 8.2. Estimated coefficients of Fisher’s linear discriminant func- tion for the Wisconsin diagnostic breast cancer data. All variables are log- arithms of the original variables.
+be the class labels and let
+Y=(y1τ .y1τ ) 1n1 2n2
+(8.32) be the (1 × n) row vector whose components are the values of Y for all n
+observations. Let
+X=(X .X) (8.33) 12
+be an (r×n)-matrix, where X1 = (x11,···,x1,n1) is the (r×n1)-matrix of observations from Π1 and X2 = (x21, · · · , x2,n2 ) is the (r × n2)-matrix of observations from Π2.
+TABLE 8.3. Confusion table for the Wisconsin Diagnostic Breast Cancer Data. Row totals are the true classifications and column totals are predicted classifications using leave-one-out cross-validation.
+8.3 Binary Classification 247
+￼Variable
+ radius.mv
+texture.mv
+   peri.mv
+   area.mv
+ smooth.mv
+   comp.mv
+   scav.mv
+   ncav.mv
+   symt.mv
+  fracd.mv
+Coeff. –30.586 –0.317 35.215 –2.250 0.327 –2.165 1.371 0.509 –1.223 –3.585
+Variable
+ radius.sd
+texture.sd
+   peri.sd
+   area.sd
+ smooth.sd
+   comp.sd
+   scav.sd
+   ncav.sd
+   symt.sd
+  fracd.sd
+Coeff. –2.630 –0.602
+0.262 –3.176 0.139 –0.398 0.047 0.953 –0.530 –0.521
+Variable
+ radius.ev
+texture.ev
+   peri.ev
+   area.ev
+ smooth.ev
+   comp.ev
+   scav.ev
+   ncav.ev
+   symt.ev
+  fracd.ev
+Coeff. 6.283 2.313
+–3.176 –1.913 1.540 0.528 –1.161 –0.947 2.911 4.168
+￼￼8.3.3
+LDA via Multiple Regression
+The above results on LDA can also be obtained using multiple regression. We create an indicator variable Y showing which observations fall into which class, and then regress that Y on the feature vector X. Let
+Y =
+(8.31)
+􏰇
+y1 ifx∈Π1
+y2 if x ∈ Π2
+￼￼True benign True malignant Column total
+Predicted Predicted benign malignant 353 4 20 192 373 196
+Row total 357 212 569
+￼￼
+248 8. Linear Discriminant Analysis
+Let
+we have that
+whence,
+(Ir+kddτS−1 )−1 XX
+=
+kddτ S−1 Ir− XX ,
+XX
+( 8 . 4 3 )
+X c = X − X ̄ = X H n ( 8 . 3 4 )
+Y c = Y − Y ̄ = Y H n , ( 8 . 3 5 ) where Hn = In − n−1Jn is the “centering matrix” and Jn = 1n1τn is an
+(n × n)-matrix of ones.
+If we regress the row vector Yc on the matrix Xc, the OLS estimator of
+the multiple regression coefficient vector β is given by β􏰡τ=YcXcτ(XcXcτ)−1.
+We have the following cross-product matrices:
+(8.36)
+(8.37)
+(8.38) (8.39)
+(8.40) (8.41)
+where
+XcXcτ=SXX+kddτ,
+YcXcτ =k(y1−y2)dτ, Y c Y cτ = k ( y 1 − y 2 ) 2 ,
+d = n − 1 X 1 − n − 1 X 1 = x ̄ − x ̄ , 11n1 22n2 12
+SXX =X1Hn1X1τ +X2Hn2X2τ, and k = n1n2/n. See (8.23). Thus,
+β􏰡τ = k(y1 − y2)dτ (SXX + kddτ )−1
+= k(y1 − y2)dτ S−1 (Ir + kddτ S−1 )−1.
+(8.42) From the matrix result (3.4), setting A = Ir, u = kd, and vτ = dτS−1 ,
+XX XX
+￼􏰃k(y −y )􏰄
+β􏰡 = 1 2 Σ􏰡 − 1 d ,
+n−2+T2 XX whereΣ􏰡XX =SXX/(n−2)and
+T2 =kdτΣ􏰡−1 d= n1n2(x ̄1 −x ̄2)τΣ􏰡−1 (x ̄1 −x ̄2) XX n XX
+(8.44) is Hotelling’s T2 statistic, which is used for testing the hypothesis that
+1+kdτS−1 d XX
+￼￼μ1 = μ2. Assuming multivariate normality,
+􏰃n − r − 1􏰄
+r(n − 2) T 2 ∼ Fr,n−r−1 (8.45)
+￼
+when this hypothesis is correct (see, e.g., Anderson, 1984, Section 5.3.4). Note that D2 = dτΣ􏰡−1 d is proportional to an estimate of Δ2 (see
+(8.16)). From (8.28) and (8.43), it follows that
+β􏰡∝Σ􏰡−1 (x ̄1−x ̄2)=b􏰡. (8.46)
+where the proportionality constant is n1n2(y1 − y2)/n(n1 + n2 − 2 + T 2). This fact was first noted by Fisher (1936). Thus, we can obtain Fisher’s estimated LDF (8.28) (up to a constant of proportionality) through multiple regression using an indicator response variable.
+How should we choose the values y1 and y2? Four different choices are given in Table 8.4. In choosing the values of y1 and y2, researchers were initially concerned about ease of computation. The only part of β􏰡 in (8.43) that depends upon y1 and y2 is y1 − y2. Thus, Fisher wanted y1 − y2 = 1 and Y ̄ = 0; Bishop wanted k(y1 − y2) = n; Ripley wanted Y ̄ = 0 and the total sum of squares n1y12 + n2y2 = n; and Lattin, Carroll, and Green wanted YcXcτ = dτ . With the public availability of high-speed computers, more simplistic choices are used, including (y1, y2) = (1, 0) or (1, −1). For- tunately, it does not matter which values of (y1,y2) we pick: these different choices of (y1,y2) yield β􏰡s that are proportional to each other.
+Example: Wisconsin Diagnostic Breast Cancer Data (Continued)
+When we regress Y (1 if the patient’s tumor is malignant and 0 otherwise) on each of the 30 (log-transformed) variables one at a time, all but four of the coefficients are declared to be significant. (A coefficient is “significant” at the 5% level if its absolute t-ratio is greater than the value 2.0 and is nonsignificant otherwise.)
+At the other extreme, regressing Y on all 30 variables results in only eight significant coefficients. Table 8.5 gives the multiple regression of Y on the 30 (log-transformed) variables. The estimated coefficients in this table are proportional to those given in Table 8.2 for the LDF. The ordered magnitudes of the ratio of estimated coefficient to its estimated standard error for all 30 variables is displayed in Figure 8.2.
+Such conflicting behavior is probably due to high pairwise correlations among the variables: 19 correlations are between 0.8 and 0.9, and 25 cor- relations are greater than 0.9 (six of which are greater than 0.99).
+8.3.4 Variable Selection
+High-dimensional data often contain pairs of highly correlated variables, which introduce collinearity into discrimination and classification problems. So, variable selection becomes a priority. The connection between Fisher’s
+XX
+XX
+8.3 Binary Classification 249
+250 8. Linear Discriminant Analysis
+TABLE 8.4. Proposed values of (y1,y2) for LDA via multiple regression.
+￼Author(s)
+Fisher (1936)
+Bishop (1995, p. 109) Ripley (1996, p. 102) Lattin et al (2003, p. 437)
+(y1, y2)
+(n2/n, −n1/n) (n/n1,−n/n2) ±(−(n2/n1)1/2,(n1/n2)1/2) (1/n1,−1/n2)
+￼￼LDF and multiple regression provides us with a vehicle for selecting im- portant discriminating variables. Thus, the variable selection techniques of FS and BE stepwise procedures, Cp, LARS, and Lasso can all be used in the discrimination context as well as in regression; see Exercise 8.10.
+8.3.5 Logistic Discrimination
+We see from (8.11) and the fact that p(Π2|x) = 1 − p(Π1|x) at X = x, that the posterior probability density satisfies
+􏰃 p(Π|x) 􏰄
+logitp(Π |x)=log 1 =β +βτx, (8.47)
+1 e 1−p(Π1|x) 0
+￼which has the form of a logistic regression model. The logistic approach to discrimination assumes that the log-likelihood ratio (8.11) can be modeled as a linear function of x. Inverting the relationship (8.47), we have that
+eL(x) p(Π1|x) = 1 + eL(x)
+p(Π2|x) = 1
+1 + eL(x)
+, ,
+(8.48) (8.49) (8.50)
+(8.51) say, where σ(u) = 1/(1 + e−u) in (8.51) is a sigmoid function (“S-shaped”)
+Maximum-Likelihood Estimates
+In light of (8.50), we now write p(Π1|x) as p1(x,β0,β), and similarly for p2(x,β0,β). Thus, instead of first estimating μ1, μ2, and ΣXX as we did
+￼￼where
+We can write (8.48) as
+L(x) = β0 + βτ x. p(Π1|x) = 1 = σ(L(x)),
+￼1 + e−L(x)
+(see Figure 8.3), taking values of u ∈ R onto (0, 1).
+TABLE 8.5. Multiple regression results for linear discriminant analysis on the Wisconsin diagnostic breast cancer data. All variables are logarithms of the original variables. Y is taken to be 1 if the patient’s tumor is malig- nant and 0 if benign. Listed are the estimated regression coefficients, their respective estimated standard errors, and the Z-ratio of those two values. The multiple R2 is 0.777 and the F -statistic is 62.43 on 30 and 538 degrees of freedom.
+8.3 Binary Classification 251
+￼￼(Intercept)
+  radius.mv
+ texture.mv
+    peri.mv
+    area.mv
+  smooth.mv
+    comp.mv
+    scav.mv
+    ncav.mv
+    symt.mv
+   fracd.mv
+  radius.sd
+ texture.sd
+    peri.sd
+    area.sd
+  smooth.sd
+    comp.sd
+    scav.sd
+    ncav.sd
+    symt.sd
+   fracd.sd
+  radius.ev
+ texture.ev
+    peri.ev
+    area.ev
+  smooth.ev
+    comp.ev
+    scav.ev
+    ncav.ev
+    symt.ev
+   fracd.ev
+Coeff. S.E. –14.348 3.628 –6.168 2.940 –0.064 0.217 7.102 2.385 –0.454 1.654 0.066 0.233 –0.437 0.162 0.277 0.104 0.103 0.094 –0.247 0.167 –0.723 0.353 –0.530 0.277 –0.122 0.080 0.053 0.131 0.691 0.271 0.028 0.074 –0.080 0.100 0.010 0.096 0.192 0.098 –0.107 0.085 –0.105 0.069 1.267 1.922 0.467 0.283 –0.641 0.800 –0.386 1.012 0.311 0.259 0.106 0.173 –0.234 0.135 –0.191 0.126 0.587 0.209 0.841 0.255
+Ratio –3.955 –2.098 –0.294
+2.978 –0.274 0.284 –2.690 2.669 1.096 –1.473 –2.047 –1.915 –1.527 0.405 2.555 0.377 –0.800 0.100 1.970 –1.255 –1.516 0.659 1.647 –0.801 –0.381 1.200 0.617 –1.730 –1.517 2.816 3.292
+￼
+252
+8. Linear Discriminant Analysis
+￼￼￼￼￼￼￼fracd.ev peri.mv sym t.ev comp.mv scav.mv area.sd radius.mv fracd.mv ncav.sd radius.sd
+scav.ev texture.ev texture.sd
+ncav.ev fracd.sd sym t.m v sym t.sd
+smooth.ev ncav.mv peri.ev comp.sd radius.ev comp.ev peri.sd area.ev sm ooth.sd texture.m v sm ooth.m v area.m v scav.sd
+￼￼￼￼￼￼￼￼￼X = x belongs,
+􏰇
+0123 AbsoluteValueoft-Ratio
+FIGURE 8.2. Multiple regression results for linear discriminant analysis on the Wisconsin diagnostic breast cancer data. All input variables are logarithms of the original variables. Listed are the variable names on the vertical axis and the absolute value of the t-ratio for each variable on the horizontal axis. The variables are listed in descending order of their absolute t-ratios.
+in (8.24) and (8.25) in order to estimate β0 and the coefficient vector β, we can estimate β0 and β directly through (8.47).
+We define a response variable Y that identifies the population to which
+Y =
+1 if x ∈ Π1 (8.52) 0 otherwise.
+The values of Y are the class labels. Conditional on X, the Bernoulli random variableY hasP(Y =1)=π1 andP(Y =0)=1−π1 =π2.Thus,we are interested in modeling binary data, and the usual way we do this is through logistic regression.
+Given n observations, (xi, yi), i = 1, 2, . . . , n, on (X, Y ), the conditional likelihood for (β0,β) can be written as
+􏰛n
+(p1(xi, β0, β))yi (1 − p1(xi, β0, β))1−yi , whence, the conditional log-likelihood is
+􏰏n i=1
+l(β0, β) =
+{yi loge p1(xi, β0, β) + (1 − yi) loge(1 − p1(xi, β0, β))}
+L(β0, β) =
+(8.53)
+i=1
+￼￼￼￼1.0 0.8 0.6 0.4 0.2 0.0
+8.3 Binary Classification 253
+￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼estimate
+eL􏰣(x)
+L􏰣 ( x ) , ( 8 . 5 7 )
+-10-50510 u
+FIGURE 8.3. Graph of σ(u) = 1/(1+e−u), the logistic sigmoid activation function. For |u| small, σ(u) is very close to linear.
+􏰏n 􏰦 τ β + β τ x 􏰧
+yi(β0 +β xi)−loge(1+e 0 i) . (8.54)
+i=1
+M L e s t i m a t e s , ( β􏰣 0 , β􏰣 ) , o f ( β 0 , β ) a r e o b t a i n e d b y m a x i m i z i n g l ( β 0 , β ) w i t h respect to β0 and β. The maximization algorithm boils down to an iterative version of a weighted least-squares procedure in which the weights and the responses are updated at each iteration step. The details of the iteratively reweighted least-squares algorithm are given below.
+The maximum-likelihood estimates (β􏰣0,β􏰣) can be plugged into (8.50) to give another estimate of the LDF,
+=
+The classification rule,
+L􏰣 ( x ) = β􏰣 0 + β􏰣 τ x . ( 8 . 5 5 ) if L􏰣(x) > 0, assign x to Π1, (8.56)
+otherwise, assign x to Π2, is referred to as logistic discriminant analysis. We note that maximizing (8.54) will not, in general, yield the same estimates for β0 and β as we found in (8.28) and (8.29) for Fisher’s LDF.
+An equivalent classification procedure is to use L􏰣(x) in (8.55) to estimate the probability p(Π1|x) in (8.48). Substituting L􏰣(x) into (8.48) yields the
+p􏰣 ( Π 1 | x ) =
+1+e
+￼so that x is assigned to Π1 if p􏰣(Π1|x) is greater than some cutoff value, say 0.5, and x is assigned to Π2 otherwise.
+sigma(u)
+254 8. Linear Discriminant Analysis
+Iteratively Reweighted Least-Squares Algorithm
+It will be convenient (temporarily) to redefine the r-vectors xi and β as the following (r+1)-vectors: xi ← (1,xτi )τ, and β ← (β0,βτ)τ. Thus, β0 + βτ xi can be written more compactly as βτ xi. We also write p1(xi, β0, β) as p1(xi, β) and l(β0, β) as l(β).
+Differentiating (8.54) and setting the derivatives equal to zero yields the score equations:
+i=1 p2(xi, β).
+The nonlinear equations (8.58) are solved using an algorithm known as iteratively reweighted least-squares (IRLS). The second derivatives of l(β) are given by the ((r + 1) × (r + 1)) Hessian matrix:
+xixτi p1(xi, β)(1 − p1(xi, β)). (8.59)
+The IRLS algorithm is based upon using the Newton–Raphson iterative approach to finding ML estimates. Starting values of β􏰣(0) = 0 are recom- mended. Then, the (k + 1)st step in the algorithm replaces the kth iterate β􏰣(k) by
+ ̇ ∂l(β)􏰏n
+l(β) = ∂β =
+These are r + 1 nonlinear equations in the r + 1 logistic parameters β.
+l(β) = ∂β∂βτ = −
+i=1
+i=1
+xi{yi − p1(xi, β)} = 0. (8.58)
+￼From (8.58), we see that n1 = 􏰊n p1(xi,β) and, hence, also that n2 = 􏰊n i=1
+ ̈ ∂ 2 l ( β ) 􏰏n
+￼􏰣(k+1) 􏰣(k)  ̈ −1  ̇
+β = β − (l(β)) l(β),
+where the derivatives are evaluated at β􏰣(k). Using matrix notation, we set
+(8.60)
+X = (x1,···,xn), Y = (y1,···,yn)τ,
+to be an ((r + 1) × n) data matrix and n-vector, respectively, and let W =
+diag{wi} be an (n × n) diagonal weight-matrix with ith diagonal element
+wi =p1(xi,β􏰣)(1−p1(xi,β􏰣)), i=1,2,...,n.
+The score vector of first derivatives (8.58) and the Hessian matrix (8.59) can be written as
+ ̇ ̈τ l(β)=X(Y−p1), l(β)=−XWX , (8.61)
+respectively, where p1 is the n-vector
+p1 =(p1(x1,β􏰣),···,p1(xn,β􏰣))τ. Then, (8.60) can be written as:
+β􏰣(k+1) = β􏰣(k) + (XWXτ )−1X(y − p1)
+= (XWXτ)−1XW{Xτβ􏰣(k) +W−1(y−p1)} = (XWXτ)−1XWz,
+.
+(8.62)
+(8.63) (8.64)
+where
+is an n-vector. The ith element of z is given by
+z = X τ β􏰣 ( k ) + W − 1 ( y − p 1 ) z i = x τi β􏰣 ( k ) + y i − p 1 ( x i , β􏰣 ( k ) )
+(8.65) The update (8.63) has the form of a generalized least-squares estimator (see
+8.3 Binary Classification
+255
+￼p1(xi, β􏰣(k))(1 − p1(xi, β􏰣(k))
+Exercise 5.17) with W as the diagonal matrix of weights, z as the response
+vector, and X as the data matrix. Note that p1 = p(k), z = z(k), and 1
+W = W(k) have to be updated at every step in the algorithm because they each depend upon β􏰣(k). Furthermore, the update formula (8.63) assumes that the ((r + 1) × (r + 1))-matrix X WX τ can be inverted, a condition that will be violated in applications where n < r + 1.
+Despite the fact that convergence of the IRLS algorithm to the maxi- mum of l(β) cannot be guaranteed, the algorithm does converge for most practical situations. We refer the reader to Thisted (1988, Section 4.5.6) for a detailed discussion of IRLS and its properties. The algorithm is used extensively in fitting generalized linear models (see, e.g., McCullagh and Nelder, 1989, Section 2.5).
+Example: Wisconsin Diagnostic Breast Cancer Data (Continued)
+Carrying out a logistic regression on all 30 transformed variables in the Wisconsin diagnostic breast cancer study results in huge values for both the estimated regression coefficients and their estimated standard errors. This, in turn, yields tiny values for all 30 t-ratios. This situation is caused by the high collinearity present in the data.
+To reduce the number of variables, we apply BE stepwise regression to these data. Table 8.6 lists the parameter estimates and their estimated standard errors for a final model consisting of nine variables. Most of the pairwise correlations between these nine variables are quite moderate, with the only correlations greater than 0.8 being those of 26 (ncav.mv) with 29 (scav.ev) and 6 (comp.mv).
+256 8. Linear Discriminant Analysis
+TABLE 8.6. BE stepwise logistic regression results for the Wisconsin di- agnostic breast cancer data.
+￼￼(Intercept)
+  smooth.mv
+    comp.mv
+    ncav.mv
+ texture.sd
+    area.sd
+   fracd.sd
+ texture.ev
+    scav.ev
+   fracd.ev
+Coeff. S.E. –66.251 19.504 15.179 7.469 –14.774 4.890 10.476 3.377 –6.963 2.304 12.943 3.070 –5.476 1.754 23.224 5.753 4.986 1.568 17.166 5.912
+Ratio –3.397 2.032 –3.022 3.102 –3.022 4.216 –3.122 4.036 3.180 2.904
+￼8.3.6 Gaussian LDA or Logistic Discrimination?
+Theoretical and empirical comparisons have been carried out between Gaussian LDA and logistic discriminant analysis. Some of the differences are the following:
+1. The conditional log-likelihood (8.54) is valid under general exponen- tial family assumptions on f (·) (which includes the multivariate Gaus- sian model with common covariance matrix). This suggests that lo- gistic discrimination is more robust to nonnormality than Gaussian LDA.
+2. Simulation studies have shown that when the Gaussian distributional assumptions or the common covariance matrix assumption are not satisfied, logistic discrimination performs much better.
+3. Sensitivity to gross outliers can be a problem for Gaussian LDA, whereas outliers are reduced in importance in logistic discrimination, which essentially fits a sigmoidal function (rather than a linear func- tion).
+4. Logistic discriminant analysis is asymptotically less efficient than is Gaussian LDA because the latter is based upon full ML rather than conditional ML.
+5. At the point when we would expect good discrimination to take place, logistic discrimination requires a much larger sample size than does Gaussian LDA to attain the same (asymptotic) error rate distribution (Efron, 1975), and this result extends to LDA using an exponential family with plug-in estimates.
+8.3.7 Quadratic Discriminant Analysis
+How is the classification rule (8.14) affected if the covariance matrices of the two Gaussian populations are not equal to each other? That is, if Σ1 ̸= Σ2. In this case, (8.8) becomes
+log f1(x) = e f2(x)
+c0 − 1{(x−μ1)τΣ−1(x−μ1)−(x−μ2)τΣ−1(x−μ2)} 212
+= c − 1xτ(Σ−1 −Σ−1)x+(μτΣ−1 −μτΣ−1)x, 12121122
+(8.66)
+(8.67)
+where
+Q(x) = β0 +βτx+xτΩx, Ω=−1(Σ−1 −Σ−1)
+(8.68)
+(8.69)
+8.3 Binary Classification 257
+￼￼￼where c0 and c1 are constants that depend only upon the parameters μ1, μ2, Σ1, and Σ2. The log-likelihood ratio (8.67) has the form of a quadratic function of x. In this case, set
+￼212 β=Σ−1μ −Σ−1μ
+(8.70) β=−1 log|Σ1|+μτΣ−1μ−μτΣ−1μ −log(π/π). (8.71)
+􏰇1122􏰢 02e|Σ2|111222 e21
+￼￼Note that Ω is an (r × r) symmetric matrix. The classification rule is to assign x to Π1 if (8.67) is greater than loge(π2/π1); that is,
+if Q(x) > 0, assign x to Π1, (8.72) and assign x to Π2 otherwise.
+The function Q(x) of x is called a quadratic discriminant function (QDF) and the classification rule (8.72) is referred to as quadratic discriminant analysis (QDA). The boundary {x ∈ Rr|Q(x) = 0} that divides the two classes is a quadratic function of x.
+An approximation to the boundaries obtained by QDA can be obtained using an LDA approach that enlists the aid of the linear terms, squared terms, and all pairwise products of the feature variables. For example, if we have two feature variables X1 and X2, then “quadratic LDA” would use X1, X2, X12, X2, and X1X2 in the linear discriminant function with r = 5.
+Maximum-Likelihood Estimates
+If the r(r + 3) distinct parameters in μ1, μ2, Σ1, and Σ2 are all un- known, and π1 and π2 are also unknown (1 additional parameter), they
+258 8. Linear Discriminant Analysis
+can be estimated using learning samples as above, with the exception of the covariance matrices, where the ML estimate of Σi is
+ni
+Σ􏰡i =n−1􏰏(xij −x ̄i)(xij −x ̄i)τ, i=1,2.
+(8.73)
+(8.74)
+(8.75)
+(8.76) (8.77)
+i
+j=1
+Substituting the obvious estimates into Q(x) in (8.68) gives us Q􏰡 ( x ) = β􏰡 0 + β􏰡 τ x + x τ Ω􏰡 x ,
+where
+Ω􏰡 = − 1 ( Σ􏰡 − 1 − Σ􏰡 − 1 ) , 212
+β􏰡 = Σ􏰡 − 1 x ̄ − Σ􏰡 − 1 x ̄ 1122
+β􏰡 =−c􏰡 −log n2 +log n1 , 01enen
+￼￼￼and where c􏰡 is the estimated version of the first term in (8.67). 1
+Because the classifier Q􏰡(x) depends upon the inverses of both Σ􏰡1 and Σ􏰡2, it follows that if either n1 or n2 is smaller than r, then Σ􏰡i (i = 1 or 2, as appropriate) will be singular and QDA will fail.
+8.4 Examples of Binary Misclassification Rates
+In this section, we compare the two-class discriminant analysis methods LDA and QDA on a number of well-known data sets.2 These data sets, which are listed in Table 8.7, are
+BUPA liver disorders These data are the results of blood tests consid- ered to be sensitive to liver disorders arising from excessive alchohol consumption. The first five variables are all blood tests: mcv (mean corpuscular volume), alkphos (alkaline phosphotase), sgpt (alamine aminotransferase), sgot (aspartate aminotransferase), and gammagt (gamma-glutamyl transpeptidase); the sixth variable is drinks (num- ber of half-pint equivalents of alchoholic beverages drunk per day). All patients are males: 145 subjects in class 1 and 200 in class 2.
+Ionosphere These are radar data collected by a system of 16 high-frequency phased-array antennas in Goose Bay, Labrador, with a total transmit- ted power of the order 6.4 kilowatts. The targets were free electrons
+2These data sets can be found in the files bupa, ionosphere, sonar, and spambase on the book’s website. More details can be found in the UCI Machine Learning Repository at archive.ics.uci.edu/ml/datasets.html.
+￼￼
+8.4 Examples of Binary Misclassification Rates 259
+in the ionosphere. The two classes are “Good” for radar returns that show evidence of some type of structure in the ionosphere and “Bad” for those that do not and whose signals pass through the ionosphere. The received electromagnetic signals are complex-valued and were processed using an autocorrelation function whose arguments are the time of a pulse and the pulse number. There were 17 pulse numbers, which are described by two measurements per pulse number. One variable (#2) was removed from the data set because its value for all observations was zero.
+Sonar Sonar signals are bounced off a metal cylinder (representing a mine) or a roughly cylindrical rock at various aspect angles and under various conditions. There are 111 observations obtained by bounc- ing sonar off a metal cylinder and 97 obtained from the rock. The transmitted sonar signal is a frequency-modulated chirp, rising in frequency. The data set contains signals ontained from a variety of aspect angles, spanning 90 degrees for the cylinder and 180 degrees for the rock. Each observation is a set of 60 numbers in the range 0–1, where each number represents the energy within a particular frequency band, integrated over a certain period of time.
+Spambase This data set derives from a collection of spam e-mails (un- solicited commercial e-mail, which came from a postmaster and in- dividuals who had filed spam) and non-spam e-mails (which came from filed work and personal e-mails). Most of the variables indicate whether a particular word or character was frequently occurring in the e-mail: 48 variables have the form “word freq WORD,” that gives the percentage of the words in the e-mail which match WORD; 6 vari- ables have the form “word freq CHAR,” that gives the percentage of characters in the e-mail which match CHAR; and 3 “run-length” variables, measuring the average length, length of longest, and sum of length of uninterupted sequences of consecutive capital letters. There are 1813 spam (39.4%) and 2788 non-spam observations in the data set.
+Table 8.7 lists the CV misclassification rates for LDA and QDA for each data set. These two-class data sets have quite varied CV misclassifica- tion rates and, in three out of the five data sets (the exceptions are the ionosphere and sonar data sets), LDA is a better classifier than QDA.
+Figure 8.4 displays the kernel density estimates of the class-conditional scores of the linear discriminant function (LD1) for the binary classification data sets spambase, ionosphere, sonar, and bupa. These data sets are ar- ranged in order of LDA misclassification rates, from smallest to largest. The less overlap between the two density estimates, the smaller the misclassifi- cation rate; the greater the overlap between the two density estimates, the larger the misclassification rate.
+￼￼￼￼
+260 8. Linear Discriminant Analysis
+TABLE 8.7. Summary of data sets with two classes. Listed are the sample size (n), number of variables (r), and number of classes (K). Also listed for each data set are leave-one-out cross-validation (CV/n) misclassifica- tion rates for linear discriminant analysis (LDA) and quadratic discrimi- nant analysis (QDA). The data sets are listed in increasing order of LDA misclassification rates.
+￼DataSet n r K LDA
+QDA 0.062 0.170 0.128 0.240 0.406
+￼Breast cancer (wdbc) 569 30 2 Spambase 4601 57 2
+0.042 0.113 0.137 0.245 0.301
+Ionosphere Sonar BUPA liver disorders
+8.5 Multiclass LDA
+351 33 2 208 60 2 345 6 2
+￼￼Assume now that the population of interest is divided into K > 2 nonoverlapping (disjoint) classes. For example, in a database made pub- licly available by the U.S. Postal Service, each item is a (16 × 16) pixel image of a digit extracted from a real-life zip code that is handwritten onto an envelope. The database consists of thousands of these handwritten dig- its, each of which is viewed as a point in an input space of 256 dimensions. The classification problem is to assign each digit to one of the 10 classes 0,1,2,...,9. 􏰉K􏰀
+We could carry out 2 different two-class linear discriminant analyses, where we set up a sequence of “one class versus the rest” classification scenarios. Such a solution does not work because it would produce regions that do not belong to any of the K classes considered (see Exercise 8.14).
+Instead, the two-class methodology carries over in a straightforward way to the multiclass situation. Specifically, we wish to partition the sample space into K nonoverlapping regions R1, R2, . . . , RK , such that an obser- vation x is assigned to class Πi if x ∈ Ri. The partition is to be determined so that the total misclassification rate is a minimum.
+Text Categorization
+A note of caution is in order here: not all multiclass classification prob- lems fit this description. Text categorization is an important example. At the simplest level of information processing, we save and categorize files, e-mail messages, and URLs; in more complicated activities, we assign news items, computer FAQs, security information, author identification, junk mail identification, and so on, to predefined categories. For example, about 810,000 documents of newswire stories in the Reuters Business Briefing database RCV1 (Lewis, Yang, Rose, and Li, 2004) are assigned by topic
+−4−20246 −6−4−202 LD1 LD1
+8.5 Multiclass LDA 261
+￼￼￼￼￼￼￼￼￼￼￼￼￼￼−4−2024 −20246 LD1 LD1
+FIGURE 8.4. Kernel density estimates of the class-conditional scores for the linear discriminant function (LD1) for the following two-class data sets: spambase (upper-left panel). ionosphere (upper-right panel). sonar (lower-left panel). bupa (lower-right panel). The amount of overlap in the density estimates is directly related to the estimated misclassification rate between the data in the two groups.
+into 103 categories. The classification problem is to assign each document to a topic based solely upon the textual content of that document (repre- sented as a vector of words). Because documents can be assigned to more than one topic, text categorization does not fit the standard description of a classification problem.
+8.5.1 Bayes’s Rule Classifier
+Let
+P(X ∈ Πi) = πi, i = 1,2,...,K, (8.78)
+0.0 0.1 0.2 0.3 0.4
+0.0 0.1 0.2 0.3 0.4 0.5 0.6 0.7
+0.0 0.1 0.2 0.3 0.4 0.5 0.0 0.2 0.4 0.6
+262 8. Linear Discriminant Analysis
+be the prior probabilities of a randomly selected observation X belonging to each of the different classes in the population, and let
+P(X = x|X ∈ Πi) = fi(x), i = 1,2,...,K, (8.79) be the multivariate probability density for each class. The resulting poste-
+rior probability that an observed x belongs to the ith class is given by p(Πi|x) = P(X ∈ Πi|X = x) = 􏰊 fi(x)πi , i = 1,2,...,K. (8.80)
+The Bayes’s rule classifier for K classes assigns x to that class with the highest posterior probability. Because the denominator of (8.80) is the same for all Πi,i = 1,2,...,K, we assign x to Πi if
+fi(x)πi = max fj (x)πj . (8.81) 1≤j≤K
+If the maximum in (8.81) does not uniquely define a class assignment for a given x, then use a random assignment to break the tie between the appropriate classes.
+Thus, x gets assigned to Πi if fi(x)πi > fj(x)πj, for all j ̸= i, or, equivalently, if loge(fi(x)πi) > loge(fj(x)πj), for all j ̸= i. The Bayes’s rule classifier can be defined in an equivalent form by pairwise comparisons of posterior probabilities. We define the “log-odds” that x is assigned to Πi rather than to Πj as follows:
+￼Kk=1 fk(x)πk
+􏰇p(Π|x)􏰢 􏰇f(x)π 􏰢
+L(x)=log i =log i i . (8.82)
+ij e p(Πj |x) e fj (x)πj
+Then, we assign x to Πi if Lij (x) > 0 for all j ̸= i. We define classification
+￼￼regions, R1,R2,...,RK, as those areas of Rr such that
+Ri = {x ∈ Rr|Lij(x) > 0,j = 1,2,...,K,j ̸= i},
+i = 1,2,...,K. (8.83)
+This argument can be made more specific by assuming for the ith class Πi that fi(·) is the Nr(μi,Σi) density, where μi is an r-vector and Σi is an (r × r) covariance matrix, i = 1, 2, . . . , K. We further assume that the covariance matrices for the K classes are identical, Σ1 = ··· = ΣK, and equal to a common covariance matrix ΣXX.
+Under these multivariate Gaussian assumptions, the log-odds of assigning x to Πi (as opposed to Πj) is a linear function of x,
+where
+Lij (x) = b0ij + bτij x, (8.84)
+bij = (μi − μj )τ Σ−1 (8.85) XX
+b0ij = −1{μτi Σ−1 μi − μτj Σ−1 μj} + loge(πi/πj). (8.86) 2XX XX
+Because Lij (x) is linear in x, the regions {Ri} in (8.83) partition r-dimensional space by means of hyperplanes.
+Maximum-Likelihood Estimates
+Typically, the mean vectors and common covariance matrix will all be unknown. In that case, we estimate the Kr+r(r+1)/2 distinct parameters by taking learning samples from each of the K classes. Thus, from the ith class, we take ni observations, xij, j = 1,2,...,ni, on the r-vector (8.1), that are then collected into the data matrix,
+r×ni
+Xi = (xi1,···,xi,ni), i = 1,2,...,K. (8.87)
+Let n = 􏰊Ki=1 ni be the total number of observations. The K data matrices (8.87) are then arranged into a single data matrix X which has the form
+ni
+x ̄i = n−1Xi1ni = n−1 􏰏xij i = 1,2,...,K,
+ii
+j=1
+and these K vectors are arranged into the matrix of means, r×n
+￼￼￼￼Let
+where Hnj compute
+X ̄ = (x ̄1,···,x ̄1,···,x ̄K,···,x ̄K). 􏰋 􏰌􏰍 􏰎 􏰋 􏰌􏰍 􏰎
+n1 nK
+r×n  ̄ .. Xc=X−X=(X1Hn1 .···.XKHnK),
+(8.91) is the (nj ×nj) “centering matrix,” j = 1,2,...,K. Then, we
+K ni r×rτ􏰏􏰏 τ
+SXX=XcXc =
+(xij −x ̄i)(xij −x ̄i) .
+(8.92)
+( 8 . 9 3 )
+i=1 j=1
+Now, consider the following standard decomposition,
+x i j − x ̄ = ( x i j − x ̄ i ) + ( x ̄ i − x ̄ ) ,
+8.5 Multiclass LDA 263
+￼r×n r×n1 . . r×nK X =(X1 .···.XK)
+= (x11,···,x1,n1,···,xK1,···,xK,nK ).
+The mean of each variable for the ith class is given by the r-vector,
+(8.88)
+(8.89)
+(8.90)
+264 8. Linear Discriminant Analysis
+TABLE 8.8. Multivariate decomposition of the total covariance matrix for K classes Π1,Π2,...,ΠK, when a random learning sample of ni observa- tions is drawn from Πi, i = 1,2,...,K.
+￼Source of Variation
+Between classes Within classes
+Total
+df
+K − 1 n − K
+n−1
+Sum of Squares Matrix
+SB = 􏰊Ki=1 ni(x ̄i − x ̄)(x ̄i − x ̄)τ
+SW = 􏰊K 􏰊ni (xij − x ̄i)(xij − x ̄i)τ
+￼i=1 j=1
+Stot =􏰊K 􏰊ni i=1 j=1
+(xij −x ̄)(xij −x ̄)τ
+￼￼for the jth observation within the ith class, where
+K ni
+x ̄ = n−1X1n = n−1 􏰏􏰏xij = (x ̄1,···,x ̄r)τ (8.94)
+i=1 j=1
+is the overall mean vector ignoring class identifiers. Postmultiplying each side of (8.93) by their respective transposes, multiplying out the right-hand side, then summing over all n observations, and noting that the cross- product term vanishes, we arrive at the well-known multivariate analysis of variance (MANOVA) identity,
+Stot = SB + SW, (8.95) where SB, SW, and Stot are given in Table 8.8.
+Thus, the total covariance matrix of the observations, Stot, having n − 1 degrees of freedom and calculated by ignoring class identity, is partitioned into a part representing the between-class covariance matrix, SB, having K − 1 degrees of freedom, and another part representing the pooled within- class covariance matrix, SW (= SX X ), having n − K degrees of freedom. An unbiased estimator of the common covariance matrix, ΣXX, of the K classes is, therefore, given by
+Σ􏰡XX =(n−K)−1SW =(n−K)−1SXX. (8.96)
+If we let fi(x) = fi(x,ηi), where ηi is an r-vector of unknown parame- ters, and assume that the {πi} are known, the posterior probabilities (8.80)
+are estimated by
+p􏰡(Πi|x) = 􏰊 fi(x,η􏰡i)πi , i = 1,2,...,K, (8.97)
+to Πi if
+which is often referred to as the plug-in classifier.
+fi(x,η􏰡i)πi = max fj(x,η􏰡j)πj , (8.98) 1≤j≤K
+If the {fi(·)} are multivariate Gaussian densities and ηi = (μi,ΣXX), then, the sample version of Lij(x) is given by
+L􏰡ij(x)=􏰡b0ij +b􏰡τijx, b􏰡 i j = ( x ̄ i − x ̄ j ) τ Σ􏰡 − 1
+(8.99)
+( 8 . 1 0 0 ) (8.101)
+8.5 Multiclass LDA 265
+￼Kj=1 fj(x,η􏰡j)πj
+where η􏰡i is an estimate of ηi. The classification rule, therefore, assigns x
+where
+􏰡 1 τ􏰡−1 τ􏰡−1 􏰦ni􏰧
+XX b0ij = −2{x ̄i ΣXXx ̄i − x ̄j ΣXXx ̄j} + loge n
+􏰦nj􏰧 − loge n ,
+￼￼￼and where we have estimated the prior πi by the proportionality estimate, π􏰡i = ni/n, i = 1, 2, . . . , K. The classification rule reduces to:
+Assign x to Πi if L􏰡ij(x) > 0, j = 1,2,...,K, j ̸= i. (8.102) In other words, we assign x to that class Πi with the largest value of L􏰡ij (x).
+In the event that the covariance matrices cannot be assumed to be equal, estimates of the mean vectors are obtained using (8.89), and the ith class covariance matrix, Σi, is estimated by its maximum-likelihood estimate,
+ni
+Σ􏰡i = n−1 􏰏(xij −x ̄i)(xij −x ̄i)τ, i = 1,2,...,K. (8.103)
+i
+j=1
+There are Kr+Kr(r+1)/2 distinct parameters that have to be estimated, and, if r is large, this is a huge increase over carrying out LDA. The resulting quadratic discriminant analysis (QDA) is similar to that of the two-class case if we make our decisions based upon comparisons of loge fi(x), i = 1,2,...,K − 1, with loge fK(x), say.
+8.5.2 Multiclass Logistic Discrimination
+The logistic discrimination method extends to the case of more than two classes. Setting ui = loge{fi(x)πi}, we can express (8.80) in the form
+eui
+p(Πi|x) = 􏰊K = σi, (8.104)
+k=1 euk
+￼
+266 8. Linear Discriminant Analysis
+say. In the statistical literature, (8.104) is known as a multiple logistic model, whereas in the neural network literature, it is known as a normalized exponential (or softmax) activation function. Because we can write
+σi = 1 , (8.105) 1 + e−wi
+where wi = ui − log{􏰊 euk }, σi is a generalization of the logistic sigmoid k̸=i
+activation function (see Figure 8.3).
+Suppose we arbitrarily designate the last class (ΠK) to be a reference class and assume Gaussian distributions with common covariance matrices. Then, we define
+￼where
+Li(x)=ui−uK =b0i+bτix, bi = (μi − μK )τ Σ−1
+(8.106)
+(8.107)
+(8.108) and use
+XX
+b0i = −1{μτi Σ−1 μi − μτKΣ−1 μK} + loge{πi/πK}.
+￼2XX XX
+If we divide the numerator and denominator of (8.104) by euK
+(8.106), the posterior probabilities can be written as
+eLi (x)
+p(Πi|x) = 1+􏰊K−1eLk(x), i=1,2,...,K−1, (8.109)
+k=1
+p(ΠK|x) = 􏰊 1 (8.110) 1+ K−1eLk(x)
+k=1
+If we write fi(x) = fi(x, ηi), where ηi is an r-vector of unknown param-
+eters, then we estimate η by η􏰡 and f (x) by f􏰡(x) = f (x,η􏰡 ). As before, iiiiii
+we assign x to that class that maximizes fi(x,η􏰡i), i = 1,2,...,K. This classification rule is known as multiple logistic discrimination.
+8.5.3 LDA via Reduced-Rank Regression
+We now generalize to the multiclass case the idea for the two-class case (K = 2), in which we showed that the LDF can be obtained (up to a pro- portionality constant) by using multiple regression with a single indicator variable as the response variable.
+In the multiclass case, we take the response variables to be a set of distinct indicator variables whose number is one fewer than the number of classes. If we know which observations fall into the first K − 1 classes, then the remaining observations automatically fall into the Kth class, and so we do not need an additional indicator variable to document that fact. The observations in the Kth class are instead each specified by a zero variable.
+￼￼
+Some have used the Kth class (which could actually be any class, not just the last one) as a reference class to which all other classes may be compared.
+As in the two-class case, the indicator variables are taken to be response variables. We now show that multiclass LDA is a special case of canonical variate analysis, which, as we saw in Chapter 7, is itself a special case of multivariate reduced-rank regression. It is for this reason that many authors refer to LDA as canonical variate analysis.
+Identifying Classes Using Indicator Variables
+In the following development, we set K = s + 1, where s is to be the number of output variables. Each observation in (8.88) is associated with its corresponding class by defining an indicator response s-vector Yij, which has a 1 in the ith position if the jth observation r-vector, Xij, comes from Πi, and zeroes in all other positions, j = 1,2,...,ni, i = 1,2,...,s + 1. In other words, if Yij = (Yijk), then, Yijk = 1 if k = i and Yijk = 0 otherwise.
+For the ith class Πi, we have the matrix,
+⎛0 ··· 0⎞
+⎜ . . ⎟ s×ni ⎜⎟
+Yi = (yi1,...,yi,ni) = ⎜1 ··· 1⎟, (8.111) ⎝ . . ⎠
+0···0
+in which all ni columns are identical, i = 1, 2, . . . , s + 1. Thus, the indicator
+response matrix Y is given by
+s×n s×n1 . . s×ns+1
+Y =(Y1 .···.Ys+1)
+= (y11,...,y1,n1,...,ys+1,1,...,ys+1,ns+1)
+⎛1···1···0···00···0⎞
+= ⎝ . . . . . . ⎠. (8.112)
+0···0···1···10···0
+Each column of Y has a single 1 with the exception of the last set of ns+1
+columns, whose every entry is equal to zero. The s-vector of row means of Y is given by
+y ̄ = n−1Y1n = (n1/n, · · · , ns/n)τ . (8.113)
+The ith component of y ̄ estimates the prior probability, πi, that a randomly selected observation belongs to Πi; that is, π􏰡i = ni/n, i = 1, 2, . . . , s, and π􏰡s+1 = ns+1/n. Let
+s×n
+Y ̄ = ( y ̄ , . . . , y ̄ ) ( 8 . 1 1 4 )
+8.5 Multiclass LDA 267
+268 8. Linear Discriminant Analysis
+denote the matrix whose columns are n copies of the s-vector (8.113), and
+let
+where Hn is the (n × n) centering matrix. Then, the entries of Yc are either
+1 − (ni/n) or −ni/n. The cross-product matrix, s×s
+s×n  ̄
+Yc = Y − Y = YHn, (8.115)
+SYY=YcYcτ =diag{n1,...,ns}−ny ̄y ̄τ, (8.116) has ith diagonal entry ni(1 − ni/n) and off-diagonal entry −nini′ /n for the
+ith row and i′th column, i ̸= i′, i,i′ = 1,2,...,s. We invert SY Y to get S−1 = diag{n−1, . . . , n−1} + n−1J , (8.117)
+YY1sss where Js = 1s1τs is an (s × s)-matrix of 1s.
+Generating Canonical Variates
+We now have all the ingredients to carry out a canonical variate anal- ysis of X and Y. The central computation involves the eigenvalues and associated eigenvectors (λ􏰡j , v􏰡j ), j = 1, 2, . . . , s, of the matrix,
+where
+s×s
+R􏰡 = S−1/2SY XS−1 SXY S−1/2,
+s×r
+SXY=XcYcτ =(n1(x ̄1−x ̄),···,ns(x ̄s−x ̄))=SτYX.
+(8.118)
+YY XX YY
+(8.119) We recall the following fact from Section 7.3. The jth largest eigenvalue,
+λ􏰡∗j, and associated eigenvector, v􏰡j∗, of the matrix r×r
+R􏰡 ∗ = S−1/2 SX Y S−1 SY X S−1/2 XX YY XX
+are related to those of R􏰡 by
+v􏰡j = S−1/2SY XS−1/2v􏰡j∗,
+j = 1,2,...,min(r,s). Notice that R􏰡∗ depends upon Yc through the pro- jection matrix
+n×n τ−1
+Py = Yc SY Y Yc (8.123)
+onto the columns of Yc. So, for any set of vectors that spans Yc, R􏰡∗ will be unchanged.
+λ􏰡j =λ􏰡∗j,
+YY XX
+(8.120)
+(8.121)
+(8.122)
+We rescale v􏰡j∗ by setting
+γ = S − 1 / 2 v􏰡 ∗
+( 8 . 1 2 4 ) (8.125)
+j XXj
+= λ􏰡−1S−1 SXY S−1/2v􏰡j, jXX YY
+j = 1, 2, . . . , min(r, s). From (8.122) and (8.125), we have that the (r × r)- matrix SB in Table 8.5 can be more easily expressed as
+r×r −1
+SB= SXY SY Y SY X. (8.126)
+Writing out the jth eigenequation R􏰡v􏰡j = λ􏰡jv􏰡j, premultiplying both sides by S−1/2SXY S−1/2, and then using (8.126), we obtain
+XX YY
+SBγj =λ􏰡j(SB +SW)γj, (8.127) which shows that γj is the eigenvector associated with the jth largest
+eigenvalue λ􏰡j of the (r × r)-matrix (SB + SW )−1SB. Rearranging (8.127), we have that
+where
+SBγj = μjSWγj, (8.128) μj = λ􏰡j , j=1,2,...,min(r,s). (8.129)
+8.5 Multiclass LDA
+269
+￼1 − λ􏰡 j
+In other words, the eigenvalues and eigenvectors of R􏰡 are equivalent to
+the eigenvalues and eigenvectors of S−1SB (or of its symmetric version W
+S−1/2SBS−1/2). In general, the (s × r)-matrix S−1SB has min(r, s) = WWW
+min(r, K − 1) nonzero eigenvalues. If K ≤ r, then SB will not have full rank, resulting in r − s = r − K + 1 zero eigenvalues.
+From (7.72) and (7.73), we set
+g􏰡 τ = v􏰡 τ S − 1 / 2 S S − 1 ,
+( 8 . 1 3 0 ) ( 8 . 1 3 1 )
+jj
+j jYYYXXX
+h􏰡 τ = v􏰡 τ S − 1 / 2 , jjYY
+j = 1,2,...,t. Then, from (7.69), we calculate the jth pair of canonical v a r i a t e s ( ξ􏰡 , ω􏰡 ) , w h e r e
+ξ􏰡 = g􏰡 τ x = γ τ x , jjcjc
+ω􏰡j = h􏰡τj yc = γτj SXY S−1 yc, YY
+( 8 . 1 3 2 ) (8.133)
+j = 1,2,...,t. In (8.132) and (8.133), xc = x − x ̄ and yc = y − y ̄, where x is an observed r-vector, and y is an indicator response s-vector. The coefficient vector
+γj = (γj1,···,γjr)τ (8.134)
+270 8. Linear Discriminant Analysis
+is the jth discriminant vector, j = 1, 2, . . . , min(r, s). The first LDF evaluated at xc is given by
+ξ􏰡 = γ τ x ( 8 . 1 3 5 ) 11c
+and has the property that, among all such linear combinations of the xs, it alone can discriminate best between the K classes. The second LDF is given by
+ξ􏰡 = γ τ x ( 8 . 1 3 6 ) 22c
+and is the best discriminator between the K classes among all such linear combinations of the xs that are uncorrelated with ξ􏰡 . The jth LDF,
+combinations of x that are also uncorrelated with ξ􏰡 , ξ􏰡 , . . . , ξ􏰡 . c 12 j−1
+There are at most min(r, K − 1) such linear discriminant functions. One
+problem is to determine the smallest number t < min(r, s) of linear discrim-
+inant functions that discriminates most efficiently between the K classes.
+In practice, it is usual to take t = 2, so that only ξ􏰡 and ξ􏰡 are used in 12
+deciding whether sufficient discrimination has been obtained.
+Graphical Display
+(8.138) (8.139)
+(8.140) (8.141)
+1
+( 8 . 1 3 7 ) is the best discriminator between the K classes among all those linear
+ξ􏰡 = γ τ x , jjc
+Consider the kth observation xik (in Πi) and its associated indicator responsevectory .Weevaluateξ􏰡 atx=x andω􏰡 aty=y .Set
+ik j ik j ik (i) τ
+ξ􏰡 =γ(x−x ̄), jk jik
+ω􏰡 ( i ) = γ τ S S − 1 ( y − y ̄ ) , jk j XY YY ik
+k = 1, 2, . . . , ni, i = 1, 2, . . . , s + 1. Then, we form the row vectors
+ξτ j
+ωτ j
+= =
+(ξ(1),···,ξ(1) ,···,ξ(r+1),···,ξ(r+1)), j1 jn1 j1 jnr+1
+􏰡􏰡􏰡􏰡
+(ω􏰡(1),···,ω􏰡(1) ,···,ω􏰡(r+1),···,ω􏰡(r+1)), j1 jn1 j1 jnr+1
+of jth discriminant scores, j = 1, 2, . . . , min(r, s). From (8.117) and (8.119), we have that
+SXY S−1 = (x ̄1 − x ̄s+1, · · · , x ̄s − x ̄s+1), YY
+whence, from (8.138) and (8.139),
+(8.142)
+( 8 . 1 4 3 )
+(i) τ (i) τ
+ξ􏰡 = γ ( x − x ̄ ) , ω􏰡 = γ ( x ̄ − x ̄ ) , jkjik jkji
+are the kth components of the jth pair of canonical variates evaluated for
+Πi. But,
+so that
+ni
+x ̄i − x ̄ = n−1 􏰏(xik − x ̄),
+(8.144)
+(8.145)
+􏰡􏰡
+(i)
+ω􏰡 =n
+(i)
+ξ􏰡 =ξ ̄ , k=1,2,...,ni.
+ni
+−1 􏰏 (i)
+jk i ja j a=1
+i
+k=1
+In other words, the canonical variates evaluated at the indicator response variables are the class averages of the canonical variates for the discrim-
+􏰡
+space generated by these coordinates is called the discriminant space. To visualize graphically whether the discriminant coordinates emphasize dif- ferences in class means, it is customary to plot the n points
+on a scatterplot and, taking note of (8.145), we also plot a point represent- ing the respective mean of each class,
+(ω􏰡(i),ω􏰡(i)), k=1,2,...,ni, i=1,2,...,s+1, (8.147) 1k 2k
+superimposed on the same scatterplot.
+8.6 Example: Gilgaied Soil
+These data3 were collected in a study of gilgaied soil at Meandarra, Queensland, Australia (Horton, Russell, and Moore, 1968). Three micro- topographic classes based upon relative contours were classified as follows: top (> 60 cm); slope (30–60 cm); and depression (< 30 cm). The area was divided into four blocks, and soil samples were taken randomly within each microtopographic class at depths of 0–10, 10–30, 30–60, and 60–90 cm. See Table 8.9.
+Chemical analyses on nine variables were carried out for each soil sam- ple in the four blocks of the (3 positions × 4 depths) 12 groups, yielding a total of 48 soil samples. The variables are pH; total nitogen (N); bulk- density (BD); total phosphorus (P); exchangeable + soluble calcium (Ca); exchangeable + soluble magnesium (Mg); exchangeable + soluble potassium (K); exchangeable + soluble sodium (Na); and conductivity of the saturation extract (cond).
+3These data can be found in the file gilgaied.soil on the book’s website.
+inating variables. The {ξ(i)} are called discriminant coordinates and the jk
+(ξ(i),ξ(i)), k=1,2,...,ni, i=1,2,...,s+1, (8.146) 1k 2k
+8.6 Example: Gilgaied Soil 271
+￼￼
+272 8. Linear Discriminant Analysis
+TABLE 8.9. Group numbers by depth and microtopographic position (T.P.) of gilgaied soil.
+Soil Depth
+T.P. 0–10 cm 10–30 cm 30–60 cm 60–90 cm
+Top ABCD Slope E F G H Depression I J K L
+The first two LDF scores are computed using (8.143) and plotted in Figure 8.5. Also plotted on the same graph are the projected class averages (i.e., the letters A–L) of the 12 classes. We see that the projected class averages are plotted in roughly the same two-way position as given in Table 8.9 (with curvature). There is quite a bit of overlap of class points in this 2D discriminant space. In fact, the apparent error rate is 7/48 = 0.146, and the leave-one-out CV misclassification rate is 31/48 = 0.646. The curvature in the plot suggests that QDA may be more appropriate than LDA, but with only four observations in each class, QDA would fail. Another possible explanation is that the soil depths are not uniformly spaced; see Exercise 8.1.
+8.7 Examples of Multiclass Misclassification Rates
+In this section, we summarize how well LDA and QDA perform when applied to a wide variety of well-known multiclass data sets.4 These data sets, which are listed in Table 8.10, are
+Diabetes These data resulted from a study conducted at the Stanford Clinical Research Center of the relationship between chemical sub- clinical and overt nonketotic diabetes in non-obese adult subjects. The three primary variables are glucose area (a measure of glucose intolerance), insulin area (a measurement of insulin response to oral glucose), and SSPG (steady-state plasma glucose, a measure of insulin resistance). In addition, the relative weight and fasting plasma glucose were measured for each individual in the study. The three clinical classifications are overt diabetic (Class 1, 33 individu- als), chemical diabetic (Class 2, 36), and normal (Class 3, 76).
+4These data sets can be found at the book’s website. The data and descriptions are taken from the UCI website, with the exception of diabetes, which originated from Andrews and Herzberg (1985, Table 36.1, pp. 215–219) and can be found in the Andrews subdirectory at the StatLib website, and primate scapulae, details of which can be found in Section 12.3.6.
+￼￼￼￼￼
+8.7 Examples of Multiclass Misclassification Rates 273
+￼￼￼￼￼￼￼AAAA
+EEEE
+IIII
+BBBB
+FFFF
+JJJJ
+CCCC
+GGGG
+KKKK
+DDDD
+HHHH
+LLLL
+￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼3
+1
+-1
+-3
+-5
+￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼-8.5 -6.0 -3.5 -1.0 1.5 4.0 6.5 1stLinearDiscriminantScore
+FIGURE 8.5. LDA plot of the gilgaied soil data. There are 12 classes, A– L, and each class has four points. The projected class means are overplotted as letters and appear in roughly the same two-way position as given in Table 8.9, albeit with some curvature.
+E-coli These data were obtained in a study of protein localization sites for 336 examples of E. coli. The variables are mvg (McGeoch’s method for signal sequence recognition), gvh (von Heijne’s method for signal se- quence recognition), lip (von Heijne’s Signal Peptidase II consensus sequence score), chg (presence of charge on N-terminus of predicted lipoproteins), aac (score of discriminant analysis of the amino-acid content of outer membrane and periplasmic proteins), alm1 (score of the ALOM membrane spanning region prediction program), and alm2 (score of the ALOM program after excluding putative cleav- able signal regions from the sequence). There are 8 localization sites (classes): cp (cytoplasm, 143 examples), im (inner membrane without signal sequence, 77), pp (perisplasm, 52), imU (inner membrane, un- cleavable signal sequence, 35), om (outer membrane, 20), omL (outer membrane lipoprotein, 5), imL (inner membrane lipoprotein, 2), and imS (inner membrane, cleavable signal sequence, 2).
+Forensic glass These data were collected for forensic purposes to deter- mine whether a sample of glass is a type of “float” glass or not. There are 6 types of glass used in this data set: building windows float processed (70 examples), building windows non–float processed
+2ndLinearDiscriminantScore
+274 8. Linear Discriminant Analysis
+(76), vehicle windows float processed (17), containers (13), tableware (9), and headlamps (29). The variables are RI (refractive index), Na (sodium), Mg (magnesium), Al (aluminum), Si (silicon), K (potas- sium), Ca (calcium), Ba (barium), and Fe (iron).
+Iris These are Edgar Anderson’s iris data made famous by R.A. Fisher. There are 150 observations made on three classes of the iris flower. The classes are Iris setosa, Iris versicolour, and Iris virginica, with 50 observations on each class. Four measurements (in cm) are made on each iris: sepal length, sepal width, petal length, and petal width.
+Letter recognition The 26 capital letters of the English alphabet were converted into black-and-white rectangular pixel displays by using 20 different fonts, and each letter with these 20 fonts was randomly distorted to produce a file of 20,000 unique observations. Each ob- servation was converted into 16 primitive numerical variables, which were then scaled to fit into a range of integer values of 0–15. The number of observations for each letter ranged from 734 to 813.
+Pendigits These data were obtained from 44 writers, each of whom hand- wrote 250 examples of the digits 0, 1, 2, . . . , 9 in a random order. See Section 7.2.1 for a detailed description.
+Primate scapulae These data consist of measurements of indices and an- gles on the scapulae (shoulder bones) of five genera of adult primates representing Hominoidae: gibbons (Hylobates), orangutangs (Pongo), chimpanzees (Pan), gorillas (Gorilla), and man (Homo). The vari- ables are 5 indices (AD.BD, AD.CD, EA.CD, Dx.CD, and SH.ACR) and 2 angles (EAD, β). Of the 105 measurements on each variable, 16 were from Hylobates, 15 from Pongo, 20 from Pan, 14 from Gorilla, and 40 from Homo.
+Shuttle These space-shuttle data contain 43,500 observations on 8 uniden- tified variables, and the observations are divided into 7 classes: Rad Flow (1), Fpv Close (2), Fpv Open (3), High (4), Bypass (5), Bpv Close (6), and Bpv Open (7). Class 1 contains about 78% of the data.
+Vehicle This data set was collected by the Turing Institute, Glasgow, Scotland, in a study of how to distinguish 3D objects from a 2D im- age. The classes in this data set are the silhouettes of four types of Corgi model vehicles, an Opel Manta car (240 images), a Saab 9000 car (240), a double-decker bus (240), and a Chevrolet van (226), as viewed by a camera from many different angles and elevations. The variables are scaled variance, skewness, and kurtosis about the ma- jor/minor axes, and heuristic measures such as hollows ratio, circular- ity, elongatedness, rectangularity, and compactness of the silhouettes.
+8.7 Examples of Multiclass Misclassification Rates 275
+Wine These data are the results of a chemical analysis of 178 wines grown over the decade 1970–1979 in the same region of Italy, but derived from three different cultivars (Barolo, Grignolino, Barbera). The Barbera wines were predominately from a period that was much later than that of the Barolo and Grignolino wines. The analysis determined the quantities of 13 constituents found in each of the three types of wines: Alcohol, MalicAcid, Ash, AlcAsh (Alcalinity of Ash), Mg (Magnesium), Phenols (Total Phenols), Flav (Flavanoids), NonFlavPhenols (Non-Flavanoid Phenols), Proa (Proanthocyanins), Color (Color Intensity), Hue, OD (OD280/OD315 of Diluted Wines), and Proline. There are 59 Barolo wines, 71 Grignolino wines, and 48 Barbera wines.
+Yeast These data were obtained in a study of protein localization sites for 1,484 examples of yeast. The variables are mcg, gvh, alm (see E- coli), mit (score of discriminant analysis of the amino-acid content of the N-terminal region, 20 residues long, of mitochondrial and non- mitochondrial proteins), erl (presence of HDEL substring, thought to act as a signal for retention in the endoplasmic reticulum lumen), pox (peroxisomal targeting signal in the C-terminus), vac (score of discriminant analysis of the amino-acid content of vacuolar and ex- tracellular proteins), and nuc (score of discriminant analysis of nu- clear localization signals of nuclear and non-nuclear proteins). There are 10 localization sites (classes): cyt (cytosolic or cytoskeletal, 463 examples), nuc (nuclear, 429), mit (mitochondrial, 244), me3 (mem- brane protein, no N-terminal signal, 163), me2 (membrane protein, uncleaved signal, 51), me1 (membrane protein, cleaved signal, 44), exc (extracellular, 37), vac (vacuolar, 30), pox (peroxisomal, 20), and erl (endoplasmic reticulum lumen, 5).
+Table 8.10 lists the leave-one-out CV misclassification rates for LDA and QDA for each data set. The prior πi was estimated using the proportion- ality estimate, π􏰡i = ni/n, i = 1,2,...,K. These multiclass data sets have quite varied CV misclassification rates. For the diabetes, glass, letter recognition, pendigits, vehicle, and wine data sets, the QDA misclas- sification rate is smaller than the LDA rate, whereas the reverse happens for the iris and primate scapulae data sets. Note that if any data set has a class with fewer observations than r, then that class’s estimated covariance matrix is singular, and QDA fails.
+In Figure 8.6, we display the LDA plots corresponding to the six data sets iris, primate.scapulae, shuttle, pendigits, vehicle, and glass. They are arranged according to their estimated misclassification rates, as listed in Table 8.10.
+We will be comparing these methods with other classification methods using the same data sets in later chapters.
+276
+8. Linear Discriminant Analysis
+Iris
+Prim ate Scapulae
+￼￼￼￼13 333
+3
+￼33
+11 1 33333 1 3333
+111111 223
+11 2 3333 11111111 233333
+￼￼11111 223333
+1111111 111111
+111111 1111
+2 2222 22222 3 333333 222222222 3 33
+3
+2 22 23 3 3
+￼222223 33 22223
+22222 22 2 122
+33
+￼￼22
+￼￼￼￼￼￼￼￼￼￼11
+1
+1 1
+11 1111
+￼1 11
+1
+1
+222 22
+2
+4 555555 33 3 444434 55555555
+33 34 4444 5 55 333 5
+3334
+222
+22 2 2 2 5 5
+￼4
+3 4 5555555
+3
+5
+5255 5
+5 555555 5
+￼333 33
+￼￼￼￼￼￼￼￼3 2 1 0 -1 -2 -3
+7
+3
+-1
+-5
+￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼-7 -2 3 8
+1stLinearDiscriminantScore 1stLinearDiscriminantScore
+Shuttle Pendigits
+5
+0
+-5
+-8.5 -6.0 -3.5 -1.0 1.5 4.0 6.5
+￼￼￼5 55
+55 5
+￼1
+1
+5
+5
+6
+6 555
+66 6
+65
+11 111 1 1111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111131131111111113111111111111111111111111311111111111111111111111111111111111311111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111311111111111111111111111111111111111111111111111111111111111111111111111111111111131111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111311111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111131111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111311111111111113111111111111111111111111111111111111111113111111111111111111111113111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111131111111111111111111111311111111111111111111111111131111111111111111111111113111111111111111111111111111111113111111111111111111111111111111111111111111111111111111111111131111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111113111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111131111111111111111111111111131111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111311111111311111111111111111111111111111111111111111111111111111111111113111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111131111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111311111111111111111111111311111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111131111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111131111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111311111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111113113111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111131111111111111111111111111111111111111111111111111111111111111111111111111111113111111111111111111111111111111111111111111111111111111111111111111111111111111111111111113131111111111111111111111111111111111111113111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111131111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111311111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111311111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111113111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111113111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111311111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111113111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111121111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111121111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111311111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111311111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111121111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111121111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111112111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111211111111111121111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111121111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111121111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111121111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111114111111111111111114111111111111111111111111111111111111111111111111111111111111111111111111111111111111111141111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111141141111411111411111111111111111111111111111111111114111111111111111114111111111111111411111114111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111121111111111111111111111111111111111111111111111111111111111111111111111111111111111111141111111111111141111411111111144111114111111111111111111111111111111111111111111111411111111111141111111111144144144114144414444411111141114411114111111111411141141111111111111111111141444141441414114444441411111111411111111111141411141144114114111141441114111111111114111111111111111111111141111111111111141111111111141111114111111111111111141111111111111141111111114111111111141111114111411214111414414411111111414114411411114111111114144414111441411114441111111111144111111111111111411111114114144414444441441144444414444141444444144114114144141444444141444144144144414441444444441141441114411111114111111114111141114114441411111411111111111111111111111111111111111114141111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111411111141111111111131111111111111111111111111411141411111111141111111111114111111111111111111111141141414141111111111411111111141111114111111111111141411111144141411441411141441444441444144441444114441141414414444444144144144141144444144411144444144411444144411444111411411144411114111441141444141144444141114144111111141411141411444111411111114441111141111111444414111111414444144444114444111144444111411114111111141441444141144111114444444444144111144414144444444144441411411414441114114114144111441414411411111441144144411411411441141414414441444414441111144411111414144141111111111111411141114111113111111111144444441111141414114111441414441144444444111441441441441441111411414114111411141414444444444114114144414414144414141144111441411414444444144144414441114114444444444414411444444414444444441144141414144441414144444411444444444144444444444444444444444444444444444444444444444444414441441444444444444444414414444444444144444444444444444444444444144444441444144444444444414441444444444444444444414144441414441444144411144444441444444444444141414444444144444144444444144444444114144444414414444414444444444444414414441444114444444441441444444414414444144444444444444414141411441444411411444111441141411444411444411141144144414444141111444444444411414141144444144141444344141431444411111114141144441141144144144444444444144111414411114441414111441144141144444444444444111444441141444441444114444444144111114444441114141141114114441114141111111444141441141444441144444414441144444443411414444444144441344441441144414444444444144111141441144144114444444414444114444444444411444414444144441444444444444444444444444444444444444444444444444444444444444444444444444444444444444441444414144444444144441444444444444441444144444444414144414444444444444444444444444444444444444441444444141444444444444141444441444444444444444114444144444444441444444444444414444444141444144441444414144444444414144111414441444441444444444444444144444441441444444444444444144411144444414444444444444444144444444444444444444444444444444444414444414444444444444444444414444444444444444441441444414444444444444141444444444444411441434444444444441444444441444144444444444444444444444441144441444444444414444444444444144111411414441444444141444144444114144441144444444441411444444141444141414441441444414414444144444444144444434444444144414144441444441414444443444444444443444444444434444443444344444444444444444444444441444444444414444444414444444414444444444441441444414414444444444414444444444441141144444441442444444144444444444144444414444414444444444444144444444444444444444444444444444444444444444144411441444444444444444144444444444444444444444444444444444444444444444444444444444444444444444444444444443444444444444444444444444444444444444344444444444444444444444444444444444344444444444444444444444444444414444444444444444444444444444444444444444444444444444444444444444444444444444444444144444444444441144414441444444444444444441444444444444444444444444444444444444444444444444444444444444444444444444444444444414441444444444444444444444444411444444444444444414444444441444444444444444444444444444444444444444444444444444444444444444444444444444444144444444444444444444444444444444444444444444444444444444444444444444444444444444434444441134144111114441141411444114411114441114144144414111141111414411414414144444444444444444444444444144414444444441444444444444444444444444444444444444444444444444444444444444444444444444444444444244444441444141114444414441414444444444444444444444444444444444444444444444443444444444444444444444441413444444444444444114414444441444444344441444441444444444444444444444444444444444444444444444441444444444444444444444444444444444444444444444441444444114441444411444444411141414414411444444434444141144441413444444444141414441344444144441441444444444444444444444444414114144411144141111134441444414444444144444141144444444444414444444144444444444444444444444444444444444444444444424444444431141111444441444414444414444441444441141414444441444144411414444334441411444441444414114144441444444444444444144111411134444444444444444444444444444444444444444444444444444444444444444444444444444444444414444114144411114111111411441431413141114414441141444444144444444444444414444444444444444444444444444441444444444114414441441414444111111414444444114444441414414441414341411111111111411311141144411444141111444444444444444244444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444114444444444444414444144444144411444441114441411414444441444441441444441444442444444441414444144144144411144444444444344444144444444444444144444444444444444441311111111111414141414441144414111144141144144444144444444144444414444444414444441444441441444444444444444444444414414444444444444414444444444114444414444444414444444441111114444444444444444444444444444444444444444444444444444444444444444444444444444311144444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444411241141441441114444444444441444444444441414444444444444444444444444444443443444444444444444444414444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444434444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444442444444444442434343444444444444444444444444444444444444444444444444444444444444444444334443444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444344444444444444444444442344444444444444444444444444444444444444444444444444444444444444444444444444444444444344444444444424444434424444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444344444444444444444444444444444444444444444444444444344444444444444444444444444444444444444444444444444444444444444444443444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444344444444444444444444444444444444444444444444444444444444444444445444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444544444444444444444444444444444444334444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444443444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444434444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444344434444444444444444444444444444444444444444444444444444444444444434444443444444444443444444444344444444444444444444444444444444444444444444333332134333 3323 33323353332332552255552555555555555555555555552555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555255555555555555555555555552555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555252552555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555551555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555554555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555 5 55 5 5 5555
+1111 777177 1
+1
+1
+7
+7 777
+￼4
+￼71
+￼￼￼￼￼￼￼￼￼￼￼￼￼￼0
+6
+4 44444444444 4444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444 4
+0 4 6 4446644444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444
+4 4 44444
+6666 66666466666 44444496494496499444444449494444444444444444444444444449444444444444444444444444444444444444444444444444044444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444 444
+66 6696966666666696664644944449464999644446444444444444494494444444444444444444444444444444494444444444444444444444444444444144444444444444444444444444444444444444444444444444444444444444444444 4
+666 666696996696666666966666666996669666696669669666666660666964696466666649646666666664696446996646666666664444649449469446944444644444466444444446646944444444449444449444440944444499494444449449494444444944944444944444944441944947994449944944494449444444449444444444444949444449444494444444449444444444444444444444444444444444444444441444444444444444444444444444444444 44
+6 6696666666696666666666666666660696666660666666666666666696606999966696369666966606666666666666969666666666666606669660666666669996666606666666666666669666660666966066644656966669066990664466946609600459664066604644664959464944444444440944909994999999949499974994441499194444494441949994444474449944994947914447949444499944744414147414944444141441444444111411 4 2 2 2 2
+0 06660606660666666666666066666666666666669666966696666966666666999696969696966966696699066666666669696966666696696666966005006606666666066666654950556645545559045595009095045056499996996444949499604949444491777969744444999494447777791444141147474191 4 22222222 22 2
+￼6 000666666666666666666666666666666606666666660666666666666666666666666666660666666066666606966666066666669966699966966696966966666666099969666966500099966960696660966569665566699609556956656550956699556065460544060595955559055955555956995555595595569595559505999595959999901995999944999999999949919495999949944441944499979949474 99477499119149919999199919 2 2221222222222222222222
+0 600060666666666660666666066666006600666666666666606066666066666666066965660696696666666600666005666666666966669060690666696666065669666096699650969666996090555966996699655695959955996565599165969505555595559599556555996999699059955959995599999519595999095559999999999199999999699599999999099999919496990999999949949199994491979119799999931991997199111327119719 122122212222222222222122222222222222222222222222222222222222222222222
+0 8 60 000 0000060606066066006066066660666666066066066060066606660006666666666066066666006006666660669666665606606666666666965666666959596666660566906990966099906990595905955595995955995565965699599599959999595999595959959559999565559999559195991999999959991919919959999915995999151199969191999995199919119919199519995191599999999999599999199999995999559991495999991991 1914411999991999771919111999199111111997917199131171111111131111119212131111111111111111211121121272122211222222222222222222222222222222222222212222222222222222222221222222222222222222222222222222222
+8 0 8 00 0000000000000000000600000000000000000600000000000006000000000000000000000600000000000800000000000660000000000000000000060000000000660000000000006000006600800006600600600000660000000000606600060600660000000066000066000066660066006000660006000000660600066000066006660606060000606060000606066606606000606060006660666660006606666050060666066606666666066566060660666666696666666606096666666666666666666866666666509606605006666606666665066966666605666999595659660696999965599965595099995999695999909699995099559099596956995566995999999999599999999999969999996995965999999999999999999599999955009599999959959995999999955599955999969959999999999965999959999999991999999999999996959599999999999999995999919999995991999585959919999199919999999999359955999999999999999999591919999999959999599199959999919919119199195991951999559999919995591595999111995959599995139999319959995959555591959391559591955993515559999155559515559993155515155595553995915951955511159959995155151915905951195535999551399597119913133539319193193711113533391131131313911319111113111113311311133133311119339913311919111733117719197911191111711111111113711919339931311911111111131711171733317131111711131311111171333177141197371711131317111111111113113111131111771117317113773191117171113173111111197711311177111131131111771171313133711111773331117911313111337137771317393113173773111371737777771177131111377179733321371937177377111711217317111713111213131172711272111211171113112117312123131311111111121311211273112213772722111111371222111212211122111227231217121111122112111112217121221722121111122122221711111111212111112221111717111111111212111111221112222221112222211111112111121111211111111212111211223211122212111111111212112111211222112121211111172111211112111211212112221212112112222122212212121221211222211211212122211111221121122212222221212221221211211112221121211122212121212212222122122122221221222222211121222222222121122222222222222222211222222222212222222221222222222222212222221222222212222221222222222222211222221222222222222122222222122222222222222222222222222222222222222222222222222212222222221222222222122222222222222222222222122222222222222222222222222222222222222222222222122222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222222223 0000000000000000000000000000000080000000000000000000000000000000000000000000000000000000000000000000000600000000000000000000000006600060000006000000000 0006 60 5 66659666 666666665658966666696996969989999999999999999865995599551599956559399555999159535153351513555159511155333353153751131311553535153111337331333331133353371111331331331313331111331331133333713339311331113137333313313791313137133331337733317131333333131377733733173131313713717133711331317173117111317171311773331171117712737713777737777771771137172123211771212111111271177212721117177211211112111111121111212111211121111112121122212112211212112121212122111212222212222212222222111272221222211222222212122222222222122222222222222222222222222222222222222222222222222222222222222222222222
+0 0800000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000006000000000000000000000000000080000000000000000000000068000800000000800080000000000000080000060060000800000008000608066000 605 5 86555655666566555666555658655865559695998959569658999956799968995698559699995959588585955153357533513333513511353355311353553313353353333353331153131131353333531353335333513133335353333113553133333333333513911533333311533133313313331351333335333313333311133333531313333733333133333333333333311333733353333133313333333335331333133713333337131133533333373331119733133333133337737331333333333333333733333333333137373333137717331375337333331331337333337331373333333333333713313733333377333337153377331111113371377771313337331371337173371337377717337731773777111177377777177177137717117777717377777773371131377737777737717771777717137771177777777177771777771777727771217171771777112112122717112117727172121271121212177222211221211212212222221222222212222222221222212121222122122222222222221122222222222222222222222222222222222222222222222222
+8000000800000000000000000000000000000000000000000000000000080000000000000000000000000800000000000000000808000000080000000000000000000000008008000000000080000068080000000080000080800800088608008080080068 65500055858565555565586585556555585555555506585555955055555558555555555565585555689658885585855555885658588588698858888988878788698788775553358339593335585375333336735533133133355313533335133353333333331131533333733333333111531351333133333333335533133331333373733515333333311333533133333535333151133535535717131333115331333133335351373153733133173333337333333713373115355353333113353331373733313373777111337333313337337533357373177331333337713317113373773373331737137733313375373731333733333773353717333337337377331113737731337733373713333373777737377771777373173777733377737713371373777773711333733721357317317777773177537777131773777157737773771737377777337773177377731777777317377773777777373771777777777177117777771717777777777777777777777777177777737377717777777772777777177272727172727122222722222221 12222222222222
+0 000000000000000000000000000808000800000000000000000000800008088000000000000000800000800800000088008088088088880000808080880088888888880888808088800888888888088088808888888088888888888808880888808895588588585888858558555885585555805855555655805855555555855555655550888585555555555555550555556855855855555555556555555585588559655855555555555858555585555755555555558555555855858555555555555855755555555555555558555555555555555558555555555955585555586555055585599555555555555585556550555555595505855555555995885558555855555555855555585555558588555887595585787855758878888069875888887985588887878888877888987888778887387737388537989788833879887573738333738838333833533933513333533733333333733373337333333333333333333333333733337333337333335333533137373317173333333733333333333333331733333333333133337313333333377737113313377331773773773713733753773333773773517773331313733733317373171731173733773313773177173711777771733771113777773777773177577173777773771377373737717777777777177737777157777177175777777775777777777777771577777177777777717777377777777717777777777777777777177177717777777777777777777777777777777777777777377777777777777777777777777777777771777777777377777777777777777777777777777777772 22 2
+0 0000000800000080800808008080088088888088888888808888888888888888888880888888888888885888888588888585888555555588555585585585585558555855558555555885955555555855855588058555585555585555885555988558555565555055555585555855558855550555585755878888588888087888888777787387808338787333733533333337773373373377337777373373733173777777777777777777777777777177777777777777777777777777777777777777777777777 0008 880 8888888888888888888888888888888888888888888888088888888888888888888888888888888888888888888888888888888888888888888898888888558858888888888888888585858008558885859858568888555585555858555585058558555858585885555587585555885555858855588558558555555855855595855555555855558588878558558977797798978878988733333383777737777377777737777777777777777777777777777777777777777777777777777777777777777 77 7 0 0 00 8888888888088888888888888888888888888888888888888888888888888588888888888888888888888880888888888888888888888888888888888888888088588888888888888888888555888888888855858888888588855505855885585589558555555558858558558855888 98888 77773 37777777777777777777777777777777777777777777777777777
+￼80888880888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888858888888888855555885888585888885888885785855 5 88 3 77 77777 7 7 0 8889 88888888888888888888888888888888888888888888888888888 888888888 8 8 7
+888888888 88888888888888888888 8
+8 888888888 88 8 8
+￼￼￼￼￼￼￼￼￼￼￼￼50
+0
+-50
+￼￼￼￼￼-100 -10
+-20-15-10-5051015 -9-7-5-3-1135
+￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼1stLinearDiscriminantScore 1stLinearDiscriminantScore
+Vehicle Glass
+￼￼￼￼44 444 444444 44444444444444444444444444 4 4
+4444444 44444 44 4 4 44 44444444444444444444444444444444444 4 4
+4 4 2 1 444144444444444444 444444444444444 4444 44 1142 24124222441244444444444444244444443244444
+3
+44
+4
+44 4444
+4 444444
+￼￼122242444
+122 221421122421244421411444343 3333333
+3
+2 224121112141 33433333
+2 22 2 212 2121222221221 12132 33133 333333333333 3333 2 221111112 11212121112221 312313331333333333333333
+￼22
+2 1222222211212121211221222211222121111121221122112122212111212211 111212312133133333333333333333333333333333333333 33333 3
+2 122122212221122112111122222111122221112 433333323333333333 3
+2 22 22 2211122 122121111111212222112222221122111221111112112 11112122 112 21323 33333 33333 3333333 3 3 33 3 3
+222212112222121121212111221211121 2111112111121
+2
+2
+21212 122111 121221132211122222211121 2 212121111121112111222221111 2211
+1 22 2111 11
+3
+2 23333 333333 3 3
+231 2333 3333333 33 33 3 3 3333333 33333333 3
+11 33
+￼2
+2 33333333333 3333 3 33 3 33 3
+211 1 13
+￼￼￼￼￼￼￼￼￼￼￼￼￼1
+2
+1
+1111 1 1 1 1111111 11 11
+6 77 7777 7 77777 7
+1
+7 77
+7 7 77
+11111 111111111111111
+1 1
+7 7
+5
+11111 222222222 222 55 2222 5665
+2
+111111112 22 6
+2
+11111 11111111 222222222 2 6767
+7
+7
+￼￼2 22 22 222 576 7 222222222222222 56 75 22 22 22222223232 56
+￼2 22333335 5 2222333333 5
+1235 33
+￼￼3
+￼￼￼￼￼￼￼￼￼￼5
+￼4 32 0 -2 -4 -6
+-5
+-6 -4 -2 0 2 4 6 8 -8.5-6.0-3.5-1.01.54.06.59.0
+1stLinearDiscriminantScore 1stLinearDiscriminantScore
+FIGURE 8.6. LDA plots of Fisher’s iris data, primate.scapulae data, shuttle data, pendigits data, vehicle data, and glass data.
+￼￼￼￼1
+-1
+-3
+￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼2ndLinearDiscriminantScore 2ndLinearDiscriminantScore 2ndLinearDiscriminantScore
+2ndLinearDiscriminantScore 2ndLinearDiscriminantScore 2ndLinearDiscriminantScore
+TABLE 8.10. Summary of multiclass data sets. Listed are the sample size (n), number of variables (r), and number of classes (K). Also listed for each data set are leave-one-out cross-validation (CV/n) misclassification rates for linear discriminant analysis (LDA) and quadratic discriminant analysis (QDA). The data sets are ordered by size of the LDA misclassification rate. For each data set, the proportionality estimate was used for the priors. If a class has fewer than r members, QDA will fail.
+8.8 Software Packages 277
+￼Data Set Wine Iris Primate scapulae Shuttle Diabetes Pendigits E-coli Vehicle Letter recognition Glass Yeast
+n r K LDA 178 13 3 0.011 150 4 3 0.020 105 7 5 0.029
+43,500 8 7 0.056 145 5 3 0.110 10,992 16 10 0.124 336 7 8 0.128 846 18 4 0.221 20,000 16 26 0.298 214 9 6 0.350 1,484 8 10 0.411
+QDA 0.006 0.027 0.057
+0.097 0.017
+0.144 0.114 0.140
+￼￼8.8 Software Packages
+￼All the major statistical software packages contain routines for carrying out LDA and QDA. Misclassification rates are computed in these pack- ages by a number of methods, including the apparent error rate and cross- validation. Logistic regression is usually included within the regression methods in the packages. LDA is included as a special case of multivari- ate reduced-rank regression in the RRR+Multanl package, which can be downloaded from the book’s website.
+Bibliographical Notes
+Since Fisher (1936), LDA has seen applications in many different ar- eas. Theoretical accounts of linear discriminant analysis may be found in Anderson (1984, Chapter 6) and Seber (1984, Chapter 6). More recent ac- counts are given in Ripley (1996, Chapter 3), Johnson and Wichern (1998, Chapter 11), Hastie, Tibshirani, and Friedman (2001, Chapter 4), Rencher (2002, Chapters 8, 9), and Bishop (2006, Chapter 4). A Bayesian approach is outlined in Press (1989, Chapter 7) and a nonparametric (kernel) ap- proach in Hand (1982). The idea of using a regression model to carry out LDA can be found in Fisher (1936).
+￼
+278 8. Linear Discriminant Analysis
+Exercises
+8.1 How would you use the information in Table 8.9 to carry out a two-way LDA on the gilgaied soil data? Would your results change if you took into account the fact that the soil depths are not equally spaced?
+8.2 Consider the wine data. Compute a LDA, draw a 2D-scatterplot of the first two LDF coordinates, and color-code the points by wine type. What do you notice?
+8.3 Suppose X1 ∼ Nr(μ1,ΣXX) and X2 ∼ Nr(μ2,ΣXX) are indepen- dently distributed. Consider the statistic
+{E(aτ X1) − E(aτ X2)}2 var(aτX1 −aτX2)
+as a function of a. Show that a ∝ Σ−1 (μ − μ ) maximizes the statistic XX 1 2
+by using a Lagrange multiplier approach.
+8.4 Consider the following alternative to QDA. Suppose you start with two variables, X1 and X2. Now, expand the data set by adding squares, X3 = X12 and X4 = X2, and cross-product, X5 = X1X2. These five variables are to be used as input to an LDA procedure. Derive the LDA boundaries from this procedure and compare them to the QDA procedure. Generalize to r > 2. Try this alternative procedure out on a data set of your choice.
+8.5 Consider the diabetes data. Draw a scatterplot matrix of all five variables with different colors or symbols representing the three classes of diabetes. Do these pairwise plots suggest multivariate Gaussian distribu- tions for each class with equal covariance matrices? Carry out an LDA and draw the 2D-scatterplot of the first two discriminating functions. Using the leave-one-out CV procedure, find the confusion table and identify those ob- servations that are incorrectly classified based upon the LDA classification rule. Do the same for the QDA procedure.
+8.6 Try the following transformation on the iris data. Set X5 = X1/X2 and X6 = X3/X4. Then, X5 is a measure of sepal shape and X6 is a measure of petal shape. Take logarithms of X5 and of X6. Plot the transformed data, and carry out an LDA on X5 and X6 alone. Estimate the misclassification rate for the transformed data. Do the same for the QDA procedure.
+8.7 Carry out a stepwise logistic regression of the spambase data. Which variables are chosen to be in the final subset?
+8.8 Consider The Insurance Company Benchmark data, which can be downloaded from kdd.ics.uci.edu/databases/tic. There are 86 vari- ables on product-usage data and socio-demographic data derived from zip
+￼￼
+area codes of customers of an insurance company. There is a learning set ticdata2000.txt of 5,822 customers and a test set ticeval2000.txt of 4,000 customers. Customers in the learning set are classified into two classes, depending upon whether they bought a caravan insurance policy. The problem is to predict who in the test set would be interested in buy- ing a caravan insurance policy. Use any of the classification methods on the learning data and then apply them to the test data. Compare your predictions for the test set with those given in the file tictgts2000.txt and estimate the test set error rate. Which variables are most useful in predicting the purchase of a caravan insurance policy?
+8.9 These data (covertype) were obtained from the U.S. Forest Service and are concerned with seven different types of forest cover. The data can be downloaded from kdd.ics.uci.edu/databases/covertype. There are 581,012 observations (each a 30 × 30 meter cell) on 54 input variables (10 quantitative variables, 4 binary wilderness areas, and 40 binary soil type variables). Divide these data randomly into a learning set and a test set. Use any of the methods of this chapter on the learning set to predict the forest cover type for the test set. Estimate the test set error rate.
+8.10 Consider the Wisconsin diagnostic breast cancer data. Regress Y on each of the 30 variables, one at a time. How many coefficients are signifi- cant? Which are they? (A coefficient is declared to be “significantly different from zero” at the 5% level if its absolute t-ratio is greater than the value 2 and is nonsignificant otherwise.) Now, regress Y on all 30 variables. How many coefficients are significant? Which are they? Next, run the BE and FS stepwise procedures, and the LAR and LARS-Lasso algorithms on these data, and compare the variable subsets you obtain from these methods.
+8.11 Consider the E-coli data. Draw a scatterplot matrix of the vari- ables. What do you notice? Do they look Gaussian? Carry out an LDA of the e-coli data by using the reduced-rank regression approach. Find the estimated coefficients of the first two linear discriminant functions. Com- pute the LD scores and plot them in a scatterplot.
+8.12 Consider the yeast data. Draw a scatterplot matrix of the data and, if possible, draw 3D plots of various subsets of the variables and rotate the plot (“brush and spin” in S-Plus). What do you notice about the data? Do they look Gaussian? Carry out an LDA of the yeast data by using the reduced-rank regression approach. Find the estimated coefficients of the first two linear discriminant functions. Compute the LD scores and plot them in a scatterplot.
+8.13 Consider the primate.scapulae data. Carry out five linear discrim- inant analyses (one for each primate species), where each analysis is of the “one class versus the rest” type. Find the spatial zone (known as an am- biguous region) that does not correspond to any LDA assignment of a class
+8.8 Exercises 279
+280 8. Linear Discriminant Analysis
+of primate (out of the five considered). Are the results consistent with the multiclass classification results?
+8.14 Suppose LDA boundaries are found for the primate.scapulae data by carrying out a sequence of 􏰉5􏰀 = 10 LDA problems, each involving a
+2
+distinct pair of primate species (Hylobates versus Pongo, Gorilla versus Homo, etc.). Find the ambiguous region that does not correspond to any LDA assignment of a class of primate (out of the five considered). Suppose we classify each primate in the data set by taking a vote based upon those boundaries. Estimate the resulting misclassification rate and compare it with the rate from the multiclass classification procedure.

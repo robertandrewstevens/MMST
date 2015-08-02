@@ -1,0 +1,864 @@
+11
+Support Vector Machines
+11.1 Introduction
+Fisher’s linear discriminant function (LDF) and related classifiers for binary and multiclass learning problems have performed well for many years and for many data sets. Recently, a brand-new learning methodology, support vector machines (SVMs), has emerged (Boser, Guyon, and Vapnik, 1992), which has matched the performance of the LDF and, in many instances, has proved to be superior to it.
+Development and implementation of algorithms for SVMs are currently of great interest to theoretical researchers and applied scientists in machine learning, data mining, and bioinformatics. Huge numbers of research arti- cles, tutorials, and textbooks have been published on the topic, and annual workshops, new research journals, courses, and websites are now devoted to the subject. SVMs have been successfully applied to classification prob- lems as diverse as handwritten digit recognition, text categorization, cancer classification using microarray expression data, protein secondary-structure prediction, and cloud classification using satellite-radiance profiles.
+SVMs, which are available in both linear and nonlinear versions, involve optimization of a convex loss function under given constraints and so are unaffected by problems of local minima. This gives SVMs quite a strong
+A.J. Izenman, Modern Multivariate Statistical Techniques, Springer Texts in Statistics, 369 DOI 10.1007/978-0-387-78189-1_11, © Springer Science+Business Media New York 2013
+￼
+370 11. Support Vector Machines
+competitive advantage over methods such as neural networks and decision trees. SVMs are computed using well-documented, general-purpose, math- ematical programming algorithms, and their performance in many situa- tions has been quite remarkable. Even in the face of massive data sets, extremely fast and efficient software is being designed to compute SVMs for classification.
+By means of the new technology of kernel methods, SVMs have been very successful in building highly nonlinear classifiers. The kernel method enables us to construct linear classifiers in high-dimensional feature spaces that are nonlinearly related to input space and to carry out those com- putations in input space using very few parameters. SVMs have also been successful in dealing with situations in which there are many more variables than observations.
+Although these advantages hold in general, we have to recognize that there will always be applications in which SVMs can get beaten in perfor- mance by a hand-crafted classification method.
+In this chapter, we describe the linear and nonlinear SVM as solutions of the binary classification problem. The nonlinear SVM incorporates non- linear transformations of the input vectors and uses the kernel trick to simplify computations. We describe a variety of kernels, including string kernels for text categorization problems. Although the SVM methodology was built specifically for binary classification, we discuss attempts to ex- tend that methodology to multiclass classification. Finally, although the SVM methodology was originally designed to solve classification problems, we discuss how the SVM methodology has been defined for regression sit- uations.
+11.2 Linear Support Vector Machines
+Assume we have available a learning set of data,
+L = {(xi,yi) : i = 1,2,...,n}, (11.1)
+on the pair (X, Y ), where X ∈ Rr and Y ∈ {−1, +1}. The binary classifi- cation problem is to use L to construct a function f : Rr → R so that
+C(x) = sign(f(x)), x ∈ Rr, (11.2)
+is a classifier. The separating function f then classifies each new point x in a test set T into one of two classes, Π+ or Π−, depending upon whether C(x) is +1 (if f(x) ≥ 0) or −1 (if f(x) < 0), respectively. The goal is to have f assign all “positive” points in T (i.e., those with Y = y, where y = +1) to Π+ and all “negative” points in T (i.e., those with Y = y, where
+￼
+11.2 Linear Support Vector Machines 371
+y = −1) to Π−. In practice, we recognize that 100% correct classification may not be possible.
+11.2.1 The Linearly Separable Case
+First, consider the simplest situation: suppose the positive and negative data points from the learning set L can be separated by a hyperplane,
+{x : f (x) = β0 + xτ β = 0}, (11.3)
+where β is the weight vector with Euclidean norm ∥ β ∥, and β0 is the bias. (Note: b = −β0 is the threshold.) If this hyperplane can separate the learning set into the two given classes without error, the hyperplane is termed a separating hyperplane. Clearly, there is an infinite number of such separating hyperplanes. How do we determine which one is the best?
+Consider any separating hyperplane. Let d− be the shortest distance from the separating hyperplane to the nearest negative data point, and let d+ be the shortest distance from the same hyperplane to the nearest positive data point. Then, the margin of the separating hyperplane is defined as d = d− + d+. If, in addition, the distance between the hyperplane and its closest observation is maximized, we say that the hyperplane is an optimal separating hyperplane (also known as a maximal margin classifier).
+If the learning data from the two classes are linearly separable, there exists β0 and β such that
+β0 +xτiβ≥+1, if yi =+1, (11.4) β0 +xτiβ≤−1, if yi =−1. (11.5)
+If there are data vectors in L such that equality holds in (11.4), then these data vectors lie on the hyperplane H+1: (β0 − 1) + xτ β = 0; similarly, if there are data vectors in L such that equality holds in (11.5), then these data vectors lie on the hyperplane H−1: (β0 + 1) + xτ β = 0. Points in L that lie on either one of the hyperplanes H−1 or H+1, are said to be support vectors. See Figure 11.1. The support vectors typically consist of a small percentage of the total number of sample points.
+If x−1 lies on the hyperplane H−1, and if x+1 lies on the hyperplane H+1, then,
+β0 + xτ−1β = −1, β0 + xτ+1β = +1. (11.6) The difference of these two equations is xτ+1β − xτ−1β = 2, and their sum
+is β0 = − 1 {xτ+1β + xτ−1β}. The perpendicular distances of the hyperplane 2
+￼β0 +xτβ = 0 from the points x−1 and x+1 are
+d−=|β0+xτ−1β|= 1 , d+=|β0+xτ+1β|= 1 , (11.7) ∥β∥ ∥β∥ ∥β∥ ∥β∥
+￼￼￼￼
+372 11. Support Vector Machines
+￼￼￼τ
+
+ β0 + x β = 0   􏰴􏰴
+￼￼H−1
+B
+ 􏰴􏰴􏰴 BMBd−=1  􏰴􏰴􏰴 B ∥β∥
+􏰴
+￼BBN􏰴􏰴􏰴 􏰴 􏰴􏰴
+BMB B
+NB
+?MB d = 1
+ B + ∥β∥  NB
+￼ 􏰴􏰴􏰴􏰴 margin B 􏰴􏰴􏰴 
+B 􏰴􏰴􏰴􏰴  BBNB􏰴􏰴􏰴􏰴   
+MB  H+1 ￼ B
+￼FIGURE 11.1. Support vector machines: the linearly separable case. The red points correspond to data points with yi = −1, and the blue points cor- respond to data points with yi = +1. The separating hyperplane is the line β0 + xτ β = 0. The support vectors are those points lying on the hyperplanes H−1 and H+1. The margin of the separating hyperplane is d = 2/ ∥ β ∥.
+respectively (see Exercise 11.1). So, the margin of the separating hyperplane is d = 2/ ∥ β ∥.
+The inequalities (11.4) and (11.5) can be combined into a single set of inequalities,
+yi(β0 +xτiβ)≥+1, i=1,2,...,n. (11.8)
+The quantity yi(β0 +xτi β) is called the margin of (xi, yi) with respect to the hyperplane (11.3), i = 1, 2, . . . , n. From (11.6), we see that xi is a support vector with respect to the hyperplane (11.3) if its margin equals one; that is, if
+yi(β0 + xτi β) = 1. (11.9)
+The support vectors in Figure 11.1 are those points lying on the hyper- planes H−1 and H+1. The empirical distribution of the margins of all the observations in L is called the margin distribution of a hyperplane with re- spect to L. The minimum of the empirical margin distribution is the margin of the hyperplane with respect to L.
+The problem is to find the optimal separating hyperplane; namely, find the hyperplane that maximizes the margin, 2/ ∥ β ∥, subject to the condi- tions (11.8). Equivalently, we wish to find β0 and β to
+minimize 1 ∥ β ∥2, (11.10) 2
+subjectto yi(β0 +xτiβ)≥1, i=1,2,...,n. (11.11)
+￼
+where
+1 􏰏n
+FP(β0,β,α)= 2 ∥β∥2 −
+11.2 Linear Support Vector Machines 373
+This is a convex optimization problem: minimize a quadratic function sub- ject to linear inequality constraints. Convexity ensures that we have a global minimum wthout local minima. The resulting optimal separating hyper- plane is called the maximal (or hard) margin solution.
+We solve this problem using Lagrangian multipliers. Because the con- straints are yi(β0 + xτi β) − 1 ≥ 0, i = 1,2,...,n, we multiply the con- straints by positive Lagrangian multipliers and subtract each such product from the objective function (11.10) to form the primal functional,
+αi{yi(β0 +xτiβ)−1}, α = (α1,···,αn)τ ≥ 0
+(11.12)
+(11.13)
+￼i=1
+is the n-vector of (nonnegative) Lagrangian coefficients. We need to mini- mize F with respect to the primal variables β0 and β, and then maximize the resulting minimum-F with respect to the dual variables α.
+The Karush–Kuhn–Tucker conditions give necessary and sufficient con- ditions for a solution to a constrained optimization problem. For our primal problem, β0, β, and α have to satisfy:
+∂FP(β0,β,α) ∂β0
+∂FP(β0,β,α) ∂β
+􏰏n
+= −αiyi=0,
+i=1 􏰏n
+= β− αiyixi = 0, i=1
+(11.14)
+(11.15)
+￼￼yi(β0+xτiβ)−1≥ 0, αi≥ 0,
+αi{yi(β0 + xτi β) − 1} =
+for i = 1,2,...,n. The condition (11.18) is known as the Karush–Kuhn–
+0,
+Tucker complementarity condition.
+Solving equations (11.14) and (11.15) yields
+􏰏n i=1
+(11.16) (11.17) (11.18)
+αiyi = 0, ∗ 􏰏n
+(11.19)
+β =
+αiyixi. (11.20) Substituting (11.19) and (11.20) into (11.12) yields the minimum value of
+FP(β0,β,α), namely,
+1 􏰏n
+FD(α) = 2∥β∗∥2− αi{yi(β0∗+xτiβ∗)−1} i=1
+i=1
+￼
+374 11. Support Vector Machines
+=
+=
+2
+􏰏n 1􏰏n􏰏n
+αi
+1 􏰏n 􏰏n
+αiαjyiyj(xτi xj) −
+􏰏n 􏰏n
+αiαjyiyj(xτi xi) +
+􏰏n
+i=1 (11.21)
+￼i=1 j=1
+i=1 j=1 αiαjyiyj(xτi xj),
+￼i=1
+αi − 2
+i=1 j=1
+where we used (11.18) in the second line. Note that the primal variables have been removed from the problem. The expression (11.21) is usually referred to as the dual functional of the optimization problem.
+We next find the Lagrangian multipliers α by maximizing the dual func- tional (11.21) subject to the constraints (11.17) and (11.19). The con- strained maximization problem (the “Wolfe dual”) can be written in matrix notation as follows. Find α to
+maximize FD(α)=1τnα−1ατHα (11.22) 2
+subject to α ≥ 0, ατy = 0, (11.23) where y = (y1,···,yn)τ and H = (Hij) is a square (n × n)-matrix with
+Hij = yiyj (xτi xj ). If α􏰡 solves this optimization problem, then,
+￼􏰡 􏰏n β =
+i=1
+yields the optimal weight vector. If α􏰡i > 0, then, from (11.18), yi(β0∗ + xτi β∗) = 1, and so xi is a support vector; for all observations that are not support vectors, α􏰡i = 0. Let sv ⊂ {1, 2, . . . , n} be the subset of indices that identify the support vectors (and also the nonzero Lagrangian multipliers). Then, the optimal β is given by (11.24), where the sum is taken only over the support vectors; that is,
+β􏰡 = 􏰏 α􏰡iyixi. (11.25) i∈sv
+In other words, β􏰡 is a linear function only of the support vectors {xi,i ∈ sv}. In most applications, the number of support vectors will be small relative to the size of L, yielding a sparse solution. In this case, the sup- port vectors carry all the information necessary to determine the optimal hyperplane.
+The primal and dual optimization problems yield the same solution, al- though the dual problem is simpler to compute and, as we shall see, is simpler to generalize to nonlinear classifiers. Finding the solution involves standard convex quadratic-programming methods, and so any local mini- mum also turns out to be a global minimum.
+Although the optimal bias β􏰡0 is not determined explicitly by the opti- mization solution, we can estimate it using the primal constraints. In other
+α􏰡iyixi (11.24)
+C(x) = sign{f(x)}.
+If j ∈ sv, then, from (11.27), 􏰡􏰡􏰏τ
+hyperplane is
+∥ β􏰡 ∥2 = = = =
+􏰏 􏰏 α􏰡iα􏰡jyiyj(xτi xj) i∈sv j∈sv
+11.2 Linear Support Vector Machines 375
+words, the estimated bias of the optimal hyperplane is given by
+β􏰡 0 = − 1 { x τ− 1 β􏰡 + x τ+ 1 β􏰡 } , ( 1 1 . 2 6 ) 2
+where x−1 is any support vector lying on the hyperplane H−1 and x+1 is any support vector lying on the hyperplane H+1.
+￼It follows that the optimal hyperplane can be written as
+􏰡􏰡τ􏰡 f(x) = β0+xβ
+= β􏰡0+􏰏α􏰡iyi(xτxi). i∈sv
+(11.27)
+Clearly, only support vectors are relevant in computing the optimal sepa- rating hyperplane; observations that are not support vectors play no role in determining the hyperplane and are, thus, irrelevant for solving the op- timization problem. Thus, the classification rule applied to the observed value X = x is given by
+(11.28)
+α􏰡iyiyj(xj xi) = 1.
+Hence, from (11.25), the squared-norm of the weight vector β􏰡 of the optimal
+yjf(xj) = yjβ0 +
+(11.29)
+j∈sv 􏰏
+α􏰡 j .
+i∈sv
+􏰡
+􏰏􏰏
+α􏰡jyj α􏰡iyi(xτi xj)
+j∈sv
+􏰏 α􏰡 j ( 1 − y j β􏰡 0 )
+( 1 1 . 3 0 ) The third line used (11.29) and the fourth line used (11.19). It follows from
+j∈sv
+(11.30) that the optimal hyperplane has maximum margin 2/ ∥ β􏰡 ∥, where ⎛ ⎞−1/2
+1 = ⎝ 􏰏 α􏰡 j ⎠ . ( 1 1 . 3 1 ) ∥ β􏰡 ∥ j ∈ s v
+i∈sv
+￼
+376 11. Support Vector Machines
+11.2.2 The Linearly Nonseparable Case
+In real applications, it is unlikely that there will be such a clear linear separation between data drawn from two classes. More likely, there will be some overlap. We can generally expect some data from one class to infiltrate the region of space perceived to belong to the other class, and vice versa. The overlap will cause problems for any classification rule, and, depending upon the extent of the overlap, we should expect that some of the overlapping points will be misclassified.
+The nonseparable case occurs if either the two classes are separable, but not linearly so, or that no clear separability exists between the two classes, linearly or nonlinearly. One reason for overlapping classes is the high noise level (i.e., large variance) of one or both classes. As a result, one or more of the constraints will be violated.
+The way we cope with overlapping data is to create a more flexible for- mulation of the problem, which leads to a soft-margin solution. To do this, we introduce the concept of a nonnegative slack variable, ξi, for each data point, (xi,yi), in the learning set, i = 1,2,...,n. See Figure 11.2 for a two-dimensional example. Let
+ξ = (ξ1,···,ξn)τ ≥ 0. (11.32)
+The constraints (11.11) now become yi(β0 +xτi β)+ξi ≥ 1 for i = 1, 2, . . . , n. Data points that obey these constraints have ξi = 0. The classifier now has to find the optimal hyperplane that controls both the margin, 2/∥ β ∥, and some computationally simple function of the slack variables, such as
+􏰏n i=1
+subject to certain constraints. The usual values of σ are 1 (“1-norm”) or 2 (“2-norm”). Here, we discuss the case of σ = 1; for σ = 2, see Exercise 11.3.
+The 1-norm soft-margin optimization problem is to find β0, β, and ξ to
+minimize 2 ∥ β ∥ +C
+subjectto ξi ≥0, yi(β0 +xτiβ)≥1−ξi, i=1,2,...,n, (11.35)
+where C > 0 is a regularization parameter. C takes the form of a tuning constant that controls the size of the slack variables and balances the two terms in the minimizing function.
+Formtheprimalfunctional,FP =FP(β0,β,ξ,α,η),where 1􏰏n􏰏n 􏰏n
+gσ(ξ) =
+ξiσ, (11.33)
+1 2 􏰏n
+ξi, (11.34)
+￼FP = 2 ∥ β ∥2 +C ξi− i=1
+i=1
+αi{yi(β0+xτi β)−(1−ξi)}− ηiξi, (11.36) i=1
+i=1
+￼
+∂FP ∂β0
+∂FP ∂β
+∂FP ∂ξi
+Setting these derivatives equal to zero and solving yields
+11.2 Linear Support Vector Machines 377
+￼￼￼    β0 + xτ β = 0 ξ2  􏰴􏰴
+￼BMB 􏰴􏰴􏰴 MBd−=1 H−1 B  B􏰴􏰴􏰴B  B ∥β∥
+￼￼􏰴 ξ NB BNB
+B 􏰴􏰴B 4ξ5BM?
+􏰴 BBMB1
+NB􏰴B 
+􏰴􏰴 B BB B B d+ = ∥β∥
+￼BMB
+m a r g i n B   ξ 1 N B  B B 􏰴 􏰴 B 􏰴 􏰴
+B B 􏰴 􏰴 􏰴 􏰴 􏰴 􏰴 NB B 􏰴 MB B 
+ 
+  B NB B ξ 􏰴
+B  B 3 B􏰴􏰴  B MB 􏰴
+H+1B 
+
+￼￼FIGURE 11.2. Support vector machines: the linearly nonseparable case. The red points correspond to data points with yi = −1, and the blue points correspond to data points with yi = +1. The separating hyperplane is the line β0 + xτ β = 0. The support vectors are those points lying on the hy- perplanes H−1 and H+1. The slack variables ξ1 and ξ4 are associated with the red points that violate the constraint of hyperplane H−1, and points marked by ξ2 , ξ3 , and ξ5 are associated with the blue points that violate the constraint of hyperplane H+1. Points that satisfy the constraints of the appropriate hyperplane have ξi = 0.
+with α = (α1,···,αn)τ ≥ 0 and η = (η1,···,ηn)τ ≥ 0. Fix α and η, and differentiate FP with respect to β0, β,and ξ:
+􏰏n
+= −
+= β− αiyixi,
+i=1
+= C−αi−ηi, i=1,2,...,n.
+(11.37)
+(11.38) (11.39)
+(11.40)
+(11.41)
+i=1
+αiyi, 􏰏n
+￼￼￼􏰏n
+􏰏n
+αiyi =0, β∗ =
+􏰏n 1􏰏n􏰏n
+FD(α) = αi − 2 αiαjyiyj(xτi xj), i=1 i=1 j=1
+αiyixi, αi =C−ηi. Substituting (11.40) into (11.36) gives the dual functional,
+i=1
+i=1
+￼
+378 11. Support Vector Machines
+which, remarkably, is the same as (11.21) for the linearly separable case. FromtheconstraintsC−αi−ηi =0andηi ≥0,wehavethat0≤αi ≤C. In addition, we have the Karush–Kuhn–Tucker conditions:
+yi(β0 +xτi β)−(1−ξi) ξi αi ηi αi{yi(β0 + xτi β) − (1 − ξi)} ξi(αi−C)
+≥ 0 ≥ 0, ≥ 0, ≥ 0, = 0, = 0,
+(11.42) (11.43) (11.44) (11.45) (11.46) (11.47)
+for i = 1, 2, . . . , n. From (11.47), a slack variable, ξi, can be nonzero only if αi = C. The Karush–Kuhn–Tucker complementarity conditions, (11.46) and (11.47), can be used to find the optimal bias β0.
+We can write the dual maximization problem in matrix notation as fol- lows. Find α to
+maximize FD(α)=1τnα−1ατHα (11.48) 2
+subject to ατy = 0, 0 ≤ α ≤ C1n. (11.49)
+The only difference between this optimization problem and that for the linearly separable case, (11.22) and (11.23), is that, here, the Lagrangian coefficients αi, i = 1,2,...,n, are each bounded above by C; this upper bound restricts the influence of each observation in determining the solu- tion. This type of constraint is referred to as a box constraint because α is constrained by the box of side C in the positive orthant. From (11.49), we see that the feasible region for the solution to this convex optimiza- tion problem is the intersection of the hyperplane ατ y = 0 with the box constraint 0 ≤ α ≤ C1n. If C = ∞, then the problem reduces to the hard-margin separable case.
+If α􏰡 solves this optimization problem, then,
+β􏰡 = 􏰏 α􏰡iyixi (11.50)
+i∈sv
+yields the optimal weight vector, where the set sv of support vectors con-
+tains those observations in L which satisfy the constraint (11.42). 11.3 Nonlinear Support Vector Machines
+So far, we have discussed methods for constructing a linear SVM clas- sifier. But what if a linear classifier is not appropriate for the data set in
+￼￼
+11.3 Nonlinear Support Vector Machines 379
+question? Can we extend the idea of linear SVM to the nonlinear case? The key to constructing a nonlinear SVM is to observe that the observations in L only enter the dual optimization problem through the inner products ⟨xi,xj⟩ = xτi xj, i,j = 1,2,...,n.
+11.3.1 Nonlinear Transformations
+Suppose we transform each observation, xi ∈ Rr, in L using some non- linear mapping Φ : Rr → H, where H is an NH-dimensional feature space. The nonlinear map Φ is generally called the feature map and the space H is called the feature space. The space H may be very high-dimensional, possibly even infinite dimensional. We will generally assume that H is a Hilbert space of real-valued functions on R with inner product ⟨·,·⟩ and norm ∥ · ∥.
+Let
+Φ(xi) = (φ1(xi),···,φNH(xi))τ ∈ H, i = 1,2,...,n. (11.51)
+The transformed data are then {Φ(xi ), yi }, where yi ∈ {−1, +1} identifies the two classes. If we substitute Φ(xi) for xi in the development of the linear SVM, then data would only enter the optimization problem by way of the inner products ⟨Φ(xi),Φ(xj)⟩ = Φ(xi)τΦ(xj). The difficulty when using nonlinear transformations in this way is in computing such inner products in high-dimensional space H.
+11.3.2 The “Kernel Trick”
+The idea behind nonlinear SVM is to find an optimal separating hyper- plane (with or without slack variables, as appropriate) in high-dimensional feature space H just as we did for the linear SVM in input space. Of course, we would expect the dimensionality of H to be a huge impediment to constructing an optimal separating hyperplane (and classification rule) because of the curse of dimensionality. The fact that this does not become a problem in practice is due to the “kernel trick,” which was first applied to SVMs by Cortes and Vapnik (1995).
+The so-called kernel trick is a wonderful idea that is widely used in algo- rithms for computing inner products of the form ⟨Φ(xi), Φ(xj )⟩ in feature space H. The trick is that instead of computing these inner products in H, which would be computationally expensive because of its high dimen- sionality, we compute them using a nonlinear kernel function, K(xi,xj) = ⟨Φ(xi),Φ(xj)⟩, in input space, which helps speed up the computations. Then, we just compute a linear SVM, but where the computations are carried out in some other space.
+380 11. Support Vector Machines
+11.3.3 Kernels and Their Properties
+A kernel K is a function K : Rr × Rr → R such that, for all x, y ∈ Rr ,
+K (x, y) = ⟨Φ(x), Φ(y)⟩. (11.52)
+The kernel function is designed to compute inner-products in H by using only the original input data. Thus, wherever we see the inner product ⟨Φ(x),Φ(y)⟩, we substitute the kernel function K(x,y). The choice of K implicitly determines both Φ and H. The big advantage to using kernels as inner products is that if we are given a kernel function K, then we do not need to know the explicit form of Φ.
+We require that the kernel function be symmetric, K(x,y) = K(y,x), and satisfy an inequality, [K(x,y)]2 ≤ K(x,x)K(y,y), derived from the Cauchy–Schwarz inequality. If K(x,x) = 1 for all x ∈ Rr, this implies that ∥Φ(x)∥H = 1. A kernel K is said to have the reproducing property if, for any f ∈ H,
+⟨f (·), K (x, ·)⟩ = f (x). (11.53) If K has this property, we say it is a reproducing kernel. K is also called
+the representer of evaluation. In particular, if f(·) = K(·,x), then,
+⟨K (x, ·), K (y, ·)⟩ = K (x, y). (11.54)
+Let x1,...,xn be any set of n points in Rr. Then, the (n × n)-matrix K = (Kij), where Kij = K(xi,xj), i,j = 1,2,...,n, is called the Gram (or kernel) matrix of K with respect to x1, . . . , xn. If the Gram matrix K satisfies uτ Ku ≥ 0, for any n-vector u, then it is said to be nonnegative- definite with nonnegative eigenvalues, in which case we say that K is a nonnegative-definite kernel1 (or Mercer kernel).
+If K is a specific Mercer kernel on Rr × Rr, we can always construct a unique Hilbert space HK, say, of real-valued functions for which K is its reproducing kernel. We call HK a (real) reproducing kernel Hilbert space (rkhs). We write the inner-product and norm of HK by ⟨·,·⟩HK (or just ⟨·, ·⟩ when K is understood) and ∥ · ∥HK , respectively.
+11.3.4 Examples of Kernels
+An example of a kernel is the inhomogeneous polynomial kernel of degree d,
+K(x,y) = (⟨x,y⟩ + c)d, x,y ∈ Rr, (11.55)
+1In the machine-learning literature, nonnegative-definite matrices and kernels are usually referred to as positive-semidefinite (or sometimes even positive-definite) matrices and kernels, respectively.
+￼
+11.3 Nonlinear Support Vector Machines 381
+TABLE 11.1. Kernel functions, K(x,y), where σ > 0 is a scale param- eter, a, b, c ≥ 0, and d is an integer. The Euclidean norm is ∥x∥2 = xτ x.
+￼Kernel
+Polynomial of degree d Gaussian radial basis function Laplacian Thin-platespline
+Sigmoid
+K(x, y) (⟨x, y⟩ + c)d
+􏰦 ∥x−y∥2􏰧 exp − 2σ2
+exp 􏰨− ∥x−y∥ 􏰩 σ
+􏰉∥x−y∥􏰀2log 􏰨∥x−y∥􏰩 σeσ
+tanh(a⟨x, y⟩ + b)
+￼￼￼￼￼￼where c and d are parameters. The homogeneous form of the kernel occurs when c = 0 in (11.55). If d = 1 and c = 0, the feature map reduces to the identity. Usually, we take c > 0. A simple nonlinear map is given by the caser=2andd=2.Ifx=(x1,x2)τ andy=(y1,y2)τ,then,
+K(x,y) = (⟨x,y⟩ + c)2 = (x1y1 + x2y2 + c)2 = ⟨Φ(x),Φ(y)⟩,
+where Φ(x) = (x21, x2, √2x1x2, √2cx1, √2x2, c)τ and similarly for Φ(y). In this example, the function Φ(x) consists of six features (H = R6), all monomials having degree at most 2. For this kernel, we see that c controls the magnitudes of the constant term and the first-degree term.
+￼￼￼In general, there will be dim(H) = 􏰉r+d􏰀 different features, consisting of d
+all monomials having degree at most d. The dimensionality of H can rapidly become very large: for example, in visual recognition problems, data may consist of 16 × 16 pixel images (so that each image is turned into a vector of dimension r = 256); if d = 2, then dim(H) = 33, 153, whereas if d = 4, we have dim(H) = 186, 043, 585.
+Other popular kernels, such as the Gaussian radial basis function (RBF), the Laplacian kernel, the thin-plate spline kernel, and the sigmoid kernel, are given in Table 11.1. Strictly speaking, the sigmoid kernel is not a kernel (it satisfies Mercer’s conditions only for certain values of a and b), but it has become very popular in that role in certain situations (e.g., two-layer neural networks).
+The Gaussian RBF, Laplacian, and thin-plate spline kernels are exam- ples of translation-invariant (or stationary) kernels having the general form
+382 11. Support Vector Machines
+K(x, y) = k(x − y), where k : Rr → R. The polynomial kernel is an exam- ple of a nonstationary kernel. A stationary kernel K(x,y) is isotropic if it depends only upon the distance δ = ∥x − y∥, i.e., if K(x, y) = k(δ), scaled to have k(0) = 1.
+It is not always obvious which kernel to choose in any given application. Prior knowledge or a search through the literature can be helpful. If no such information is available, the best approach is to try either a Gaussian RBF, which has only a single parameter (σ) to be determined, or a polynomial kernel of low degree (d = 1 or 2). If necessary, more complicated kernels can then be applied to compare results.
+String Kernels for Text Categorization
+Text categorization is the assignment of natural-language text (or hyper- text) documents into a given number of predefined categories based upon the content of those documents (see Section 2.3.3). Although manual cat- egorization of text documents is currently the norm (e.g., using folders to save files, e-mail messages, URLs, etc.), some text categorization is auto- mated (e.g., filters for spam or junk mail to help users cope with the sheer volume of daily e-mail messages). To reduce costs of text categorization tasks, we should expect a greater degree of automation to be present in the future.
+In text-categorization problems, string kernels have been proposed based upon ideas derived from bioinformatics (see, e.g., Lodhi, Saunders, Shawe- Taylor, Cristianini, and Watkins, 2002).
+Let A be a finite alphabet. A “string”
+s = s1s2 · · · s|s| (11.56)
+is a finite sequence of elements of A, including the empty sequence, where |s| denotes the length of s. We call u a subsequence of s (written u = s(i)) if there are indices i = (i1,i2,···,i|u|), with 1 ≤ i1 < ··· < i|u| ≤ |s|, such that uj = sij , j = 1,2,...,|u|. If the indices i are contiguous, we say that u is a substring of s. The length of u in s is
+l(i) = i|u| − i1 + 1, (11.57)
+which is the number of elements of s overlaid by the subsequence u. For example, let s be the string “cat” (s1 = c,s2 = a,s3 = t, |s| = 3), and consider all possible 2-symbol sequences, “ca,” “ct,” and “at,” derived from s.Forthestringu=ca,wehavethatu1 =c=s1,u2 =a=s2,whence, u = s(i), where i = (i1,i2) = (1,2). Thus, l(i) = 2. Similarly, for the subsequence u = ct, u1 = c = s1,u2 = t = s3, whence, i = (i1,i2) = (1,3), andl(i)=3.Also,thesubsequenceu=athasu1 =a=s2,u2 =t=s3, whence, i = (2, 3), and l(i) = 2.
+11.3 Nonlinear Support Vector Machines 383
+If D = Am is the set of all finite strings of length at most m from A, then, the feature space for a string kernel is RD. The feature map Φu, operating on a string s ∈ Am, is characterized in terms of a given string u ∈ Am. To deal with noncontiguous subsequences, define λ ∈ (0,1) as the drop-off rate (or decay factor); we use λ to weight the interior gaps in the subsequences. The degree of importance we put into a contiguous subsequence is reflected in how small we take the value of λ. The value Φu(s) is computed as follows: identify all subsequences (indexed by i) of s that are identical to u; for each such subsequence, raise λ to the power l(i); and then sum the results over all subsequences. Because λ < 1, larger values of l(i) carry less weight than smaller values of l(i). We write
+Φu(s) = 􏰏 λl(i), u ∈ Am. (11.58) i:u=s(i)
+In our example above, Φca(cat) = λ2, Φct(cat) = λ3, and Φat(cat) = λ2.
+Two documents are considered to be “similar” if they have many sub- sequences in common: the more subsequences they have in common, the more similar they are deemed to be. Note that the degree of contiguity present in a subsequence determines the weight of that substring in the comparison; the closer the subsequence is to a contiguous substring, the more it should contribute to the comparison.
+Let s and t be two strings. The kernel associated with the feature maps corresponding to s and t is given by the sum of inner products for all common substrings of length m,
+􏰏
+⟨Φu (s), Φu (t)⟩ u∈D i:u=s(i) j:u=s(j)
+Km (s, t) =
+= 􏰏 􏰏 􏰏 λl(i)+l(j).
+u∈D
+(11.59)
+The kernel (11.59) is called a string kernel (or a gap-weighted subsequences kernel). For the example, let t be the string “car” (t1 = c,t2 = a,t3 = r, |t| = 3). Note that the strings “cat” and “car” are both substrings of the string “cart.” The three 2-symbol substrings of t are “ca,” “cr,” and “ar.” For these substrings, we have that Φca(car) = λ2,Φcr(car) = λ3, and Φar(car) = λ2. The inner product (11.59) is given by K2(cat,car) = ⟨Φca(cat), Φca(car)⟩ = λ4.
+The feature maps in feature space are usually normalized to remove any bias introduced by document length. This is equivalent to normalizing the kernel (11.59),
+Km∗ (s,t) = 􏰐 Km(s,t) Km(s, s)Km(t, t)
+. (11.60)
+￼￼
+384 11. Support Vector Machines
+For our example, K2(cat, cat) = ⟨Φca(cat), Φca(cat)⟩+⟨Φct(cat), Φct(cat)⟩+ ⟨Φat(cat), Φat(cat)⟩ = λ6 + 2λ4, and, similarly, K2(car, car) = λ6 + 2λ4, whence, K2∗(cat, car) = λ4/(λ6 + 2λ4) = 1/(λ2 + 2).
+The parameters of the string kernel (11.59) are m and λ. The choices of m = 5 and λ = 0.5 have been found to perform well on segments of certain data sets (e.g., on subsets of the Reuters-21578 data) but do not fare as well when applied to the full data set.
+11.3.5 Optimizing in Feature Space
+Let K be a kernel. Suppose, first, that the observations in L are linearly separable in the feature space corresponding to the kernel K. Then, the dual optimization problem is to find α (and bias β0) to
+maximize FD(α)=1τnα−1ατHα 2
+subject to α ≥ 0, ατy = 0, where y = (y1,···,yn)τ, H = (Hij), and
+Hij = yiyjK(xi,xj) = yiyjKij, i,j = 1,2,...,n.
+(11.61) (11.62)
+(11.63)
+￼Because K is a kernel, the Gram matrix K = (Kij ) is nonnegative-definite, and so is the matrix H with elements (11.63). Hence, the functional FD(α) is convex (see Exercise 11.11). So, there is a unique solution to this con- strained optimization problem. If α􏰡 (and β􏰡0) solve this problem, then, the
+􏰡
+􏰏
+α􏰡iyiK(x,xi)
+is the optimal separating hyperplane in the feature space corresponding to
+the kernel K.
+In the nonseparable case, using the kernel K, the dual problem of the
+SVM decision rule for X = x is sign{f(x)}, where
+􏰡􏰡
+(11.64)
+f(x) = β0 +
+i∈sv
+1-norm soft-margin optimization problem is to find α to
+maximize FD∗(α)=1τnα−1ατHα (11.65)
+￼2
+subject to 0 ≤ α ≤ C1n, ατy = 0, (11.66)
+where y and H are as above. For an optimal solution, the Karush–Kuhn– Tucker conditions, (11.42)–(11.47), must hold for the primal problem. So, a solution, α, to this problem has to satisfy all those conditions. Fortunately, it suffices to check a simpler set of conditions: we have to check that α
+11.3 Nonlinear Support Vector Machines 385
+satisfies (11.66) and that (11.47) holds for all points where 0 ≤ αi < C and ξi = 0, and also for all points where αi = C and ξi ≥ 0.
+11.3.6 Grid Search for Parameters
+We need to determine two parameters when using a Gaussian RBF ker- nel, namely, the cost, C, of violating the constraints and the kernel param- eter γ = 1/σ2. The parameter C in the box constraint can be chosen by searching a wide range of values of C using either CV (usually, 10-fold) on L or an independent validation set of observations. In practice, it is usual to start the search by trying several different values of C, such as 10, 100, 1,000, 10,000, and so on. An initial grid of values of γ can be selected by trying out a crude set of possible values, say, 0.00001, 0.0001, 0.001, 0.01, 0.1, and 1.0.
+When there appears to be a minimum CV misclassification rate within an interval of the two-way grid, we make the grid search finer within that interval. Armed with a two-way grid of values of (C,γ), we apply CV to estimate the generalization error for each cell in that grid. The (C,γ) that has the smallest CV misclassification rate is selected as the solution to the SVM classification problem.
+11.3.7 Example: E-mail or Spam?
+This example (spambase) was described in Section 8.4, where we applied LDA and QDA to a collection of 4,601 messages, comprising 1,813 spam e-mails and 2,788 non-spam e-mails. There are 57 variables (attributes) and each message is labeled as one of the two classes email or spam.
+Here we apply nonlinear SVM (R package libsvm) using a Gaussian RBF kernel to the 4,601 messages. The SVM solution depends upon the cost C of violating the constraints and the variance, σ2, of the Gaussian RBF kernel. After applying a trial-and-error method, we used the following grid of values for C and γ = 1/σ2:
+C = 10, 80, 100, 200, 500, 1,000,
+γ = 0.00001(0.00001)0.0001(0.0001)0.002(0.001)0.01(0.01)0.04.
+In Figure 11.3, we plot the values of the 10-fold CV misclassification rate against the values of γ listed above, where each curve (connected set of points) represents a different value of C. For each C, we see that the CV/10 misclassification curves have similar shapes: a minimum value for γ very close to zero, and for values of γ away from zero, the curve trends upwards. In this initial search, we find a minimum CV/10 misclassification rate of 8.06% at (C, γ) = (500, 0.0002) and (1,000, 0.0002). We see that the general
+386 11. Support Vector Machines
+0.25 0.25 ￼ 0.25
+0.20 0.20 ￼ 0.20
+0.15 0.15 ￼ 0.15
+0.10 0.10 ￼ 0.10
+0.05 0.05 0.00 0.01 0.02 0.03 0.04
+￼￼￼￼￼￼￼￼￼￼￼C=10
+C=80
+C=100
+￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼0.05
+gamma gamma gamma
+￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼0.25 0.25 ￼ 0.25
+0.20 0.20 ￼ 0.20
+0.15 0.15 ￼ 0.15
+0.10 0.10 ￼ 0.10
+0.05 0.05 0.00 0.01 0.02 0.03 0.04
+0.00 0.01 0.02 0.03 0.04
+0.00 0.01 0.02 0.03 0.04
+￼￼￼￼￼￼￼￼￼￼￼C=200
+C=500
+C=1000
+￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼0.05
+gamma gamma gamma
+￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼0.00 0.01 0.02 0.03 0.04
+0.00 0.01 0.02 0.03 0.04
+FIGURE 11.3. SVM cross-validation misclassification rate curves for the spambase data. Initial grid search for the minimum 10-fold CV misclassi- fication rate using 0.00001 ≤ γ ≤ 0.04. The curves correspond to C = 10 (dark blue), 80 (brown), 100 (green), 200 (orange), 500 (light blue), and 1,000 (red). Within this intial grid search, the minimum CV/10 misclassi- fication rate is 8.06%, which occurs at (C,γ) = (500, 0.0002) and (1,000, 0.0002).
+level of the misclassification rate tends to decrease as C increases and γ decreases together.
+A detailed investigation of C > 1000 and γ close to zero reveals a mini- mum CV/10 misclassification rate of 6.91% at C = 11, 000 and γ = 0.00001, corresponding to the following 10 CV estimates of the true classification rate:
+0.9043, 0.9478, 0.9304, 0.9261, 0.9109,
+0.9413, 0.9326, 0.9500. 0.9326, 0.9328.
+This solution has 931 support vectors (482 e-mails, 449 spam), which means that a large percentage (79.8%) of the messages (82.7% of the e-mails and 75.2% of the spam) are not support points. Of the 4,601 messages, 2,697 e-mails and 1,676 spam are correctly classified (228 misclassified), yielding an apparent error rate of 4.96%.
+This example turns out to be more computationally intensive than are the other binary-classification examples discussed in this chapter. Although the value of γ has very little effect on the speed of computing the 10- fold CV error rate, the speed of computation does depend upon C: as we increase the value of C, the speed of computation slows down considerably.
+CV/10MisclassificationRate CV/10MisclassificationRate
+CV/10MisclassificationRate CV/10MisclassificationRate
+CV/10MisclassificationRate CV/10MisclassificationRate
+11.3 Nonlinear Support Vector Machines 387
+TABLE 11.2. Summary of support vector machine (SVM) application to data sets for binary classification. Listed are the sample size (n), number of variables (r), and number of classes (K). Also listed for each data set is the 10-fold cross-validation (CV/10) misclassification rates corresponding to the best choice of (C, γ) for the SVM. The data sets are listed in increasing order of LDA misclassification rates (see Table 8.5).
+￼Data Set Breast cancer (logs) Spambase Ionosphere Sonar BUPA liver disorders
+n r K
+569 30 2 4601 57 2 351 33 2 208 60 2 345 6 2
+SVM–CV/10 0.0158 0.0691 0.0427 0.1010 0.2522
+￼￼Also worth noting is that for fixed γ, increasing C
+of support vectors and the apparent error rate. We
+general statements about fixed C and increasing γ; however, for fixed C, we generally see that the number of support vectors tends to increase (but not always) with increasing γ.
+The nonlinear SVM is clearly a better classifier for this example than is LDA or QDA, whose leave-one-out CV misclassification rate is around 11% for LDA and 17% for QDA, but the amount of computational work involved in the grid search for the SVM solution is much greater and, hence, a lot more expensive.
+11.3.8 Binary Classification Examples
+We apply the SVM algorithm to the binary classification examples of Section 8.4: the log-transformed breast cancer data, the ionosphere data, the BUPA liver disorders data, the sonar data, and the spambase data. Except for spambase, computations for these examples were very fast.
+In Table 11.2, we list the minimum 10-fold CV misclassification rate for each data set. Comparing these results to those of LDA (see Table 8.5, where we used leave-one-out CV), we see that SVM produces remarkable decreases in misclassification rates: the breast cancer rate decreased from 11.3% to 1.58%, the spambase rate decreased from 11.3% to 6.91%, the ionosphere rate decreased from 13.7% to 4.27%, the sonar rate decreased from 24.5% to 10.1%, and the BUPA liver disorders rate decreased from 30.1% to 25.22%.
+11.3.9 SVM as a Regularization Method
+The SVM classifier can also be regarded as the solution to a particular regularization problem. Let f ∈ HK , the reproducing kernel Hilbert space
+reduces the number cannot make similar
+388 11. Support Vector Machines
+￼￼￼￼y=+1 y=-1
+￼￼3.0 2.5 2.0 1.5 1.0 0.5 0.0
+￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼-4-2024 f(x)
+FIGURE 11.4. Hinge loss function (1 − yf (x))+ for y = −1 and y = +1.
+(rkhs) associated with the kernel K, with ∥ f ∥2HK the squared-norm of f in HK.
+Consider the classification error, yi − f (xi ), where yi ∈ {−1, +1}. Then,
+|yi −f(xi)|=|yi(1−yif(xi))|=|1−yif(xi)|, i=1,2,...,n. (11.67)
+Let (x)+ = max{x, 0}. The quantity (1 − yif(xi))+, which could be zero if all xi are correctly classified, is called the hinge loss function and is displayed in Figure 11.4. The hinge loss plays a vital role in SVM method- ology; indeed, it has been shown to be Bayes consistent for classification in the sense that minimizing the loss function yields the Bayes rule (Lin, 2002). The hinge loss is also related to the misclassification loss function I[yiC(xi)≤0] = I[yif(xi)≤0]. When f(xi) = ±1, the hinge loss is twice the misclassification loss; otherwise, the ratio of the two losses depends upon the sign of yif(xi).
+We wish to find a function f ∈ HK to minimize a penalized version of the hinge loss. Specifically, we wish to find f ∈ HK to
+1 􏰏n
+minimize n
+where λ > 0. In (11.68), the first term, n−1 􏰊ni=1(1 − yif(xi))+, measures the distance of the data from separability, and the second term, λ ∥ f ∥2HK , penalizes overfitting. The tuning parameter λ balances the trade-off be- tween estimating f (the first term) and how well f can be approximated
+(1 − yif(xi))+ + λ∥ f ∥2HK , (11.68)
+￼i=1
+HingeLoss
+≥ ∥
+α i K ( x i , · ) ∥ 2H K ,
+( 1 1 . 7 2 )
+11.3 Nonlinear Support Vector Machines 389
+(the second term). After the minimizing f has been found, the SVM clas- sifier is C(x) = sign{f(x)}, x ∈ Rr.
+The optimizing criterion (11.68) is nondifferentiable due to the shape of the hinge-loss function. Fortunately, we can rewrite the problem in a slightly different form and thereby solve it.
+We start from the fact that every f ∈ H can be written uniquely as the sum of two terms:
+􏰏n i=1
+where f∥ ∈ HK is the projection of f onto the subspace HK of H and f⊥ is in the subspace perpendicular to HK; that is, ⟨f⊥(·),K(xi,·)⟩H = 0, i = 1,2,...,n. We can write f(xi) via the reproducing property as follows:
+f(xi) = ⟨f(·),K(xi,·)⟩ = ⟨f∥(·),K(xi,·)⟩ + ⟨f⊥(·),K(xi,·)⟩. (11.70) Because the second term on the rhs is zero, then,
+K(xi,xj). Now, from (11.69),
+∥f∥2HK = ∥􏰏αiK(xi,·)+f⊥∥2HK
+i
+= ∥ 􏰏αiK(xi,·) ∥2HK + ∥ f⊥ ∥2HK i
+􏰏
+i
+f(·) = f∥(·) + f⊥(·) =
+αiK(xi,·) + f⊥(·), (11.69)
+􏰏n i=1
+f(x) =
+independent of f⊥, where we used (11.69) and ⟨K(xi,·),K(xj,·)⟩HK =
+αiK(xi,x), (11.71)
+with equality iff f⊥ = 0, in which case any f ∈ HK that minimizes (11.68) admits a representation of the form (11.71). This important result is known as the representer theorem (Kimeldorf and Wahba, 1971); it says that the minimizing f (which would live in an infinite-dimensional rkhs if, for exam- ple, the kernel is a Gaussian RBF) can be written as a linear combination of a reproducing kernel evaluated at each of the n data points.
+From (11.72), we have that ∥ f ∥2 = 􏰊 􏰊 αiαjK(xi,xj) = ∥ β ∥2, 􏰊n HKij
+where β = i=1 αiΦ(xi). If the space HK consists of linear functions of t h e f o r m f ( x ) = β 0 + Φ ( x ) τ β w i t h ∥ f ∥ 2H K = ∥ β ∥ 2 , t h e n t h e p r o b l e m o f finding f in (11.68) is equivalent to one of finding β0 and β to
+1 􏰏n
+minimize n
+(1−yi(β0 +Φ(xi)τβ))+ +λ∥β∥2 . (11.73)
+￼i=1
+390 11. Support Vector Machines
+Then, (11.68), which is nondifferentiable due to the hinge loss function, can be reformulated in terms of solving the 1-norm soft-margin optimization problem (11.34)–(11.35).
+11.4 Multiclass Support Vector Machines
+Often, data are derived from more than two classes. In the multiclass situation, X ∈ Rr is a random r-vector chosen for classification purposes and Y ∈ {1,2,...,K} is a class label, where K is the number of classes. Because SVM classifiers are formulated for only two classes, we need to know if (and how) the SVM methodology can be extended to distinguish between K > 2 classes. There have been several attempts to define such a multiclass SVM strategy.
+11.4.1 Multiclass SVM as a Series of Binary Problems
+The standard SVM strategy for a multiclass classification problem (over K classes) has been to reduce it to a series of binary problems. There are different approaches to this strategy:
+One-versus-rest: Divide the K-class problem into K binary classifica-
+tion subproblems of the type “kth class” vs. “not kth class, ” k =
+1,2,...,K. Corresponding to the kth subproblem, a classifier f􏰡 is k
+constructed in which the kth class is coded as positive and the union
+of the other classes is coded as negative. A new x is then assigned to
+the class with the largest value of f􏰡 (x), k = 1,2,...,K, where f􏰡 (x) kk
+is the optimal SVM solution for the binary problem of the kth class versus the rest.
+One-versus-one: Divide the K-class problem into 􏰉K􏰀 comparisons of all 2
+pairs of classes. A classifier f􏰡 is constructed by coding the jth class jk
+as positive and the kth class as negative, j,k = 1,2,...,K, j ̸= k. Then, for a new x, aggregate the votes for each class and assign x to the class having the most votes.
+Even though these strategies are widely used in practice to resolve mul- ticlass SVM classification problems, one has to be cautious about their use.
+In Table 11.3, we report the CV/10 misclassification rates for one-versus- one multiclass SVM applied to the same data sets from Section 8.7. Also listed in Table 11.3 are the values of (C,γ) that yield the minimum mis- classification rate for each data set. It is instructive to compare these rates with those in Table 8.7, where we used LDA and QDA. We see that for
+￼
+Data Set Wine Iris Primate scapulae Shuttle Diabetes Pendigits E-coli Vehicle Letter recognition Glass Yeast
+n r K
+178 13 3 150 4 3 105 7 5
+43,500 8 7 145 5 3 10,992 16 10 336 7 8 846 18 4 20,000 16 26 214 9 6 1,484 8 10
+SVM–CV/10 C 0.0169 106 0.0200 100 0.0286 100 0.0019 10 0.0414 100 0.0031 10 0.1280 10 0.1501 600 0.0183 50 0.0093 10 0.3935 10
+γ
+8×10−8 0.002 0.0002 0.0001 0.000009 0.0001 1.0 0.00005 0.04 0.001 7.0
+11.4 Multiclass Support Vector Machines 391
+TABLE 11.3. Summary of support vector machine (SVM) “one-versus- one” classification results for data sets with more than two classes. Listed are the sample size (n), number of variables (r), and number of classes (K). Also listed for each data set is the 10-fold cross-validation (CV/10) misclassification rates corresponding to the best choice of (C,γ). The data sets are listed in increasing order of LDA misclassification rates (Table 8.7).
+￼￼￼the shuttle, diabetes, pendigits, vehicle, letter recognition, glass, and yeast data sets, the SVM method performs better than does the LDA method; for the iris, primate scapulae, and e-coli data sets, the SVM and LDA meth- ods perform about the same; and LDA performs better than does SVM for the wine data set. Thus, neither one-versus-one SVM nor LDA performs uniformly best for all of these data sets.
+The one-versus-rest approach is popular for carrying out text catego- rization tasks, where each document may belong to more than one class. Although it enjoys the optimality property of the SVM method for each binary subproblem, it can yield a different classifier than the Bayes opti- mal classifier for the multiclass case. Furthermore, the classification success of the one-versus-rest approach depends upon the extent of the class-size imbalance of each subproblem and whether one class dominates all other classes when determining the most-probable class for each new x.
+The one-versus-one approach, which uses only those observations be- longing to the classes involved in each pairwise comparison, suffers from the problem of having to use smaller samples to train each classifier, which may, in turn, increase the variance of the solution.
+11.4.2 A True Multiclass SVM
+To construct a true multiclass SVM classifier, we need to consider all K classes, Π1,Π2,...,ΠK, simultaneously, and the classifier has to reduce to
+392 11. Support Vector Machines
+the binary SVM classifier if K = 2. Here we describe the construction due to Lee, Lin, and Wahba (2004).
+Let v1,...,vK be a sequence of K-vectors, where vk has a 1 in the kth position and whose elements sum to zero, k = 1, 2, . . . , K; that is, let
+􏰃1 1􏰄τ
+v1 = 1, − K − 1 , · · · , − K − 1
+􏰃1 1􏰄τ
+v2 = − K − 1 , 1, · · · . − K − 1
+. 􏰃 1 1 􏰄τ vK = −K−1,−K−1,···,1 .
+Note that if K = 2, then v1 = (1,−1)τ and v2 = (−1,1)τ. Every xi can be labeled as one of these K vectors; that is, xi has label yi = vk if xi ∈ Πk, i = 1,2,...,n, k = 1,2,...,K.
+Next, we generalize the separating function f(x) to a K-vector of sepa- rating functions,
+f(x) = (f1(x),···,fK(x))τ, (11.74) fk(x)=β0k +hk(x), hk ∈HK, k=1,2,...,K. (11.75)
+In (11.75), HK is a reproducing-kernel Hilbert space (rkhs) spanned by the {K(xi,·),i = 1,2,...,n}. For example, in the linear case, hk(x) = xτβk, for some vector of coefficients βk. We also assume, for uniqueness, that
+􏰏K
+fk(x) = 0. (11.76)
+k=1
+Let L(yi) be a K-vector with 0 in the kth position if xi ∈ Πk, and 1 in all other positions; this vector represents the equal costs of misclassifying xi (and allows for an unequal misclassification cost structure if appropriate). IfK=2andxi ∈Π1,thenL(yi)=(0,1)τ,whileifxi ∈Π2,then L(yi) = (1, 0)τ .
+The multiclass generalization of the optimization problem (11.68) is, therefore, to find functions f (x) = (f1 (x), · · · , fK (x))τ satisfying (11.76) which
+￼￼￼￼￼￼where
+1 􏰏n
+minimize Iλ(f, Y) = n
+i=1
+λ 􏰏K
+[L(yi)]τ (f(xi)−yi)+ + 2 ∥ hk ∥2, (11.77)
+k=1
+￼￼where (f(xi) − yi)+ = ((f1(xi) − yi1)+,···,(fK(xi) − yiK)+)τ and Y = (y1,···,yn) is a (K ×n)-matrix.
+11.4 Multiclass Support Vector Machines 393
+By setting K = 2, we can see that (11.77) is a generalization of (11.68). Ifxi ∈Π1,thenyi =v1 =(1,−1)τ,and
+[L(yi)]τ (f(xi) − yi)+ =
+= (f2(xi) + 1)+
+K−1 K−1 n K−1
+fK(·) = − 􏰏 β0k − 􏰏 􏰏βikK(xi,·)− 􏰏 h⊥k (·).
+k=1 k=1 i=1 k=1 Because K(·, ·) is a reproducing kernel,
+(11.82)
+(11.83)
+and so,
+fk(xi) =
+β0k + hk(xi)
+(0, 1)((f1(xi) − 1)+, (f2(xi) + 1)+)τ
+= (1 − f1(xi))+, (11.78) whileifxi ∈Π2,thenyi =v2 =(−1,1),and
+[L(yi)]τ (f(xi) − yi)+ = (f1(xi) + 1)+. (11.79)
+So, the first term (with f) in (11.68) is identical to the first term (with f1) in (11.77) when K = 2. If we set K = 2 in the second term of (11.77), we have that
+􏰏2
+∥hk ∥2=∥h1 ∥2 +∥−h1 ∥2=2∥h1 ∥2, (11.80)
+k=1
+so that the second terms of (11.68) and (11.77) are identical.
+As in (11.69), the function hk ∈ HK can be decomposed into two parts:
+􏰏n
+l=1
+where the {βlk} are constants and h⊥k (·) is an element in the rkhs or- thogonal to HK . Substituting (11.76) into (11.77), then using (11.81), and rearranging terms, we have that
+h k ( · ) =
+β l k K ( x l , · ) + h ⊥k ( · ) , ( 1 1 . 8 1 )
+⟨hk,K(xi,·)⟩ = hk(xi), i = 1,2,...,n,
+= β0k +⟨hk,K(xi,·)⟩
+􏰏n
+= β0k + ⟨
+= β0k +
+l=1 􏰏n
+l=1
+(11.84)
+βlkK(xl, ·) + h⊥k (·), K(xi, ·)⟩ βlkK(xl,xi).
+394 11. Support Vector Machines
+Note that, for k = 1, 2, . . . , K − 1,
+􏰏n l=1
+􏰏n 􏰏n l=1 i=1
+Thus, to minimize (11.86), we set h⊥k (·) = 0 for all k. From (11.84), the zero-sum constraint (11.76) becomes
+􏰏n
+∥ h k ( · ) ∥ 2 = ∥
+β l k K ( x l , · ) + h ⊥k ( · ) ∥ 2
+=
+βlkβikK(xl, xi)+ ∥ h⊥k (·) ∥2,
+(11.85)
+( 1 1 . 8 6 )
+and, for k = K,
+∥ h K ( · ) ∥ 2 = ∥ 􏰏 􏰏 β i k K ( x i , · ) ∥ 2 + ∥ 􏰏 h ⊥k ( · ) ∥ 2 .
+K−1 n
+k=1 i=1 k=1
+β ̄ 0 +
+{xi, i = 1, 2, . . . , n}, (11.87) in matrix notation is given by
+􏰈􏰏K 􏰙 􏰈􏰏K 􏰙 β0k 1n + K β·k
+β ̄ l K ( x l , · ) = 0 ,
+where β ̄0 = K−1 􏰊Kk=1 β0k and β ̄l = K−1 􏰊Kk=1 βlk. At the n data points,
+l=1
+= 0, (11.88) whereK=(K(xi,xj))isan(n×n)Grammatrixandβ·k =(β1k,···,βnk)τ.
+k=1
+k=1
+Let β∗ = β0k − β ̄0 and β∗ = βik − β ̄i. Using (11.87), we see that the cen- 0k ik∗∗􏰊n∗
+tered version of (11.84) is fk (xi) = β0k + l=1 βlkK(xl, xi) = fk(xi). Then,
+􏰏K 􏰏K 􏰏K 􏰏K
+βτ·kKβ·k − Kβ ̄τ Kβ ̄ ≤ and so 􏰊Kk=1 β0k = 0. Thus,
+ ̄ τ  ̄ 􏰏n 􏰏K 0 = K2β Kβ = ∥ (
+βτ·kKβ·k = ∥ hk(·) ∥2, k=1
+∥ h∗k(·) ∥2=
+where β ̄ = (β ̄1,···,β ̄n)τ; if Kβ ̄ = 0, the inequality becomes an equality
+k=1
+k=1
+k=1
+whence, 􏰊K
+􏰊n k=1 i=1
+βik)K(xi,·) ∥2 = ∥ βikK(xi,x) = 0, for all x. Thus,
+i=1 k=1
+k=1 i=1
+􏰏K􏰘􏰏n 􏰠
+β0k + βikK(xi,x) = 0,
+k=1
+i=1
+K−1
+􏰏K 􏰏n
+βikK(xi,·) ∥2, (11.90)
+(11.91)
+( 1 1 . 8 7 )
+(11.89)
+subject to
+11.4 Multiclass Support Vector Machines 395
+for every x. So, minimizing (11.77) under the zero-sum constraint (11.76) only at the n data points is equivalent to minimizing (11.77) under the same constraint for every x.
+We next construct a Lagrangian formulation of the optimization problem (11.77) using the following notation. Let ξi = (ξi1, · · · , ξiK )τ be a K-vector of slack variables corresponding to (f(xi) − yi)+, i = 1,2,...,n, and let (ξ·1,···,ξ·K) = (ξ1,···,ξn)τ be the (n × K)-matrix whose kth column is ξ·k and whose ith row is ξi. Let (L1,···,LK) = (L(y1),···,L(yn))τ be the (n × K)-matrix whose kth column is Lk and whose ith row is L(yi) = (Li1,···,LiK). Let (y·1,···,y·K) = (y1,···,yn)τ denote the (n × K)-matrix whose kth column is y·k and whose ith row is yi.
+The primal problem is to find {β0k}, {β·k}, and {ξ·k} to
+minimize
+􏰏K k=1
+n λ 􏰏K
+Lτkξ·k + 2 βτ·kKβ·k
+k=1
+(11.92)
+(11.93) (11.94)
+(11.95)
+￼β0k1n +Kβ·k −y·k ≤ ξ·k, k = 1,2,...,K, ξ·k ≥ 0, k=1,2,...,K,
+􏰈􏰏K 􏰙 􏰈􏰏K 􏰙 β0k1n+K β·k =0.
+k=1 k=1
+Form the primal functional FP = FP ({β0k}, {β·k}, {ξ·k}), where
+􏰏K n λ 􏰏K
+FP = Lτkξ·k+2 βτ·kKβ·k
+￼k=1
+􏰏K
+k=1
+ατ·k(β0k1n + Kβ·k − y·k − ξ·k)
++
+k=1
+􏰏K 􏰏K 􏰏K
+− γ τk ξ · k + δ τ k=1
+β 0 k 1 n + K β · k . k=1
+(11.96)
+􏰈􏰈 􏰙 􏰈 􏰙􏰙
+k=1
+In (11.96), α·k = (α1k,···,αnk)τ and γk are n-vectors of nonnegative Lagrange multipliers for the inequality constraints (11.93) and (11.94), re- spectively, and δ is an n-vector of unconstrained Lagrange multipliers for the equality constraint (11.95).
+Differentiating (11.96) with respect to β0k, β·k, and ξ·k yields ∂FP = (α·k + δ)τ 1n,
+(11.97) (11.98)
+￼∂ β0k ∂FP
+∂β·k
+= nλKβ·k + Kα·k + Kδ,
+￼
+396 11. Support Vector Machines
+∂FP ∂ξ·k
+Lk − α·k − γk, 0,
+0.
+The Karush–Kuhn–Tucker complementarity conditions are
+α·k ≥ γk ≥
+=
+(11.99)
+(11.100) (11.101)
+￼α·k(β0k1n +Kβ·k −y·k −ξ·k)τ = 0, k = 1,2,...,K, (11.102) γkξτ·k = 0, k = 1,2,...,K, (11.103)
+where, from (11.99), γk = Lk − α·k. Note that (11.102) and (11.103) are outer products of two column vectors, meaning that each of the n2 elemen- twise products of those vectors are zero.
+From (11.99) and (11.101), we have that 0 ≤ α·k ≤ Lk, k = 1.2....,K. Suppose, for some i, 0 < αik < Lik; then, γik > 0, and, from (11.103), ξik = 0, whence, from (11.102), yik = β0k + 􏰊nl=1 βlkK(xl, xi).
+Setting the derivatives equal to zero for k = 1,2,...,K yields δ = −α ̄ = −K −1 􏰊Kk=1 α·k from (11.97), whence, (α·k −α ̄ )τ 1n = 0, and, from (11.98), β·k = −(nλ)−1(α·k − α ̄ ), assuming that K is positive-definite. If K is not positive-definite, then β·k is not uniquely determined. Because (11.97), (11.98), and (11.99) are each zero, we construct the dual functional FD by using them to remove a number of the terms of FP .
+The resulting dual problem is to find {α·k} to
+1 􏰏K
+minimize FD = 2
+subject to
+􏰏K
+(α·k − α ̄)τ K(α·k − α ̄) + nλ ατ·ky·k
+(11.104)
+(11.105) (11.106)
+￼where
+k=1
+k=1
+k = 1,2,...,K, k = 1,2,...,K.
+f􏰡(x)=β􏰡 +
+k 0k lk l
+􏰏n
+l=1
+0 ≤ α·k ≤ Lk, (α·k −α ̄)τ1n = 0,
+From the solution, {α􏰡·k}, to this quadratic programming problem, we set
+􏰡 −1 􏰡 β·k=−(nλ) (α􏰡·k−α ̄),
+􏰡 −1 􏰊K
+where α ̄ = K k=1 α􏰡·k.
+The multiclass classification solution for a new x is given by C (x) = arg max{f􏰡 (x)},
+(11.107)
+(11.108)
+(11.109)
+kk k
+β􏰡 K(x,x), k=1,2,...,K.
+− 1 􏰏n i=1
+11.5 Support Vector Regression 397
+Suppose the row vector α􏰡i = (α􏰡i1,···,α􏰡iK) = 0 for (xi,yi); then, from (11.107), β􏰡 = (β􏰡 ,···,β􏰡 ) = 0. It follows that the term β􏰡 K(x ,x) =
+i i1 iK ik i
+0, k = 1,2,...,K. Thus, any term involving (xi,yi) does not appear in
+(11.109); in other words, it does not matter whether (xi,yi) is or is not
+included in the learning set L because it has no effect on the solution. This
+result leads us to a definition of support vectors: an observation (xi,yi) is
+called a support vector if β􏰡 = (β􏰡 ,···,β􏰡 ) ̸= 0. As in the binary SVM i i1 iK
+solution, it is in our computational best interests for there to be relatively few support vectors for any given application.
+The one issue remaining is the choice of tuning parameter λ (and any other parameters involved in the computation of the kernel). A generalized approximate cross-validation (GACV) method is derived in Lee, Lin, and Wahba (2004) based upon an approximation to the leave-one-out cross- validation technique used for penalized-likelihood methods. The basic idea behind GACV is the following. Write (11.77) as
+Let fλ = argminf Iλ(f,Y) and let f(−i) denote the fλ that yields the mini- λ
+mum of Iλ(f,Y) by omitting the ith observation (xi,yi) from the first term in (11.110). If we write
+g(yi,f(−i)(xi))=g(yi,fλ(xi))+[g(yi,f(−i)(xi))−g(yi,fλ(xi))], (11.111) λλ
+then the λ that minimizes n−1 􏰊n g(yi, f(−i)(xi)) is found by using a i=1􏰊 λ
+suitable approximation of D(λ) = n−1 n [g(yi, f(−i)(xi))−g(yi, fλ(xi))], i=1 λ
+computed over a grid of values of λ.
+This solution of the multiclass SVM problem has been found to be suc- cessful in simulations and in analyzing real data. Comparisons of various multiclass classification methods, such as multiclass SVM, “all-versus-rest,” LDA, and QDA, over a number of data sets show that no one classifica- tion method appears to be superior for all situations studied; performance appears to depend upon the idiosyncracies of the data to be analyzed.
+11.5 Support Vector Regression
+The SVM was designed for classification. Can we extend (or generalize) the idea to regression? How would the main concepts used in SVM — con- vex optimization, optimal separating hyperplane, support vectors, margin, sparseness of the solution, slack variables, and the use of kernels — trans- late to the regression situation? It turns out that all of these concepts find
+Iλ(f, Y) = n
+where g(yi,f(xi)) = [L(yi)]τ(f(xi)−yi)+ and Jλ(f) = (λ/2)􏰊ni=1 ∥ hj ∥2.
+g(yi, f(xi)) + Jλ(f), (11.110)
+￼
+398 11. Support Vector Machines
+their analogues in regression analysis and they add a different view to the topic than the views we saw in Chapter 5.
+11.5.1 ε-Insensitive Loss Functions
+In SVM classification, the margin is used to determine the amount of separation between two nonoverlapping classes of points: the bigger the margin, the more confident we are that the optimal separating hyperplane is a superior classifier. In regression, we are not interested in separating points but in providing a function of the input vectors that would track the points closely. Thus, a regression analogue for the margin entails forming a “band” or “tube” around the true regression function that would contain most of the points. Points not contained within the tube would be described through slack variables. In formulating these ideas, we first need to define an appropriate loss function.
+We define a loss function that ignores errors associated with points falling within a certain distance (e.g., ε > 0) of the true linear regression function,
+μ(x) = β0 + xτ β. (11.112)
+In other words, if the point (X,Y ) = (x,y) is such that |y−μ(x)| ≤ ε, then the loss is taken to be zero; if, on the other hand, |y − μ(x)| > ε, then we take the loss to be |y−μ(x)|−ε.
+With this strategy in mind, we can define the following two types of loss function:
+• Lε1(y, μ(x)) = max{0, |y − μ(x)| − ε},
+• Lε2(y, μ(x)) = max{0, (y − μ(x))2 − ε}.
+The first loss function, Lε1, is called the linear ε-insensitive loss function, and the second, Lε2, is the quadratic ε-insensitive loss function. The two loss functions, linear (red curve) and quadratic (blue curve), are graphed in Figure 11.5. We see that the linear loss function ignores all errors falling within ±ε of the true regression function μ(x) while dampening in a linear fashion errors that fall outside those limits.
+11.5.2 Optimization for Linear ε-Insensitive Loss
+We define slack variables ξi and ξj′ in the following way. If the point (xi, yi) lies above the ε-tube, then ξi′ = yi − μ(xi) − ε ≥ 0, whereas if the point (xj,yj) lies below the ε-tube, then ξj = μ(xj) − ε − yj ≥ 0. For points that fall outside the ε-tube, the values of the slack variables depend
+minimize
+s u b j e c t t o
+1 􏰏n
+2 ∥ β ∥2 +C
+(ξi + ξi′)
+(11.113)
+(11.114)
+11.5 Support Vector Regression 399
+￼￼￼￼Quadratic
+Linear
+￼￼u
+FIGURE 11.5. The linear ε-insensitive loss function (red curve) and the quadratic ε-insensitive loss function (blue curve) for support vector regres- sion. Plotted are Li(u) = max{0, |u|i−ε} vs. u, i = 1, 2, where u = y−μ(x). For the linear loss function, the “flat” part of the curve has width 2ε.
+upon the shape of the loss function; for points inside the ε-tube, the slack variables have value zero.
+For linear ε-insensitive loss, the primal optimization problem is to find β0, β, ξ′ = (ξ1′,···,ξn′ )τ, and ξ = (ξ1,···,ξn)τ to
+￼i=1
+y i − ( β 0 + x τi β ) ≤ ε + ξ i′ ,
+(β0 +xτiβ)−yi ≤ε+ξi,
+ξi′ ≥0, ξi ≥0, i=1,2,...,n.
+The constant C > 0 exists to balance the flatness of the function μ against our tolerance of deviations larger than ε. Notice that because ε is found only in the constraints, the solution to this optimization problem has to incorporate a band around the regression function.
+Form the primal Lagrangian,
+F P =
+1 􏰏n 􏰏
+2 ∥ β ∥ 2 + C ( ξ i + ξ i′ ) − a i { y i − ( β 0 + x τi β ) − ε − ξ i′ }
+￼−
+􏰏
+i
+i=1 i bi{(β0 +xτi β)−yi −ε−ξi}
+− 􏰏 ciξi′ − 􏰏 diξi, ii
+(11.115)
+Epsilon-InsensitiveLossFunction
+400 11. Support Vector Machines
+where ai, bi, ci, and di, i = 1, 2, . . . , n, are the Lagrange multipliers. This, in turn, implies that ai,bi,ci, di, i = 1,2,...,n, are all nonnegative. The derivatives are
+∂FP ∂β0
+∂FP ∂β
+∂FP ∂ξi ∂FP
+=
+=
+􏰏􏰏
+ai − bi
+ii
+(11.116) (11.117)
+(11.118)
+￼β +
+􏰏􏰏
+aixi − bixi ii
+￼= C+bi−di
+￼= C+ai−ci
+Setting these derivatives equal to zero for a stationary solution yields:
+￼C +bi −di = 0,
+∂ ξ i′
+i
+􏰏
+(bi − ai) = 0,
+C +ai −ci = 0, i = 1,2,...,n.
+(11.119)
+β∗ = 􏰏(bi − ai)xi,
+(11.120)
+(11.121) (11.122)
+i
+The expression (11.120) is known as the support vector expansion because β∗ can be written as a linear combination of the input vectors {xi}. Setting β = β∗ in the true regression equation (11.112) gives us
+gives us the dual problem: find a = (a1,···,an)τ, b = (b1,···,bn)τ to maximize FD = (b−a)τy−ε(b+a)τ1n
+− 1(b−a)τK(b−a) (11.124) 2
+subjectto 0≤a,b≤C1n, (b−a)τ1n =0, (11.125)
+where K = (⟨xi,xj⟩) for linear SVM. The Karush–Kuhn–Tucker comple- mentarity conditions state that the products of the dual variables and the constraints are all zero:
+􏰏n i=1
+μ∗(x) = β0 +
+Substituting β∗ into the primal Lagrangian and using (11.120) and (11.121)
+(bi − ai)(xτ xi). (11.123)
+￼ai(β0+xτiβ−yi−ε−ξi)=0, bi(yi−β0−xτiβ−ε−ξi′)=0, ξiξi′=0,aibi=0, (ai −C)ξi = 0, (bi −C)ξi′ = 0,
+i = 1,2,...,n, i = 1,2,...,n, i = 1,2,...,n, i = 1,2,...,n.
+(11.126) (11.127) (11.128) (11.129)
+general kernel function,
+11.6 Optimization Algorithms for SVMs 401
+In practice, the value of ε is usually taken to be around 0.1.
+The solution to this optimization problem produces a linear function of x accompanied by a band or tube of ±ε around the function. Points that do not fall inside the tube are the support vectors.
+11.5.3 Extensions
+The optimization problem using quadratic ε-insensitive loss can be solved in a similar manner; see Exercise 11.2.
+If we formulate this problem using nonlinear transformations of the input vectors, x → Φ(x), to a feature space defined by the kernel K(x,y), then the stationary solution (11.120) is replaced by
+∗ 􏰏n
+β = (bi − ai)Φ(xi),
+(11.130) the more
+i=1
+the inner product ⟨xi , xj ⟩ = xτi xj in (11.120) is
+by
+replaced K(xi,xj) = ⟨Φ(xi),Φ(xj)⟩ = Φ(xi)τΦ(xj),
+(11.131) the matrix K = (K(xi,xj)) replaces the matrix K in (11.124), and the
+SVM regression function (11.122) at X = x becomes
+i=1
+resentation as it has in (11.120).
+11.6 Optimization Algorithms for SVMs
+When a data set is small, general-purpose linear programming (LP) or quadratic programming (QP) optimizers work quite well to solve SVM problems; QP optimizers can solve problems having about a thousand points, whereas LP optimizers can deal with hundreds of thousands of points. With larger data sets, however, a more sophisticated approach is required.
+The main problem when computing SVMs for very large data sets is that storing the entire kernel in main memory dramatically slows down computation. Alternative algorithms, constructed for the specific task of overcoming such computational inefficiencies, are now available in certain SVM software.
+∗ 􏰏n μ (x) = β0 +
+(bi − ai)K(x, xi); (11.132) see Exercise 11.4. Note that β∗ in (11.130) does not have an explicit rep-
+￼
+402 11. Support Vector Machines
+We give only brief descriptions of some of these algorithms. The simplest procedure for solving a convex optimization problem is that of gradient ascent:
+Gradient Ascent: Start with an initial estimate of the α-coefficient vec- tor and then successively update α one α-coefficient at a time using the steepest ascent algorithm.
+A problem with this approach is that the solution for α = (α1, · · · , αn)τ has to satisfy the linear constraint ατy = 􏰊ni=1 αiyi = 0. Carrying out a non-trivial one-at-a-time update of each α-component (while holding the remaining αs constant at their current values) will violate this constraint, and the solution at each iteration will fall outside the feasible region. The minimum number of αs that can be changed at each iteration is two.
+More complicated (but also more efficient) numerical techniques for large learning data sets are now available in many SVM software packages. Ex- amples of such advanced techniques include “chunking,” decomposition, and sequential minimal optimization. Each method builds upon certain common elements: (1) choose a subset of the learning set L, (2) monitor closely the KKT optimality conditions to discover which points not in the subset violate the conditions, and (3) apply a suitable optimizing strategy. These strategies are
+Chunking: Start with an arbitrary subset (called the “working set” or “chunk”) of size 100–500 of the learning set L; use a general LP or QP optimizer to train an SVM on that subset and keep only the support vectors; apply the resulting classifier to all the remaining data in L and sort the misclassified points by how badly they violate the KKT conditions; add to the support vectors found previously a predetermined number of those points that most violate the KKT conditions; iterate until all points satisfy the KKT conditions. The general optimizer and the point selection process make this algorithm slow and inefficient.
+Decomposition: Similar to chunking, except that at each iteration, the size of the subset is always the same; adding new points to the subset means that an equal number of old points must be removed.
+Sequential Minimal Optimization (SMO): An extreme version of the decomposition algorithm, whereby the subset consists of only two points at each iteration (see above comments related to the gradient ascent algorithm). These two αs are found at each iteration by using a heuristic argument and then updated so that the constraint ατ y = 􏰊ni=1 αiyi = 0 is satisfied and the solution is found within the feasible region.
+TABLE 11.4. Some implementations of SVM.
+11.7 Software Packages 403
+￼Package
+SVMlight
+LIBSVM SVMTorch II SVMsequel TinySVM
+Implementation
+http://svmlight.joachims.org/ http://csie.ntu.edu.tw/~cjlin/libsvm/ http://www.idiap.ch/machine-learning.php http://www.isi.edu/~hdaume/SVMsequel/ http://chasen.org/~taku/TinySVM/
+￼￼A big advantage of SMO (Platt, 1999) is that the algorithm has an ana- lytical solution and so does not need to refer to a general QP optimizer; it also does not need to store the entire kernel matrix in memory. Although more iterations are needed, SMO is much faster than the other algorithms. The SMO algorithm has been improved in many ways for use with massive data sets.
+11.7 Software Packages
+There are several software packages for computing SVMs. Many are avail- able for downloading over the Internet. See Table 11.4 for a partial list. Most of these SVM packages use similar data-input formats and command lines.
+The most popular SVM package is SVMlight by Thorsten Joachims; it is very fast and can carry out classification and regression using a variety of kernels and is used for text classification. It is often used as the basis for other SVM software packages.
+The C++–based package LIBSVM by C.-C. Chang and C.-J. Lin, which carries out classification and regression, is based upon SMO and SVMlight, and has interfaces to MATLAB, python, perl, ruby, S-Plus (function svm in library libsvm), and R (function svm in library e1071); see Venables and Ripley (2002, pp. 344–346). SVMTorch II is an extremely fast C++ program for classification and regression that can handle more than 20,000 observations and more than 100 input variables. SVMsequel is a very fast program that handles classification problems, a variety of kernels (including string kernels), and enormous data sets. TinySVM, which supports C++, perl, ruby, python, and Java interfaces, is based upon SVMlight, carries out classification and regression, and can deal with very large data sets.
+￼
+404 11. Support Vector Machines
+Bibliographical Notes
+There are several excellent references on support vector machines. Our primary references include the books by Vapnik (1998, 2000), Cristianini and Shawe-Taylor (2000), Shawe-Taylor and Cristianini (2004, Chapter 7), Scho ̈lkopf and Smola (2002), and Hastie, Tibshirani, and Friedman (2001, Section 4.5 and Chapter 12) and the review articles by Burges (1998), Scho ̈lkopf and Smola (2003), and Moguerza and Munoz (2006). An excellent book on convex optimization is Boyd and Vandenberghe (2004).
+Most of the theoretical work on kernel functions goes back to about the beginning of the 1900s. The idea of using kernel functions as inner products was introduced into machine learning by Aizerman, Braverman, and Rozoener (1964). Kernels were then put to work in SVM methodology by Boser, Guyon, and Vapnik (1992), who borrowed the “kernel” name from the theory of integral operators.
+Our description of string kernels for text categorization is based upon Lodhi, Saunders, Shawe-Taylor, Cristianini, and Watkins (2002). See also Shawe-Taylor and Cristianini (2004, Chapter 11). For applications of SVM to text categorization, see the book by Joachims (2002) and Cristianini and Shawe-Taylor (2000, Section 8.1).
+Exercises
+11.1 (a) Show that the perpendicular distance of the point (h, k) to the √
+linef(x,y)=ax+by+c=0is±(ah+bk+c)/ a2+b2,wherethesign chosen is that of c.
+(b) Let μ(x) = β0 +xτβ = 0 denote a hyperplane, where β0 ∈ R and β∈Rr,andletxk ∈Rr beapointinthespace.Byminimizing∥x−xk ∥2 subject to μ(x) = 0, show that the perpendicular distance from the point to the hyperplane is |μ(xk)|/ ∥ β ∥.
+11.2 In the support vector regression problem using a quadratic ε-insensitive loss function, formulate and solve the resulting optimization problem.
+11.3 The “2-norm soft margin” optimization problem for SVM classi-
+￼￼￼fication: Consider the regularization problem of minimizing 1 ∥ β ∥2 􏰊n2 τ2
+￼+C i=1ξi subjecttotheconstraintsyi(β0+xiβ)≥1−ξi,andξ≥0, for i = 1,2,...,n.
+(a) Show that the same optimal solution to this problem is reached if we remove the constraints ξi ≥ 0, i = 1, 2, . . . , n, on the slack variables. (Hint: What is the effect on the objective functional if this constraint is violated?)
+(b) Form the primal Lagrangian FP , which will be a function of β0, β, ξ, and the Lagrangian multipliers α. Differentiate FP wrt β0, β, and ξ, set the results equal to zero, and solve for a stationary solution.
+(c) Substitute the results from (b) into the primal Lagrangian to obtain the dual objective functional FD. Write out the dual problem (objective functional and constraints) in matrix notation. Maximize the dual wrt α. Use the Karush–Kuhn–Tucker complementary conditions αi{yi(β0+xτi β)− (1 − ξi )} = 0 for i = 1, 2, . . . , n.
+(d) If α∗ is the solution to the dual problem, find β􏰡 and its norm, which gives the width of the margin.
+11.4 For the support vector regression problem in a feature space defined by a general kernel function K representing the inner product of pairs of nonlinearly transformed input vectors, formulate and solve the resulting optimization problem using (a) a linear ε-insensitive loss function and (b) a quadratic ε-insensitive loss function.
+11.5 In the support vector regression problem, let ε = 0. Consider the quadratic (2-norm) primal optimization problem,
+minimize λ ∥ β ∥2 + 􏰊ni=1 ξi2
+subject to yi −xτi β = ξi, i = 1,2,...,n.
+Form the Lagrangian, differentiate wrt β and ξi, i = 1,2,...,n, and set the results equal to zero for a stationary solution. Substitute these values into the primal functional to get the dual problem. Use K to represent the Gram matrix with entries either Kij = xτi xj or Kij = K(xi,xj). Differentiate the dual functional wrt the Lagrange multipliers α, and set the result equal to zero. Show that this solution is related to ridge regression (see Section 5.7.4).
+11.6 Let x, y ∈ R2. Consider the polynomial kernel function, K(x, y) = ⟨x,y⟩2,sothatr=2andd=2.FindtwodifferentmapsΦ:R2 →Hfor H = R3.
+11.7 Let z ∈ R and define the (2m + 1)-dimensional Φ-mapping, Φ(z) = (2−1/2,cosz,···,cosmz,sinz,···,sinmz)τ.
+Using this mapping, show that the kernel K(x, y) = ⟨Φ(x), Φ(y)⟩, x, y ∈ R, reduces to the Dirichlet kernel given by
+sin((m + 1 )δ) K(x,y) = 2 ,
+11.8 Show that the homogeneous polynomial kernel, K (x, y) = ⟨x, y⟩d , satisfies Mercer’s condition (11.54).
+11.7 Exercises 405
+￼￼where δ = x − y.
+2 sin(δ/2)
+406 11. Support Vector Machines
+11.9 If K1 and K2 are kernels and c1, c2 ≥ 0 are real numbers, show that the following functions are kernels:
+(a) c1K1(x, y) + c2K2(x, y); (b) K1(x,y)K2(x,y);
+(c) exp{K1(x,y)}.
+(Hint: In each case, you have to show that the function is nonnegative- definite.)
+11.10 Prove that in finite-dimensional input space, a symmetric function K(x,y) is a kernel function iff K = (K(xi,xj)) is a nonnegative-definite matrix with nonnegative eigenvalues. (Hint: Use the symmetry and the spectral theorem for K to show that K is a kernel. Then, show that for a negative eigenvalue, the squared-norm of any point z ∈ H is negative, which is impossible.)
+11.11 Show that the functional FD (α) in (11.41) is convex; i.e., show that, for θ ∈ (0,1) and α,β ∈ Rn,
+FD(θα + (1 − θ)β) ≤ θFD(α) + (1 − θ)FD(β).
+11.12 Apply nonlinear-SVM to a binary classification data set of your choice. Make up a two-way table of values of (C,γ) and for each cell in that table compute the CV/10 misclassification rate. Find the pair (C,γ) with the smallest CV/10 misclassification rate. Compare this rate with results obtained using LDA and that using a classification tree.

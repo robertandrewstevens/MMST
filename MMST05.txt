@@ -1,0 +1,1031 @@
+5
+Model Assessment and Selection in Multiple Regression
+5.1 Introduction
+Regression, as a scientific method, first appeared around 1885, although the method of least squares was discovered 80 years earlier. Least squares owes its origins to astronomy and, specifically, to Legendre’s 1805 pioneering work on the determination of the orbits of planets in which he introduced and named the method of least squares. Adrien Marie Legendre estimated the coefficients of a set of linear equations by minimizing the error sum of squares. Gauss stated in 1809 that he had been using the method since 1795, but could not prove his claim with documented evidence. Within a few years, Gauss and Pierre Simon Laplace added a probability component — a Gaussian curve to describe the error distribution — that was crucial to the success of the method. Gauss went on to devise an elimination algorithm to compute least-squares estimates. Once introduced, least squares caught on immediately in astronomy and geodetics, but it took 80 years for these ideas to be transported to other disciplines.
+The ideas of regression and correlation were developed in the mid-1880s by Francis Galton in studies of heredity stature, and he applied those ideas to a comparison of the heights of parents and their children (which led to his famous phrase of “regression to mediocrity”). Galton (and also Fran-
+A.J. Izenman, Modern Multivariate Statistical Techniques, Springer Texts in Statistics, 107 DOI 10.1007/978-0-387-78189-1_5, © Springer Science+Business Media New York 2013
+￼
+108 5. Model Assessment and Selection in Multiple Regression
+cis Ysidro Edgeworth and Karl Pearson), however, failed to connect least squares to regression. It was George Udny Yule, in 1897, who showed that an assumption of a Gaussian error curve in regression could be replaced by an assumption that the variables were linearly related, and that, as a result, least squares could be applied to regression. Thus, the wealth of numeri- cal algorithms already developed by astronomers and geodesists for finding least-squares solutions could be put to work solving regression equations.
+Since then, regression has evolved into many different forms, including linear and nonlinear regression and parametric and nonparametric regres- sion. Linear regression models, in particular, are referred to as simple, mul- tiple, or multivariate depending upon the number of input and output variables considered. Simple linear regression deals with one input and one output, multiple regression deals with many inputs and one output, and multivariate regression deals with many inputs and many outputs.
+5.2 The Regression Function and Least Squares
+Assume that an output (or dependent, response) variable Y is linearly
+￼related to r input (or independent, predictor) variables X1, . . . , Xr following way,
+􏰏r j=1
+in the (5.1)
+Y =β0 +
+βjXj +e,
+where e is an unobservable random variable (the error component) with mean 0 and variance σ2. The relationship (5.1) is known as a multiple linear regression model, where β0, β1, . . . , βr are unknown parameters and σ2 > 0 is an unknown error variance. The linearity of the model (5.1) is a result of its linearity in the parameters β0, β1, . . . , βr. Thus, transformations of the input variables (such as powers Xjd and products XjXk) can be included in (5.1) without it losing its characterization as a linear regression model.
+The goal is to estimate the true values of β0,β1,...,βr, and σ2, and to assess the impact of each input variable on the behavior of Y . In the likely event that some of the input variables have negligible effects on Y , we may also wish to reduce the number of input variables to a smaller number, especially if r is large. In many uses of multiple regression, we are interested in predicting future values of Y , given future values of the input variables, and we would like to be able to measure the accuracy of those predictions.
+The way we treat the model (5.1) depends upon our assumptions about how the input variables X1, . . . , Xr were generated. We distinguish between the case when the values of X1, . . . , Xr are randomly selected according to some probability distribution (the “random-X” case), a situation that
+5.2 The Regression Function and Least Squares 109
+occurs with observational data, and the case when the values of X1, . . . , Xr are fixed in repeated sampling (the “fixed-X” case), possibly set through a designed experiment.
+5.2.1 Random-X Case
+Suppose we have an input vector of random variables X = (X1 , . . . , Xr )τ and a random output variable Y , and suppose that these r + 1 real-valued random variables are jointly distributed according to P(X, Y ) with means E(X) = μX and E(Y) = μY , respectively, and covariance matrices ΣXX, ΣYY =σY2,andΣXY.
+Consider the problem of predicting Y by a function, f(X), of X. We measure prediction accuracy by a real-valued loss function L(Y,f(X)), that gives the loss incurred if Y is predicted by f(X). The expected loss is the risk function,
+R(f) = E{L(Y,f(X))}, (5.2) which measures the quality of f as a predictor. The Bayes rule is the
+function f∗ which minimizes R(f), and the Bayes risk is R(f∗).
+For squared-error loss, R(f) becomes the mean squared error criterion
+by which we judge f (X) as a predictor of Y . We have that
+R(f) = E{(Y − f(X))2} (5.3)
+= EX[EY |X{(Y − f(X))2|X}], (5.4) where the subscripts indicate the distribution over which the expectation is
+taken. Hence, R(f) can be minimized pointwise (at each x). We can write
+Y − f(x) = (Y − μ(x)) + (μ(x) − f(x)), (5.5)
+where μ(x) = EY |X{Y |X = x} is the mean of the conditional distribution of Y given X = x and is called the regression function of Y on X. Squaring both sides of (5.5) and taking conditional expectations, we have that
+EY |X{(Y − f(x))2|X = x} = EY |X{(Y − μ(x))2|X = x}
++ (μ(x) − f (x))2 , (5.6)
+where the cross-product term vanishes because EY |X{Y −μ(x)|X = x} = 0. Therefore, (5.6) is minimized with respect to f by taking
+f∗(x) = μ(x) = EY |X{Y |X = x}, (5.7) so that the pointwise minimum of (5.6) is given by
+EY |X{(Y − f∗(x))2|X = x} = EY |X{(Y − μ(x))2|X = x}. (5.8)
+110 5. Model Assessment and Selection in Multiple Regression
+Taking expectations of both sides, we have that the Bayes risk is
+R(f∗) = min R(f) = E{(Y − μ(X))2}. (5.9)
+f
+Thus, the best predictor of Y at X=x, using minimum mean squared er- ror to define “best,” is given by μ(x), the regression function of Y on X, evaluated at X=x, which is also the unique Bayes rule.
+To be more specific, suppose the relationship (5.1) holds, where we as- sume that e is uncorrelated with the X1,...,Xr. The regression function, which is linear in X, is given by
+􏰏r i=1
+βiXi = β0 +Xτβ∗ = Zτβ, (5.10) coefficients, β = (β . βτ)τ is an (r + 1)-vector, and Z = (1 . Xτ)τ is
+μ(X) = β0 +
+where β0 is the intercept, β∗ = (β1 , . . . , βr )τ is an r-vector of regression
+0∗
+an (r + 1)-vector. We then choose β0 and β∗ to minimize the quadratic
+objective function (5.8). Let
+S(β) = E{(Y − Zτ β)2}, (5.11)
+and define β􏰣 = argminβS(β). Differentiating S(β) with respect to β yields:
+∂S(β) = −2E(ZY − ZZτ β). (5.12) ∂β
+Setting (5.12) equal to zero for a minimum, we get the OLS estimator of
+￼β:
+From (5.13), and setting β􏰣 = (β􏰣 . β􏰣 τ )τ , it
+(Exercise 5.1) that
+β􏰣ols = [E(ZZτ )]−1E(ZY ). ols 0 ∗
+β􏰣 = Σ−1 Σ , ∗ XXXY
+(5.13) to show
+them by ML using data generated by the joint distribution of (X, Y ). Now we estimate the unknown β􏰣∗ and β􏰣0. Suppose that
+D = {(xi,yi),i = 1,2,...,n}, (5.16)
+are iid observations from P(X,Y), where xi = (xi1,···,xir)τ is the ith observed value of X = (X1, X2, · · · , Xr)τ and yi is the ith observed value of Y , i = 1,2,...,n. Let X = (x1,···,xn)τ be an (n × r)-matrix and
+β􏰣0 =μY−μτXβ􏰣∗.
+In practice, because μX, μY , ΣXX and ΣXY will be unknown, we estimate
+is
+not
+difficult
+(5.14) (5.15)
+5.2 The Regression Function and Least Squares 111
+Y = (y1, · · · , yn)τ be an n-vector. Estimates of μX and μY are given by the r-vectorx ̄=n−1􏰊nj=1xj andscalary ̄=n−1􏰊nj=1yj,respectively.Let X ̄ = (x ̄,···,x ̄)τ be an (n × r)-matrix and Y ̄ = (y ̄,···,y ̄)τ be an n-vector. LetXc =X−X ̄andYc =Y−Y ̄bethemean-centeredformsofX andY, respectively, and estimate ΣXX by n−1Xcτ Xc and ΣXY by n−1Xcτ Yc. The least-squares estimates of β􏰣∗ and β􏰣0 are given by
+β􏰡 ∗ = ( X cτ X c ) − 1 X cτ Y c , ( 5 . 1 7 ) β􏰡 0 = y ̄ − x ̄ τ β􏰡 ∗ , ( 5 . 1 8 )
+respectively.
+5.2.2 Fixed-X Case
+In the “fixed-X” case, we view the input variables X1,...,Xr as being fixed in repeated sampling at the values x1,...,xr, respectively. Thus, the value of the random variable Y may depend upon input variables whose val- ues are selected by an experimentalist within the framework of a designed experiment, or Y may be observed conditional on x1,...,xr.
+Suppose the n observations {(xi,yi),i = 1,2,...,n} on (X,Y) satisfy (5.1), where xi = (xi1,···,xir)τ, so that
+as e. Equations (5.19) can be written as
+yi =zτiβ+ei =μ(xi)+ei, i=1,2,...,n, (5.20)
+where μ(xi) = zτi β is the regression function, zτi = (1,xi1,···,xir), and βτ = (β0, β1, · · · , βr). The n equations (5.20) can be written more com- pactly as
+Y = Zβ + e, (5.21)
+whereY=(y1,···,yn)τ isann-vector,Z=(z1,···,zn)τ isan(n×(r+1))- matrix with ith row zτi (i = 1,2,...,n), β is an (r + 1)-vector, and e is a random n-vector of unobservable errors with E(e) = 0 and var(e) = σ2In. To account for the intercept β0, the first column of Z consists only of 1s.
+We form the error sum of squares (ESS),
+∂ESS(β) = −2Zτ (Y − Zβ), (5.23) ∂β
+􏰏n i=1
+􏰏r j=1
+yi=β0+
+where e1, e2, . . . , en are iid random variables having the same distribution
+βjxij+ei, i=1,2,...,n, (5.19)
+e2i = eτe = (Y −Zβ)τ(Y −Zβ), (5.22) and estimate β by minimizing ESS(β) with respect to β. Differentiating
+ESS(β) =
+ESS(β) with respect to β yields
+￼
+112 5. Model Assessment and Selection in Multiple Regression
+∂2ESS(β) = −2Zτ Z, (5.24) ∂β ∂βτ
+and setting result (5.23) equal to 0 for a minimum yields the normal equa-
+￼tions,
+Z τ Z β􏰡 = Z τ Y . ( 5 . 2 5 )
+Assuming that the ((r + 1) × (r + 1))-matrix ZτZ is nonsingular (and, hence, invertible), the unique ordinary least-squares (OLS) estimator of β in the model (5.21) is given by
+β􏰡ols = (Zτ Z)−1Zτ Y. (5.26) Note the resemblance of (5.26) to (5.13).
+We can write Z = (1 . Xτ ), where Xτ = (x ) is an (r×n)-matrix, with n ij
+a corresponding partition of β as β = (β . βτ)τ, where β = (β ,···,β )τ. 0∗∗1r
+Let x ̄ = n−1X1n and y ̄ = n−11τnY. As before, let X ̄ = (x ̄,···,x ̄) be an (n×r)-matrix each column of which is x ̄, and let Y ̄ = (y ̄,···,y ̄)τ, be an n-vector each element of which is y ̄. Then, Xc = X − X ̄ is an (n × r)-matrix
+and Y = Y −Y ̄ is an n-vector. Set β􏰡 = (β􏰡 . β􏰡τ)τ. It is not difficult to
+c
+show (Exercise 5.2) that
+β􏰡 ∗ = β􏰡 0 =
+ols 0 ∗
+( X cτ X c ) − 1 X cτ Y c , ( 5 . 2 7 )
+y ̄ − x ̄ τ β􏰡 ∗ . ( 5 . 2 8 )
+Clearly, the estimates (5.17) and (5.18) are identical to the corresponding estimates (5.27) and (5.28). Even though the descriptions differ as to how the input data are generated, the OLS estimates turn out to be the same for the random-X case and the fixed-X case.
+For fixed X and assuming that cov(e) = σ2In, the mean vector and covariance matrix of β􏰡ols in (5.26) are given by E(β􏰡ols) = β and
+cov(β􏰡ols) = (Zτ Z)−1Zτ {cov(Y)}Z(Zτ Z)−1
+= σ2(Zτ Z)−1, (5.29)
+respectively.
+The OLS regression estimator β􏰡ols has some very desirable properties that are characterized by the Gauss–Markov Theorem (Exercise 5.4). If we are looking for a linear unbiased estimator of β with minimum variance, the Gauss–Markov Theorem states that we need only consider β􏰡ols.
+The components of the n-vector of OLS fitted values are the vertical projections of the n points onto the LS regression surface (or hyperplane) y􏰡i = μ􏰡(xi) = β􏰡0 + xτi β􏰡∗ = zτi β􏰡ols, i = 1,2,...,n. See Figure 5.1 for a geometrical view. The variance of Y􏰡i for fixed xi is given by
+var(Y􏰡i | xi) = zτi {cov(β􏰡ols)}zi = σ2zτi (Zτ Z)−1zi. (5.30)
+5.2 The Regression Function and Least Squares 113
+￼￼￼x2
+y
+y=projM(y)=OLSestimate
+x1
+M=span(x1,x2)
+FIGURE 5.1. A geometrical view of the ordinary least-squares method, using two input variables, X1 and X2. The hyperplane spanned by the input variables is denoted by M, and the OLS fitted value y􏰡 is the orthogonal projection of the output value y onto M.
+The n-vector of fitted values Y􏰡 = (y􏰡1, . . . , y􏰡n)τ is
+Y􏰡 = Zβ􏰡ols = Z(Zτ Z)−1Zτ Y = HY, (5.31)
+wherethe(n×n)-matrixH=Z(ZτZ)−1Zτ isoftencalledthehatmatrix because it puts the “hat” on Y. Note that H and In−H are both symmetric, idempotent matrices with H(In − H) = 0. Furthermore, HZ = Z and (In − H)Z = 0. The covariance matrix of Y􏰡 given X = x is given by
+cov(Y􏰡|x) = H{cov(Y)}Hτ = σ2H. (5.32)
+The ijth component hij of H is the amount of leverage (or impact) that the observed value yj exerts on the fitted value y􏰡i. The hat matrix H is, therefore, used to identify high-leverage points. In particular, the diagonal components hii satisfy 0 ≤ hii ≤ 1, their sum is the number, r, of input variables, and the average leverage magnitude is r/n. From this, high- leverage points have been defined as those points having hii > 2r/n.
+The residuals, 􏰡e = Y − Y􏰡 = (In − H)Y, are the OLS estimates of the unobservable errors e. The residual vector can also be written as
+􏰡e=Y−Zβ􏰡ols =(Zβ+e)−Z(β+(ZτZ)−1Zτe)=(In −H)e, (5.33)
+whence, assuming again that Z is fixed, it follows that E(􏰡e) = 0 and cov(􏰡e) = σ2(In − H). Hence, var(e􏰡i) = σ2(1 − hii), where hii is the ith diagonal element of H, i = 1, 2, . . . , n. The residual sum of squares (RSS) is given by
+RSS =
+2τ
+e􏰡i = 􏰡e 􏰡e = ESS(βols).
+(5.34)
+􏰏n
+i=1
+􏰡
+v
+114 5. Model Assessment and Selection in Multiple Regression
+Note that
+RSS = ESS(β) + (β − β􏰡ols)τ Zτ Z(β − β􏰡ols). (5.35) Dividing RSS by its number of degrees of freedom, n − r − 1, gives us an
+unbiased estimate of the error variance σ2,
+σ􏰡2= RSS , (5.36)
+￼n−r−1
+which is known as the residual variance. The OLS estimate of cov(β􏰡ols) is,
+therefore, given by
+c􏰤ov(β􏰡ols) = σ􏰡2(Zτ Z)−1. (5.37)
+Residuals are often rescaled into internally Studentized residuals (which are more usually called standardized residuals) by dividing them by an estimate of their standard error,
+S e􏰡i
+e􏰡i =σ􏰡(1−hii)1/2, i=1,2,...,n. (5.38)
+An externally Studentized residual can also be defined by omitting the ith case from the regression.
+Because the n fitted values Y􏰡 = HY and the n residuals 􏰡e = (In − H)Y have zero covariance and, hence, are uncorrelated, it follows that the re- gression of Y􏰡 on 􏰡e has zero slope. If the multiple regression model is correct, then a scatterplot of residuals (or Studentized residuals) against fitted val- ues should show no discernible pattern (i.e., a slope of approximately zero). Anomolous patterns to look out for include nonlinearity, nonconstant vari- ance, and possible outliers.
+Now, consider the identity yi − y ̄ = (yi − y􏰡i) + (y􏰡i − y ̄). Squaring both sides, summing over all n observations, and noting that the cross-product term disappears, we have that the total sum of squares,
+􏰏n
+(yi−y ̄)2=(Y−Y ̄)τ(Y−Y ̄), (5.39) can be written as SY Y = SSreg +RSS, where the regression sum of squares,
+￼S S r e g =
+and the residual sum of squares,
+( 5 . 4 0 )
+(5.41)
+RSS=
+(y −y􏰡)2 =(Y−Zβ􏰡 )τ(Y−Zβ􏰡 ),
+SYY =
+i=1
+􏰏n τ
+( y􏰡 i − y ̄ i ) 2 = β􏰡 o l s ( Z τ Z ) β􏰡 o l s ,
+i=1
+􏰏n
+ii ols ols
+i−1
+Source of Variation
+Regression on X1,...,Xr Residual
+df Sum of Squares
+r SSreg = β􏰡τols(ZτZ)β􏰡ols n−r−1 RSS=(Y−Zβ􏰡ols)τ(Y−Zβ􏰡ols)
+5.2 The Regression Function and Least Squares 115
+TABLE 5.1. ANOVA table for a multiple regression model.
+￼￼￼Total n−1 SYY =(Y−Y ̄)τ(Y−Y ̄)
+form an orthogonal decomposition, which can be summarized by an analysis of variance (ANOVA) table; see Table 5.1. The squared multiple correlation coefficient, R2 = SSreg/SY Y , lies between 0 and 1 and is used to measure the proportion of the total variation in Y that can be explained by a linear regression on x1,...,xr.
+So far, no assumptions have been made about the probability distribution of the errors. If ei ∼ N(0,σ2), i = 1,2,...,n, it follows that
+β􏰡 ∼ N 􏰉β,σ2(ZτZ)−1􏰀, (5.42) ols r+1
+RSS = (n − r − 1)σ􏰡2 ∼ σ2χ2n−r−1, (5.43)
+and β􏰡ols and σ􏰡2 are independently distributed. From the ANOVA table, we can determine whether there is a linear relationship between Y and the Xs. We compute the F-statistic,
+F = SSreg/r , (5.44) RSS/(n − r − 1)
+and compare the resulting F -value with an appropriate percentage point of the Fr,n−r−1 distribution. A small value for F implies that the data did not provide sufficient evidence to reject β = 0, whereas a large value indicates that at least one βj is not zero. Under normality, if βj = 0, the statistic
+β􏰡
+tj=√j , (5.45)
+where vjj is the jth diagonal entry of (ZτZ)−1, follows the Student’s t distribution with n − r − 1 degrees of freedom, j = 1, 2, . . . , r + 1. A large value of |tj | is evidence that βj ̸= 0, whereas a small, near-zero value of |tj | is evidence that βj = 0. For large n, tj reduces to a Gaussian-distributed
+￼￼￼σ􏰡 vjj
+￼
+116 5. Model Assessment and Selection in Multiple Regression
+random variable, and the cutoff value for |tj| is usually taken to be 2.0. For 0 < α < 1, it follows that a (1−α)×100% confidence region for β is given by the set of β-vectors such that
+(r+1)−1(β􏰡 −β)τ(ZτZ)(β􏰡 −β)≤σ􏰡2Fα . (5.46) ols ols r+1,n−r−1
+Geometrically, the confidence region (5.46) is an (r + 1)-dimensional ellip- soid with center β􏰡ols and orientation controlled by the matrix ZτZ.
+5.2.3 Example: Bodyfat Data
+These data were used to produce predictive equations for lean body weight, a measure of health.1 Measurements were made on n = 252 men in order to relate the percentage of bodyfat determined by underwater weighing (bodyfat), which is inconvenient and costly to obtain, to a num- ber of body circumference measurements, recorded using only a scale and measuring tape.
+The r = 13 input variables are age in years (age), weight in lbs (weight), height in inches (height), neck circumference in cms (neck), chest circum- ference in cms (chest), abdomen 2 circumference in cms (abdomen), hip cir- cumference in cms (hip), thigh circumference in cms (thigh), knee circum- ference in cms (knee), ankle circumference in cms (ankle), extended biceps circumference in cms (biceps), forearm circumference in cms (forearm), and wrist circumference in cms (wrist).
+The pairwise correlations of the input variables are given in Table 5.2. We see 13 correlations greater than 0.8 and two greater than 0.9. One observation (#39) appears to be an outlier in all variables except age, height, forearm, and wrist. Using these 13 body measurements, we wish to derive accurate predictive measurements of bodyfat.
+To study the relationship between bodyfat and the 13 input variables, we formulate the regression equation as follows:
+bodyfat = β0 + β1(age) + β2(weight) + β3(height) + β4(neck) + β5(chest) + β6(abdomen) + β7(hip) + β8(thigh)
++ β9(knee) + β10(ankle) + β11(biceps)
++ β12(forearm) + β13(wrist) + e, (5.47)
+where e is a random variable with mean zero and constant variance σ2. The results of the multiple regression are given in Table 5.3 and summarized in Figure 5.2 by the ordered absolute values of the t-ratios of the 13 estimated
+1The data and literature references can be downloaded from the StatLib–Datasets Archive, lib.stat.cmu.edu/datasets/, under the filename bodyfat.
+￼
+5.3 Prediction Accuracy and Model Assessment 117
+TABLE 5.2. Correlations between all pairs of input variables for the body- fat data. For these data, r = 13, n = 252.
+￼age weight weight –0.013
+height –0.245 0.487 neck 0.114 0.831 chest 0.176 0.894 abdomen 0.230 0.888 hip –0.050 0.941 thigh –0.200 0.869 knee 0.018 0.853 ankle –0.105 0.614 biceps –0.041 0.800 forearm –0.085 0.630 wrist 0.214 0.730 hip thigh
+thigh 0.896
+knee 0.823 0.799
+ankle 0.558 0.540 biceps 0.739 0.761 forearm 0.545 0.567 wrist 0.630 0.559
+height neck chest
+0.321
+0.227 0.785
+0.190 0.754 0.916 0.372 0.735 0.829 0.339 0.696 0.730 0.501 0.672 0.719 0.393 0.478 0.483 0.319 0.731 0.728 0.322 0.624 0.580 0.398 0.745 0.660
+knee ankle biceps
+0.612
+0.679 0.485
+0.556 0.419 0.678 0.665 0.566 0.632
+abdomen
+0.874 0.767 0.737 0.453 0.685 0.503 0.620
+forearm
+0.586
+￼￼￼￼regression coefficients. We see a few large values in the residual analysis: 12 standardized residuals have absolute values greater than 2.0, and two of them (observations 39 and 224) have absolute values greater than 2.6. We estimate the error variance σ2 by the residual variance, σ􏰡2 = 18.572 on 238 degrees of freedom. If the errors are Gaussian distributed (an assumption that is supported by the residual analysis), the t statistics for abdomen, wrist, forearm, neck, and age are significant.
+5.3 Prediction Accuracy and Model Assessment
+Prediction is the art of making accurate guesses about new response values that are independent of the current data. Good predictive ability is often recognized as the most useful way of assessing the fit of a model to data. Thus, the two aims of prediction and model assessment (or validation) are closely related to each other.
+For prediction in regression, we use the learning data,
+L = {(xi,yi),i = 1,2,...,n}, (5.48)
+to regress Y on X, and then predict a new Y -value, ynew, by applying the fitted model to a brand-new X-value, xnew, from the test set T . The result- ing prediction is compared with the actual response value. The predictive ability of the regression model is assessed by its prediction (or generaliza- tion) error, an overall measure of the quality of the prediction, usually taken to be mean squared error. The definition of prediction error depends upon whether we consider X as fixed or as random (Breiman, 1996a).
+￼
+118 5. Model Assessment and Selection in Multiple Regression
+TABLE 5.3. OLS estimation of coefficients for the regression model using the bodyfat data with r = 13, n = 252. The multiple R2 is 0.749, the residual sum of squares is 4420.1, and the F-statistic is 54.5 on 13 and 238 degrees of freedom. A multiple regression using only those variables having |t| > 2 (i.e., abdomen, wrist, forearm, neck, and age) has residual sum of squares 4724.9, R2 = 0.731, and an F -statistic of 133.85 on 5 and 246 degrees of freedom.
+Coefficient Estimate Std.Error t-value
+￼￼(Intercept) -21.3532 age 0.0646 weight -0.0964 height -0.0439 neck -0.4755 chest -0.0172 abdomen 0.9550 hip -0.1886 thigh 0.2483 knee 0.0139 ankle 0.1779 biceps 0.1823 forearm 0.4557 wrist -1.6545
+22.1862 -0.9625 0.0322 2.0058 0.0618 -1.5584 0.1787 -0.2459 0.2356 -2.0184 0.1032 -0.1665 0.0902 10.5917 0.1448 -1.3025 0.1462 1.6991 0.2477 0.0563 0.2226 0.7991 0.1725 1.0568 0.1993 2.2867 0.5332 -3.1032
+￼￼￼￼￼abdomen wrist
+forearm neck age thigh
+weight hip
+biceps ankle
+height chest knee
+FIGURE 5.2. Multiple regression results for the bodyfat data. The variable names are given on the vertical axis (listed in descending order of their absolute t-ratios) and the absolute value of the t-ratio for each variable on the horizontal axis.
+￼￼￼￼￼￼￼￼￼￼￼￼￼0246810 AbsoluteValueoft-ratio
+5.3 Prediction Accuracy and Model Assessment 119
+5.3.1 Random-X Case
+In the random-X case, the learning data L are iid observations from the joint distribution of (X, Y ). The observed responses Yi , i = 1, 2, . . . , n, are assumed to have been generated by the regression model,
+Y =β0 +Xτβ+e=μ(X)+e, (5.49)
+where μ(X) = E(Y |X) = β0+Xτ β is the true regression function, E(e|X) = 0, and var(e|X) = E{Y − E(Y |X)}2 = σ2. From T , we draw a new obser- vation, (xnew,ynew), where we assume ynew is unknown, from the same distribution as (X, Y ), but independent of the learning set L. We assess the fitted model by predicting ynew from xnew.
+If the estimated OLS regression function at X = x is
+μ􏰡 ( x ) = β􏰡 0 + x τ β􏰡 ∗ , ( 5 . 5 0 )
+then the predicted value of y at xnew is given by μ􏰡(xnew). The prediction error (PER) in this case is defined as the mean squared error in predicting ynew using μ􏰡(xnew),
+P E R = n · E { Y n e w − μ􏰡 ( X n e w ) } 2 = n σ 2 + M E R , where the expectation is taken only over (Xnew, Y new) and
+MER = n · E{μ(Xnew) − μ􏰡(Xnew)}2
+= n(β0 − β􏰡0)2 + (β − β􏰡∗)τ (nE{XXτ })(β − β􏰡∗)
+( 5 . 5 1 )
+(5.52) (5.53)
+is the model error (i.e., the mean squared error of μ􏰡(xnew) as a predictor of μ(xnew), a quantity also called the “expected bias-squared”).
+5.3.2 Fixed-X Case
+In the fixed-X case, the r-vectors {xi}, whose transposes are the rows of the design matrix X , are fixed by the experimental conditions, so that only Y is random. We assume that the true model generating the observations {yi} on Y is
+yi =β0 +xτiβ+ei =μ(xi)+ei, (5.54)
+where μ(xi) = β0 + xτi β is the regression function evaluated at xi and the errors ei,i = 1,2,...,n, are iid with mean 0 and variance σ2. We assume that the test data in T are generated by using “future-fixed” {xnew} points (Breiman, 1992), which may either be the same fixed design points {xi} as in the learning data L or they may be future values of x that are considered
+120 5. Model Assessment and Selection in Multiple Regression
+by the experimenter to be known and fixed (i.e., new design points). For
+convenience in this discussion, we assume the former situation holds. Thus,
+we assume that T = {(x ,ynew),i = 1,2,...,n}, where ii
+ynew = μ(x ) + enew, (5.55) iii
+and the {enew} are independent of the {ei} but have the same distribution. i
+We further assume that the XτX matrix for the {xi} is known. The predicted value of ynew at a future-fixed x is given by
+μ􏰡 ( x ) = β􏰡 0 + x τ β􏰡 ∗ , ( 5 . 5 6 ) where β􏰡∗ is the OLS estimate of the regression coefficients. The prediction
+error in the fixed-X case is defined as
+􏰘􏰏n 􏰠 (Ynew−μ􏰡(x))2 =nσ2+ME ,
+(5.57)
+(5.58) (5.59)
+PE =E FiiF
+i=1
+where the expectation is taken only over the {Y new} and
+􏰏n
+MEF = (μ(xi)−μ􏰡(xi))2
+i=1
+= n(β0 −β􏰡0)2 +(β−β􏰡∗)τ(XτX)(β−β􏰡∗)
+is the model error due to the lack of fit to the true model. Compare (5.59) with (5.53).
+5.4 Estimating Prediction Error
+In the random-X case, when the entire data set D is large enough, we can use the partition into learning, validation, and test sets to do a thorough job of estimating the regression function, predicting future outcomes, and validating the model. However, in cases where such a division may not be practical, we have to use alternative methods.
+5.4.1 Apparent Error Rate
+As before, let μ􏰡(xnew) be the predicted value of Y at X = xnew, and let L(y, μ(x)) = (y − μ(x))2 be the loss incurred by predicting y by μ(x). The prediction error PE is given by (5.51) in the random-X case and (5.57) in the fixed-X case. Given observations {(xi,yi),i = 1,2,...,n}, we can estimate PE by
+􏰤 1 􏰏n R S S
+PE(μ􏰡,D)=n (yi−μ􏰡(xi))2= n , (5.60)
+i=1
+i
+￼￼￼
+which we call the apparent error rate (or resubstitution error rate) for D. This estimate of P E is computed by fitting the OLS regression function to the idiosyncracies of the original sample D and then applying that func- tion to see how well it predicts those same members of D. The apparent error rate is a misleadingly optimistic value because it estimates the pre- dictive ability of the fitted model from the same data that was used to fit that model. Consequently, we expect that RSS/n will be too optimistic an
+􏰤
+estimate of PE with PE(μ􏰡,D) < PE.
+Rather than use the apparent error rate for estimating prediction error, we use resampling methods (cross-validation and the bootstrap). Which resampling methodology we use depends upon whether the fixed-X or the random-X model is more appropriate. For the random-X case, we can use cross-validation or the “unconditional bootstrap,” and in the fixed-X case, we can use the “conditional bootstrap.” Cross-validation is not appropriate for estimating prediction error in the fixed-X case.
+5.4.2 Cross-Validation
+Amongst the methods available for estimating prediction error (and model error) for the random-X case, the most popular is cross-validation (Stone, 1974), of which there are several versions.
+Suppose D is a random sample drawn from the joint probability distri- bution of (X, Y ) in (r + 1)-dimensional space. If n = 2m, we can randomly split D into two equal subsets, treating one subset as the learning set L andtheotherasthetestsetT,whereD=L∪T andL∩T =∅.Let T = {(x′i,yi′), i = 1,2,...,m}. An estimate of PER obtained from the test set is
+P E = m
+where μ􏰡(x′ ) = β􏰡 + x′τ β􏰡 . The learning set and the test set are then
+􏰤 1 􏰏m
+( y i′ − μ􏰡 ( x ′i ) ) 2 , ( 5 . 6 1 ) switched and the resulting two estimates of PER are averaged to yield a
+5.4 Estimating Prediction Error 121
+￼i0i∗ final estimate.
+i=1
+To generalize the above precedure, assume that n = V m, where V ≥ 2 is a small integer, such as 5 or 10. We split the data set D randomly into V dis- jointsubsetsTv,v=1,2,...,V,ofequalsize,whereD=􏰥Vv=1Tv,Tv∩Tv′ = ∅, v ̸= v′. We next create V different versions of the data set, each version of which has a learning set consisting of V − 1 of the subsets (i.e., (V − 1)m observations) and a test set of the one remaining subset (of m observa- tions). In other words, we drop the Tv cases and consider the remaining learning set of Lv = D − Tv cases. Using only the Lv cases, we obtain the OLS regression function μ􏰡−v(x). We then evaluate this regression function at the Tv test-set cases, yielding the values μ􏰡−v(xi), xi ∈ Tv. We compute the prediction error from the vth test set Tv, repeating the procedure V
+122 5. Model Assessment and Selection in Multiple Regression
+times, while cycling through each of the test sets, T1,T2,...,TV . This pro- cedure is called V-fold cross-validation (CV/V ). Combining these results gives us a CV/V-estimate of PE,
+􏰤1􏰏V􏰏 2
+(yi −μ􏰡−v(xi)) . (5.62) 2􏰤􏰤2
+PECV/V = V
+Then, subtract σ􏰡 from PE to get ME, where σ􏰡 is the residual variance
+obtained from the full data set.
+The most computationally intensive version of cross-validation occurs when m = 1 (so that V = n). In this case, each learning set Lv has size n−1, and the test set Tv has size one. At the ith stage, the ith case (xi, yi) is omitted from the ith learning set, and the OLS regression function μ􏰡−i(x) is computed from that learning set and evaluated at xi. This type of balanced split is referred to as the leave-one-out rule (CV/n or LOO). The prediction error is then estimated by
+(5.63)
+￼􏰤 1􏰏n
+PECV/n = n
+As before, we obtain ME by subtracting σ􏰡 from PE.
+v=1 (xi,yi)∈Tv
+(yi −μ􏰡−i(xi))2. 􏰤2􏰤
+￼i=1
+As well as issues of computational complexity, the difference between taking V = 5 or 10 and taking V = n is one of “bias versus variance.” The leave-one-out rule yields an estimate of PER that has low bias but high variance (arising from the high degree of similarity between the leave-one- out learning sets), whereas the 5–fold or 10–fold rule yields an estimate of PER with higher bias but lower mean squared error (and also lower variance). Furthermore, 10–fold (and even 5-fold) cross-validation appears to be better at model assessment than is leave-one-out cross-validation.
+5.4.3 Bootstrap
+For estimating prediction error in regression models, we can also use the bootstrap technique (Efron, 1979). In general, the specific version of the bootstrap to be applied has to depend upon what we actually assume about the stochastic model that may have generated the data. In regression mod- els, it again boils down to whether we are in the random-X case (using the “unconditional” bootstrap) or the fixed-X case (“conditional” bootstrap).
+Unconditional Bootstrap
+The unconditional bootstrap is used for the random-X case. We first sample n times with replacement from the original sample, D, to get a
+random-X bootstrap sample, which we denote by
+D∗b = {(x∗b,y∗b),i = 1,2,...,n}. (5.64)
+Rii
+Next, we regress y∗b on x∗b, i = 1,2,...,n, and obtain an OLS regression ii
+function μ􏰡∗b(x). If we then apply μ􏰡∗b to the original sample, D, the resulting RR
+estimate of PE is given by
+􏰤 1􏰏n
+i=1
+Averaging P E(μ􏰡R , D) over all B bootstrap samples yields the simple boot-
+􏰤 ∗b strap estimator of PE,
+1 􏰏B 1 􏰏B 􏰏n 􏰤􏰤∗b ∗b2
+P E R ( D ) = B P E ( μ􏰡 R , D ) = B n ( y i − μ􏰡 R ( x i ) ) , ( 5 . 6 6 )
+b=1 b=1 i=1
+which is not a particularly good estimate of PE because there are obser-
+vations common to the bootstrap samples {D∗b} (that determined {μ􏰡∗b}) RR
+and the original sample D, and so an estimate of PE such as (5.66) will also be overly optimistic.
+As another estimator of PE, an apparent error rate for D∗b is computed
+by applying μ􏰡∗b to D∗b: RR
+5.4 Estimating Prediction Error 123
+PE(μ􏰡∗b,D)= (y −μ􏰡∗b(x))2. (5.65) RniRi
+￼￼￼􏰤 1􏰏n
+PE(μ􏰡∗b,D∗b) = (y∗b −μ􏰡∗b(x∗b))2. (5.67)
+R
+￼RRniRi i=1
+Averaging (5.67) over all B bootstrap samples yields
+∗b ∗b ∗b 2
+(yi −μ􏰡R(xi )). (5.68)
+1 􏰏B 1 􏰏B 􏰏n 􏰤 ∗b ∗b
+􏰤 ∗
+PE(DR)=B PE(μ􏰡R,DR)=Bn
+b=1 i=1
+￼￼b=1
+This estimate of P E has the same disadvantages as the apparent error rate
+for D.
+We can improve on these estimates of PE by estimating the bias in using RSS/n (the apparent error rate for D) as an estimate of PE and then correcting RSS/n by subtracting its estimated bias. An estimate of that bias for D∗b is the bth optimism,
+R
+􏰤b􏰤∗b 􏰤∗b∗b
+optR =PE(μ􏰡R,D)−PE(μ􏰡R,DR). (5.69) Averaging 􏰤optbR over all B bootstrap samples yields an overall estimate,
+1 􏰏B
+􏰤 􏰤b􏰤􏰤∗
+optR = B
+optR =PE(D)−PE(DR), (5.70)
+￼b=1
+124 5. Model Assessment and Selection in Multiple Regression
+􏰤
+of the average optimism, opt = E{P E(μ􏰡, D) − P E(μ􏰡, D)}, which is gener-
+ally positive. The bootstrap estimator of PER is given by the sum of the apparent error rate for D and the bias in that apparent error,
+􏰤 RSS 􏰤
+PER= n +optR, (5.71)
+􏰤􏰤2 􏰤
+and ME is estimated by MER = PER − σ􏰡 . In simulations, PER (which
+is computationally more expensive than cross-validation) appears to have low bias and is slightly better for model assessment than is 10-fold cross- validation.
+􏰤
+sets) and to the original data set D (operating as the test set). In fact, the
+chance that the ith observation (xi,yi) from D is selected at least once to
+￼Recall that PER(D) in (5.66) underestimates PER because there are ob- servations common to the bootstrap samples {D∗b} (operating as learning
+be in the bth bootstrap sample D∗b is R
+as n → ∞. Thus, on average, about 37% of the observations in D are
+left out of each bootstrap sample, which contains about 0.632n distinct
+observations. One unfortunate consequence of this result is that if n is
+close to r, this will lead to numerical difficulties in computing μ􏰡∗b, because R
+in such cases it is likely that X τ X will be singular or nearly singular when computed from a bootstrap sample.
+Let PE(1) be the expected bootstrap prediction error at those points R
+(xi,yi) ∈ D that are not included in the B bootstrap samples. We esti- mate PE(1) as follows. Define nib to be the number of times that the ith
+􏰃 1􏰄n P((X,Y)∈D∗b) = 1− 1−
+iiRn
+→ 1 − e−1 ≈ 0.632,
+(5.72)
+R
+￼We now use (5.72) to improve upon optR (and also PER) by including in the computation the prediction errors for the ith observation (xi,yi) only from those bootstrap samples that do not contain that observation, i = 1,2,...,n.
+R
+observation (xi,yi) appears in the bth bootstrap sample, and set Iib = 1 if
+nib = 0 and zero otherwise. Then, we estimate PE(1) by R
+where
+􏰊 Iib(yi − μ􏰡b(xi))2 􏰤b
+(1) 1􏰏n 􏰤􏰤 PER =n PEi,
+i=1
+(5.73)
+(5.74)
+􏰤􏰤
+￼PEi = 􏰊 I . b ib
+￼
+􏰤 (1)
+Efron and Tibshirani (1997) called PER the leave-one-out bootstrap es-
+timator because of its similarity to the leave-one-out cross-validation esti- mator. Another way of writing (5.74) is
+i b∈Ci
+where Ci is the set of indices of the bootstrap samples that do not contain
+(xi,yi), and Bi = |Ci| is the number of such bootstrap samples. These
+􏰤1􏰏2
+PEi = B
+(yi −μ􏰡b(xi)) , (5.75)
+5.4 Estimating Prediction Error 125
+￼observations are often referred to as out-of-bootstrap (OOB) observations. 􏰤(1) 􏰤
+Efron (1983) showed that PER is biased upwards compared to PECV/n, which is nearly unbiased.
+Based upon (5.72), the 0.632 bootstrap estimator of optimism is given by 􏰤(0.632) 􏰤 (1) 􏰤
+optR = 0.632(P ER − P E(μ􏰡, D)). (5.76) Replacing 􏰤opt in (5.71) by 􏰤opt(0.632) in (5.76) yields the 0.632 bootstrap
+RR
+estimator of prediction error,
+􏰤 (0.632) 􏰤 􏰤(0.632)
+PER = PE(μ􏰡,D)+optR RSS
+􏰤 (1) = 0.368· n +0.632·PER .
+(5.77) Although the 0.632 bootstrap estimator is an improvement over the appar-
+￼ent error rate, it still underestimates PER (Efron, 1983). Example: Bodyfat Data (Continued)
+Cross-validation and the unconditional bootstrap were used to estimate the prediction error for the bodyfat data. The results are summarized in Tables 5.4 and 5.5.
+From Table 5.4, we see that the estimates obtained from CV/5, CV/10, CV/n, and the bootstrap (with B = 500) are reasonably close to each other. The apparent error rate, RSS/n = 4420.064/252 = 17.5399, un- derestimates the leave-one-out cross-validation estimate of the prediction error by more than 12%. Dividing RSS by its degrees of freedom to give an unbiased estimate of σ2 yields RSS/238 = 18.5717, still well below the other estimates.
+B=10 For a simple bootstrap illustration, let B = 10. The bootstrap computations are detailed in Table 5.5. The simple bootstrap estimate,
+􏰤
+PER(D) = 18.4692,istheaverageofthefirstcolumnandismuchtoosmall. The average of the third column, 􏰤optR = 18.4692 − 15.9535 = 2.5157, is the difference between the average of the first column and the average of the second column and yields a measure of how optimistic the apparent error
+126 5. Model Assessment and Selection in Multiple Regression
+TABLE 5.4. Estimated prediction errors for the bodyfat data when the multiple regression model is fit. Listed are the apparent error rate (RSS/n) and the error rates from using 5-fold (CV/5), 10-fold (CV/10), leave-one- out cross-validation (CV/n), and the unconditional bootstrap and 0.632 bootstrap using B = 500. The subscript “R” indicates that the bootstrap computations are made for the random-X case. These results show the very optimistic value of the apparent error rate.
+￼R S S / n 􏰤P E 17.5399 20.2578
+􏰤P E 􏰤P E CV/10 CV/n
+20.7327 20.2948
+􏰤P E R 19.6891
+􏰤P E ( 0 . 6 3 2 ) R 19.9637
+CV/5
+￼￼rate is in estimating the prediction error. Finally, P ER = RSS/n + optR = 17.5399 + 2.5157 = 20.0556.
+􏰤
+B=500 When we use B = 500 bootstrap samples, we obtain PER(D) = 􏰤∗􏰤
+18.7683 and PE(DR) = 16.6191, so that optR = 18.7683 − 16.6191 = 􏰤
+2.1492, whence, P ER = 17.5399 + 2.1492 = 19.6891. We see a small differ- ence between the bootstrap estimates of PE using B = 10 and B = 500 bootstrap samples.
+Conditional Bootstrap
+The conditional bootstrap for the fixed-X case operates by sampling with replacement from the residuals obtained from fitting the regression model tothenon-stochasticinputsx1,x2,...,xn (Efron,1979).
+We first fit the model (5.21) and obtain the OLS regression coefficients β􏰡ols = (Zτ Z)−1Zτ Y, the estimated regression function μ􏰡(x) = zτ β􏰡ols (where z = (1, xτ )τ ), the residuals e􏰡1, e􏰡2, . . . , e􏰡n, and the residual variance σ􏰡2. When applying the conditional bootstrap, we assume that the errors of the model are iid and homoscedastic. For an extensive discussion of the effect of error variance heterogeneity on the conditional bootstrap, see Wu (1986).
+Because E(RSS/n) = (1 − p/n)σ2, where p = r + 1 is the number of parameters, RSS/n is biased downwards as an estimator of σ2, and the residuals tend to be smaller than the errors of the model. Some statisticians advocate rescaling the residuals upwards by multiplying each of them by the factor (n/(n − p))1/2; Efron and Tibshirani (1993, p. 112) feel that the scaling issue becomes important only when p > n/4.
+Suppose we consider β􏰡ols to be the true value of the regression parameter. For the bth bootstrap sample, we sample with replacement from the resid-
+∗b∗b ∗b
+uals to get the bootstrapped residuals, e􏰡1 , e􏰡2 , . . . , e􏰡n , and then compute
+a new set of responses
+∗b ∗b
+yi =μ􏰡(xi)+e􏰡i , i=1,2,...,n. (5.78)
+􏰤􏰤
+TABLE 5.5. Unconditional bootstrap estimates of prediction error for the bodyfat data, where B = 10 bootstrap samples are taken. Each row of the table represents a bootstrap sample b, and the multiple regression model is fit to that sample. For each b, the first column is the simple bootstrap estimate of prediction error, the second column is the bootstrap apparent error rate, and the third column is the difference between the first two columns. The average optimism, in this case 2.5157, is the difference between the average of the first column and the average of the second column.
+5.5 Instability of LS Estimates 127
+￼􏰤∗b
+b PE(μ􏰡R ,D)
+1 18.5198
+2 18.2555
+3 17.9683
+4 18.9317
+5 18.6249
+6 18.0191
+7 18.5381
+8 18.9265
+9 18.6881
+10 18.2201
+ave 18.4692
+􏰤∗b ∗b PE(μ􏰡R ,DR )
+15.8261 13.5946 18.2385 14.5406 15.7998 15.1146 17.7595 13.8298 18.8233 16.0080 15.9535
+􏰑b optR
+2.6937
+4.6609 -0.2702 4.3911 2.8251 2.9045 0.7786 5.0967 -0.1352 2.2121 2.5157
+￼￼￼The bth fixed-X bootstrap sample is now given by
+D∗b = {(x ,y∗b), i = 1,2,...,n}.
+(5.79)
+Fii
+We regress y∗b on x to get a bootstrapped estimator,
+β􏰡∗b =(ZτZ)−1ZτY∗b,
+of the regression coefficients, where Y∗b = (y∗b, . . . , y∗b)τ . Under this boot-
+√􏰡∗b􏰡1 n
+strap sampling scheme, n(β − βols) is approximately distributed as
+√
+n(β􏰡 −β) (Freedman, 1981). The bootstrap regression function is μ􏰡∗b(x)
+(5.80)
+￼￼ols F
+= zτ β􏰡∗b (where z = (1, xτ )τ ). Straightforward analogues of the estimates for the fixed-X case, similar to those for the unconditional case, can now be computed.
+5.5 Instability of LS Estimates
+If Xc has less than full rank, then Xcτ Xc will be singular, and the OLS estimate of β will not be unique. Singularity occurs when the matrix Xc is ill-conditioned, or the columns of Xc are collinear, or when there are more variables than observations (i.e., r > n). If the assumptions for the regression model do not hold (e.g., due to ill-conditioned data, collinearity, correlated errors), then we have to look for alternative solutions.
+￼
+128 5. Model Assessment and Selection in Multiple Regression
+Data are ill-conditioned for a given problem whenever the quantities to be computed for that problem are sensitive to small changes in the data. When that is the case, computational results, especially those obtained using matrix inversion routines, are likely to be numerically unstable. As a result, major errors (due to rounding and cancellations) tend to accumulate and severely skew the calculations. In some regression situations, the matrix X (or its mean-centered version Xc) may be rank-deficient or almost so because of too many highly correlated variables, which exhibit collinearity. Exact collinearity rarely occurs, but problems involving variables that are almost collinear (“near collinearity”) are not unusual.
+In linear regression models, ill-conditioning and collinearity problems co- incide. Near collinearity in linear regression problems is of major concern to statisticians and econometricians, especially when an overly large number of input variables is included in the initial model (the so-called kitchen-sink approach to modeling). Among the effects of near collinearity are overly large (positive or negative) estimated coefficient values whose signs may be reversed if negligible changes are made to the data. The standard errors of the estimated regression coefficients may also be dramatically inflated, thereby masking the presence of what would otherwise be significant re- gression coefficients.
+There are several measures of ill-conditioning of a square matrix M, the most popular of which is the condition number, κ(M); see Section 3.2.9. In regression, M = XτX. Each variable may be scaled to have equal length (e.g., replacing xij by xij/si, where si is the sample standard deviation of the ith variable). The condition number of X τ X (or X ) reduces to the ratio of the largest to the smallest nonzero singular value, κ = σ1/σr, of X. If κ is large, X is said to be ill-conditioned. When exact collinearity occurs, κ = ∞.
+As an alternative to κ, we can compute the set of collinearity indices, 􏰐
+￼where
+κk(X) = VIFk , k = 1,2,...,r, (5.81) VIFk =(1−Rk2)−1, (5.82)
+is the kth variance inflation factor, and Rk2 is the squared multiple cor- relation coefficient of the kth column of X on the other r − 1 columns of X, k = 1,2,...,r. Large values of VIFk (typically, VIFk > 10) imply that Rk2 is close to unity, which in turn suggests near collinearity may be present. The collinearity indices have value at least one and are invariant under scale changes of the columns of X . For example, the bodyfat data has some very large V IF values: each of the variables weight, chest, abdomen, and hip has a V IF value in the range 10–50. The high V IF values for those particular four variables appear to reflect their high pairwise correlations.
+5.6 Biased Regression Methods
+Because the OLS estimates depend upon (Zτ Z)−1, we would experience numerical complications in computing β􏰡ols if Zτ Z were singular or nearly singular. If Z is ill-conditioned, small changes to the elements of Z lead to large changes in (Zτ Z)−1, the estimator β􏰡ols becomes computationally un- stable, and the individual component estimates may either have the wrong sign or be too large in magnitude. So, even though the regression model may be a good fit to the learning data, it will not generalize sufficiently well to the test data.
+One way out of this situation is to abandon the requirement of an unbi- ased estimator of β and, instead, consider the possibility of using a biased estimator of β. There are several such estimators that are superior (in terms of MSE) to β􏰡ols when Z is ill-conditioned or when ZτZ is singular (or nearly singular). Biased regression methods have primarily been used in chemometrics (e.g., food research, environmental pollution studies). In such applications, it is not unusual to see the number of input variables greatly exceed the number of observations, so that the OLS regression estimator does not exist.
+We assume only that the Xs and the Y have been centered, so that we have no need for a constant term in the regression. Thus, X is an (n × r)- matrix with centered columns and Y is a centered n-vector. Each of the biased estimators described in this section can be written in the form
+β􏰡 = 􏰏 f ( λ j ) λ − 1 v j v jτ s , ( 5 . 8 3 ) j
+j
+where f(λj) is the jth “shrinkage” factor, vj is the eigenvector associated with the jth largest eigenvalue λj of S = XτX, and s = XτY. We show that for a t-component PCR, the shrinkage factor is f(λj) = 1 if j ≤ t, and 0 otherwise; for a t-component PLSR, f(λj) is a polynomial of degree t; and for RR with ridge parameter k > 0, f(λj) = fk(λj) = λj/(λj + k).
+5.6.1 Example: PET Yarns and NIR Spectra
+These data2 were obtained from a calibration study (Swierenga, de Wei- jer, van Wijk, and Buydens, 1999) of polyethylene terephthalate (PET) yarns, which are used for textile (e.g., clothing materials) and industrial
+2The datafile PET.txt can be downloaded from the book’s website. It was originally provided by Erik Swierenga and is available as an R data set as part of The pls Package. See www.maths.lth.se/help/R/.R/library/pls/html/NIR.html.
+5.6 Biased Regression Methods 129
+￼￼
+130
+5. Model Assessment and Selection in Multiple Regression
+￼￼￼￼3
+2
+1
+0
+Density
+￼￼￼￼￼￼￼￼￼￼￼￼￼￼050100150200250
+FIGURE 5.3. Raman NIR spectra of a sample of 21 polyethylene tereph- thalate (PET) yarns. The 21 spectra are each measured at 268 frequencies. Note that the horizontal axis is variable number, not frequency.
+purposes (e.g., tires, seat belts, and ropes). PET yarns are produced by a process of melt-spinning, whose settings largely determine the final semi- crystalline structure of the yarn (i.e., its physical structure), which, in turn, determines its thermo-mechanical properties. As a result, parameters that characterize the physical structure of PET yarns are important quality parameters for the end use of the yarn.
+Raman near-infrared (NIR) spectroscopy has recently become an impor- tant tool in the pharmaceutical and semiconductor industries for investi- gating structural information on polymers; in particular, it is used to reveal information on the chemical nature, conformational order, state of the or- der, and orientation of polymers. Thus, Raman spectra are used to predict the physical structure parameters of polymers.
+In this example, we study the relationship between the overall density of a PET yarn to its NIR spectrum. The data consist of a sample of n = 21 PET yarns having known mechanical and structural properties. For each PET yarn, the Y -variable is the density (measured in kg/m3) of the yarn, and the r = 268 X-variables (measured at 268 frequencies in the range 598–1900 cm−1) are selected from the NIR spectrum of that yarn. This example is quite representative of data sets in the chemometrics literature, in that r ≫ n. The 21 NIR spectra are displayed graphically in Figure 5.3; the spectra appear to have very similar characteristics, although there are noticeable differences in some curves.
+5.6.2 Principal Components Regression
+An obvious way of dealing with a matrix X τ X that is singular (or nearly singular) is to substitute a generalized inverse G in place of (XτX)−1. Suppose XτX has known rank t (1 ≤ t ≤ r), so that the smallest r−t eigenvalues of X τ X are all zero. Then, the spectral decomposition of X τ X can be written as XτX = VΛVτ, where Λ = diag{λ1,...,λt} is a diagonal matrix of the first t eigenvalues of X τ X with diagonal elements ordered in magnitude from largest to smallest, and V = (v1, . . . , vt) is an (r × t)- matrix whose columns are the eigenvectors associated with the eigenvalues in Λ. The unique rank-t Moore–Penrose inverse G of XτX is, therefore, given by
+(5.84)
+( 5 . 8 5 )
+(5.86)
+G = (XτX)+ = VΛ−1Vτ =
+and the generalized-inverse regression (GIR) estimator is
+j=1
+λ − 1 v j v jτ s , j
+j=1
+where s = XτY. The GIR fitted values are then given by
+Y􏰡(t) = Xβ􏰡(t) = XV(Λ−1Vτs). gir gir
+􏰡 􏰏t β ( t ) = G X τ Y =
+gir
+Marquardt (1970) showed that β􏰡gir minimizes the error sum of squares,
+ESS(β), in (5.22) within the t-dimensional linear subspace spanned by V.
+It follows that β􏰡gir is a constrained least-squares estimator of β and so is
+said to be conditionally unbiased. If X τ X actually has a rank greater than
+t and we incorrectly use G in (5.85) to define the estimator of β, then β􏰡(t) gir
+is a biased estimator of β.
+The rows of the (n × t)-matrix Zt = XV are the scores of the first t principal components of X (see Chapter 7). Regressing Y on Zt is a tech- nique usually referred to as principal components regression (PCR) (Massy, 1965). This regression method is popularly used in chemometrics, where, for example, we may be interested in calibrating the fat concentration in n chemical samples to highly collinear absorbance measurements recorded at r fixed wavelength channels of an X-spectrum (Martens and Naes, 1989, sec. 3.4). In such situations, the number of variables r will likely be much greater than the number of observations n. PCR can be used to reduce the dimensionality of the regression by dropping those dimensions that contribute to the collinearity problem. PCR has also been used for map- ping quantitative trait loci in statistical genetics, where Y represents a quantitative trait value (e.g., blood pressure, yield) and X consists of the genotypes of a mouse or plant, etc., at each of r molecular markers (Hwang and Nettleton, 2003).
+5.6 Biased Regression Methods 131
+􏰏t
+j
+λ−1vjvjτ,
+132 5. Model Assessment and Selection in Multiple Regression
+The estimated regression coefficients for the t principal components are given by the t-vector,
+β􏰡(t) = (Zτ Z )−1Zτ Y = Λ−1Vτ s, (5.87) pcr tt t
+where we have used VτV = It. Note that because of the orthogonality of the columns of V, the elements of (5.87) do not change as t increases. Thus,
+􏰡 (t) 􏰡 (t)
+(5.85) and (5.87) are related by βgir = Vβpcr, and the corresponding fitted
+values are given by
+Y􏰡(t) = Z β􏰡(t) = XV(Λ−1Vτs) = Xβ􏰡(t) = Y􏰡(t), (5.88)
+pcr t pcr gir gir So, the fitted values obtained by GIR and PCR are identical.
+It is usual to transform the PCR coefficients (5.87) into coefficients of
+􏰡(t) 􏰡 􏰡 τ
+the original input variables. Given βpcr = (βpcr,1, · · · , βpcr,t) , we compute
+the r-vectors,
+Then, the first k partial sums of the {β􏰡∗pcr,j} give the k-component PCR
+β􏰡 ∗ = β􏰡 v , j = 1 , 2 , . . . , t . ( 5 . 8 9 ) pcr,j pcr,j j
+coefficients of the original input variables; that is,
+β􏰡∗(k) = pcr
+Note that β􏰡∗(t) = β􏰡 . pcr ols
+􏰏k j=1
+β􏰡∗ pcr,j
+=Vβ􏰡(k), 1≤k≤t. pcr
+(5.90)
+In practice, the rank of XτX and, hence, the number of components is an unknown metaparameter to be determined from the data. If we extract principal components from the correlation matrix, Kaiser’s rule (Kaiser, 1960) suggests we retain only those principal components whose eigenvalues are greater than one. Another way of determining t is by cross-validation (Wold, 1978).
+A caveat: Although PCR aims to relate Y and the {Xj} in the presence of severe collinearity, there is also the potential for PCR to fail dramatically. The principal components, Z1, . . . , Zt (1 ≤ t < r), which are used as inputs to a multiple regression, are chosen to correspond to the t highest-variance directions of X = (X1 , · · · , Xr )τ while dropping the remaining r − t (low- variance) directions. Because the extraction of the principal components is accomplished without any reference to the output variable Y , we have no reason to expect Y to be highly correlated with any of the principal components, in particular those having the largest eigenvalues. Indeed, Y may actually have its highest correlation with one of the last few principal components (Jolliffe, 1982) or even only the last one (Hadi and Ling, 1998) which is always dropped from the regression equation.
+Example: The PET Yarn Data (Continued)
+Each variable (Y and all the Xs) from the PET yarn data was centered. The (21 × 268)-matrix X yields at most t = min{20, 268} = 20 principal components. The 20 nonzero eigenvalues from the correlation matrix in descending order of magnitude are
+11.86 8.83 6.75 1.61 0.76 0.54 0.40 0.25 0.24 0.19 0.14 0.11 0.08 0.07 0.06 0.05 0.05 0.04 0.03 0.02
+There are four eigenvalues larger than one. The first component accounts for 52.5% of total variance, the first two components account for 81.6% of total variance, the first three components account for 98.6% of total variance, and the first four components account for 99.5% of total variance.
+Figure 5.4 displays the PCR coefficients for t = 1,3,4,20 components. This figure shows that a single component yields regression estimates with almost no structure. By three components, the final structure is certainly visible, and the graph appears to settle down when we use four compo- nents. After four components, all that is added to the graph of the coeffi- cient estimates is noise, which reinforces the information gained from the eigenvalues.
+5.6.3 Partial Least-Squares Regression
+In partial least-squares regression (PLSR), the derived variables (usually referred to as latent variables, components, or factors) are specifically con- structed to retain most of the information in the X variables that helps predict Y , while at the same time reducing the dimensionality of the regres- sion. Whereas PCR constructs its latent variables using only data on the input variables, PLSR uses data on both the input and output variables. Chemometricians have adopted the name PLSR1 to refer to PLSR using a single output variable and PLSR2 to refer to PLSR using multiple output variables.
+PLSR is typically obtained using an algorithm rather than as the re- sult of an optimization procedure. The are several such algorithms. The most popular one is sequential, starting with an empty set and adding a single latent variable at each subsequent step of the process. The result is a sequence of prediction models, M1, . . . , Mt, where Mk predicts the output variable Y through a linear function of the first k latent variables. The “best” of these PLSR models is that model that minimizes a cross- validation estimate of prediction error. (How well cross-validation actually selects the best model is as yet unknown, however.)
+5.6 Biased Regression Methods 133
+￼￼
+134 5. Model Assessment and Selection in Multiple Regression
+66
+33
+00
+-3 -3
+-6 -6
+050100150200250 050100150200250
+66
+33
+00
+-3 -3
+-6 -6
+050100150200250 050100150200250
+FIGURE 5.4. Principal component regression estimates for the PET yarn data. There are 268 coefficients. The numbers of PCR components are t = 1 (upper-left panel), t = 3 (upper-right panel), t = 4 (lower-left panel), t = 20 (lower-right panel). The horizontal axis is coefficient number.
+The PLSR algorithm in Table 5.6 (Wold, Martens, and Wold, 1983) uses only a series of simple linear regression routines. We build the latent variables, Z1, . . . , Zt, in a stepwise fashion. At the kth step, Zk is a weighted average of the X-residuals from the previous step, where the weights are proportional to covariances of the X-residuals from the previous step with the Y -residuals from the previous step. The resulting PLSR function is a linear combination of the Z1, . . . , Zt.
+Empirical studies (Frank and Friedman, 1993) show that PLSR gives slightly better overall performance than does PCR, that fewer components are needed in PLSR than in PCR to provide a similar fit to the data, and that as the problem becomes increasingly more ill-conditioned, both biased methods yield substantial improvements in predictive ability over OLS. De Jong (1995) also showed that, in an R2 sense and using t components, the PLSR fitted values are closer to the OLS fitted values than are the PCR fitted values.
+The PLSR estimator, β􏰡(t) , where t is the number of components, is plsr
+a shrinkage estimator. This is a difficult result to prove. De Jong (1995)
+showed that, for 1 ≤ k ≤ t, ∥β􏰡(k) ∥ is a strictly nondecreasing function of plsr
+￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼4Components
+1Component
+20Components 3Components
+TABLE 5.6. PLSR algorithm (Wold, Martens, and Wold, 1983).
+5.6 Biased Regression Methods 135
+￼1. Standardize each n-vector xj of data on Xj so that it has mean 0 and standard deviation 1, and set x(0) = xj , j = 1, 2, . . . , r. Center the n-vector
+j
+YofdataonY sothatithasmean0,andsetY(0) =Y.SetY􏰡(0) =y ̄1n.
+2. Fork=1,2,...,t:
+• For j = 1, 2, . . . , r, regress Y(k−1) on x(k−1) to get the OLS regression
+coefficient
+j
+􏰡 (k−1) (k−1) (k−1) βk−1,j =cov(xj ,Y )/var(xj ),
+where, for any n-vectors x and y, cov(x, y) = xτ y and var(x) = xτ x. 􏰡 (k−1)
+Compute βk−1,jxj .
+• Compute the weighted average zk = j=1 wk−1,j βk−1,j xj
+􏰊r 􏰡 (k−1) predictor of Y, where wk−1,j ∝ var(x(k−1)). Thus,
+as a
+j
+j=1
+􏰡 (k−1) θk =cov(zk,Y
+􏰏r
+zk ∝
+• Regress Y(k−1) on zk to get the OLS regression coefficient
+(k) (k−1) and the residual vector Y = Y
+)/var(zk) 􏰡
+jj
+• Stop when 􏰊r var(x(k)) = 0.
+cov(x(k−1),Y(k−1))·x(k−1). jj
+− θkzk.
+• For j = 1,2,...,r, regress x(k−1) on zk to get the OLS regression
+j
+􏰡(k) 􏰡(k−1) 􏰡
+• SetY =Y +θkzk.
+coefficient
+a n d r e s i d u a l v e c t o r x ( k ) = x ( k − 1 ) − φ􏰡 k j z k .
+φ􏰡kj = cov(zk,x(k−1))/var(zk) j
+j=1 j
+3. The PLSR function fitted with t components is, therefore, given by
+􏰡(t)
+Y p l s r = y ̄ 1 n +
+􏰏t k=1
+􏰡
+θ k z k .
+￼
+136 5. Model Assessment and Selection in Multiple Regression
+k, which implies that every PLSR iterate improves upon OLS; that is, ∥β􏰡(1) ∥ ≤ ∥β􏰡(2) ∥ ≤ ··· ≤ ∥β􏰡(t) ∥ = ∥β􏰡 ∥. (5.91)
+plsr plsr plsr ols
+Goutis (1996) used a geometric argument to give a direct proof that, for every 1 ≤ k ≤ t, ∥β􏰡(k) ∥ ≤ ∥β􏰡ols∥, and Phatak and de Hoog (2002) derived
+an explicit expression relating the PLSR estimator to the OLS estimator. The shrinkage behavior of individual PLSR coefficients turns out to be quite “peculiar”: Frank and Friedman (1993) noted from empirical evidence and certain heuristics that whereas PLSR shrunk some OLS coefficients, it also expanded others. This shrinkage behavior was further studied by Butler and Denham (2000) and Lingjaerde and Christophersen (2000).
+The orthogonal loadings algorithm uses a sequence of multiple regres- sions to arrive at the same PLSR solution as Wold’s algorithm (Helland, 1988). The code for the S-Plus PLSR algorithm is given in Brown (1993, Appendix E). The PLSR algorithm in Table 5.6 is an extension of the NI- PALS algorithm (Wold, 1975). See also the SIMPLS algorithm (de Jong, 1993).
+Example: The PET Yarn Data (Continued)
+Each variable in the PET yarn data was centered. The PLSR estimates of all 268 regression coefficients in the vector β􏰡(t) for the PET yarn data are
+displayed in Figure 5.5. for t = 1, 3, 4, 20 components. The 20-component PLSR estimate is the minimum-length LS estimator of the regression coef- ficient vector β.
+We see from Figure 5.5 that using only one PLSR component results in a set of regression estimates with little visible structure. Most of the variability in the regression coefficients occurs in the first 150 coefficients. The final shape of the coefficient estimates can already be discerned by 3 components, and a useful representation is given by 4 components. As addi- tional components are added to the model, more and more high-frequency noise is added to the PLSR estimates.
+5.6.4 Ridge Regression
+Hoerl and Kennard (1970a) proposed that potential instability in the OLS estimator, β􏰡ols = (XτX)−1XτY, of β could be tracked by adding a small constant value k to the diagonal entries of the matrix XτX before taking its inverse. The result is the ridge regression estimator (or ridge rule),
+where
+βˆ r r ( k ) = ( X τ X + k I r ) − 1 X τ Y = W ( k ) βˆ o l s , ( 5 . 9 2 ) W(k)=(XτX +kIr)−1XτX. (5.93)
+plsr
+plsr
+66
+33
+00
+-3 -3
+-6 -6
+050100150200250 050100150200250
+66
+33
+00
+-3 -3
+-6 -6
+050100150200250 050100150200250
+FIGURE 5.5. Partial least-squares regression estimates for the PET yarn data. There are 268 coefficients. The numbers of PLSR components are t = 1 (upper-left panel), t = 3 (upper-right panel), t = 4 (lower-left panel), t = 20 (lower-right panel). The horizontal axis is coefficient number.
+Thus, we have a class of estimators (5.92), indexed by a parameter k. When k > 0, βˆrr(k) is a biased estimator of β. In the special case XτX = Ir (the orthonormal design case), (5.92) reduces to β􏰡rr(k) = (1 + k)−1β􏰡ols. When k = 0, (5.92) reduces to the OLS estimator.
+Properties
+The ridge regression estimator (5.92) can be characterized in three differ- ent ways — as an estimator with restricted length that minimizes the error sum of squares, as a shrinkage estimator that shrinks the least-squares es- timator toward the origin, and, given suitable priors, as a Bayes estimator.
+1. A ridge regression estimator is the solution of a penalized least-squares problem. Specifically, it is the r-vector β that minimizes the error sum of squares,
+ESS(β) = (Y − Xβ)τ (Y − Xβ), (5.94) subject to ∥β∥2 ≤ c, (5.95)
+5.6 Biased Regression Methods 137
+￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼4Components
+1Component
+20Components 3Components
+￼138 5. Model Assessment and Selection in Multiple Regression
+Ridge estimate
+OLSestimate
+β1
+β2
+FIGURE 5.6. The ridge regression estimator, β􏰡rr(k), as the solution of a penalized least-squares problem. The ellipses show the contours of the error sum-of-squares function, and the circle shows the boundary of the penalty function, β12+β2 ≤ c, where c is the radius of the circle. The ridge estimator is the point at which the innermost elliptical contour touches the circular penalty.
+where ∥β∥2 = βτ β and c > 0 is an arbitrary constant. To see this, form the function
+φ(β) = (Y −Xβ)τ(Y −Xβ)−λβτβ, (5.96)
+where λ > 0 is a Lagrangian multiplier (or ridge parameter) that regularizes the stability of a ridge regression estimator, and βτ β is a penalty function. Differentiate φ with repect to β, set the result equal to zero, and at the minimum, set β = β􏰡rr(λ) to get
+( X τ X + λ I r ) β􏰡 r r ( λ ) = X τ Y . ( 5 . 9 7 )
+The result is obtained by solving this last equation for β􏰡rr(λ) and then setting k = λ. Note that the restriction βτβ ≤ c on β is a hypersphere centered at the origin with bounded squared radius c, where the value of c determines the value of k. Figure 5.6 shows the two-parameter case.
+2. A ridge regression estimator is a shrinkage estimator that shrinks the OLS estimator toward zero. The singular value decomposition of the (n × r)-matrix X is given by X = UΛ1/2Vτ , where Λ = diag[λj ], UUτ = UτU=In,VVτ =VτV=Ir,andXτX =VΛVτ.The{λj}arethe ordered eigenvalues of XτX. Let P = XV = UΛ1/2 so that PτP = Λ. Then, we can write (5.92) as follows:
+β􏰡rr(k) = (XτX +kIr)−1XτY
+= (VΛVτ + kVVτ )−1VΛ1/2Uτ Y = V(Λ+kIr)−1Λ1/2UτY
+= V(Λ + kIr)−1Pτ Y. (5.98) Now, if we let α = Vτ β (so that β = Vα), then, the canonical form of the
+multiple regression model is
+Y =Xβ+e=Pα+e, (5.99)
+whence the OLS estimator of α is α􏰡 ols = (Pτ P)−1 Pτ Y = Λ−1 Vτ s, where s = XτY. Set
+α􏰡 r r ( k ) = V τ β􏰡 r r ( k )
+= (Λ+kIr)−1PτY
+= (Λ + kIr)−1Λα􏰡ols.
+The jth component in the r-vector α􏰡rr(k) is, therefore, given by
+􏰃λ􏰄
+α􏰡rr,j(k)= j α􏰡ols,j =fk(λj)α􏰡ols,j,
+λj +k
+(5.100)
+(5.101)
+5.6 Biased Regression Methods 139
+￼say, where 0 < fk(λj) ≤ 1, j = 1,2,...,r. For k > 0, α􏰡rr,j(k) < α􏰡ols,j, so that α􏰡rr,j(k) shrinks α􏰡ols,j toward zero. Also, α􏰡rr,j(k) can be written as α􏰡rr,j(k) = wj ·0+(1−wj)α􏰡ols,j, with weight 0 < wj = k/(λj +k) < 1, whence it follows that the smaller the value of λj (for a given k > 0), the larger the value of wj , and, hence, the greater is the shrinkage toward zero. Thus, ridge regression shrinks low-variance directions (small λj ) more than it does high-variance directions (large λj ).
+Note that these conclusions hold for the canonical form of the regression model with α as the coefficient vector. We can transform back by setting β􏰡rr(k) = Vα􏰡rr(k). However, β􏰡rr(k) may not shrink every component of β􏰡ols. Indeed, for some j, the jth component, β􏰡rr,j(k), of β􏰡rr(k) may actually have the opposite sign from the corresponding component, β􏰡ols,j, of β􏰡ols, or that |β􏰡 (k)| > |β􏰡 |. What we can say, however, is that
+rr,j ols,j
+∥β􏰡rr(k)∥2 = ∥α􏰡rr(k)∥2 = j α􏰡2ols,j, (5.102)
+􏰏r 􏰃 λ 􏰄2 j=1 λj +k
+￼which is a monotonically decreasing function of k. Thus, ∥β􏰡rr(k)∥ < ∥β􏰡ols∥, so that β􏰡rr(k) is a shrinkage estimator.
+3. A ridge regression estimator is a Bayes estimator when β is given a suitable multivariate Gaussian prior. Suppose Y = X β + e, where now e ∼ Nn(0, σ2In) and σ2 is known. In other words, Y ∼ Nn(Xβ, σ2In). The likelihood is 􏰇 1 􏰢
+L(Y|β,σ) ∝ exp −2σ2(Y−Xβ)τ(Y−Xβ) 􏰇1􏰢
+∝ exp −2σ2(β−β􏰡)τXτX(β−β􏰡) , (5.103)
+￼￼
+140 5. Model Assessment and Selection in Multiple Regression
+which has the form Nr(β􏰡,σ2(XτX)−1). Next, assume that the components of β are each independently distributed as Gaussian with mean 0 and known variance σβ2 , so that β ∼ Nr (0, σβ2 Ir ) with prior density
+􏰘􏰠
+π(β)∝exp −βτβ . (5.104) 2σβ2
+The posterior density of β is proportional to the likelihood times the prior, that is,
+￼p(β|Y, σ) = L(Y|β, σ)π(β) (5.105) 􏰇1􏰒􏰡ττ 􏰡τ􏰓􏰢
+∝ exp −2σ2 (β−β) X X(β−β)+kβ β , (5.106) where k = σ2/σβ2 . Now, for the first term in the exponent, set β − β􏰡 =
+￼(β − β􏰡(k)) + (β􏰡(k) − β􏰡), and, for the second term, β = (β − β􏰡(k)) + β􏰡(k). Multiplying out both expressions and gathering like terms, we find that the posterior density of β is given by
+􏰇 1 􏰒 􏰡 τ τ 􏰡 􏰓􏰢 p(β|Y,σ)∝exp −2σ2 (β−β(k)) (X X +kIr)(β−β(k)) . (5.107)
+In other words, the posterior density of β is multivariate Gaussian with mean vector (and posterior mode) β􏰡(k) and covariance matrix σ2(XτX + kIr)−1, where k = σ2/σβ2. Note that if σβ2 is very large, the prior den- sity becomes vague, and a ridge regression estimator approaches the OLS estimator.
+The Bias-Variance Trade-off
+Consider the mean squared error of the ridge regression estimator, MSE(k) = E{(βˆrr(k) − β)τ (βˆrr(k) − β)} (5.108)
+= VAR(k) + BIAS2(k), (5.109) where the first term on the right-hand side is the variance and the second
+￼term is the bias-squared. The variance term is
+VAR(k) = tr{σ2(XτX+kIr)−1XτX(XτX+kIr)−1}
+= σ2tr{(Λ + kIr)−1Λ(Λ + kIr)−1} =σ2􏰏r λj .
+(5.110)
+￼The bias is
+j=1 (λj + k)2
+E(β􏰡rr(k)−β) = E{(XτX+kIr)−1XτY−β}
+= {(XτX +kIr)−1XτX −Ir}β
+= {(VΛVτ + kIr)−1VΛVτ − Ir}Vα
+= V{(Λ + kIr)−1Λ − Ir}α,
+whence the bias-squared term is
+BIAS2(k) = (E(βˆrr(k) − β))τ (E(βˆrr(k) − β))
+(5.111)
+= ατ {Λ(Λ + kIr)−1 − Ir}{(Λ + kIr)−1Λ − Ir}τ α
+MSE(k)=􏰏r σ2λj +k2α2j , (5.113) j=1 (λj +k)2
+where λj is the jth largest eigenvalue of X τ X , αj is the jth element of α (the orthogonally transformed β), and σ2 is the error variance, j = 1,2,...,r.
+When k = 0, the squared-bias term is zero. The variance term decreases monotonically as k increases from zero, whereas the squared-bias term in- creases. For large values of k, the squared-bias term dominates the mean squared error. For these reasons, k has often been called the bias parameter.
+Estimating the Ridge Parameter
+We can use very small values of k to study how the OLS estimates would behave if the input data were mildly perturbed. If we observe large fluctuations in ridge estimates for very small k, such instability would reflect the presence of collinearity in the input variables. The main problem of ridge regression is to decide upon the best value of k. Choice of k is supposed to balance the “variance vs. bias” components of the mean squared error when estimating β by (5.92); the larger the value of k, the larger the bias, but the smaller the variance. In applications, k is determined from the data in X.
+Hoerl and Kennard recommend use of the ridge trace, a graphical dis- play of all components of the vector β􏰡rr(k) plotted on the same scatterplot against a range of values of k. The ridge trace is often touted as a diagnos- tic tool that exhibits the degree of stability of the regression coefficients. Because k controls the amount of bias in the ridge estimate, the value of k is estimated (albeit subjectively) by the smallest value at which the trace stabilizes for all coefficients. Thisted (1976, 1980) argues that choosing an estimate of k to reflect stability of the ridge trace does not necessarily yield a meaningful reduction in mean squared error.
+= k2􏰏r α2j j=1 (λj + k)2
+. (5.112) Thus, the mean squared error for a ridge estimator (5.92) is given by
+5.6 Biased Regression Methods 141
+￼￼
+142 5. Model Assessment and Selection in Multiple Regression
+The ridge trace is also used as a variable-selection procedure. If an es- timated regression coefficient changes sign in the graph of its ridge trace, this is taken to mean that the OLS estimator of that coefficient has an in- correct sign, so that that variable should not be included in the regression model. Such a variable-selection rule has been criticized as being “danger- ous” (Thisted, 1976) because it eliminates variables without taking into account their virtues as predictors. Thisted argues that it is possible for a variable to be a poor predictor but have a small, stable ridge trace, and, vice versa, to have a very unstable ridge trace but be an important variable for the regression model.
+In an alternative version of the ridge trace, Hastie, Tibshirani, and Fried- man (2001, Section 3.4.3) choose instead to plot the components of β􏰡rr(k) against what they call the effective degrees of freedom,
+df(k) = tr(W(k)) = 􏰏r λj j=1 λj +k
+, (5.114) where the matrix W(k) in (5.93) shrinks the OLS estimator.
+￼The ridge parameter k can also be estimated using cross-validation tech- niques. A prescription for determining a V -fold cross-validatory choice of the ridge parameter k is given in Table 5.7.
+Example: The PET Yarn Data (Continued)
+As before, all variables in the PET yarn data are centered. The ridge trace for the first 60 RR coefficients is displayed in Figure 5.7. We see that several of the coefficient estimates change sign as k increases. The ridge trace (not shown here) for all 268 curves indicates that the ridge parameter k stabilizes for the centered PET yarn data at about the value 0.9.
+Figure 5.8 shows the 268 ridge regression coefficient estimates for selected values of the ridge parameter k. The values of k are, from the top panel, k = 0.00001, 0.01, 0.1, and 1.0. We see that the smaller the value of k, the more noisy the estimates, whereas the larger the value of k, the less noisy the estimates. If k = 0 (which is not possible in this application, where r ≫ n), then we would have the minimum-length LS estimate. The computations for this example were carried out using the data augmentation algorithm (see Exercise 5.8).
+5.7 Variable Selection
+It is very easy to include too many input variables in a regression equa- tion. When that happens, too many parameters will be estimated, the
+￼
+TABLE 5.7. V -fold cross-validatory choice of ridge parameter k.
+1. Standardize each Xj so that it has mean 0 and standard deviation 1, j = 1,2,...,r.
+2. Partition the data into V learning and test sets corresponding to one of the versions of cross-validation (V = 5, 10, or n).
+3. Choose k1 , k2 , . . . , kN to be N (possibly equally spaced) values of k.
+4. Fori=1,2,...,N,andforv=1,2,...,V,
+• Use the vth learning set to compute the ridge regression coefficients β􏰡−v(ki), say.
+• Obtain an estimate of prediction error, 􏰤PEv(ki), say, by applying β􏰡−v(ki) to the corresponding vth test set.
+􏰤
+• Plot the value of PECV/V (ki) against ki.
+6. Choose that value of k that minimizes prediction error. In other words, the
+V -fold cross-validatory choice of k is given by 􏰡􏰤
+kCV/V =argminPECV/V(ki). ki
+5.7 Variable Selection 143
+￼5. Fori=1,2,...,N,
+• Average the V prediction error estimates to get an overall estimate
+of prediction error, 􏰤PECV/V (ki) = V −1 􏰊 􏰤PEv(ki), say. v
+￼regression function will have an inflated variance, and overfitting will take place. At the other extreme, if too few variables are included, the variance will be reduced, but the regression function will have increased bias, it will give a poor explanation of the data, and underfitting will occur. Some compromise between these extremes is, therefore, desirable. The notion of what makes a variable “important” is still not well understood, but one interpretation (Breiman, 2001b) is that a variable is important if dropping it seriously affects prediction accuracy.
+The driving force behind variable selection is a desire for a parsimonious regression model (one that is simpler and more easily interpretable than is the model with the entire set of variables) combined with a need for greater accuracy in prediction. Selecting variables in regression models is a complicated problem, and there are many conflicting views on which type of variable selection procedure is best. In this section, we discuss several of these procedures.
+144
+5. Model Assessment and Selection in Multiple Regression
+￼￼￼￼￼4
+2
+0
+-2
+-4
+-6
+￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼0.1 0.3 0.5 0.7 0.9 1.1 k
+FIGURE 5.7. Ridge trace of the first 60 ridge estimates of the 268 regres- sion coefficients for the centered PET yarn data. Each curve represents a ridge regression coefficient estimate for varying values of k.
+5.7.1 Stepwise Methods
+There are two main types of stepwise procedures in regression: backwards elimination, forwards selection, and a hybrid version that incorporates ideas from both main types.
+Backwards elimination (BE) begins with the full set of variables. At each step, we drop that variable whose F -ratio,
+F = (RSS0 − RSS1)/(df0 − df1) , (5.115) R S S 1 / df 1
+is smallest, where RSS0 is the residual sum of squares (with df0 degrees of freedom) for the reduced model, and RSS1 is the residual sum of squares (with df1 degrees of freedom) for the larger model, where the “reduced” model is a submodel of the “larger” model. Then, we refit the reduced model anditerateagain.Here,df0−df1 =1anddf1 =n−k−1,wherekisthe number of variables in the larger model.
+Because of the relationship between the t and F distribution (t2ν = F1,ν ), this procedure is equivalent to dropping that variable with the smallest ratio of the least-squares regression coefficient estimate to its respective estimated standard error. For large samples, this ratio behaves like a stan- dard Gaussian deviate Z. A regression coefficient is, therefore, declared
+￼C oefficients
+66
+5.7 Variable Selection 145
+￼￼￼￼￼￼￼￼￼￼￼￼￼33
+00
+-3 -3
+-6 -6
+050100150200250 050100150200250
+66
+33
+00
+-3 -3
+-6 -6
+050100150200250 050100150200250
+FIGURE 5.8. Ridge regression estimates of the 268 regression coefficients for the centered PET yarn data. The values of the ridge parameter k are k=0.00001 (top-left panel), 0.01 (top-right panel), 0.1 (lower-left panel), 1.0 (lower-right panel). The horizontal axis is coefficient number.
+significant at the 5% level if the absolute value of its Z-ratio is larger than 2.0, and nonsignificant otherwise. Those variables having nonsignificant co- efficients (using either the F or Z definition) are dropped from the model. We stop when all variables retained in the model are larger than some pre- determined value Fdelete, usually taken as the 10% point of the F1,n−k−1 distribution.
+Forwards selection (FS) begins with an empty set of variables. At each step, we select from the variable list that variable with the largest F value (5.115) with df0 −df1 = 1 and df1 = n−k−2, where k is the number of variables in the smaller model, add that variable to the regression model, and then refit the enlarged model. We stop selecting variables for the model when the F value for each variable not currently in the model is smaller than some predetermined value Fenter, which is typically taken to be equal to 2 or 4 or the 25% point of the F1,n−k−2 distribution.
+A hybrid stepwise procedure alternates backwards and forwards in its model selection and stops when all variables have either been retained for inclusion or removed.
+￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼k=0.1
+k=0.00001
+k=1.0 k=0.01
+146 5. Model Assessment and Selection in Multiple Regression
+For the bodyfat data, when we use Fenter = Fdelete = 4.0, only four input variables (abdomen, weight, wrist, and forearm) appear in the final model using any of the above stepwise procedures. If we set Fenter = Fdelete = 2.0, three further variables, neck, age, and thigh, are retained for the equation, although neck and thigh each have t-values smaller than 2.0.
+Criticisms of Stepwise Methods. Stepwise procedures have been severely criticized for the following reasons: (1) Stepwise methods ignore multiple testing problems when the input variables are highly correlated. (2) The maximum (or minimum) of a set of correlated F statistics is not an F statis- tic. Hence, the decision rules used in stepwise regression to add or drop an input variable can be misleading. We should be very cautious in evaluat- ing the significance (or not) of a regression coefficient when the associated variable is a candidate for inclusion or exclusion in a stepwise regression procedure. (3) There is no guarantee that the subsets obtained from either forwards selection or backwards elimination stepwise procedures will con- tain the same variables or even be the “best” subset. (4) When there are more variables than observations (r > n), backwards elimination is typi- cally not a feasible procedure. (5) A stepwise procedure produces a single answer (a very specific subset) to the variable selection problem, although several different subsets may be equally good for regression purposes.
+5.7.2 All Possible Subsets
+An alternative method of variable selection involves examining all possi- ble subsets of a given size and evaluating their powers of prediction. Thus, if we start out with r variables, each variable can be in or out of the subset; this implies that there are 2r − 1 different possible subsets that have to be examined (ignoring the empty subset). This number of candidate sub- sets quickly becomes very large even for moderate r (e.g., with 20 variables, there are more than a million subsets). Branch-and-bound algorithms (e.g., Furnival and Wilson, 1974) reduce this number to a more manageable size by eliminating large numbers of candidate models from consideration.
+Let k ∈ {0, 1, 2, . . . , r} be the number of variables in a given regression
+submodel P with |P | = p = k + 1 parameters (k variables and an intercept).
+There are 􏰉r􏰀 different subsets each having k variables. Using a variable k
+selection criterion, each of those subsets may be compared and ranked.
+Most subset selection procedures choose the best submodel by minimiz- ing a selection criterion of the form,
+R S S P σ􏰡 2
+n +λ·p· n , (5.116)
+where λ is a penalty coefficient, σ􏰡2 is the residual variance from the full model R+, and RSSP is the residual sum of squares for submodel P. In
+￼￼
+the neural networks literature, RSSP /n is called the learning (or training) error; we saw it before as the apparent error rate or resubstitution error rate. The term λpσ􏰡2/n is called the complexity term. Special cases of (5.116) are Akaike Information Criterion (AIC) (Akaike, 1973) and Mallows CP (Mallows, 1973, 1995), both of which have λ = 2, and the Bayesian Infor- mation Criterion (BIC) (Akaike, 1978; Schwarz, 1978) with λ = log n. The best submodel found using minimum-BIC will have fewer variables than by using minimum-CP . Asymptotically, AIC and CP are equivalent but have different properties than BIC.
+The most popular of these criteria is CP = RSSP /σ􏰡2 − (n − 2p). To comparesubmodels,wedrawascatterplotofCP valuesagainstp.(Usually, we only plot the smallest few CP values for each p.) Certain regions of the CP -plot deserve special mention. For the full model,
+CR+ = |R+| = r + 1, (5.117)
+“good” subsets (those with small bias) will have CP ≈ p, and those subsets withlargebiaswillhaveCP valuesgreaterthanp.Furthermore,anysubset with CP ≤ r + 1 also has F ≤ 2 (a criterion used in stepwise regression for adding or eliminating a variable) and so is a candidate for a good subset. AnalyticalandempiricalresultssuggestthatCP (andrelatedcriteria)tend to overfit when the full model has very high dimensionality.
+The CP plot for the bodyfat data is given in Figure 5.9, where we have plotted those subsets with the five smallest CP values for each value of p. There are 27 subsets with CP < p. The overall lowest CP = 5.9 is obtained from a 7-variable subset with variables age, weight, neck, abdomen, thigh, forearm, and wrist.
+5.7.3 Forwards-Stagewise Regression
+Forwards Stagewise is closely related to forwards selection, but is a much less greedy algorithm. Both algorithms start out with all coefficient es- timates set to zero. At the first step, they both add the same variable to the regression model. As new variables are sequentially added to the model, forwards selection recomputes all coefficient estimates by refitting the expanded model, while Forward Stagewise adds new variables to the model without adjusting the coefficient estimates of those variables already present.
+Let X = (xij) be an (n × r)-matrix and Y = (y1,···,yn)τ. We as-
+sume that the input variables have been standardized to have mean zero,
+􏰊n xij = 0, and length one, 􏰊n x2ij = 1, j = 1,2,...,r, and that the i=1 i=1
+􏰊
+output variable has mean zero, ni=1 yi = 0. The “current” estimate of
+the regression function μ = Xβ is given by μ􏰡 = Xβ􏰡, where the jth col- umn, Xj = (x1j,···,xnj)τ, of X = (X1,···,Xr) represents n observations
+5.7 Variable Selection 147
+148
+5. Model Assessment and Selection in Multiple Regression
+￼￼￼￼￼￼￼￼￼￼￼￼￼40
+30
+20
+10
+0
+￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼2468101214 p
+FIGURE 5.9. Subset selection for the bodyfat data. The smallest five val- ues of CP are plotted against the number of parameters p in the subset model P.
+on the jth input Xj. The vector of “current” correlations of X with the “current” residual vector r = Y − μ􏰡 is given by 􏰡c = (c􏰡 ,···,􏰡c )τ = Xτr.
+The Forwards-Stagewise algorithm is as follows:
+1 . I n i t i a l i z e β􏰡 = 0 , s o t h a t μ􏰡 = 0 a n d r = Y .
+4.Updateμ􏰡←μ􏰡+δj1Xj1 andr←r−δj1Xj1.
+5. Repeat steps 2 and 3 many times until 􏰡c = 0. This is the OLS solution.
+Forwards Stagewise is most efficiently computed using a simple modi- fication of the least-angle regression (LAR) algorithm (see Section 5.7.4). Let A denote the “active’ set of indices of the set {1, 2, . . . , r}. Unlike LAR, Forwards Stagewise can drop one or more indices of A at each step. Thus, the number of steps taken by Forwards Stagewise to arrive at the OLS solution can be far greater than that for LAR, possibly even thousands of steps, which has contributed to its lack of use.
+For the bodyfat data, Forwards Stagewise took the following sequence of steps: variables 6, 3, 1, 13, 4, 12, and 7 were added successively to the model; variables 3 and 1 were dropped; then variable 3 was added back, but in the next step was dropped again. Then, variables 11, 8, and 2 were added, but variable 13 was dropped. Variables 1, 10, 3, 13, 5, and 9 were next added. Then, variable 4 was dropped, then added back, then dropped
+2. Find the input vector, Xj1 , say, most highly correlated with r, where j = a r g m a x | c􏰡 | .
+1jj
+3.Updateβ􏰡 ←β􏰡 +δ ,whereδ =ε·sign(c􏰡 )andεisasmall
+j1 j1 j1 j1 j1 constant that controls the step-length.
+1r
+Cp
+again, and added back again; and variable 1 was dropped, added, dropped again, and then finally added back in. Thus, 29 modified LAR steps were needed to reach the OLS solution.
+5.7.4 Least-Angle Regression
+The least-angle regression (LAR) algorithm (Efron, Hastie, Johnstone, and Tibshirani, 2004) is a new variable-selection procedure for linear mod- els. It builds up a regression model sequentially by piecewise-linear steps, adding a single input variable to the model at each step. When r < n, the LAR algorithm is as computationally efficient as OLS and it is especially useful for situations in which r ≫ n. Simple modifications of the LAR al- gorithm enable implementations of the Forwards-Stagewise algorithm and the Lasso (Section 5.8.1) to be computed efficiently. Other model-selection algorithms (e.g., the Dantzig selector: Candes and Tao, 2007; the elastic net: Zou and Hastie, 2005) can also be computed efficiently by modifying the LAR algorithm.
+The LAR Algorithm
+1. Initialize β􏰡 = 0, so that μ􏰡 = 0 and r = Y. Start with the “active” set A an empty subset of indices of the set {1,2,...,r}.
+2. Find the input vector, Xj1 , say, most highly correlated with r, where j =argmax |c􏰡|;thenewactivesetisA←A∪{j},andX isadded
+1jj 1j1 to the regression model.
+3. Move β􏰡 toward sign(c􏰡 ) (see Step 3 of the Forwards-Stagewise al- j1 j1
+gorithm) until some other input vector, Xj2 , say, has the same correlation withrasdoesXj1;thenewactivesetisA←A∪{j2},andXj2 isadded to the regression model.
+4. Update r and move (β􏰡 ,β􏰡 ) toward the joint OLS direction for the j1 j2
+regression of r on (Xj1 , Xj2 ) (i.e., equiangular between Xj1 and Xj2 ), until a third input vector, Xj3 , say, is as correlated with r as are the first two variables; the new active set is A ← A ∪ {j3}, and Xj3 is added to the regression model.
+5. After k LAR steps, A = {j1,j2,...,jk}, μ􏰡A is the current LAR esti- mate (where exactly k estimated coefficients, β􏰡 , β􏰡 , . . . , β􏰡 , are nonzero
+j1j2 jk
+and Xj1 , Xj2 , . . . , Xjk define the linear regression model), and the current
+vector of correlations is 􏰡c = X τ (Y − μ􏰡A).
+6. Continue until all r input variables have been added to the regression
+model and 􏰡c = 0. This is the OLS solution.
+The total number of LAR steps is min(r, n − 1). Because the input vari- ables are each mean-centered, LAR terminates in n − 1 steps if r > n − 1.
+5.7 Variable Selection 149
+150 5. Model Assessment and Selection in Multiple Regression
+A CP -type statistic that estimates prediction error is available as a stop- ping rule to choose between possible LAR models. See the R package lars. Because of its propensity to overfit in high-dimensional problems, however, thereissomedoubtastohowreliableCP canbeinselectingaparsimonious model.
+5.7.5 Criticisms of Variable Selection Methods
+There have been many criticisms leveled at variable selection methods in general. These include (1) inferential methods applied to a regression model assume that the variables are selected a priori. Variable selection procedures, however, use the data to add or delete variables and, hence, change the model. As such, they violate the inferential model and should be considered only as “heuristic data analysis tools” (Breiman, Friedman, Olshen, and Stone, 1984, p. 227). (2) When variable selection is data-driven, then the OLS estimates of the regression coefficients based upon the same data will be biased (even for large sample sizes) on the order 1–2 standard errors (Miller, 2002). (3) If the (learning) data are changed a small amount, this may drastically change the variables chosen for the optimal regression subset, rendering variable selection procedures very “unstable” (Breiman, 1996).
+5.8 Regularized Regression
+Both ridge regression and variable selection have their advantages and disadvantages. It would, therefore, be useful if we could construct a hybrid of these two ideas that would combine the best properties of each method — subset selection, shrinkage to improve prediction accuracy, and stability in the face of data perturbations.
+Consider the general form of the penalized least-squares criterion, which can be written as
+φ(β) = (Y − X β)τ (Y − X β) + λp(β), (5.118)
+for a given penalty function p(·) and regularization parameter λ. regular- ization parameter λ effects a compromise between how well the regression function fits the data and a size constraint on the coefficient vector. A large value of λ means that the size constraint dominates, whereas a small value of λ allows the OLS estimator to dominate.
+We can define a family (indexed by q > 0) of penalized least-squares estimators in which the penalty function,
+􏰏r j=1
+￼pq(β) =
+|βj|q, (5.119)
+5.8 Regularized Regression 151
+￼￼￼-1.0 -0.5 0.0 0.5 1.0
+￼￼￼￼￼￼￼β2
+q=1 q=0.5
+q=0.2
+q=5 q=2
+￼￼-1.0 -0.5
+0.0 β 0.5 1
+1.0
+v
+v
+FIGURE 5.10. Two-dimensional contours of the symmetric penalty func- tionpq(β)=|β1|q+|β2|q =1forq=0.2,0.5,1,2,5.Thecaseq=1(blue diamond) yields the lasso and q = 2 (red circle) yields ridge regression.
+bounds the lq-norm of the parameters in the model as
+􏰏|βj|q ≤c (5.120)
+j
+(Frank and Friedman, 1993). The two-dimensional contours of this sym- metric penalty function for different values of q are given in Figure 5.10.
+If we substitute the penalty function pq(β) in (5.119) in place of p(β) in (5.118), we can write the criterion as φq (β), q > 0. Then, φq (β) is a smooth, convex function when q > 1, and is convex for q = 1, so that we can use classical optimization methods to minimize φq (β). By contrast, φq (β) is not convex when q < 1, and so its minimization is more complicated, especially when r is large.
+Ridge regression corresponds to q = 2, and its corresponding penalty
+function is a circular disk (r = 2) or sphere (r = 3), or, for general r, a
+rotationally invariant hypersphere centered at the origin. The ridge regres-
+sion estimator is that point on the elliptical contours of ESS(β), centered
+at β􏰡, which first touches the hypersphere 􏰊 β2 ≤ c. The tuning parameter jj
+c controls the size of the hypersphere and, hence, how much we shrink β􏰡 toward the origin.
+If q ̸= 2, the penalty is no longer rotationally invariant. The most inter- esting case is q < 2, where the penalty function collapses toward the coordi-
+152 5. Model Assessment and Selection in Multiple Regression
+nate axes, so that not only does it shrink the coefficients toward zero, but it also sets some of them to be exactly zero, thus combining elements of ridge regression and variable selection. When q is set very close to 0, the penalty function places all its mass along the coordinate axes, and the contours of the elliptical region of ESS(β) touch an undetermined number of axes (so that the resulting regression function has an unknown number of zero coefficients); the result is variable selection. The case q = 1 produces the lasso method having a diamond-shaped penalty function with the corners of the diamond on the coordinate axes. If q = 0, the penalty counts the number of nonzero coefficients, which corresponds to all-possible-subsets variable selection.
+5.8.1 The Lasso
+The Lasso (least absolute shrinkage and selection operator) is a con- strained OLS minimization problem in which
+ESS(β) = (Y − Xβ)τ (Y − Xβ) (5.121)
+is minimized for β = (βj) subject to the diamond-shaped condition that 􏰊rj=1 |βj| ≤ c (Tibshirani, 1996b). The regularization form of the problem is to find β to minimize
+φ(β) = (Y − X β)τ (Y − X β) + λ methods subject to linear inequality constraints.
+􏰏r j=1
+|βj |. (5.122) This problem can be solved using complicated quadratic programming
+The Lasso has a number of desirable features that have made it a popular
+regression algorithm. Just like ridge regression, the Lasso is a shrinkage
+estimator of β, where the OLS regression coefficients are shrunk toward
+the origin, the value of c controlling the amount of shrinkage. At the same
+time, it also behaves as a variable-selection technique: for a given value of c,
+only a subset of the coefficient estimates, β􏰡 , will have nonzero values, and j
+reducing the value of c reduces the size of that subset. The coefficient values will be exactly zero when one of the elliptical contours of the function
+E S S ( β ) = R S S + ( β − β􏰡 o l s ) τ X τ X ( β − β􏰡 o l s ) , ( 5 . 1 2 3 ) where RSS = ESS(β􏰡) is a constant, touches a corner of the diamond-
+shaped penalty function.
+The entire Lasso sequence of paths (or profiles) displays the coefficient
+estimates plotted against the upper bound c = 􏰊 |β􏰡 | (or normalized at 􏰊jj
+each step by dividing c by max |β􏰡 |) as c increases from 0 to the point jj
+at which the OLS solution is obtained. These profiles can be generated by a slight modification of the LAR algorithm. We start with the LAR algorithm; then, if a nonzero estimated coefficient becomes 0 (e.g., changes its sign), stop and remove that variable from A and from the calculation of the next equiangular direction. No new variable is added to the model at that step. The LAR algorithm recomputes the best direction and continues on its way. All additions and subtractions of variables are made “one-at-a- time,” so that the number of steps for the LAR-Lasso algorithm can exceed that of the LAR algorithm.
+The Lasso and Forwards Stagewise can both be computed through the LAR algorithm. Their respective sequences of paths can either be identical (in certain situations) or very different. In general, the Forwards Stagewise paths will be smoother than those of the Lasso because Forwards Stagewise can be characterized as a monotone (i.e., more restricted) version of the Lasso (Hastie, Taylor, Tibshirani, and Walther, 2007).
+The LAR algorithm is efficient, involving of the order O(r3 + nr2) com- putations when r < n, equivalent to an OLS fit on r input variables. The LAR-Lasso algorithm, in which we may need to drop a variable (costing at most an additional O(r2) computational operations for each variable dropped), generates the Lasso solution without difficulty.
+In Figure 5.11, we display all 13 Lasso paths for the bodyfat data, both for the coefficients (left panel) and for the standardized coefficients (right panel). Variables are added to the regression model in the following order: 6 (abdomen), 3 (height), 1 (age), 13 (wrist), 4 (neck), 12 (forearm), 7 (hip), 11 (biceps), 8 (thigh), 2 (weight), 10 (ankle), 5 (chest), and 9 (knee). None of the coefficient paths cross zero and so no variables are dropped from the regression model at any stage of the Lasso process. Fig- ure 5.11 was computed by the LAR-Lasso algorithm; the LAR algorithm yielded the same paths.
+A hybrid penalized LS regression method called the elastic net (Zou and Hastie, 2005) uses as p(β) in (5.118) a linear combination of the ridge regression l2 penalty function and the Lasso l1 penalty function.
+5.8.2 The Garotte
+A different type of penalized least-squares estimator is due to Breiman (1995). Let β􏰡ols be the OLS estimator and let W = diag{w} be a diagonal matrix with nonnegative weights w = (wj ) along the diagonal. The problem is to find the weights w that minimize
+φ(w) = (Y − X Wβ􏰡ols)τ (Y − X Wβ􏰡ols) (5.124) subject to one of the following two constraints,
+1. w ≥ 0, 1τr w = 􏰊rj=1 wj ≤ c (nonnegative garotte)
+5.8 Regularized Regression 153
+154
+5. Model Assessment and Selection in Multiple Regression
+￼￼￼￼￼￼￼￼1.0 0.5 0.0 -0.5 -1.0 -1.5 -2.0
+150
+100
+50
+0
+-50
+￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼0.0 0.2 0.4 0.6 0.8 1.0 |beta|/m ax|beta|
+0.0 0.2 0.4 0.6 0.8 1.0 |beta|/m ax|beta|
+FIGURE 5.11. Lasso paths for the bodyfat data. The paths are plots of the coefficients {β􏰡 } (left panel) and the standardized coefficients, {β􏰡 ∥ X ∥ }
+j􏰊􏰊jj2 (right panel) plotted against |β􏰡 |/ max |β􏰡 |. The variables are added
+jj jj
+to the regression model in the order: 6, 3, 1, 13, 4, 12, 7, 11, 8, 2, 10, 5, 9.
+2. wτ w = 􏰊rj=1 wi2 ≤ c (garotte).
+Either version of the garotte seeks to find some desirable scaling of the regression coefficients. As c is decreased, more of the wj become 0 (thus eliminating those particular variables from the regression function), while the nonzero β􏰡ols,j shrink toward 0. Note that both versions of the garotte, which depend upon the existence of the OLS estimator, β􏰡ols, fail in situa- tions where r > n.
+Comparisons Extensive simulations comparing prediction accuracy under a wide variety of conditions and models (see, e.g., Breiman, 1995, 1996; Tibshirani, 1996b; O ̈jelund, Brown, Madsen, and Thyregod, 2002) show that the Lasso, which tends to choose too many variables, almost always contains the correct model; the nonnegative garotte tends to select smaller models than the Lasso; and all-possible-subsets, while more likely to choose the correct model than the Lasso, selects models that contain the correct model far less often than the Lasso. Simulations also show that ridge re- gression is very stable and is more accurate when there are many small coefficients, but does not do well when faced with a mixture of large and small coefficients; the nonnegative garotte is relatively stable and is more accurate when there are a few nonzero coefficients; the lasso performs well when there are a small-to-medium number of moderate-sized coefficients (while its estimates tend to have large biases); and all-possible-subsets, al- though very unstable, performs well only when there are a few nonzero coefficients.
+C oefficients
+StandardizedCoefficients
+Bibliographical Notes
+There is a huge literature on multiple linear regression, and it is the area of statistics about which most is known. See, for example, Weisberg (1985) and Draper and Smith (1981, 1998). An excellent book on variable selection is Miller (2002).
+The material on prediction error is based upon the work of Breiman (1992, 1995), Breiman and Spector (1992), and Efron (1983, 1986). The use of cross-validation for model selection purposes was introduced by Stone (1974) and Geisser (1975). (It is amusing to read that one discussant of Stone’s article likened cross-validation to witchcraft!) Based upon a con- viction that “prediction is generally more relevant for inference than param- eter estimation,” Geisser (1974, 1975) called the cross-validation technique the predictive sample-reuse method.
+Book-length accounts of the bootstrap include Efron (1982), Hall (1992), Efron and Tibshirani (1993), and Chernick (1999). The names “uncon- ditional” and “conditional” bootstrap were taken from Breiman (1992). Freedman (1981) distinguishes the two regression models for bootstrapping by calling the fixed-X case the “regression model” and the random-X case the “correlation model.” An account of regression problems with collinear data from an econometric point of view is given by Belsley, Kuh, and Welsch (1980).
+The ridge regression estimator first appeared in 1962 in an article in a chemical engineering journal by A.E. Hoerl. This was followed by Hoerl and Kennard (1970a,b). For the Bayesian characterization of the ridge es- timator, see Lindley and Smith (1972), Chipman (1964), and Goldstein and Smith (1974).
+In many texts, it is common to recommend standardizing (centering and scaling) the input variables prior to carrying out ridge regression. Such recommendations are not accepted by everyone, however. Thisted (1976), for example, states that “no argument has ever been advanced, nor does a single theorem in the ridge literature require, that XτX be in ‘correlation form’.” He goes on to argue that “because ridge rules are not invariant with respect to changes in origin of the predictor variables, it is important to recognize that origins are not arbitrary and that centering, taken as a rule of thumb always to be followed, can lead to misleading results and poor mean square error behavior.”
+Some notes on terminology and notation origins . . . The penalized least- squares regression with penalty function (5.119) is widely referred to as bridge regression with the origin of the name ascribed to Frank and Fried- man (1993). Although this name never appears in that reference, it appar- ently was first used by Friedman in a talk (Tibshirani, personal communi- cation). . . . Mallows (1973) states that the use of the letter C in CP was
+5.8 Regularized Regression 155
+￼
+156 5. Model Assessment and Selection in Multiple Regression
+specifically chosen to honor Cuthbert Daniel, who helped Mallows develop the idea behind CP at the end of 1963. ... In an interview (Findley and Parzen, 1995), Akaike explains how AIC was named. Akaike had previ- ously used the notation IC (for information criterion) in a 1974 article, and for another article had asked his assistant to compute some values of the IC. His assistant knew that if she called the quantity “IC,” Fortran would assume that it was integer-valued, which it was not. So, she put an A in front of IC to turn it into a noninteger-valued quantity. Akaike ap- parently thought that calling it AIC was a “good idea” because it could then be used as the first of a sequence of information criteria, AIC, BIC, etc.
+Exercises
+5.1 From the solution (5.13) to the least-squares problem in the random- X case, use formula (3.5) for inverting a partitioned matrix and (3.82) to show that (5.14) and (5.15) follow.
+5.2 From the solution (5.26) to the least-squares problem in the fixed-X case, use the matrix-inversion formula (3.5) to show that (5.27) and (5.28) follow.
+5.3 Show that cov((aτ − dτ Zτ )Y, dτ Zτ Y) = 0 for the multiple regression model, where a is an n-vector and d is an (r + 1)-vector.
+5.4 (Gauss–Markov Theorem) Assume that β􏰡ols is any solution of the normal equations (5.25) and that Z is a matrix of fixed constants. Make no assumption that Z τ Z has full rank. Call cτ β estimable if we can find a vector a such that E(aτ Y) = cτ β. If cτ β is estimable, show that cτ β􏰡ols is linear in Y and is unbiased for cτ β. Using Exercise 5.3 or otherwise, show also that cτβ􏰡ols has minimum variance among all linear (in Y) unbiased estimators of cτ β.
+5.5 Suppose ZτZ is nonsingular and that the solution of the normal equations is β􏰡ols = (Zτ Z)−1Zτ Y. Show that the Gauss–Markov Theorem holds.
+5.6 Let G be a generalized inverse of ZτZ and let a solution of the normal equations be given by the generalized-inverse regression estimator, β􏰡∗ = GZτ Y. Show that the Gauss–Markov Theorem holds.
+5.7 Show that a generalized ridge regression estimator, β􏰡 r r ( k ) = ( X τ X + k Ω ) − 1 X τ y ,
+can be obtained as a solution of minimizing ESS(β) subject to the elliptical restriction that βτ Ωβ ≤ c.
+￼
+5.8 (Marquardt, 1970) Consider the following operation of data aug- mentation. Center and scale all input and output variables. Augment the
+√
+(n × r)-matrix X with r additional rows of the form Hk = kIr , where k
+5.8 Regularized Regression 157
+￼is given, and denote the resulting ((n + r) × r)-matrix by X ∗ . Augment the n-vector Y using r 0s, and denote the resulting (n+r)-vector by Y∗. Show that the ridge estimator can be obtained by applying OLS to the regression of Y∗ on X∗. Thus, one can carry out ridge regression using standard OLS regression software and obtain the correct ridge estimator. However, much of the rest of the regression output will be inappropriate for the original data (X,Y).
+5.9 In the PET yarn example, the variables were all centered, but not scaled. Standardize the input variables (the spectrum values) by centering and dividing each input variable by its standard deviation, and center the output variable (density). For the standardized data, recompute: (1) the PCR coefficient estimates, (2) the PLSR coefficient estimates, and (3) the RR coefficient estimates for various values of k (including k > 1), and redraw the ridge trace. What effect does standardizing have on the results that is not provided by centering alone? How would the results be affected by neither centering nor standardizing the variables?
+5.10 Consider data on the composition of a liquid detergent. The datafile detergent can be downloaded from the book’s website. There are five Y output variables, representing four compounds in an aqueous solution (the fifth Y variable is the amount of water in the solution), and they sum to unity. The X input variables consist of mid-infrared spectrum values recorded as the absorbances at r = 1168 equally spaced frequencies in the range 3100–759 cm−1. The data consist of n = 12 sample preparations of the detergent. Graph the 12 absorbance spectra and apply PCR, PLSR, and RR to the data using each of the first four Y variables in separate regressions.
+5.11 (Mallows, 1973) Consider the CP statistic. Let P∗ be a subset with p+1parametersthatcontainsP.ShowthatCP∗−CP isdistributedas2−t21, where t1 is the Student’s t variable having 1 degree of freedom. Show also that if the additional variable is unimportant, then the difference CP∗ −CP has mean and variance approximately equal to 1 and 2, respectively.
+5.12 What is the relationship between R2 and CP ?
+5.13 If the regression model is correct, show that CP can be used as an
+estimate of |P|, the number of parameters in the model.
+5 . 1 4 F o r t h e O L S e s t i m a t o r β􏰡 i n t h e l i n e a r r e g r s s i o n m o d e l Y = X β + e , w h e r e e h a s m e a n z e r o , s h o w t h a t E S S ( β ) = R S S + ( β − β􏰡 o l s ) τ X τ X ( β − β􏰡ols), where RSS = ESS(β􏰡).
+158 5. Model Assessment and Selection in Multiple Regression
+5.15 Consider the matrix X. Center and scale each column of X so that X τ X is the correlation matrix. Regress the kth column of X on the other r − 1 columns of X in a multiple regression. Compute the residual sum of squares, RSSk, k = 1, 2, . . . , r, for each column. Near collinearity exhibits irself when at least one of the RSS1,RSS2,...,RSSr is small. Show that RSSk is the square-root of the kth diagonal element of (X τ X )−1, which is referred to as the reciprocal square-root of VIFk. Show that VIFk = (1 − Rk2)−1, where Rk2 is the squared multiple correlation coefficient of the kth column of X regressed on the other r−1 columns of X, k = 1,2,...,r.
+5.16 Suppose the error component e of the linear regression model has mean 0, but now has var(e) = σ2V, where V is a known (n × n) positive- definite symmetric matrix and σ2 > 0 may not be necessarily known. Let β􏰡gls denote the generalized least-squares (GLS) estimator:
+β􏰡gls = arg min (Y − Zβ)τ V−1(Y − Zβ). β
+Show that
+has expectation β and covariance matrix
+β􏰡gls = (Zτ V−1Z)−1Zτ V−1Y var(β􏰡gls) = σ2(Zτ V−1Z)−1.
+5.17 What would be the consequences of incorrectly using the ordinary least-squares estimator β􏰡ols = (Zτ Z)−1Zτ Y, of β when var(e) = σ2V?
+5.18 The Boston housing data can be downloaded from the StatLib website lib.stat.cmu.edu/datasets/boston corrected.txt. There are 506 observations on census tracts in the Boston Standard Metropolitan Statistical Area (SMSA) in 1970. The response variable is the logarithm of the median value of owner-occupied homes in thousands of dollars; there are 13 input variables (plus information on location of each observation). Compute the OLS estimates and compare them with those obtained from the following variable-selection algorithms: Forwards Selection (stepwise), Cp, the Lasso, LARS, and Forwards Stagewise.
+5.19 Repeat comparisons between variable-selection algorithms in Exer- cise 5.18 for The Insurance Company Benchmark data set. The data gives information on customers of an insurance company and contains 86 vari- ables on product-usage data and socio-demographic data derived from zip area codes. There are 5,822 customers in the learning set and another 4,000 in the test set. The data were collected to answer the following question: Can you predict who would be interested in buying a caravan insurance policy and give an explanation why? The data can be downloaded from kdd.ics.uci.edu/databases/tic/tic.html.
+￼

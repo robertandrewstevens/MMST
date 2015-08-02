@@ -1,0 +1,679 @@
+9
+Recursive Partitioning and Tree-Based Methods
+9.1 Introduction
+An algorithm known as recursive partitioning is the key to the nonpara- metric statistical method of classification and regression trees (CART) (Breiman, Friedman, Olshen, and Stone, 1984). Recursive partitioning is the step-by-step process by which a decision tree is constructed by either splitting or not splitting each node on the tree into two daughter nodes. An attractive feature of the CART methodology (or the related C4.5 method- ology; Quinlan, 1993) is that because the algorithm asks a sequence of hierarchical Boolean questions (e.g., is Xi ≤ θj?, where θj is a threshold value), it is relatively simple to understand and interpret the results.
+As we described in previous chapters, classification and regression are both supervised learning techniques, but they differ in the way their out- put variables are defined. For binary classification problems, the output variable, Y , is binary-valued, whereas for regression problems, Y is a con- tinuous variable. Such a formulation is particularly useful when assessing how well a classification or regression methodology does in predicting Y from a given set of input variables X1,X2,...,Xr.
+In the CART methodology, the input space, Rr, is partitioned into a number of nonoverlapping rectangular (r = 2) or cuboid (r > 2) regions,
+A.J. Izenman, Modern Multivariate Statistical Techniques, Springer Texts in Statistics, 281 DOI 10.1007/978-0-387-78189-1_9, © Springer Science+Business Media New York 2013
+￼
+282 9. Recursive Partitioning and Tree-Based Methods
+each of which is viewed as homogeneous for the purpose of predicting Y . Each region, which has sides parallel to the axes of input space, is assigned a class (in a classification problem) or a constant value (in a regression problem). Such a partition corresponds to a classification or regression tree (as appropriate).
+Tree-based methods, such as CART and C4.5, have been used exten- sively in a wide variety of fields. They have been found especially useful in biomedical and genetic research, marketing, political science, speech recog- nition, and other applied sciences.
+9.2 Classification Trees
+A classification tree is the result of asking an ordered sequence of ques- tions, and the type of question asked at each step in the sequence depends upon the answers to the previous questions of the sequence. The sequence terminates in a prediction of the class.
+The unique starting point of a classification tree is called the root node and consists of the entire learning set L at the top of the tree. A node is a subset of the set of variables, and it can be a terminal or nonterminal node. A nonterminal (or parent) node is a node that splits into two daughter nodes (a binary split). Such a binary split is determined by a Boolean condition on the value of a single variable, where the condition is either satisfied (“yes”) or not satisfied (“no”) by the observed value of that variable. All observations in L that have reached a particular (parent) node and satisfy the condition for that variable drop down to one of the two daughter nodes; the remaining observations at that (parent) node that do not satisfy the condition drop down to the other daughter node.
+A node that does not split is called a terminal node and is assigned a class label. Each observation in L falls into one of the terminal nodes. When an observation of unknown class is “dropped down” the tree and ends up at a terminal node, it is assigned the class corresponding to the class label attached to that node. There may be more than one terminal node with the same class label. A single-split tree with only two terminal nodes is called a stump. The set of all terminal nodes is called a partition of the data.
+Consider a simple example of recursive partitioning involving two input variables, X1 and X2. Suppose the tree diagram is given in the top panel of Figure 9.1. The possible stages of this tree are as follows: (1) Is X2 ≤ θ1? If the answer is yes, follow the left branch; if no, follow the right branch. (2) If the answer to (1) is yes, then we ask the next question: Is X1 ≤ θ2? An answer of yes yields terminal node τ1 with corresponding region R1 = {X1 ≤ θ2,X2 ≤ θ1}; an answer of no yields terminal node τ2 with corresponding region R2 = {X1 > θ2, X2 ≤ θ1}. (3) If the answer to (1) is
+￼
+􏰳􏰳􏰳HHH
+yes􏰳 X2≤θ1? Hno
+􏰳􏰳 HH
+􏰲A 􏰲A
+􏰲A 􏰲A 􏰲A 􏰲A 􏰲A 􏰲A yes􏰲X1 ≤ θ2?A no yes􏰲X2 ≤ θ3?A no 􏰲A􏰲A
+τ1 τ2 􏰲A τ5 􏰲A
+􏰲A 􏰲A yes􏰲X1 ≤θ4?A no 􏰲A
+τ3
+τ4
+9.2 Classification Trees 283
+￼R5
+￼R3
+￼R4
+￼R1
+R2
+￼￼θ3 X2
+θ1
+￼￼θ2
+θ4
+X1
+FIGURE 9.1. Example of recursive partitioning with two input variables X1 and X2. Top panel shows a decision tree with five terminal nodes, τ1−τ5, and four splits. Bottom panel shows the partitioning of R2 into five regions, R1 − R5, corresponding to the five terminal nodes.
+284 9. Recursive Partitioning and Tree-Based Methods
+no, we ask the next question: Is X2 ≤ θ3? If the answer to (3) is yes, then we ask the next question: Is X1 ≤ θ4? An answer of yes yields terminal node τ3 with corresponding region R3 = {X1 ≤ θ4,θ1 < X2 ≤ θ3}; if no, follow the right branch to terminal node τ4 with corresponding region R4 ={X1 >θ4,θ1 <X2 ≤θ3}.(4)Iftheanswerto(3)isno,wearrive at terminal node τ5 with corresponding region R5 = {X2 > θ3}. We have assumed that θ2 < θ4 and θ1 < θ3. The resulting 5-region partition of R2 is given in the bottom panel of Figure 9.1. For a classification tree, each terminal node and corresponding region is assigned a class label.
+9.2.1 Example: Cleveland Heart-Disease Data
+These data1 were obtained from a heart-disease study conducted by the Cleveland Clinic Foundation (Robert Detrano, principal investigator). For the study, the response variable is diag (diagnosis of heart disease: buff = healthy, sick = heart disease). There were 303 patients in the study, 164 of them healthy and 139 with heart disease.
+The 13 input variables are age (age in years), gender (male, fem), cp (chest-pain type: angina=typical angina, abnang=atypical angina, notang =non-anginal pain, asympt=asymptomatic), trestbps (resting blood pres- sure), chol (serum cholesterol in mg/dl), fbs (fasting blood sugar < 120 mg/dl: true, false), restecg (resting electrocardiographic results: norm =normal, abn=having ST-T wave abnormality, hyp=showing probable or definite left ventricular hypertrophy by Estes’s criteria), thatach (maxi- mum heart rate achieved), exang (exercise-induced angina: true, false), oldpeak (ST depression induced by exercise relative to rest), slope (the slope of the peak exercise ST segment: up, flat, down), ca (number of ma- jor vessels (0–3) colored by flouroscopy), and thal (no description given: norm=normal, fix=fixed defect, rev=reversable defect). Of the 303 pa- tients in the original data set, seven had missing data, and so we reduced the number of patients to 296 (160 healthy, 136 with heart disease).
+The classification tree is displayed in Figure 9.2 (where we used the entropy measure as the impurity function for splitting). The root node with 296 patients is split according to whether thal = norm (163 patients) or thal = fix or rev (133 patients). The node with the 163 patients, which consists of 127 healthy patients and 36 patients with heart disease, is then split by whether ca < 0.5 (114 patients), or ca > 0.5 (49 patients). The node with 114 patients is declared a terminal node for buff because of the 102–12 majority in favor of buff. The node with 49 patients, which consists
+1The data can be downloaded from file cleveland.data in the UCI repository archive.ics.uci.edu/ml/datasets/Heart+Disease.
+￼
+of 25 healthy patients and 24 with heart disease, is split by whether cp = abnang, angina, notang (29 patients) or cp = asympt (20 patients). The node with 29 patients, which consists of 22 healthy patients and 7 with heart disease, is split by whether age ≤ 65.5 (7 patients) or age < 65.5 (22 patients). The node with 7 patients is declared a terminal node for buff because of the 7–0 majority in favor of buff, and the node with 22 patients, which consists of 15 healthy patients and 7 with heart disease, is split by whether age < 55.5 (13 patients) or age ≤ 55.5 (9 patients). The node with 13 patients is declared a terminal node for buff because of the 12–1 majority in favor of buff, and the node with 9 patients is declared a terminal node for sick because of the 6–3 majority in favor of sick. And so on.
+Thus, we see that there are four paths (sequence of splits) through this tree for a patient to be declared healthy (buff) and five other paths for a patient to be diagnosed with heart disease (sick). In fact, there are 10 splits (and 11 terminal nodes) in this tree. The variables used in the tree construction are thal, ca, cp, age, oldpeak, thatach, and exang. The resubstitution (or apparent) error rate (i.e., the error rate obtained directly from the classification tree) is 37/296 = 0.125 (12 sick patients who are classified as buff and 25 buff patients who are classified as sick).
+9.2.2 Tree-Growing Procedure
+In order to grow a classification tree, we need to answer four basic ques- tions: (1) How do we choose the Boolean conditions for splitting at each node? (2) Which criterion should we use to split a parent node into its two daughter nodes? (3) How do we decide when a node becomes a terminal node (i.e., stop splitting)? (4) How do we assign a class to a terminal node?
+9.2.3 Splitting Strategies
+At each node, the tree-growing algorithm has to decide on which vari- able it is “best” to split. We need to consider every possible split over all variables present at that node, then enumerate all possible splits, evaluate each one, and decide which is best in some sense.
+For a description of splitting rules, we need to make a distinction between ordinal (or continuous) and nominal (or categorical) variables.
+Ordinal or Continuous Variable
+For a continuous or ordinal variable, the number of possible splits at a given node is one fewer than the number of its distinctly observed values.
+9.2 Classification Trees 285
+286
+9. Recursive Partitioning and Tree-Based Methods
+￼thal=norm
+b u| f f 160/136
+￼thal=fix,rev
+￼￼￼￼ca< 0.5
+buff sick 127/36 33/100
+ca< 0.5
+ca>=0.5 ca>=0.5
+￼￼￼￼buff buff sick 102/12 25/24 27/32
+thatach>=160.5 cp=abnang,angina,notang exang=fal thatach<160.5 cp=asympt exang=true
+buff buff buff 42/11 22/7 22/11
+oldpeak<1.7 age>=65.5 age>=51 oldpeak>=1.7 age<65.5 age<51
+buff 15/7
+age<55.5 age>=55.5
+FIGURE 9.2. Classification tree for the Cleveland heart-disease data, where the entropy measure has been used as the impurity function. The nodes (internal and terminal) are classified as buff (terminal nodes are colored green) or sick (terminal nodes are colored pink) according to the majority diagnosis of patients falling into that node. The splitting variables are displayed along the branches.
+In the Cleveland heart-disease data, we have six continuous or ordinal variables: age (40 possible splits), treatbps (48 possible splits), chol (151 possible splits), thatach (91 possible splits), ca (3 possible splits), and oldpeak (39 possible splits). The total number of possible splits from these continuous variables is, therefore, 372.
+Nominal or Categorical Variable
+Suppose that a particular categorical variable is defined by M distinct categories, l1,...,lM. The set S of possible splits at that node for that variable is the set of all subsets of {l1,...,lM}. Denote by τL and τR the left daughter-node and right daughter-node, respectively, emanating from
+sick 6/68
+￼￼￼￼￼￼￼￼buff 60/1
+sick 3/17
+sick 5/21
+￼buff 39/7
+￼sick 3/4
+￼buff 7/0
+￼buff 17/3
+￼sick 5/8
+￼￼buff 12/1
+￼sick 3/6
+a (parent) node τ. If we let M = 4, then there are 2M −2 = 14 possible splits (ignoring splits where one of the daughter-nodes is empty). However, half of those splits are redundant; for example, the split τL = {l1} and τR = {l2, l3, l4} is the reverse of the split τL = {l2, l3, l4} and τR = {l1}. So, the set S of seven distinct splits is given by the following table:
+τL l1 l2 l3 l4 l1, l2 l1, l3 l1, l4
+τR l2, l3, l4 l1, l3, l4 l1, l2, l4 l1, l2, l3 l3, l4 l2, l4 l2, l3
+9.2 Classification Trees 287
+￼￼￼In general, there are 2M−1 − 1 distinct splits in S for an M-categorical variable.
+In the Cleveland heart-disease data, there are seven categorical variables: gender (1 possible split), cp (7 possible splits), fbs (1 possible split), restecg (3 possible splits), exang (1 possible split), slope (3 possible splits), and thal (3 possible splits). The total number of possible splits from these categorical variables is, therefore, 19.
+Total Number of Possible Splits
+We now add the number of possible splits from categorical variables (19) to the total number of possible splits from continuous variables (372) to get 391 possible splits over all 13 variables at the root node. In other words, there are 391 possible splits of the root node into two daughter nodes. So, which split is “best”?
+Node Impurity Functions
+To choose the best split over all variables, we first need to choose the best split for a given variable. Accordingly, we define a measure of goodness of a split.
+Let Π1,...,ΠK be the K ≥ 2 classes. For node τ, we define the node impurity function i(τ) as
+i(τ) = φ(p(1|τ), · · · , p(K|τ)), (9.1)
+where p(k|τ) is an estimate of P(X ∈ Πk|τ), the conditional probability that an observation X is in Πk given that it falls into node τ. In (9.1),
+288 9. Recursive Partitioning and Tree-Based Methods
+we require φ to be a symmetric function, defined on the set of all K-
+tuples of probabilities (p1, · · · , pK ) with unit sum, minimized at the points
+(1,0,···,0), (0,1,0,···,0), ... , (0,0,···,0,1) and maximized at the point
+( 1 ,···, 1 ). In the two-class case (K = 2), these conditions reduce to a KK
+symmetric φ(p) maximized at the point p = 1/2 with φ(0) = φ(1) = 0. One such function φ is the entropy function,
+entropy function reduces to
+i(τ ) = −p log p − (1 − p) log(1 − p), (9.3)
+where we set p = p(1|τ). Several other φ-functions have also been suggested, including the Gini diversity index,
+i(τ) = 􏰏 p(k|τ)p(k′|τ) = 1 − 􏰏{p(k|τ)}2. (9.4) k̸=k′ k
+In the two-class case, the Gini index reduces to
+i(τ ) = 2p(1 − p). (9.5)
+This function can be motivated by considering which quadratic polynomial satisfies the above conditions for the two-class case.
+In Figure 9.3, the entropy function and the Gini index are graphed for the two-class case. For practical purposes, there is not much difference between these two types of node impurity functions. The usual default in tree-growing software is the Gini index.
+Choosing the Best Split for a Variable
+Suppose, at node τ, we apply split s so that a proportion pL of the observations drops down to the left daughter-node τL and the remaining proportion pR drops down to the right daughter-node τR.
+For example, suppose we have a data set in which the response variable Y has two possible values, 0 and 1. Suppose that one of the possible splits oftheinputvariableXj isXj ≤cvs.Xj >c,wherecissomevalueofXj. We can write down the 2 × 2 table in Table 9.1.
+Consider, first, the parent node τ. We use the entropy function (9.3) as our impurity measure. Estimate pL by n+1/n++ and pR by n+2/n++, and then the estimated impurity function is
+􏰃n􏰄 􏰃n􏰄􏰃n􏰄 􏰃n􏰄
+i(τ)=− +1 log +1 − +2 log +2 . (9.6) n++ en++ n++ en++
+￼￼􏰏K k=1
+i(τ ) = −
+which is a discrete version of (7.115). When there are two classes, the
+p(k|τ ) log p(k|τ ), (9.2)
+￼￼￼￼
+￼￼￼￼0.5 0.4 0.3 0.2 0.1 0.0
+9.2 Classification Trees 289
+￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼0.1 0.3 0.5 0.7 0.9 1.1 p
+FIGURE 9.3. Node impurity functions for the two-class case. The entropy function (rescaled) is the red curve, the Gini index is the green curve, and the resubstitution estimate of the misclassification rate is the blue curve.
+Note that i(τ) is completely independent of the type of proposed split. Now, for the daughter nodes, τL and τR. For Xj ≤ c, we estimate pL by n11/n1+ and pR by n12/n1+, and for Xj > c, we estimate pL by n21/n2+ and pR by n22/n2+. We then compute
+􏰃n􏰄 􏰃n􏰄􏰃n􏰄 􏰃n􏰄
+i(τ ) = − 11 log 11 − 12 log 12 (9.7)
+L n1+ e n1+ n1+ e n1+ 􏰃n􏰄 􏰃n􏰄􏰃n􏰄 􏰃n􏰄
+￼￼￼￼i(τ ) = − 21 log 11 − 22 log 22 . (9.8) R n2+ e n2+ n2+ e n2+
+The goodness of split s at node τ is given by the reduction in impurity gained by splitting the parent node τ into its daughter nodes, τR and τL,
+Δi(s, τ ) = i(τ ) − pL i(τL ) − pR i(τR ). (9.9) The best split for the single variable Xj is the one that has the largest
+value of Δi(s, τ ) over all s ∈ Sj , the set of possible distinct splits for Xj . Example: Cleveland Heart-Disease Data (Continued)
+Consider the first variable age as a possible splitting variable at the root node. There are 41 different values for age, and so there are 40 possible
+TABLE 9.1. Two-by-two table for a split on the variable Xj, where the response variable has value 1 or 0.
+￼￼￼￼￼￼Xj ≤c
+Xj >c Column Total
+1 0
+n11 n12
+n21 n22 n+1 n+2
+Row Total
+n1+
+n2+ n++
+￼￼Impurity
+290 9. Recursive Partitioning and Tree-Based Methods
+TABLE 9.2. Two-by-two table for the split on the variable age in the Cleveland heart disease data: the left branch would be age ≤ 65 and the right branch would be age > 65.
+￼￼age ≤ 65
+age > 65 Column Total
+Buff Sick 143 120 17 16 160 136
+Row Total 263 33 296
+￼￼splits. We set up the 2×2 table, Table 9.2, in which age is split, for example, at 65.
+Using the two-class entropy function as the impurity measure, we com- pute (9.7) and (9.8), respectively, for the two possible daughter nodes:
+i(τL) = −(143/263) loge(143/263) − (120/263) loge(120/263), (9.10) i(τR) = −(17/33) loge(17/33) − (16/33) loge(16/33), (9.11)
+whence, i(τL) = 0.6893 and i(τR) = 0.6927. Furthermore, from (9.6), i(τ ) = −(160/296) loge (160/296) − (136/296) loge (136/296) = 0.6899.
+(9.12)
+Using (9.9), the goodness of this split is given by:
+Δi(s, τ ) = 0.6899 − (263/296)(0.6893) − (33/296)(0.6927) = 0.000162. (9.13)
+If we repeat these computations for all 40 possible splits for the variable age, we arrive at Figure 9.4. In the left panel, we plot i(τL) (blue curve) and i(τR) (red curve) against each of the 40 splits; for comparison, we have the constant value of i(τ) = 0.6899. Note the large drop in the plot of i(τR) at the split age > 70. In the right panel, we plot Δi(s,τ) against each of the 40 splits s. The largest value of Δi(s,τ) is 0.04305, which corresponds to the split age ≤ 54.
+Recursive Partitioning
+In order to grow a tree, we start with the root node, which consists of the learning set L. Using the “goodness-of-split” criterion for a single variable, the tree algorithm finds the best split at the root node for each of the variables, X1 to Xr. The best split s at the root node is then defined as the one that has the largest value of (9.9) over all r single-variable best splits at that node.
+In the case of the Cleveland heart-disease data, the best split at the root node (and corresponding value of Δi(s,τ)) for each of the 13 variables is listed in Table 9.3. The largest value is 0.147 corresponding to the variable thal. So, for these data, the best split at the root node is to split the
+￼￼￼￼￼￼￼￼￼￼0.04
+0.66
+0.61 0.03
+9.2 Classification Trees 291
+￼￼￼￼￼￼￼￼0.56 0.51 0.46 0.41
+FIGURE 9.4. Choosing the best split for the age variable in the Cleveland heart-disease study. The impurity measure is the entropy function. Left panel: Plots of i(τL) (blue curve), and i(τR) (red curve) against age at split. Note the sharp dip in the i(τR) plot at the split age > 70. Right panel: Plot of the goodness of split s, Δi(s,τ), against age at split. The peak of this curve corresponds to the split age ≤ 54.
+variable thal according to norm vs. (fix, rev); that is, first separate the 163 normal patients from the 133 patients who have (either fixed or reversible) defects for the variable thal.
+We next split each of the daughter nodes of the root node in the same way. We repeat the above computations for the left daughter node, except that we consider only those 163 patients having thal = norm, and then consider the right daughter node, except we consider only those 133 patients having thal = fix or rev. When those splits are completed, we continue to split each of the subsequent nodes. This sequential splitting process of building a tree layer-by-layer is called recursive partitioning. If every parent node splits into two daughter nodes, the result is called a binary tree. If the binary tree is grown until none of the nodes can be split any further, we say the tree is saturated. It is very easy in a high-dimensional classification problem to let the tree get overwhelmingly large, especially if the tree is allowed to grow until saturation.
+TABLE 9.3. Determination of the best split at the root node for the Cleve- land heart-disease data. The impurity measure is the entropy function. Each input variable is listed together with its maximum value of Δi(s,τ) over all possible splits of that variable.
+￼0.02
+0.01
+0.00
+￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼20304050607080 20304050607080 AgeatSplit AgeatSplit
+￼age
+0.043
+thatach
+0.093
+gender
+0.042
+exang
+0.093
+cp
+0.133
+oldpeak
+0.087
+trestbps
+0.011
+slope
+0.077
+chol fbs restecg
+0.011 0.00001 0.015
+ca thal
+0.124 0.147
+￼￼￼￼￼i(tau_L),i(tau_R)
+GoodnessofSplit
+292 9. Recursive Partitioning and Tree-Based Methods
+One way to counter this type of situation is to restrict the growth of the tree. This was the philosophy of early tree-growers. For example, we can declare a node to be terminal if it fails to be larger than a certain critical size; that is, if n(τ) ≤ nmin, where n(τ) is the number of observations in node τ and nmin is some previously declared minimum size of a node. Because a terminal node cannot be split into daughter nodes, it acts as a brake on tree growth; the larger the value of nmin, the more severe the brake. Another early action was to stop a node from splitting if the largest goodness-of-split value at that node is smaller than a certain predetermined limit. These stopping rules, however, do not turn out to be such good ideas. A better approach (Breiman et al., 1984) is to let the tree grow to saturation and then “prune” it back; see Section 9.2.6.
+How do we associate a class with a terminal node? Suppose at terminal node τ there are n(τ) observations, of which nk(τ) are from class Πk, k = 1,2,...,K. Then, the class which corresponds to the largest of the {nk(τ)} is assigned to τ. This is called the plurality rule. This rule can be derived from the Bayes’s rule classifier of Section 8.5.1, where we assign the node τ to class Πi if p(i|τ) = maxk p(k|τ); if we estimate the prior probability πk by nk(τ)/n(τ), k = 1,2,...,K, then this boils down to the plurality rule.
+9.2.4 Example: Pima Indians Diabetes Study
+This Indian population lives near Phoenix, Arizona. All patients listed in this data set2 are females at least 21 years old of Pima Indian heritage. There are two classes: diabetic, if the patient shows signs of diabetes according to World Health Organization criteria (i.e., if the 2-hour post- load plasma glucose was at least 200 mg/dl at any survey examination, or if found during routine medical care), and normal. In the original data, there were 500 normal subjects and 268 diabetic subjects.
+There are eight input variables: npregnant (number of times pregnant), bmi (body mass index, (weight in kg)/(height in m)2), glucose (plasma glucose concentration at 2 hours in an oral glucose tolerance test), pedigree (diabetes pedigree function), diastolic.bp (diastolic blood pressure, mm Hg), skinfold.thickness (triceps skin fold thickness, mm), insulin (2- hour serum insulin, μU/ml), and age (age in years). We removed any subject with a nonsense value of zero for the variables glucose, bmi, diastolic.bp, skinfold.thickness; this reduced the data set to 532 pa- tients (from 768), with 355 normal subjects and 177 diabetic subjects.
+2These data are available on the book’s website (file pima) and are also available from the UCI website archive.ics.uci.edu/ml/datasets/Pima+Indians+Diabetes.
+￼
+glucose<127.5
+normal | 355/177
+9.2 Classification Trees 293
+￼￼glucose>=127.5
+￼￼norm al
+284/59 71/118
+age<28.5 glucose<157.5
+age>=28.5 glucose>=157.5
+normal normal normal diabetic 198/16 86/43 59/54 12/64
+diabetic
+￼￼￼￼￼￼￼￼￼￼pedigree<0.62 bmi<30.2
+pedigree>=0.62 bmi>=30.2
+norm al diabetic norm al diabetic 67/20 19/23 27/7 32/47
+￼￼￼￼￼￼￼￼glucose<110 bmi<26.5 glucose>=110 bmi>=26.5
+normal normal normal diabetic 45/7 22/13 7/0 12/23
+age<42.5
+normal
+30/29 2/18
+age>=42.5
+￼￼￼￼￼￼￼￼￼diabetic
+￼￼￼npregnant>=1.5 glucose<96.5 pedigree<0.285
+npregnant<1.5 glucose>=96.5 pedigree>=0.285
+￼￼￼￼￼￼￼￼￼￼￼norm aldiabetic 20/7 2/6
+norm aldiabetic 7/3 5/20
+norm al 12/3
+diabetic 18/26
+glucose>=135.5 glucose<135.5
+norm al diabetic 16/15 2/11
+bm i< 41.55 bmi>=41.55
+norm al diabetic 13/8 3/7
+bmi>=34.65
+bm i< 34.65
+norm aldiabetic 10/3 3/5
+￼￼￼￼￼￼￼￼￼￼￼￼￼FIGURE 9.5. A classification tree for the Pima Indians diabetes data, where the impurity measure is the Gini index. The terminal nodes are col- ored green for normal and pink for diabetic. The splitting variables are given on the branches of each split, and the number in each node is given as number of normal/number of diabetic, with the node classification given by the majority rule. Nodes were not split further unless they contained at least 10 subjects.
+We also did not use the variable insulin because it had so many zeros (374 in the original data).
+A classification tree was grown for the Pima Indians diabetes data using Gini’s impurity measure (9.5). The classification tree appears in Figure 9.5, where nodes are declared to be terminal if they contain fewer than 10 patients. We see 14 splits and 15 terminal nodes; a patient is declared to be normal at 8 terminal nodes and diabetic at 7 terminal nodes. The assignment of each terminal node into “normal” or “diabetic” depends upon the majority rule at that node; the numbers of normal and diabetic patients in the learning set that fall into each terminal node are displayed at that node.
+294 9. Recursive Partitioning and Tree-Based Methods
+9.2.5 Estimating the Misclassification Rate
+Next, we compute an estimate of the within-node misclassification rate. The resubstitution estimate of the misclassification rate R(τ) of an obser- vation in node τ is
+r(τ) = 1 − max p(k|τ), (9.14) k
+which, for the two-class case, reduces to
+r(τ) = 1−max(p,1−p) = min(p,1−p). (9.15)
+The resubstitution estimate (9.15) in the two-class case is graphed in Fig- ure 9.3 (the blue curve). If p < 1/2, the resubstitution estimate increases linearly in p, and if p > 1/2, it decreases linearly in p. Because of its poor properties (e.g., nondifferentiability), (9.15) is not used much in practice.
+Let T be the tree classifier and let T􏰣 = {τ1,τ2,...,τL} denote the set of all terminal nodes of T. We can now estimate the true misclassification rate,
+R(T) =
+􏰏 􏰏L R(τ)P(τ) =
+R(τl)P(τl) (9.16)
+τ ∈ T􏰣
+l=1
+for T, where P(τ) is the probability that an observation falls into node τ. If we estimate P(τl) by the proportion p(τl) of all observations that fall into node τl, then, the resubstitution estimate of R(T) is
+where Rre(τl) = r(τl)p(τl).
+􏰏L Rre(T ) =
+l=1
+r(τl)p(τl) =
+􏰏L l=1
+Rre(τl), (9.17)
+Of the 532 subjects in the Pima Indians diabetes study, the classification tree in Figure 9.5 misclassifies 29 of the 355 normal subjects as diabetic, whereas of the 177 diabetic patients, 46 are misclassified as normal. So, the resubstitution estimate is Rre(T ) = 75/532 = 0.141.
+The resubstitution estimate Rre(T), however, leaves much to be desired as an estimate of R(T ). First, bigger trees (i.e., more splitting) have smaller values of Rre(T ); that is, Rre(T ′) ≤ Rre(T ), where T ′ is formed by splitting a terminal node of T. For example, if a tree is allowed to grow until every terminal node contains only a single observation, then that node is classified by the class of that observation and Rre(T) = 0. Second, using only the resubstitution estimate tends to generate trees that are too big for the given data. Third, the resubstitution estimate Rre(T) is a much-too-optimistic estimate of R(T ). More realistic estimates of R(T ) are given below.
+9.2.6 Pruning the Tree
+The Breiman et al. (1984) philosophy of growing trees is to grow the tree “large” and then prune off branches (from the bottom up) until the tree is the “right size.” A pruned tree is a subtree of the original large tree. How to prune a tree, then, is the crucial part of the process. Because there are many different ways to prune a large tree, we decide which is the “best” of those subtrees by using an estimate of R(T ).
+The pruning algorithm is as follows:
+1. Grow a large tree, say, Tmax, where we keep splitting until the nodes
+each contain fewer than nmin observations;
+2. Compute an estimate of R(τ) at each node τ ∈ Tmax;
+3. Prune Tmax upwards toward its root node so that at each stage of pruning, the estimate of R(T ) is minimized.
+Instead of using the resubstitution measure Rre(T) as our estimate of R(T ), we modify it for tree pruning by adopting a regularization approach. Let α ≥ 0 be a complexity parameter. For any node τ ∈ T , set
+Rα(τ) = Rre(τ) + α. (9.18) From (9.18), we define a cost-complexity pruning measure for a tree as
+follows:
+􏰏L l=1
+Rα(T ) =
+Rα(τl) = Rre(T ) + α|T􏰣|, (9.19)
+where |T􏰣| = L is the number of terminal nodes in the subtree T of Tmax. Think of α|T􏰣| as a penalty term for tree size, so that Rα(T) penalizes Rre(T) for generating too large a tree. For each α, we then choose that subtree T (α) of Tmax that minimizes Rα(T ):
+Rα(T(α)) = minRα(T). (9.20) T
+If T (α) satisfies (9.20), then it is called a minimizing subtree (or an optimally- pruned subtree) of Tmax. For any α, there may be more than one minimizing subtree of Tmax.
+The value of α determines the tree size. When α is very small, the penalty term will be small, and so the size of the minimizing subtree T(α), which will essentially be determined by Rre(T(α)), will be large. For example, suppose we set α = 0 and grow the tree Tmax so large that each terminal node contains only a single observation; then, each terminal node takes on the class of its solitary observation, every observation is classified correctly, and Rre(Tmax) = 0. So, Tmax minimizes R0(T). As we increase α, the
+9.2 Classification Trees 295
+296 9. Recursive Partitioning and Tree-Based Methods
+minimizing subtrees T (α) will have fewer and fewer terminal nodes. When α is very large, we will have pruned the entire tree Tmax, leaving only the root node.
+Note that although α is defined on the interval [0,∞), the number of subtrees of T is finite. Suppose that, for α = α1, the minimizing subtree is T1 = T(α1). As we increase the value of α, T1 continues to be the minimizing subtree until a certain point, say, α = α2, is reached, and a new subtree, T2 = T(α2), becomes the minimizing subtree. As we increase α further, the subtree T2 continues to be the minimizing subtree until a value of α is reached, α = α3, say, when a new subtree T3 = T (α3) becomes the minimizing subtree. This argument is repeated a finite number of times to produce a sequence of minimizing subtrees T1, T2, T3, . . ..
+How do we get from Tmax to T1? Suppose the node τ in the tree Tmax has daughter nodes τL and τR, both of which are terminal nodes. Then,
+Rre(τ) ≥ Rre(τL) + Rre(τR) (9.21)
+(Breiman et al., 1984, Proposition 4.2). For example, in the classification tree for the Pima Indians diabetes study (Figure 9.5), the lowest subtree has a root node with 13 normals and 8 diabetics, whereas its left daughter node has 10 normals and 3 diabetics and its right daughter node has 3 normals and 5 diabetics. Thus, Rre(τ) = 8/532 > Rre(τL) + Rre(τR) = (3 + 3)/532 = 6/532. If equality occurs in (9.21) at node τ , then prune the terminal nodes τL and τR from the tree. Continue this pruning strategy until no further pruning of this type is possible. The resulting tree is T1.
+Next, we find T2. Let τ be any nonterminal node of T1, let Tτ be the subtree whose root node is τ, and let T􏰣 = {τ′,τ′,...,τ′ } be the set of
+terminal nodes of Tτ . Let
+Rre(Tτ ) = 􏰏 Rre(τ′) = 􏰏 Rre(τl′′ ).
+(9.22)
+Then, Rre(τ) > Rre(Tτ ) (Breiman et al., 1984, Proposition 3.8). For exam- ple, from Figure 9.5, let τ be the nonterminal node on the right-hand side of the tree near the center of the tree having 18 normals and 26 diabetics, and let Tτ be the subtree with τ as its root node. Then, Rre(τ) = 18/532 > Rre(Tτ ) = (3 + 3 + 3 + 2)/532 = 11/532. Now, set
+R (T )=Rre(T )+α|T􏰣|. (9.23) ατττ
+As long as Rα (τ ) > Rα (Tτ ), the subtree Tτ has a smaller cost-complexity
+than its root node τ, and, therefore, it pays to retain Tτ. For the previous
+example, we retain T as long as Rre(τ) = 18/532 + α > 11/532 + 4α = τα
+Rre(T ), or α < 7/(3 · 532) = 0.0044. ατ
+τ ′ ∈ T􏰣 τ l = 1
+τ 12 Lτ
+Lτ ′
+Substituting (9.18) and (9.23) into this condition and solving for α yields α< Rre(τ)−Rre(Tτ). (9.24)
+| T􏰣 | − 1 τ
+So, the right-hand side of (9.24), which is positive, computes the reduction in Rre (due to going from a single node to the subtree with that node as root) relative to the increase in the number of terminal nodes. For τ ∈ T1, define
+g1(τ)=Rre(τ)−Rre(T1,τ). τ∈/T􏰣(α1), (9.25) |T􏰣 |−1
+where T1,τ is the same as Tτ. Then, g1(τ) can be regarded as a critical value for α: as long as g1(τ) > α1, we do not prune the nonterminal nodes τ ∈ T1.
+We define the weakest-link node τ􏰣 as the node in T that satisfies 11
+τ ∈T1
+Asαincreases,τ􏰣 isthefirstnodeforwhichR (τ)=R (T ),sothatτ􏰣
+1,τ
+9.2 Classification Trees 297
+￼￼g (τ􏰣 ) = min g (τ). (9.26) 111
+1αατ1 ispreferredtoT􏰣τ1.Setα =g(τ􏰣)anddefinethesubtreeT =T(α)of
+21122
+T by pruning away the subtree T􏰣τ1 (so that τ􏰣 becomes a terminal node) 11
+from T1.
+To find T , we find the weakest-link node τ􏰣 ∈ T through the critical
+value
+322
+g2(τ)=Rre(τ)−Rre(T2,τ), τ∈T(α2),τ∈/T􏰣(α2), |T􏰣 |−1
+(9.27)
+(9.28) and define the subtree T of T by pruning away the subtree T􏰣τ2 (so that τ􏰣
+becomes a terminal node) from T2. And so on for a finite number of steps.
+As we noted above, there may be several minimizing subtrees for each α. How do we choose between them? For a given value of α, we call T(α) the smallest minimizing subtree if it is a minimizing subtree (i.e., satifies (9.20)) and satisfies the following condition:
+if Rα(T ) = Rα(T (α)), then T ≻ T (α). (9.29)
+In (9.29), T ≻ T (α) means that T (α) is a subtree of T and, hence, has fewer terminal nodes than T. This condition says that, in the event of any ties, T(α) is taken to be the smallest tree out of all those trees that minimize
+￼2,τ
+where T2,τ is that part of Tτ which is contained in T2. We set
+α =g(τ􏰣)=ming(τ), 3222
+τ ∈T2 322
+298 9. Recursive Partitioning and Tree-Based Methods
+Rα. Breiman et al. (1984, Proposition 3.7) showed that for every α, there exists a unique smallest minimizing subtree.
+The above construction gives us a finite increasing sequence of complexity parameters,
+0=α0 <α1 <α2 <α3 <···<αM, (9.30) which corresponds to a finite sequence of nested subtrees of Tmax,
+Tmax =T0 ≻T1 ≻T2 ≻T3 ≻···≻TM, (9.31)
+where Tk = T(αk) is the unique smallest minimizing subtree for α ∈
+[αk , αk+1 ), and TM is the root-node subtree. We start with T1 and in-
+crease α until α = α determines the weakest-link node τ􏰣 ; we then prune 21
+the subtree T􏰣τ1 with that node as root. This gives us T2. We repeat this procedure by finding α = α and the weakest-link node τ􏰣 in T and prune
+322
+the subtree T􏰣τ2 with that node as root. This gives us T3. This pruning
+process is repeated until we arrive at TM .
+Example: Pima Indians Diabetes Study (Continued)
+The sequence of seven pruned classification trees, Tk, corresponding to their critical values, αk, are listed in Table 9.4. The tree displayed in Figure 9.5 has 14 splits (and, hence, 15 terminal nodes).
+Any value of α < 0.0038 will produce a tree with 15 terminal nodes. When α = 0.0038, the classification tree is pruned to have 11 splits (and 12 terminal nodes), which will remain the same for all 0.0038 ≤ α < 0.0047. Increasing α to 0.0047 prunes the tree to 9 splits (and 10 terminal nodes). And so on, until α is increased above 0.0883 when the tree consists only of the root node.
+9.2.7 Choosing the Best Pruned Subtree
+Thus far, we have constructed a finite sequence of decreasing-size subtrees T1, T2, T3, . . . , TM by pruning more and more nodes from Tmax. When do we stop pruning? Which subtree of the sequence do we choose as the “best” pruned subtree?
+Choice of the best subtree depends upon having a good estimate of the misclassification rate R(Tk) corresponding to the subtree Tk. Breiman et al. (1984) offered two estimation methods: use an independent test sample or use cross-validation. When the data set is very large, use of an inde- pendent test set is straightforward and computationally efficient, and is, generally, the preferred estimation method. For smaller data sets, cross- validation is preferred.
+TABLE 9.4. Pruned classification trees for the Pima Indians diabetes
+study. The impurity function is the Gini index. By increasing the complexity
+parameter α, seven classification trees, Tk, k = 1,2,...,6, are derived,
+where the tree details are listed so that Tk ≻ Tk+1; i.e., largest tree to
+smallest tree. Also listed for each tree are the number of terminal nodes
+(|T􏰣k|), resubstitution error (Rre), and 10-fold cross-validation (CV) error
+CV/10 􏰤 ). The ± values on the CV error are the CV standard errors (SE).
+(R
+The CV error estimate and its estimated standard error produce random values according to the random CV-partition of the data.
+1
+2 0.0038
+3 0.0047
+4 0.0069
+5 0.0085
+6 0.0188
+7 0.0883
+Independent Test Set
+15 0.141 12 0.152 10 0.162
+6 0.190 4 0.207 2 0.244 1 0.333
+􏰣 re
+k αk |Tk|R(Tk)
+CV/10
+R (Tk)
+0.258 ± 0.019 0.233 ± 0.018 0.233 ± 0.018 0.235 ± 0.018 0.256 ± 0.019 0.256 ± 0.019 0.333 ± 0.020
+9.2 Classification Trees 299
+￼￼￼Randomly assign the observations in the data set D into a learning set LandatestsetT,whereD=L∪T andL∩T =∅.SupposetherearenT observations in the test set and that they are drawn independently from the same underlying distribution as the observations in L. Grow the tree Tmax from the learning set only, prune it from the bottom up to give the sequence of subtrees T1 ≻ T2 ≻ T3 ≻ ··· ≻ TM, and assign a class to each terminal node.
+Take each of the nT test-set observations and drop it down the subtree Tk. Each observation in T is then classified into one of the different classes. Because the true class of each observation in T is known, we estimate R(Tk) by Rts(Tk), which is (9.19) with α = 0; that is, Rts(Tk) = Rre(Tk), the resubstitution estimate computed using the independent test set. When the costs of misclassification are identical for each class, Rts(Tk) is the proportion of all test set observations that are misclassified by Tk. These estimates are then used to select the best-pruned subtree T∗ by the rule
+Rts(T∗) = min Rts(Tk), (9.32) k
+and Rts(T∗) is its estimated misclassification rate.
+We estimate the standard error of Rts(T) as follows. When we drop the test set T down a tree T , the chance that we misclassify any one of those observations is p∗ = R(T). Thus, we have a binomial sampling situation with nT Bernoulli trials and probability of success p∗. If p = Rts(T) is
+300 9. Recursive Partitioning and Tree-Based Methods
+the proportion of misclassified observations in T , then, p is unbiased for p∗ and the variance of p is p∗(1 − p∗)/nT . The standard error of Rts(T ) is, therefore, estimated by
+. (9.33)
+􏰑 ts
+SE(R (T))= n
+T
+􏰇Rts(T)(1−Rts(T))􏰢1/2
+￼Cross-Validation
+In V -fold cross-validation (CV/V ), we randomly divide the data D into
+V roughly equal-size, disjoint subsets, D = 􏰥Vv=1 Dv, where Dv ∩ Dv′ = ∅,
+v ̸= v′, and V is usually taken to be 5 or 10. We next create V different
+data sets from the {Dv} by taking Lv = D − Dv as the vth learning set
+andTv =Dv asthevthtestset,v=1,2,...,V.Ifthe{Dv}eachhavethe
+same number of observations, then each learning set will have ( V −1 ) × 100 V
+￼percent of the original data set.
+Grow the vth “auxilliary” tree Tmax using the vth learning set Lv, v =
+(v)
+1, 2, . . . , V . Fix the value of the complexity parameter α. Let T (v)(α) be the
+(v)
+best pruned subtree of Tmax, v = 1, 2, . . . , V . Now, drop each observation in
+thevthtestsetTv downthetreeT(v)(α),v=1,2,...,V.Letn(v)(α)denote ij
+the number of jth class observations in Tv that are classified as being from
+the ith class, i,j = 1,2,...,K, v = 1,2,...,V. Because D = 􏰥Vv=1 Tv is a
+disjoint sum, the total number of jth class observations that are classified
+as being from the ith class is nij(α) = 􏰊V n(v)(α), i,j = 1,2,...,K. If v=1 ij
+we set nj to be the number of observations in D that belong to the jth class, j = 1, 2, . . . , K , and assume that misclassification costs are equal for all classes, then, for a given α,
+C V / V
+subtree of Tmax.
+The final step in this process is to find the right-sized subtree. Breiman et
+nij (α) (9.34) is the estimated misclassification rate over D, where T(α) is a minimizing
+R
+(T (α)) = n
+al. (1984, p. 77) recommend evaluating (9.34) at the sequence of values α′k = √
+αkαk+1, where α′k is the geometric midpoint of the interval [αk,αk+1) in which T(α) = Tk. Set
+− 1 􏰏K 􏰏K i=1 j=1
+￼RCV/V (Tk) = RCV/V (T(α′k)). (9.35) Then, select the best-pruned subtree T∗ by the rule:
+RCV/V (T∗) = min RCV/V (Tk), (9.36) k
+and use RCV/V (T∗) as its estimated misclassification rate.
+Deriving an estimated standard error of the cross-validated estimate of the misclassification rate is more complicated than using a test set. The usual way of sidestepping issues of non-independence of the summands in (9.29) is to ignore them and pretend instead that independence holds. Actually, this approximation appears to work well in practice. See Breiman et al. (1984, Section 11.5) for details.
+It is usual to take V = 10 for 10-fold CV. The leave-one-out CV method (i.e., V = n) is not recommended because the resulting auxilliary trees will be almost identical to the tree constructed from the full data set, and so nothing would be gained from this procedure.
+The One-SE Rule
+To overcome possible instability in selecting the best-pruned subtree, Breiman et al. (1984, Section 3.4.3) propose an alternative rule.
+Let R􏰡(T∗) = mink R(Tk) denote the estimated misclassification rate, calculated from either a test set (i.e., Rts(T∗)) or cross-validation (i.e., RCV/V (T∗)). Then, we choose the smallest tree T∗∗ that satisfies the “1-SE rule,” namely,
+􏰡􏰡􏰑􏰡
+9.2 Classification Trees 301
+R(T∗∗) ≤ R(T∗) + SE(R(T∗)). (9.37)
+This rule appears to produce a better subtree than using T∗ because it re- sponds to the variability (through the standard error) of the cross-validation estimates.
+Example: Pima Indians Diabetes Study (Continued)
+For example, we apply the 1-SE rule to the Pima Indians diabetes study. From Table 9.4, the 1-SE rule yields a minimum of CV error + SE = 0.233 + 0.018 = 0.251, which leads to the choice of a classification tree with 9 splits (10 terminal nodes) based upon cross-validation. The corresponding pruned classification tree is displayed in Figure 9.6.
+A diagnosis of diabetes is given to those subjects who have one of the following symptoms:
+1. plasma glucose level at least 157.5;
+2. plasma glucose level between 127.5 and 157.5, bmi at least 30.2, and age at least 42.5 years;
+3. plasma glucose level between 127.5 and 157.6, bmi at least 30.2, age less than 42.5 years, and a pedigree at least 0.285;
+4. plasma glucose level between 96.5 and 127.5, age at least 28.5 years, a pedigree at least 0.62, and bmi at least 26.5.
+302 9. Recursive Partitioning and Tree-Based Methods
+￼glucose<127.5
+norm|al 355/177
+￼glucose>=127.5
+￼￼norm al
+284/59 71/118
+age<28.5 glucose<157.5
+age>=28.5 glucose>=157.5
+normal normal 86/43 59/54
+pedigree<0.62 bmi<30.2
+pedigree>=0.62 bmi>=30.2
+diabetic diabetic 19/23 32/47
+bmi<26.5 age<42.5
+bmi>=26.5 age>=42.5
+diabetic norm al 12/23 30/29
+glucose<96.5 pedigree<0.285 glucose>=96.5 pedigree>=0.285
+FIGURE 9.6. A pruned classification tree for the Pima Indians diabetes data, with 9 splits and 10 terminal nodes, where the impurity measure is the Gini index. The terminal nodes are colored green for normal and pink for diabetic.
+This tree has a resubstitution error rate of 86/532 = 0.162 and 10-fold CV misclassification rate of 0.233 ± 0.018.
+9.2.8 Example: Vehicle Silhouettes
+Consider the vehicle data3 of Section 8.7, which were collected to study how well 3D objects could be distinguished by their 2D silhouette images. There are four classes of objects, each of which was a Corgi model vehi- cle: an Opel Manta car (opel, 212 images), a Saab 9000 car (saab, 217 images), a double-decker bus (bus, 218 images), and a Chevrolet van (van, 199 images), giving a total of 846 images. Each object was viewed by a cam- era from many different angles and elevations. The variables are scaled variance, skewness, and kurtosis about the major/minor axes, and
+3These data can be found in the UCI Machine Learning Repository website archive.ics.uci.edu/ml/datasets/Statlog+(Vehicle+Silhouettes).
+diabetic
+￼￼￼￼￼￼normal 198/16
+diabetic 12/64
+￼￼￼￼￼￼normal 67/20
+normal 27/7
+￼￼￼￼￼￼normal 7/0
+diabetic 2/18
+￼￼￼normal 7/3
+￼￼diabetic 5/20
+￼￼normal 12/3
+￼￼diabetic 18/26
+￼￼
+sizeoftree 12356711131523273032333538
+9.3 Regression Trees 303
+￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼Inf 0.11 0.037 0.011 0.0071 0.0052 0.0036 0.0013 cp
+FIGURE 9.7. Plot of 10-fold CV results of different size classification trees for the vehicle data. The cp-value is α divided by the resubstitution error rate estimate, Rre(T0) = 628/846 = 0.742, for the root tree, and the vertical axis is the corresponding CV error rate also divided by Rre(T0). The vertical lines indicate ± two SE for each CV error estimate. The rec- ommended tree size has cp equal to the smallest tree with the minimum CV error; in this case, 11 terminal nodes.
+heuristic measures such as hollows ratio, circularity, elongatedness, rectangularity, and compactness of the silhouettes.
+Based upon the One–SE rule, and the resulting complexity-parameter plot in Figure 9.7, the most appropriate classification tree has 10 splits with 11 terminal nodes, with a resubstitution error rate of 0.3535 × 0.74232 = 0.262, and CV error rate of 0.299 ± 0.0157. In Figure 9.8, we have displayed the pruned classification tree with 10 splits and 11 terminal nodes.
+9.3 Regression Trees
+Suppose L = {(xi,yi),i = 1,2,...,n}, where the yi are measurements made on a continuous response variable Y , and the xi are measurements
+￼X-valRelativeError
+0.4 0.6 0.8 1.0 1.2
+304
+9. Recursive Partitioning and Tree-Based Methods
+￼bus
+| 212/217/218/199
+￼Elong<41.5
+Elong>=41.5
+￼￼saab van 147/148/87/0 65/69/131/199
+MaxLAR>=7.5 MaxLAR<8.5
+MaxLAR<7.5 MaxLAR>=8.5
+opel bus 138/136/1/0 63/66/126/93
+Comp<106.5 SvarMinAxis>=308.5
+Comp>=106.5 SvarMinAxis<308.5
+bus van 30/28/123/3 33/38/3/90
+Dcirc>=76.5 MaxRect<131.5
+Dcirc<76.5 MaxRect>=131.5
+bus saab 13/17/123/0 25/28/0/24
+SkewMinAxis>=10.5 Comp<81.5 SkewMinAxis<10.5 Comp>=81.5
+saab 14/26/0/24
+PrAxisRect>=17.5 PrAxisRect<17.5
+FIGURE 9.8. A pruned classification tree for the vehicle data. There are 12 input variables, 846 observations, and four classes of vehicle models: opel (pink), saab (yellow), bus (green), and van (blue), whose numbers at each node are given by a/b/c/d, respectively, There are 10 splits and 11 terminal nodes in this tree. The resubstitution error rate is 0.262.
+on an input r-vector X. We assume that Y is related to X as in multiple regression (see Chapter 5), and we wish to use a tree-based method to predict Y from X.
+Regression trees are constructed in a similar way as are classification trees, and the method is generally referred to as recursive-partitioning re- gression. In a classification tree, the class of a terminal node is defined as that class that commands a plurality (a majority in the two-class case) of all the observations in that node, where ties are decided at random. In a regression tree, the output variable is set to have the constant value Y (τ ) at terminal node τ. Hence, the tree can be represented as an r-dimensional histogram estimate of the regression surface, where r is the number of input variables, X1, X2, . . . , Xr.
+￼￼￼￼￼bus 9/12/86/0
+van 2/3/5/106
+￼opel 127/93/0/0
+￼saab 11/43/1/0
+￼￼￼￼￼￼opel 17/11/0/3
+van 8/10/3/66
+￼opel 11/6/3/0
+￼bus 2/11/120/0
+￼opel 11/2/0/0
+￼￼saab 12/19/0/6
+￼van 2/7/0/18
+9.3.1 The Terminal-Node Value
+How do we find y(τ)? Recall (from Chapter 5) that the resubstitution estimate of prediction error is
+1 􏰏n
+Rre(μ􏰡) =
+where y􏰡 = μ􏰡(x ) is the estimated value of the predictor at x . For y􏰡 to be
+(y − y􏰡 )2, ii
+9.3 Regression Trees 305
+￼i=1
+ii ii
+constant at each node, the predictor has to have the form
+n
+(9.38)
+􏰏 􏰏L y(τ)I[x∈τ] =
+μ􏰡(x) =
+where I[x∈τl] is equal to one if x ∈ τl and zero otherwise. For xi ∈ τl, Rre(μ􏰡)
+τ ∈ T􏰣
+is minimized by taking y􏰡 = y ̄(τ ) as the constant value y(τ ), where y ̄(τ )
+l=1
+y ̄ ( τ l ) = 1 􏰏 y i , ( 9 . 4 0 ) n(τl) xi∈τl
+where n(τl) is the total number of observations in node τl. Changing no- tation slightly to reflect the tree structure, the resubstitution estimate is
+illl is the average of the {yi} for all observations assigned to node τl; that is,
+y(τl)I[x∈τl],
+(9.39)
+￼￼where
+1􏰏L􏰏 􏰏L
+R r e ( T ) = n ( y i − y ̄ ( τ l ) ) 2 = R r e ( τ l ) ,
+l=1 xi∈τl l=1
+Rre(τl) = 1 􏰏 (yi − y ̄(τl))2 = p(τl)s2(τl), n xi∈τl
+( 9 . 4 1 )
+(9.42)
+￼s2(τl) is the (biased) sample variance of all the yi values in node τl, and p(τl) = n(τl)/n is the proportion of observations in node τl. Hence, Rre(T ) = 􏰊Ll=1 p(τl)s2(τl).
+9.3.2 Splitting Strategy
+How do we determine the type of split at any given node of the tree? We take as our splitting strategy at node τ ∈ T􏰣 the split that provides the biggest reduction in the value of Rre(T). The reduction in Rre(τ) due to a split into τL and τR is given by
+ΔRre(τ) = Rre(τ) − Rre(τL) − Rre(τR); (9.43)
+306 9. Recursive Partitioning and Tree-Based Methods
+the best split at τ is then the one that maximizes ΔRre(τ). The result of employing such a splitting strategy is that the best split will divide up observations according to whether Y has a small or large value; in general, where splits occur, we see either y ̄(τL) < y ̄(τ) < y ̄(τR) or its reverse with y ̄(τL) and y ̄(τR) interchanged.
+We note that finding τL and τR to maximize ΔRre(τ) is equivalent to minimizing Rre(τL) + Rre(τR). From (9.42), this boils down to finding τL and τR to solve
+min {p(τL)s2(τL) + p(τR)s2(τR)}, (9.44) τL ,τR
+where p(τL) and p(τR) are the proportions of observations in τ that split to τL and τR, respectively.
+9.3.3 Pruning the Tree
+The method for pruning a regression tree incorporates the same ideas as is used to prune a classification tree.
+As before, we first grow a large tree, Tmax, by splitting nodes repeatedly until each node contains fewer than a given number of observations; that is, until n(τ) ≤ nmin for each τ ∈ T􏰣, where we typically set nmin = 5.
+Next, we set up an error-complexity measure,
+Rα(T ) = Rre(T ) + α|T􏰣|, (9.45)
+where α ≥ 0 is a complexity parameter. Use Rα(T) as the criterion for deciding when and how to split, just as we did in pruning classification trees. The result is a sequence of subtrees,
+Tmax =T0 ≻T1 ≻T2 ≻T3 ≻···≻TM, (9.46) and an associated sequence of complexity parameters,
+0=α0 <α1 <α2 <α3 <···<αM, (9.47) such that for α ∈ [αk,αk+1), Tk is the smallest minimizing subtree of Tmax.
+9.3.4 Selecting the Best Pruned Subtree
+We estimate R(Tk) by using an independent test set or by cross-validation. The details follow those in Section 9.2.6.
+For an independent test set, T , an estimate of R(Tk) is given by
+Rts(Tk) = 1 􏰏 (yi − μ􏰡k(xi))2, (9.48) nT (xi ,yi )∈T
+￼
+where nT is the number of observations in the test set and μ􏰡k(x) is the estimated prediction function associated with subtree Tk.
+For a V-fold cross-validated estimate of R(Tk), we first construct the minimal error-complexity subtrees T (v)(α), v = 1, 2, . . . , V , parameterized
+αkαk+1 and let μ􏰡(v)(x) denote the estimated prediction byα.Setα′ =√
+RCV/V (Tk) = n−1 􏰏V 􏰏 (yi − μ􏰡(v)(xi))2. (9.49) k
+v=1 (xi,yi)∈Tv
+We usually select V = 10 for a 10-fold CV estimate in which we split the learning set into 10 subsets, use 9 of those 10 subsets to grow and prune the tree, and then use the omitted subset to test the results of the tree.
+Given the sequence of subtrees {Tk}, we select the smallest subtree T∗∗
+for which
+where R􏰡(T∗) = mink R􏰡(Tk) is the estimated prediction error calculated using using either an independent test set (i.e., Rts(T∗)) or cross-validation (i.e., RCV/V (T∗)).
+9.3.5 Example: 1992 Major League Baseball Salaries
+As an example of a regression tree, we use data on the salaries of Major League Baseball (MLB) players for 1992 (Watnik, 1998).4 The data consist of n = 337 MLB players who played at least one game in both the 1991 and 1992 seasons, excluding pitchers. The interesting aspect of these data is that a player’s “value” is judged by his performance measures, which in turn could be used to determine his salary the next year or possibly to enable him to change his employer.
+The output variable is the 1992 salaries (in thousands of dollars) of these players, and the input variables are the following performance measures from 1991: BA (batting average), OBP (on-base percentage), Runs (number of runs scored), Hits (number of hits), 2B (number of doubles), 3B (number of triples), HR (number of home runs), RBI (number of runs batted in), BB (number of bases on balls or walks), SO (number of strikeouts), SB (number of stolen bases), and E (number of errors made). Also included as input
+4These data can be found at the website of the Journal of Statistics Education, www.amstat.org/publications/jse/jse data archive.html. Sources for these data are CNN/Sports Illustrated, Sacramento Bee (15th October 1991), The New York Times (19th November 1992), and the Society for American Baseball Research.
+􏰡􏰡􏰑􏰡
+9.3 Regression Trees 307
+￼kk
+function associated with the subtree T (v)(α′k ). The V -fold CV estimate of R(Tk) is given by
+R(T∗∗) ≤ R(T∗) + SE(R(T∗)), (9.50)
+￼￼￼
+308 9. Recursive Partitioning and Tree-Based Methods
+sizeoftree
+1 2 3 4 5 6 7 8 91011121314151617181921222324252627
+￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼Inf 0.068 0.026 0.017 0.0046 0.003 0.000740.000340.00011 cp
+FIGURE 9.9. Plot of 10-fold CV results of different size regression trees for 1992 baseball salary data. The cp-value is α divided by the resubstitution estimate, Rre(T0), for the root tree, and the vertical axis is the CV error also divided by Rre(T0). The vertical lines indicate ± two SE for each CV error estimate. The recommended amount of pruning is to set cp equal to the smallest tree with the minimum CV error; in this case, 11 terminal nodes.
+variables are the following four indicator variables: FAE (indicator of free- agent eligibility), FA (indicator of free agent in 1991/92), AE (indicator of arbitration eligibility), A (indicator of arbitration in 1991/92). These four variables indicated how free each player was to move to other teams. A player’s BA is the ratio of number of hits to the total number of “at-bats” for that player (whether resulting in a hit or an out). The OBP is the ratio of number of hits plus the number of walks to the number of hits plus the number of walks plus the number of outs. For reference, a BA above 0.3 is very good, and an OBP above 0.4 is excellent. An RBI occurs when a runner scores as a direct result of a player’s at-bat.
+The plot of the CV results for this example is given in Figure 9.9, where the minimum value of the CV error occurs for a tree size of 10 terminal nodes. The pruned regression tree with 10 splits and 11 terminal nodes corresponding to the minimum 1–SE rule is given in Figure 9.10. We see from the terminal node on the right-hand side of the tree that the 14 play- ers who score at least 46.5 runs have at least 94.5 RBIs, and are eligible for free-agency to earn the highest average salary ($3,897,214). The low- est average salary ($232,898), which is made by 108 players, is located at the terminal node on the left-hand side of the tree. We also see that per- forming well on at least one measure produces substantial differences in average salary. The resubstitution estimate (9.41) of prediction error for
+X-valRelativeError
+0.2 0.4 0.6 0.8 1.0 1.2
+9.4 Extensions and Adjustments 309
+￼1248.528 | n=337
+￼Runs<46.5
+Runs>=46.5
+￼￼606.2979 2058.859 n=188 n=149
+FAE<0.5 FAE<0.5
+FAE>=0.5 FAE>=0.5
+370.9556 1205.755 1295.25 2699.914 n=135 n=53 n=68 n=81
+AE<0.5 Runs<28.5 AE<0.5 RBI<64.5
+AE>=0.5 Runs>=28.5 AE>=0.5 RBI>=64.5
+2025.421 2034.909 3157.104 n=38 n=33 n=48
+RBI<81.5 Errors<27.5 RBI<94.5 RBI>=81.5 Errors>=27.5 RBI>=94.5
+FIGURE 9.10. Pruned regression tree for 1992 baseball salary data. The label of each node indicates the mean salary, in thousands of dollars, for the number n of players who fall into that node.
+this regression tree is Rre(T ) = $341, 841, the cross-validation estimate of prediction error is $549,217, and the cross-validation standard deviation is $74,928. By comparison, regressing Salary on the 15 input variables in a multiple regression yields a residual sum of squares of $155,032,181 and a residual mean square of $482,966 based upon 321 df.
+9.4 Extensions and Adjustments
+9.4.1 Multivariate Responses
+Some work has been carried out on constructing classification trees for multivariate responses, especially where each response is binary (Zhang, 1998). In such cases, the measure of within-node homogeneity at node τ for a single binary variable is generalized to a scalar-valued function of a matrix argument. Examples include − log |Vτ |, where Vτ is the within- node sample covariance matrix of the s binary responses at node τ, and
+￼￼￼￼￼￼￼￼￼￼￼￼232.8981 n=108
+￼￼923.1852 n=27
+￼680.913 1 n=23
+￼￼608.133 n=30
+￼￼370.3667 n=30
+￼￼￼￼￼￼￼￼1612.704 n=27
+￼￼3038.455 n=11
+￼￼1781.769 n=26
+￼￼2975.143 n=7
+￼￼2852.353 n=34
+￼￼3897.214 n=14
+￼
+310 9. Recursive Partitioning and Tree-Based Methods
+a node-based quadratic form in V, the covariance matrix derived from the root node. The cost-complexity of tree T is then defined as Rα(T) in (9.19), where Rre(T) is a within-node homogeneity measure summed over all terminal nodes. When dealing with multivariate responses, it is clear from an applied point of view that the amount of data available for tree construction has to be very large.
+9.4.2 Survival Trees
+Tree-based methods for analyzing censored survival data have become very useful tools in biomedical research, where they can identify prognostic factors for predicting survival (see, e.g., Intrator and Kooperberg, 1995). The resulting trees are called survival trees (or conditional inference trees). Survival data usually take the form of time-to-death but can be more gen- eral than that, such as time to a particular event to occur. Censored survival data occur when patients live past the conclusion of the study, leave the study prematurely, or die during the period of the study from a disease not connected to the one being studied, and survival analysis has to take such conditions into account in the inference process.
+When using tree-based methods to analyze censored survival data, it is necessary to choose a criterion for making splitting decisions. There are several splitting criteria, which can be divided into two types depending upon whether one prefers to use a “within-node homogeneity” measure or a “between-node heterogeneity” measure. Most applications of the former method (see, e.g., Davis and Anderson, 1989) are parametrically based; they typically incorporate a version of minus the log-likelihood loss func- tion, where the versions differ in the loss function used and, thus, how they represent the model for the observed data likelihood within the nodes.
+The first application of recursive partitioning to the analysis of censored survival data (Gordon and Olshen, 1985) used a more nonparametric ap- proach, basing their tree-construction on within-node Kaplan-Meier esti- mates of the survival distribution, and then comparing those curve esti- mates to within-node Kaplan-Meier estimates of truly homogeneous nodes. An example of the latter method (Segal, 1988) computes the within-node Kaplan-Meier curves for the censored survival data corresponding to each of the two daughter nodes of a possible split and then applies the two-sample log-rank statistic to the Kaplan-Meier curves to measure the goodness of that split; the largest value of the log-rank statistic over all possible splits determines which split is best.
+Data that fall into a particular terminal node tend to have similar ex- periences of survival (based upon a measure of within-node homogeneity). Survival trees can be used to partition patients into groups having similar survival results and, hence, identify common characteristics within these
+The lth basis function,
+μ(X) = β0 +
+Bl(X) =
+φlm(Xq(l,m)),
+􏰏L l=1
+Ml 􏰛
+m=1
+βlBl(X).
+(9.51)
+(9.52)
+9.4 Extensions and Adjustments 311
+groups. At each terminal node of a survival tree, we compute a Kaplan- Meier estimate of the survival curve using the survival information for all patients who are members of that node and then compare the survival curves from different terminal nodes.
+9.4.3 MARS
+Recursive partitioning used in constructing regression trees has been gen- eralized to a flexible class of nonparametric regression models called mul- tivariate adaptive regression splines (MARS) (Friedman, 1991).
+In the MARS approach, Y is related to X via the model Y = μ(X) + ε, where the error term ε has mean zero. The regression function, μ(X), is taken to be a weighted sum of L basis functions,
+is the product of Ml univariate spline functions {φlm(X)}, where Ml is a finite number and q(l, m) is an index depending upon the lth basis function and the mth spline function. Thus, for each l, Bl(X) can consist of a single spline function or a product of two or more spline functions, and no input variable can appear more than once in the product. These spline functions (for l odd) are often taken to be linear of the form,
+φlm(X) = (X − tlm)+, φl+1,m(X) = (tlm − X)+, (9.53)
+where tlm is a knot of φlm(X) occurring at one of the observed values of Xq(l,m), m = 1,2,...,Ml, l = 1,2,...,L. In (9.53), (x)+ = max(0,x). If, at X = x, Bl(x) = I[x∈τl], and, at Y = y, βl = y(τl), then the regression function (9.51) is equivalent to the regression-tree predictor (9.39). Thus, whereas regression trees fit a constant at each terminal node, MARS fits more complicated piecewise linear basis functions.
+Basis function are first introduced into the model (9.51) in a forwards- stepwise manner. The process starts by entering the intercept β0 (i.e., B0(X) = 1) into the model, and then at each step adding one pair of terms of the form (9.53) (i.e., choosing an input variable and a knot) by minimizing an error sum of squares criterion,
+􏰏n i=1
+ESS(L) =
+(yi − μL(xi))2, (9.54)
+312 9. Recursive Partitioning and Tree-Based Methods
+where, for a given L, μL(xi) is (9.51) evaluated at X = xi. Suppose the forwards-stepwise procedure terminates at M terms. This model is then “pruned back” by using a backwards-stepwise procedure to prevent possibly overfitting the data. At each step in the backwards-stepwise procedure, we remove one term from the model. This yields M different nested models. To choose between these M models, MARS uses a version of generalized cross-validation (GCV),
+n−1 􏰊ni=1(yi − μ􏰡m(xi))2
+GCV (m) = 􏰁 C(m)􏰂2 , m = 1,2,...,M, (9.55)
+1−n
+where μ􏰡m(x) is the fitted value of μ(x) based upon m terms, the numerator is the apparent error rate (or resubstitution error rate), and C(m) is a complexity cost function that represents the effective number of parameters in the model (Craven and Wahba, 1979). The best choice of model has m∗ = arg minm GCV (m) terms.
+9.4.4 Missing Data
+In some classification and regression problems, there may be missing values in the test set. Fortunately, there are a number of ways of dealing with missing data when using tree-based methods.
+One obvious way is to drop a future observation with a missing data value (or values) down the tree constructed using only complete-data ob- servations and see how far it goes. If the variable with the missing value is not involved in the construction of the tree, then the observation will drop to its appropriate terminal node, and we can then classify the obser- vation or predict its Y value. If, on the other hand, the observation cannot drop any further than a particular internal node τ (because the next split at τ involves the variable with the missing value), we can either stop the observation at τ (Clark and Pregibon, 1992, Section 9.4.1) or force all the observations with a missing value for that variable to drop down to the same daughter node (Zhang and Singer, 1999, Section 4.8).
+A method of surrogate splits has been proposed (Breiman et al., 1984, Section 5.3) to deal with missing data. The idea of a surrogate split at a given node τ is that we use a variable that best predicts the desired split as a substitute variable on which to split at node τ. If the best-splitting variable for a future observation at τ has a missing value at that split, we use a surrogate split at τ to force that observation further down the tree, assuming, of course, that the variable defining the surrogate split has complete data.
+￼￼
+If the missing data occur for a nominal input variable with L levels, then we could introduce an additional level of “missing” or “NA” so that the variable now has L + 1 levels (Kass, 1980).
+9.5 Software Packages
+The original CART software is commercially available from Salford Sys- tems. S-Plus and R commands (such as rpart) for classification and re- gression trees are discussed in Venables and Ripley (2002, Chapter 9). For the rpart library manual, which we used for the examples in this chapter, see Therneau and Atkinson (1997). Alternative software packages for car- rying out tree-based classification and regression are available; they have been implemented in SAS Data Mining, SPSS Classification Trees, Statistica, and Systat, version 7. These versions differ in several aspects, including the impurity measure (typical default is the entropy function), splitting criterion, and the stopping rule.
+The original MARS software is also commercially available from Salford Systems. The mars command in the mda library (Venables and Ripley, 2002, Section 8.8) in S-Plus and R is available for fitting MARS models.
+Bibliographical Notes
+This chapter follows the pioneering development of CART (Classification and Regression Trees) by Breiman, Friedman, Olshen, and Stone (1984). Other treatments of the same material can be found in Clark and Pregibon (1992, Chapter 9), Ripley (1996, Chapter 7), Zhang and Singer (1999), and Hastie, Tibshirani, and Friedman (2001, Section 9.2).
+Regression trees were introduced by Morgan and Sonquist (1963) using a computer program they named Automatic Interaction Detection (AID). Versions of AID followed: THAID in 1973 and CHAID in 1980; CHAID is used in several computer packages that carry out tree-based methods. Com- ments and references on the historical development of tree-based methods are given in Ripley (1996, Section 7.4). An excellent discussion of survival trees is given by Zhang and Singer (1999). For discussions of MARS, see Hastie, Tibshirani, and Friedman (2001, Section 9.4) and Zhang and Singer (1999, Chapter 9).
+Exercises
+9.1 The development of classification trees in this chapter assumes that misclassifying any observation has a cost independent of the classes in-
+9.5 Software Packages 313
+￼￼￼
+314 9. Recursive Partitioning and Tree-Based Methods
+volved. In many circumstances, this may be unrealistic. For example, a civilized society usually considers convicting an innocent person to be more egregious than finding a guilty person to be not guilty. Define the misclas- sification cost c(i|j) as the cost of misclassifying an observation from the jth class into the ith class. Assume that c(i|j) is nonnegative for i ̸= j and zero when i = j. Rewrite Sections 9.2.4, 9.2.5, and 9.2.6, taking into account the costs of misclassification.
+9.2 The discussion of the way to choose the best split for a classification tree in Section 9.2 used the entropy function as the impurity measure. Use the Gini index as an impurity measure on the Cleveland heart-disease data and determine the best split for the age variable (see Table 9.2); draw the graphs of i(τl) and i(τR) for the age variable and the goodness of split (see Figure 9.3). Determine the best split for all the variables in the data set (see Table 9.3).
+9.3 The full Pima Indians data (768 subjects) has a large number of missing data. In the data set, missing values are designated by zero values. How could you use those subjects having missing values for one or more variables to enhance the classification results discussed in the text?
+9.4 Consider the following two examples. Both examples start out with a root node with 800 subjects of which 400 have a given disease and the other 400 do not. The first example splits the root node as follows: the left node has 300 with the disease and 100 without, and the right node has 100 with the disease and 300 without. The second example splits the root node as follows: the left node has 200 with the disease and 400 without, and the right node has 200 with the disease and 0 without. Compute the resubstitution error rate for both examples and show they are equal. Which example do you view as more useful for the future growth of the tree?
+9.5 Construct the appropriate-size classification tree for the BUPA liver disorders data (see Section 8.4).
+9.6 Construct the appropriate-size classification tree for the spambase data (see Section 8.4).
+9.7 Construct the appropriate-size classification tree for the forensic glass data (see Section 8.7).
+9.8 Construct the appropriate-size classification tree for the vehicle data (see Section 8.7).
+9.9 Construct the appropriate-size classification tree for the wine data (see Section 8.7).

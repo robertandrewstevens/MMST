@@ -1,0 +1,833 @@
+6
+Multivariate Regression
+6.1 Introduction
+Multivariate linear regression is a natural extension of multiple linear re- gression in that both techniques try to interpret possible linear relation- ships between certain input and output variables. Multiple regression is concerned with studying to what extent the behavior of a single output variable Y is influenced by a set of r input variables X = (X1,···,Xr)τ. Multivariate regression has s output variables Y = (Y1,···,Ys)τ, each of whose behavior may be influenced by exactly the same set of inputs X = (X1,···,Xr)τ.
+So, not only are the components of X correlated with each other, but in multivariate regression, the components of Y are also correlated with each other (and with the components of X). In this chapter, we are interested in estimating the regression relationship between Y and X, taking into account the various dependencies between the r-vector X and the s-vector Y and the dependencies within X and within Y.
+We describe two different multivariate regression scenarios, analogous to the fixed-X and random-X scenarios of multiple regression. In particular, we consider restricted versions of the multivariate regression problem based upon constraining the relationship between Y and X in some way. Such
+A.J. Izenman, Modern Multivariate Statistical Techniques, Springer Texts in Statistics, 159 DOI 10.1007/978-0-387-78189-1_6, © Springer Science+Business Media New York 2013
+￼
+160 6. Multivariate Regression
+constraints may be linear or nonlinear in form, and they may be known or unknown to the researcher prior to statistical analysis. Our approach is guided by the well-known principle that major theoretical, computational, and practical advantages may result if one is able to express a wide variety of statistical problems in terms of a common focus, especially when that focus is regression analysis.
+With this in mind, we describe the multivariate reduced-rank regression model (RRR) (Izenman, 1975), which is an enhancement of the classical multivariate regression model and has recently received research attention in the statistics and econometrics literature. The following reasons explain the popularity of this model: RRR provides a unified approach to many of the diverse classical multivariate statistical techniques; it lends itself quite naturally to analyzing a wide variety of statistical problems involving re- duction of dimensionality and the search for structure in multivariate data; and it is relatively simple to program because the regression estimates de- pendonlyuponthecovariancematrixof(Xτ,Yτ)τ andtheeigendecompo- sition of a certain symmetric matrix that generalizes the multiple squared correlation coefficient R2 from multiple regression.
+6.2 The Fixed-X Case
+Let Y = (Y1, · · · , Ys)τ be a random s-vector-valued output variate with mean vector μY and covariance matrix ΣY Y , and let X = (X1, · · · , Xr)τ be a fixed (nonstochastic) r-vector-valued input variate. The components of the output vector Y will typically be continuous responses, and the components of the input vector X may be indicator or “dummy” variables that are set up by the researcher to identify known groupings of the data associated with distinct subpopulations or experimental conditions.
+Let {(Xτj,Yjτ)τ,j = 1,2,...,n} be n replications of (Xτ,Yτ)τ. Suppose when Xj is fixed at xj, we observe Yj = yj j = 1,2,...,n. The data are given by
+￼D = { ( x τj , y jτ ) τ , j = 1 , 2 , . . . , n } . We define matrices X and Y by
+r×n s×n
+X = (x1,···,xn), Y = (y1,···,yn).
+Form the following vectors and matrices:
+− 1 􏰏n j=1
+( 6 . 1 )
+(6.2)
+( 6 . 3 )
+(6.4)
+r × 1
+x ̄ = n
+s × 1
+y ̄ = n
+− 1 􏰏n j=1
+x j , X ̄ = (x ̄,···,x ̄),
+y j , Y ̄ = (y ̄,···,y ̄).
+r×n
+s×n
+6.2 The Fixed-X Case The centered versions of X and Y are defined, respectively, by
+r×n  ̄ s×n  ̄ Xc=X−X, Yc=Y−Y.
+6.2.1 Classical Multivariate Regression Model
+161
+(6.5)
+Suppose each Y depends linearly on the same set of {Xk} so that Yj=μj+θj1X1+···+θjrXr+e, j=1,2,...,s,
+(6.6) where e is an error variate. Using the data D in (6.1), which are assumed
+to follow (6.6), the multivariate linear regression model is given by s×n s×n s×r r×n s×n
+Y=μ+ΘX+E, (6.7)
+where μ is an (s×n)-matrix of unknown constants, Θ = (θjk) is an (s×r)- matrix of unknown regression coefficients, and E = (E1,E2,···,En) is the (s × n) error matrix whose columns are each random s-vectors with mean 0 and the same unknown nonsingular (s×s) error covariance matrix ΣEE, and pairs of column vectors, (Ej,Ek), j ̸= k, are uncorrelated with each other. When the Xs are considered to be fixed in repeated sampling (e.g., in designed experiments), the so-called design matrix X consists of known constants and possibly also observed values of covariates, Θ is a full-rank matrix of unknown fixed effects, and μ = μ01τn, where μ0 is an unknown s-vector of constants and 1n is an n-vector of 1s.
+Consider the problem of estimating arbitrary linear combinations of the
+{θjk},
+􏰏􏰏
+Ajkθjk, (6.8) where A = (Ajk) is an arbitrary matrix of constants. There are two equiv-
+alent ways to proceed. On the one hand, we can write
+μ+ΘX =Θ∗X∗, (6.9)
+where Θ∗ = (μ . Θ) and X∗ = (1 . Xτ)τ, and then estimate Θ∗. The 0n
+other way is to remove μ from the equation by centering X and Y and then estimate Θ directly. It is the latter procedure we give here. The reader should verify that both procedures lead to the same results (see Exercise 6.7).
+LS Estimation
+If we set μ = Y ̄ − ΘX ̄, the model (6.7) reduces to
+s×n s×r r×n s×n
+Yc=Θ Xc + E . (6.10)
+tr(AΘ) =
+jk
+162 6. Multivariate Regression
+Applying the “vec” operation to equation (6.10), we get
+sn×1 sn×sr sr×1 sn×1
+vec(Yc )=(Is ⊗ Xcτ )vec(Θ) + vec(E ) . (6.11)
+We see that the relationship (6.11) is just a multiple linear regression. The error variate vec(E) has mean vector 0 and (sn × sn) block-diagonal covariance matrix,
+cov(vec(E)) = E{(vec(E))(vec(E))τ } = ΣEE ⊗ In. (6.12) AssumingthatXcXcτ isnonsingularandusingExercise5.16,thegeneralized
+least-squares estimator of vec(Θ) is given by
+vec(Θ􏰡 ) = (6.13) ((Is ⊗ Xc)(ΣEE ⊗ In)−1(Is ⊗ Xcτ ))−1(Is ⊗ Xc)(ΣEE ⊗ In)−1vec(Yc) = (Is ⊗ (XcXcτ )−1Xc)vec(Yc), (6.14)
+using results on Kronecker products of matrices. By “un-vec’ing” (6.14), it
+follows that
+Θ􏰡 = YcXcτ (XcXcτ )−1, (6.15) μ􏰡 = Y ̄ − Θ􏰡 X ̄ , ( 6 . 1 6 )
+s o t h a t μ􏰡 0 = y ̄ − Θ􏰡 x ̄ .
+Thus, under the above conditions and if XcXcτ is nonsingular, then the
+minimum-variance linear unbiased estimator of tr(AΘ) is given by tr(AΘ􏰡 ). This is the multivariate form of the Gauss–Markov theorem.
+We can interpret the estimator Θ􏰡 in an important way. Suppose we transpose the regression equation (6.10) so that
+n×s n×r r×s n×s
+Z=W β + E, (6.17)
+w h e r e Z = Y cτ , W = X cτ , β = Θ τ , a n d E = E τ . T h e i t h r o w v e c t o r , Y c ( i ) , of Yc corresponds to the ith column vector, zi, of Z and represents all the n (mean-centered) observations on the ith output variable Ycij = Yij −Y ̄i,
+j = 1, 2, . . . , n. Thus, the n-vector zi can be modeled by the regression equation,
+n×1 n×r r×1 n×1 zi =W βi + ei ,
+multiple (6.18)
+where βi is the ith column of β, and ei is the ith column of E. The OLS
+estimate of βi is
+β􏰡i = (Wτ W)−1Wτ zi. (6.19)
+Transforming back, we get that the least-squares estimator of θ(i) (i.e., the ith row of Θ) is
+θ􏰡(i) = Yc(i)Xcτ (XcXcτ )−1, (6.20)
+w h i c h i s t h e i t h r o w o f Θ􏰡 .
+Thus, simultaneous (unrestricted) least-squares estimation applied to all the s equations of the multivariate regression model yields the same results as does equation-by-equation least-squares. As a result, nothing is gained by estimating the equations jointly, even though the output variables Y may be correlated.
+In other words, even though the variables in Y may be correlated, per- haps even heavily correlated, the LS estimator, Θ􏰡 , of Θ does not contain any reference to that correlation. Indeed, the result says that in order to estimate the matrix of regression coefficients Θ in a multivariate regression, all we need to do is (1) run s multiple regressions, each using a different Y variable, on all the X variables, (2) compute the vector of regression coefficient estimates, θ􏰡(i), i = 1,2,...,s, from each multiple regression, and then (3) arrange those estimates together into a matrix, which will be Θ􏰡. To those who encounter this result for the first time, it can be quite surprising!
+In its basic classical formulation, therefore, we see that multivariate re- gression is a procedure that has no true multivariate content. That is, there is no reason to create specialized software to carry out a multivariate regres- sion of Y on x when the same result can more easily be obtained by using existing multiple regression routines. This is one reason why many books on multivariate analysis do not contain a separate chapter on multivariate regression and also why the topics of multiple regression and multivariate regression are so often confused with each other.
+Covariance Matrix of Θ􏰡
+Using the “vec” operation and Kronecker products, it is not difficult to obtain the covariance matrix for Θ􏰡 . Substituting (6.10) for Yc into (6.15), we have that
+Θ􏰡 =(ΘXc +E)Xcτ(XcXcτ)−1 =Θ+EXcτ(XcXτ)−1. (6.21) Using the fact that Xc is a fixed matrix and that E has mean zero, we have
+that vec(Θ􏰡 ) has mean vec(Θ). Now, from (6.21),
+vec(Θˆ − Θ) = vec(EXcτ (XcXcτ )−1) = (Is ⊗ (XcXτ )−1Xc)vec(E),
+whence,
+cov(vec(Θˆ )) =
+= (Is ⊗ (XcXcτ )−1Xc)(ΣEE ⊗ In)(Is ⊗ Xcτ (XcXcτ )−1)
+= ΣEE ⊗ (XcXcτ )−1, (6.22) by using the multiplicative properties of Kronecker products.
+E{(vec(Θˆ − Θ))(vec(Θˆ − Θ))τ }
+6.2 The Fixed-X Case 163
+164 6. Multivariate Regression
+So far, we have obtained the LS estimators of the multivariate linear regression model without imposing any distributional assumptions on the errors. If we now assume that the errors in the model are distributed as iid Gaussian random vectors,
+iid
+Ej ∼ Ns(0,ΣEE), j = 1,2,...,n, (6.23)
+then,
+vec(Θ􏰡 ) ∼ Nrs(vec(Θ), ΣEE ⊗ (XcXcτ )−1). (6.24) Furthermore, the distribution of the least-squares estimator (6.20) is
+θ􏰡(i) ∼Nr(θ(i),σi2(XcXcτ)−1), (6.25) where σi2 is the ith diagonal entry of ΣEE, i = 1,2,...,s. Compare with
+(5.42).
+If Xc has less than full rank, then the (r×r)-matrix XcXcτ will be singular. In this case, we can replace the (XcXcτ)−1 term either by a generalized inverse (XcXcτ )− or by a ridge-regression-like term such as (XcXcτ +kIr)−1, where k is a positive constant; see Section 5.6.4.
+Fitted Values and Multivariate Residuals
+The (s × n) matrix Y􏰡 of fitted values is given by
+Y􏰡 = μ􏰡 + Θ􏰡 X = Y ̄ + Θ􏰡 ( X − X ̄ ) ,
+or
+where the (n × n) matrix H = Xcτ (XcXcτ )−1Xc is the hat-matrix.
+( 6 . 2 6 )
+Y􏰡c = Θ􏰡 Xc = YcXcτ (XcXcτ )−1Xc = YcH,
+The (s × n) residual matrix E􏰡 is the difference between the observed and
+fitted values of Y, namely,
+E􏰡 = Y − Y􏰡 = Y c − Θ􏰡 X c = Y c − Y􏰡 c = Y c ( I n − H ) ,
+and, using (6.27), can also be written as
+E􏰡 = Yc−Θ􏰡Xc
+= (ΘXc + E) − (Θ + EXcτ (XcXcτ )−1)Xc
+= E(In −H).
+( 6 . 2 8 )
+(6.29)
+It follows immediately that E(vec(E􏰡)) = 0. A straightforward calculation shows that
+cov(vec(E􏰡)) = ΣEE ⊗ (In − H). (6.30)
+(6.27)
+The (s × s) matrix version of the residual sum of squares is
+Se = E􏰡E􏰡τ = (Yc −Θ􏰡Xc)(Yc −Θ􏰡Xc)τ = Yc(In −H)Ycτ. (6.31)
+It is not difficult to show that Se = E(In − H)Eτ . Let E(j) be the jth row of E. Then, the jkth element of Se can be written as
+whence,
+(Se)jk = E(j)(In − H)Eτ , (k)
+E{(Se)jk} = E{tr((In − H)Eτ E(j))} (k)
+= tr(In −H)·(ΣEE)jk = (n−r)(ΣEE)jk.
+We can now state the statistical properties of an estimate of the error covariance matrix. The residual covariance matrix,
+Σ􏰡EE= 1 Se, (6.32) n−r
+is statistically independent of Θ􏰡 and has a Wishart distribution with n − r degrees of freedom and expectation ΣE E . We see that the residual covariance matrix Σ􏰡EE is an unbiased estimator for the error covariance matrix ΣEE.
+The covariance matrix of Θ􏰡 can, therefore, be estimated by c􏰤ov(vec(Θ􏰡))=Σ􏰡EE ⊗(XcXcτ)−1, (6.33)
+where Σ􏰡EE is given by (6.32). Confidence Intervals
+We can now construct confidence intervals for arbitrary linear combina- tions of vec(Θ). Let γ be an arbitrary sr-vector and consider γτvec(Θ􏰡). Assuming the error vectors are s-variate Gaussian as in (6.23), the inde- pendence of (6.15) and (6.32) means that the pivotal quantity
+t = γτ (vec(Θ􏰡 − Θ)) (6.34) {γτ(Σ􏰡EE ⊗(XcXcτ)−1)γ}1/2
+has the Student’s t-distribution with n − r degrees of freedom. Thus, a (1 − α) × 100% confidence interval for γτ vec(Θ) can be given by
+γτ vec(Θ􏰡 ) ± tα/2 {γτ (Σ􏰡 ⊗ (X X τ )−1)γ}1/2, (6.35) n−r EE cc
+where tα/2 is the (1 − α/2) × 100%-point of the t -distribution. n−r n−r
+6.2 The Fixed-X Case 165
+￼￼
+166 6. Multivariate Regression
+￼FIGURE 6.1. Three-variable Box–Behnken design for the Norwegian Pa- per Quality experiment. The three variables, X1,X2, and X3, each have values −1, 0, or 1. There are 13 design points consisting of the midpoints of each of the 12 edges of a three-dimensional cube and a point at the center of the cube. Source: NIST/SEMATECH e-Handbook of Statistical Methods, www.itl.nist.gov/div898/handbook/pri/section3/pri3362.htm.
+6.2.2 Example: Norwegian Paper Quality
+These data1 were obtained from a controlled experiment carried out in the paper-making factory of Norske Skog located in Skogn, Norway (Aldrin, 2000), which is the world’s second-largest producer of publication paper. There are s = 13 response variables, Y1,...,Y13, which measure different characteristics of paper.
+The purpose of the experiment was to uncover how these response vari- ables were influenced by three predictor variables, X1, X2, X3, each of which is controlled exactly with values −1, 0, or 1 according to a 3-variable Box– Behnken design (Box and Behnken, 1960). See Figure 6.1. The 13-point design can be represented as the midpoints of each of the 12 edges of a three-dimensional cube and a point (0,0,0) at the center of the cube. At each of 11 design points, the response variables were measured twice; at the design point (0,1,1), the response variables were measured only once; at the center point, the response variables were measured six times. To allow for interactions and nonlinear effects, the standard model for such designs includes an additional six predictor variables defined as X4 = X12,X5 = X2,X6 = X32,X7 = X1X2,X8 = X1X3,X9 = X2X3, so that r = 9. The data set, therefore, consists of 29 observations measured on each of r + s = 9 + 13 = 22 variables.
+1The data, which originally appeared in Aldrin (1996), can be found in the file norwaypaper1.txt on the book’s website or can be downloaded from the StatLib website lib.stat.cmu.edu/datasets.
+￼
+TABLE 6.1. Norwegian paper quality data. This is the (13 × 9)-matrix of estimated regression coefficients, Θ􏰡. The number of X-variables is r = 9, the number of Y -variables is s = 13, and the number of observations is n = 29.
+0.752 -0.449 -0.844 0.350 0.286 -0.670 0.497 -0.491 0.515 0.143 -0.717 0.039 0.878 0.051 -0.564 0.194 0.287 0.497
+0.105 -0.291 -0.039 0.226 0.044 -0.283 0.142 -0.391 -0.182 -0.372 0.346 -0.362 -0.324 -0.015 -0.002 -0.427 -0.382 -0.011 0.221 -0.354 0.146 0.143 -0.832 0.428 -0.704 0.561
+0.545 0.111 -0.567 -0.141 0.534 0.065 0.450 0.068 0.420 -0.158 0.055 0.139 0.228 -0.243 0.046 0.236 0.837 0.143 -0.524 0.057 -0.144 0.086 0.339 0.214 0.557 -0.231
+0.390 0.217 -0.537 -0.324 0.408 -0.163 0.195 0.020 0.792 0.602 0.462 0.125 0.126 0.255 -0.446 0.257 0.380 -0.121 -0.682 0.336 -0.826 -0.731 0.125 0.173 -0.245 -0.181
+-0.365 0.369 -0.572 -0.666 -0.570 -0.215 -0.269 -0.357 -0.600 -0.654 -0.145 0.111 0.174 -0.714 0.329 -0.526 0.283 0.541 0.505 0.052 0.428
+6.2 The Fixed-X Case 167
+￼￼Regressing Y = (Y1,···,Y13)τ on X = (X1,···,X9)τ, using formulas (6.15) and (6.16), yields the estimated mean vector μ􏰡,
+μ􏰡 = (32.393, 31.678, 7.034, 7.826, 14.734, 12.455, 9.996, 18.502, 22.414, 17.817, 21.405, 90.166, 23.547)τ, (6.36)
+and the (13×9)-matrix of estimated regression coefficients Θ􏰡 , which is given in Table 6.1. Each row of Table 6.1 can also be obtained by regressing the Y variable corresponding to that row on all nine X variables; see Ex. 6.8.
+6.2.3 Separate and Multivariate Ridge Regressions
+As we have seen, multivariate OLS regression reduces to a collection of s separate multiple OLS regressions. We can improve substantially upon OLS while still pursuing an equation-by-equation regression strategy by applying a biased regression procedure, such as ridge regression, separately to each output variable.
+Let the n-vector Yc(j) = (yj,1, · · · , yj,n)τ be the jth row of Yc. Using the penalized least-squares formulation of uniresponse ridge regression (see Section 5.8), let
+φj(β) = (Yc(j) −Xcβ)τ(Yc(j) −Xcβ)+λjβτβ, j = 1,2,...,s, (6.37) where we allow the possibility for different ridge parameters, {λj }, for each
+equation. Separate ridge-regression estimators are the solutions to
+β􏰡(λj) = argminφj(β), j = 1,2,...,s, (6.38) β
+168 6. Multivariate Regression
+and the separate ridge parameters can be estimated using leave-one-out cross-validation,
+􏰠
+λ􏰡j = argmin λ
+􏰘􏰏n i=1
+(yj,i −y􏰡j,−i(λ))2
+, j = 1,2,...,s, (6.39) where y􏰡 (λ) is the predicted value (using ridge regression with ridge pa-
+j,−i
+rameter λ) of the ith case of the jth response variable when the entire ith case is deleted from the learning set (Breiman and Friedman, 1997). Varia- tions on this idea have been used to predict the outcome on election night in every British general election (and British elections to the European parliament) since 1974 (Brown, Firth, and Payne, 1999).
+Although ridge regression can be predictively more accurate than is OLS in the case of a single output variable, this equation-by-equation strategy is unsatisfactory because it circumvents the issue that the output variables are correlated and that the combined ridge estimators do not yield a proper Bayes procedure.
+Several extensions of (5.92) for the multivariate case have since been proposed that recognize the true multivariate nature of the problem. From (6.14), we have that
+vec(Θ􏰡 ) = (Is ⊗ Xc Xcτ )−1 (Is ⊗ Xc )vec(Yc ). (6.40) A multivariate analogue of (5.92) can be based upon (6.40) by introducing
+a positive-definite (s × s) ridge matrix K so that
+vec(Θ􏰡 (K)) = ((Is ⊗ XcXcτ ) + (K ⊗ Ir))−1(Is ⊗ Xc)vec(Yc) (6.41)
+is a multivariate ridge regression estimator of vec(Θ) (Brown and Zidek, 1980, 1982). The application of (6.41) to predicting British elections uses a diagonal K. Even if XcXcτ is almost singular, (6.41) is still computable. Note that (6.41) reduces to (6.40) if K = 0. If K is chosen from the data, then the multivariate ridge estimator (6.41) becomes adaptive. A more complicated version of (6.41) was proposed by Haitovsky (1987).
+6.2.4 Linear Constraints on the Regression Coefficients
+It is sometimes necessary to consider a more restricted model than the classical multivariate regression model. In certain practical situations, we might need the elements of the regression coefficient matrix Θ in the clas- sical model Yc = ΘXc + E to satisfy a set of known linear constraints.
+A variety of applications can be based upon the general set of linear constraints on Θ,
+m×s s×r r×u m×u
+K Θ L=Γ, (6.42)
+where the matrix K (m ≤ s) and the matrix L (u ≤ r) are full-rank matrices of known constants, and Γ is a matrix of parameters (known or unknown). We often take Γ = 0.
+In (6.42), the matrix K is used to set up relationships between the dif- ferent columns of Θ (e.g., treatments), whereas L generates possible rela- tionships between the different responses. In many problems of this kind,
+it is common to take L = (I . 0)τ, where 0 is a (u×(r−u))-matrix of u
+zeroes. There are also situations in which L can be made more specific. The use of L is peculiar to the multiresponse problem and does not have any analogue in the uniresponse situation.
+Variable Selection
+For example, suppose we wish to study whether a specific subset of the r input variables has little or no effect on the behavior of the output variables. Suppose we arrange the rows of Xc so that
+c c1 c2
+where Xc1 has r1 rows and Xc2 has r2 = r−r1 rows. Suppose we believe that
+the variables included in Xc2 do not belong in the regression. Corresponding tothepartitionofX,wesetΘ=(Θ .Θ),sothat
+c12
+s×n s×r1 r1 ×n s×r2 r2 ×n s×n
+Yc=Θ1 Xc1 +Θ2 Xc2 + E . (6.44) To study whether the input variables included in Xc2 can be eliminated
+from the model, we set K = Is and L = (0 . Iτr2×u)τ, where 0 is a (u×r1)- matrix of zeroes and Ir2×u is an (r2×u)-matrix of ones along the “diagonal” and zeroes elsewhere, so that KΘL = Θ2 = 0.
+Profile Analysis
+The constraints (6.42) can be used to handle a variety of experimen- tal design problems. Such problems include profile analysis, where scores on a battery of tests (e.g., different treatments) are recorded on several independent groups of subjects and compared with each other. Typically, profile analysis is carried out on multivariate data obtained from longitu- dinal studies or clinical trials, where the components of each data vector are ordered by time.
+The simplest form of profile analysis deals with a one-way layout in which there are r groups of subjects, where the jth group consists of nj subjects selectedrandomlytoreceiveoneofrtreatments,andn1+n2+···+nr =n.
+6.2 The Fixed-X Case 169
+r×n n×r1 . n×r2
+X=(Xτ .Xτ )τ, (6.43)
+170 6. Multivariate Regression
+The scores, which are assumed to be expressed in comparable units, on the s tests by the ith subject are given by the ith column in the (s×n)-matrix Y = (Y1,···,Yn). We assume the model,
+Yi =μ+μi +Ei, i=1,2,...,n, (6.45)
+where Yi is a random s-vector, μ is an s-vector of constants that represents an overall mean vector, (μ1, · · · , μn) = ΘX is an (s × n)-matrix of fixed constants, and Ei is a random s-vector with mean 0 and covariance matrix ΣEE, i = 1,2,...,n. For convenience, we assume μ = 0.
+The design matrix X is constructed using n dummy variables as columns, where the jth row value of the ith column equals 1 if the ith subject is in the jth group, and 0 otherwise:
+⎛1···10···0···0···0⎞ r×n ⎜0 ··· 0 1 ··· 1 ··· 0 ··· 0⎟
+X=⎜⎝. . . . . .⎟⎠. 0···00···0···1···1
+The matrix of regression coefficients Θ is given by: ⎛θ···θ⎞
+(6.46)
+(6.47)
+θj = (θ1j,···,θsj)τ, j = 1,2,...,r. (6.48)
+The profile of the jth group is displayed as a graph of the points (k,θkj), k = 1,2,...,s; we connect successive points, (k,θkj) and (k + 1,θk+1,j), k = 1,2,...,s−1, by straight lines. All group profiles are plotted on the same graph for visual comparison.
+The population profiles of the r groups are said to be similar if the line segments joining successive points of each group’s profile are parallel to the corresponding line segments of the profiles of all the other groups. In other words, the population profiles of the different groups are identical but with a constant difference between each pair of profiles. Figure 6.2 displays an example of parallel treatment-mean profiles of three groups (r = 3) at five different timepoints (s = 5). Restricting the profiles to be similar is equivalent to asserting that there is no interaction between treatments and groups.
+11 1r s×r ⎜ . . ⎟
+Θ=⎝ . . ⎠. θs1 ··· θsr
+The treatment-mean profile for the jth group is defined as the s-vector s×1
+6.2 The Fixed-X Case 171
+￼￼￼￼￼Group1
+Group2
+Group3
+￼￼￼￼￼￼￼￼￼7
+6
+5
+4
+3
+￼￼￼￼￼￼￼￼￼￼and the matrix L to be
+12345 Time
+FIGURE 6.2. Profile plots of population treatment means at five time- points (s = 5) on each of three hypothetical groups (r = 3), where the group profiles are parallel to each other.
+This similarity of the r profiles can be expressed as a set of linear con- straints on Θ. To do this, we set the matrix K to be
+(s−1)×s ⎜ 0 K = ⎜⎝ . . .
+1 . . . 0
+−1 . . . 0
+··· 0 ⎟ . . . ⎟⎠
+··· −1
+(6.49)
+(6.50)
+⎛1−1
+0··· 0⎞
+0
+⎛100···0⎞
+⎜−1 10··· 0⎟ r×(r−1) ⎜ 0 −1 1 ··· 0⎟
+L =⎜ . . . .⎟, ⎝... .⎠
+0 0 0 ··· −1
+so that K1s = 0 and Lτ 1r = 0. Setting KΘL = 0 gives constraints on Θ
+that reduce to
+⎛θ−θ⎞ ⎛θ−θ⎞
+11 12
+⎟⎠ = · · · = ⎜⎝
+s1 s2 . . .
+⎟⎠ . ( 6 . 5 1 )
+⎜⎝ . . . θ1,r−1 − θ1r
+θs,r−1 − θsr
+Thus, the r treatment mean profiles are to be piecewise-parallel to each other. Alternative K and L for this problem are
+PopulationTreatmentMean
+172 6. Multivariate Regression
+K=(I .−1 ), L=(I .−1 )τ, (6.52) s−1s r−1r
+where 1s is an s-vector of ones.
+We can constrain the population treatment mean profiles further, so that not only are they parallel, but also we could require them to be “coinciden- tal” (i.e., identical). To do this, take K = 1τs and L as in (6.52), whence, KΘL = 0 translates to 1τsθ1 = 1τsθ2 = ··· = 1τsθr, which is the condition needed for coincidental profiles.
+Constrained Estimation
+Consider the problem of finding Θ∗ that solves the following constrained minimization problem:
+Θ􏰡 ∗ = arg min tr{(Yc − ΘXc)τ (Yc − ΘXc)}. (6.53) Θ
+KΘL=Γ
+Let Λ = (λij ) be a matrix of Lagrangian coefficients. The normal equations
+are:
+From (6.54), we get
+Θ􏰡∗XcXcτ +KτΛLτ =YcXcτ K Θ􏰡 ∗ L = Γ .
+(6.54) (6.55)
+(6.56)
+(6.57)
+(6.58) (6.56)
+Θ􏰡 ∗ = Θ􏰡 − K τ Λ L τ ( X c X c τ ) − 1 ,
+where Θ􏰡 is given by (6.15). Substituting (6.56) into (6.55) gives
+K K τ Λ L τ ( X c X c τ ) − 1 L = K Θ􏰡 L − Γ . Solving this last expression for Λ gives
+Λ = (KKτ )−1(KΘ􏰡 L − Γ)(Lτ (XcXcτ )−1L)−1, assuming the appropriate inverses exist. Substituting (6.58) into
+yields
+Θ􏰡∗ =Θ􏰡−Kτ(KKτ)−1(KΘ􏰡L−Γ)(Lτ(XcXcτ)−1L)−1Lτ(XcXcτ)−1.
+(6.59) Check that premultiplying (6.59) by K and postmultiplying by L leads to
+KΘ􏰡 ∗L = Γ as required by the constraint in (6.55).
+It is common practice in profile analysis to plot the points (k, θ􏰡∗ ), k =
+1,2,...,s, corresponding to the jth group, and connect them by straight lines. The treatment-mean profiles for all r groups are usually plotted on the same graph for easy visual comparison.
+kj
+Multivariate Analysis of Variance (MANOVA)
+We now set up the multivariate analysis of variance (MANOVA) table for the constrained model. The matrix version of the residual sum of squares, S∗e, under the constrained model is given by
+S∗e = (Yc −Θ􏰡∗Xc)(Yc −Θ􏰡∗Xc)τ
+= ((Yc −Θ􏰡Xc)+(Θ􏰡 −Θ􏰡∗)Xc)((Yc −Θ􏰡Xc)+(Θ􏰡 −Θ􏰡∗)Xc)τ
+= (Yc −Θ􏰡Xc)(Yc −Θ􏰡Xc)τ +(Θ􏰡 −Θ􏰡∗)XcXcτ(Θ􏰡 −Θ􏰡∗)τ, (6.60)
+where the first term on the rhs of (6.60) is the matrix version of the residual sum of squares, Se, for the unconstrained model, and the second term is the additional source of variation, Sh = Se − S∗e, due to dropping the constraints.Thecross-producttermsdisappearbecause(Yc−Θ􏰡Xc)Xcτ =0. Note that Se is given by (6.31). Furthermore, the matrix version of the regression sum of squares, Sreg, for the unconstrained model is given by
+Sreg = Θ􏰡XcXcτΘ􏰡τ
+= (Θ􏰡∗ +(Θ􏰡 −Θ􏰡∗))XcXcτ(Θ􏰡∗ +(Θ􏰡 −Θ􏰡∗))τ
+= Θ􏰡∗XcXcτΘ􏰡∗τ +(Θ􏰡 −Θ􏰡∗)XcXcτ(Θ􏰡 −Θ􏰡∗)τ, (6.61)
+where the cross-product terms disappear. The first term on the rhs of (6.61) is S∗reg, the matrix version of the regression sum of squares for the con- strained model, and the second term is, again, Sh.
+We can collect these results in a MANOVA table — see Table 6.2 — in which both the constrained and unconstrained regression models are set out so that their sums of squares and degrees of freedom add up appropriately.
+Using (6.58), we can write Sh more explicitly as follows:
+Sh =Kτ(KKτ)−1(KΘ􏰡L−Γ)(Lτ(XcXcτ)−1L)−1(KΘ􏰡L−Γ)τ(KKτ)−1K. (6.62) Substituting (6.15) into (6.62), expanding, and taking expectations, we get
+E(Sh) = D(KΘL − Γ)(Lτ (XcXcτ )−1L)−1(KΘL − Γ)τ Dτ
++ F · E(EGEτ ) · Fτ , (6.63)
+where D = Kτ(KKτ)−1, F = DK, and
+G = Xcτ (XcXcτ )−1L(Lτ (XcXcτ )−1L)−1Lτ (XcXcτ )−1Xcτ . (6.64)
+NoticethatF2 =F=Fτ andG2 =G=Gτ,sothatFandGare
+both projections. Now, the jkth entry in the (s×s)-matrix EGEτ in (6.63)
+is the quadratic form E(j)GEτ = 􏰊 􏰊 GuvEjuEkv, where E(j) = (Eju) (k) uv
+6.2 The Fixed-X Case 173
+174 6. Multivariate Regression
+TABLE 6.2. MANOVA table for the constrained and unconstrained mul- tivariate regression models, where u = rank(K).
+￼Source of Variation
+Constrainedmodel Duetodroppingconstraints
+Unconstrainedmodel Residual
+df Sum of Squares
+r−u S∗reg =Θ􏰡∗XcXcτΘ􏰡∗τ
+u Sh =(Θ􏰡−Θ􏰡∗)XcXcτ(Θ􏰡−Θ􏰡∗)τ
+r Sreg =Θ􏰡XcXcτΘ􏰡τ n−r−1 Se =(Yc −Θ􏰡Xc)(Yc −Θ􏰡Xc)τ
+￼￼￼Total n−1 YcYcτ
+is the jth row of E. So, its expected value is given by E(E(j)GE(k)τ) =
+￼􏰊
+Guu(ΣEE )jk = (ΣEE )jk · tr(G). Thus, E(EGEτ ) = uΣEE , tr(G) = tr(Iu) = u.
+General Linear Hypothesis
+From Table 6.2, we can test the general linear hypothesis, H0 :KΘL=Γ vs. H1 :KΘL̸=Γ.
+because
+(6.65)
+u
+U n d e r H 0 , E { S h / u } = F Σ E E F τ . Fu r t h e r m o r e , E { S e / ( n − r − 1 ) } = Σ E E . A formal significance test of H0 vs. H1 can, therefore, be realized through a function (e.g., determinant, trace, or largest eigenvalue) of the quantity FShFτ(FSeFτ)−1, where we use the fact that F is a projection matrix. Related test statistics have been proposed in the literature, including the following functions of Sh and Se:
+1. Hotelling–Lawley trace statistic: tr{S S−1} he
+2. Roy’s largest root: λ {S S−1} max h e
+3. Wilks’s lambda (likelihood ratio criterion): |Se|/|Sh + Se|
+Under H0 and appropriate distributional assumptions, Hotelling–Lawley’s trace statistic and Roy’s largest root should both be small, whereas Wilk’s
+lambda should be large (i.e., close to 1) under H0. In other words, we would reject H0 in favor of H1 if the trace statistic or largest root were large and if Wilk’s lambda were small (i.e., close to 0). Properties of these statistics are given in Anderson (1984, Chapter 8).
+We can also compute an appropriate confidence region for KΘL − Γ by using the statistic KΘ􏰡 L − Γ. A formal significance test can be con- structed from the resulting confidence region; if the confidence region does not contain 0, we say that the evidence from the data favors H1 rather than H0.
+6.3 The Random-X Case
+In this section, we treat the case where
+r×1 τ s×1 τ
+X = (X1,···,Xr) , Y = (Y1,···,Ys) , (6.66)
+are jointly distributed, with X having mean vector μX and Y having mean vector μY , and with joint covariance matrix,
+6.3 The Random-X Case 175
+￼􏰃􏰄
+ΣXX ΣXY ΣY X ΣY Y
+. (6.67)
+For convenience in exposition, we assume s ≤ r. Although X is presumed to be the larger of the two sets of variates, this reflects purely a mathematical convenience, and similar expressions as appear here can be obtained in the case in which r ≤ s. The variables X and Y are assumed to be continuous but may also include transformations (e.g., logs, square-roots, reciprocals), powers (e.g., squares, cubes), products, or ratios of the input variables. Notice that we have not assumed that the joint distribution of (6.66) is Gaussian.
+6.3.1 Classical Multivariate Regression Model
+Suppose Y is related to X by the following multivariate linear model: s×1 s×1 s×r r×1 s×1
+Y=μ+ΘX+E, (6.68)
+where μ and the regression coefficient matrix Θ are the unknown param- eters and E is the unobservable error component of the model with mean E(E) = 0 and unknown (s×s) error covariance matrix cov(E) = ΣEE, and E is distributed independently of X. Our first goal is to obtain suitable expressions for μ, Θ, and ΣEE that are optimal in a least-squares sense.
+176 6. Multivariate Regression
+We are interested in finding the s-vector μ and (s × r)-matrix Θ that minimize the (s × s)-matrix,
+W (μ, Θ) = E{(Y − μ − ΘX)(Y − μ − ΘX)τ }, (6.69)
+where the expectation is taken over the joint distribution of (Xτ , Yτ )τ . Set Yc = Y−μY and Xc = X−μX, and assume that ΣXX is nonsingular. Expanding the rhs of (6.69), we get that
+W(μ,Θ) = E{YcYcτ −YcXτcΘτ −ΘXcYcτ +ΘXcXτcΘτ} +(μ−μY +ΘμX)(μ−μY +ΘμX)τ
+= (ΣYY −ΣYXΣ−1 ΣXY) XX
++ (ΣY X Σ−1/2 − ΘΣ1/2 )(ΣY X Σ−1/2 − ΘΣ1/2 )τ XX XX XX XX
++(μ−μY +ΘμX)(μ−μY +ΘμX)τ ≥ ΣYY −ΣYXΣ−1 ΣXY,
+with equality when
+μ=μY −ΘμX Θ=ΣYXΣ−1 .
+The minimum achieved is ΣY Y − ΣY XΣ−1 ΣXY . The μ and Θ given by XX
+(6.71) and (6.72), respectively, minimize (6.69) and also minimize the trace, determinant, and jth largest eigenvalue of (6.69).
+The (s×r)-matrix Θ is called the (full-rank) regression coefficient matrix of Y on X, and
+Y=μ+Σ Σ−1(X−μ) (6.73) Y YXXX X
+is the (full-rank) linear regression function of Y on X, where “full rank” refers to the rank of Θ. At the minimum, the error variate is
+E =Y−μ −Σ Σ−1 (X−μ )=Y −Σ Σ−1 X . (6.74) Y YXXX X c YXXXc
+From (6.74), we see that E(E) = 0, ΣEE = ΣYY −ΣYXΣ−1 ΣXY , and
+E ( E X τc ) = 0 .
+6.3.2 Multivariate Reduced-Rank Regression
+XX
+(6.70)
+(6.71) (6.72)
+In Section 6.2.4, we described how to place constraints on Θ when X is considered fixed. An alternative way of constraining a multivariate regres- sion model is through a rank condition on the matrix of regression coeffi- cients. The resulting model is called the multivariate reduced-rank regres- sion (RRR) model (Izenman, 1972, 1975). In this section, we describe the RRR scenario in which X and Y are jointly distributed (i.e., the random-X case). The reader is encouraged to develop the RRR model for the fixed-X case (see Exercises 6.4, 6.5, and 6.6).
+XX
+XX
+Most applications of reduced-rank regression have been directed toward problems in time series (time domain and frequency domain) and econo- metrics. This development has led to the introduction of the related topic of cointegration into the econometric literature.
+The Reduced-Rank Regression Model
+Consider the multivariate linear regression model given by
+s×1 s×1 s×r r×1 s×1 Y=μ+CX+E, (6.75)
+where μ and C are unknown regression parameters, and the unobservable error variate, E, of the model has mean E(E) = 0 and covariance matrix cov(E) = E{EEτ} = ΣEE, and is distributed independently of X. The dif- ference between this model and that of (6.68) is that we allow the possibility that the rank of the regression coefficient matrix C is deficient; that is,
+rank(C)=t ≤ min(r,s). (6.76)
+The “reduced-rank” condition (6.76) on the regression coefficient matrix C brings a true multivariate feature into the model. The rank condition implies that there may be a number of linear constraints on the set of re- gression coefficients in the model. Unlike the model studied in Section 6.2.4, however, the value of t and, hence, the number and nature of those con- straints may not be known prior to statistical analysis. The name reduced- rank regression was introduced to distinguish the case 1 ≤ t < s from full-rank regression, where t = s.
+When C has reduced-rank t, then, there exist two (nonunique) full-rank matrices, an (s×t) matrix A and a (t×r) matrix B, such that C = AB. The nonuniqueness occurs because we can always find a nonsingular (t×t)-matrix T such that C = (AT)(T−1B) = DE, which gives a different decomposition of C. The model (6.75) can now be written as
+s×1 s×1 s×t t×r r×1 s×1 Y=μ+ABX+E. (6.77)
+Given a sample, (Xτ1,Y1τ)τ,...,(Xτn,Ynτ)τ of observations on (Xτ,Yτ)τ, our goal is to estimate the parameters μ, A, and B (and, hence, C) in some optimal manner.
+Such a setup can be motivated within a time-series context (Brillinger, 1969). Suppose we wish to send a message based upon the r components of a vector X so that the message received, Y, will be composed of s components. Suppose, further, that such a message can only be transmitted using t channels (t ≤ s). We would, therefore, first need to encode X into a t-vector ξ = BX, where B is a (t × r)-matrix, and then on receipt of the coded message to decode it using an (s × t)-matrix A to form the s-vector
+6.3 The Random-X Case 177
+178 6. Multivariate Regression
+Aξ, which, it would be hoped, would be as “close” as possible to the desired Y.
+One of the primary aspects of reduced-rank regression is to assess the unknown value of the metaparameter t, which we call the effective dimen- sionality of the multivariate regression (Izenman, 1980).
+Minimizing a Weighted Sum-of-Squares Criterion
+We, therefore, wish to find an s-vector μ, an (s × t)-matrix A, and a (t × r)-matrix B to minimize a weighted sum-of-squares criterion,
+W (t) = E{(Y − μ − ABX)τ Γ(Y − μ − ABX)}, (6.78)
+where Γ is a positive-definite symmetric (s × s)-matrix of weights and the expectation is taken over the joint distribution of (Xτ , Yτ )τ . In practice, we try out different forms of Γ.
+We minimize W(t) in two steps. As before, let Xc and Yc denote the centered versions of X and Y, respectively. The first step makes no rank condition on C. The minimizing criterion becomes:
+W(t) ≥ E{(Yc −CXc)τΓ(Yc −CXc)}
+= E{YcτΓYc −YcτΓCXc −XτcCτΓYc +XτcCτΓCXc} = tr{Σ∗YY −C∗Σ∗XY −Σ∗YXC∗τ +C∗Σ∗XXC∗τ}
+=
+the matrix and
+j=1
+Σ∗ Σ∗−1Σ∗ = Γ1/2Σ Σ−1 Σ Γ1/2 YX XX XY YX XX XY
+(6.81) (6.82)
+(6.83)
+tr{(Σ∗ − Σ∗ Σ∗−1Σ∗ YY YX XX XY
+)
++ (C∗Σ∗1/2 − Σ∗ Σ∗−1/2)(C∗Σ∗1/2 − Σ∗ Σ∗−1/2)τ },
+XX YX XX XX YX XX
+(6.79)
+where Σ∗XX
+C∗ = Γ1/2C. Next, we assume that C has rank t. From the Eckart–Young Theorem (see Section 3.2.10), the last expression is minimized by setting
+= ΣXX , Σ∗Y Y = Γ1/2ΣY Y Γ1/2, Σ∗XY = ΣXY Γ1/2, and
+􏰏t XX j
+C∗Σ∗1/2 =
+where vj is the eigenvector associated with the jth largest eigenvalue λj of
+wj = λ−1/2Σ∗−1/2Σ∗XY vj = λ−1/2Σ−1/2ΣXY Γ1/2vj. jXX jXX
+Thus, the minimizing C with reduced-rank t is given by ⎛⎞
+􏰏t C(t) =Γ−1/2⎝
+j=1
+vjvjτ⎠Γ1/2ΣYXΣ−1 . XX
+λ1/2vjwjτ, (6.80)
+6.3 The Random-X Case 179 The matrix C(t) in (6.83) is called the reduced-rank regression coefficient
+matrix with rank t and weight matrix Γ.
+It follows that W(t) in (6.78) is minimized by taking μ, A, and B to be
+the following functions of t,
+μ(t) = μY −A(t)B(t)μX,
+A(t) = Γ−1/2 Vt ,
+B(t) = VτΓ1/2Σ Σ−1 ,
+t YXXX
+(6.84) (6.85) (6.86)
+respectively, where Vt = (v1, . . . , vt) is an (s × t)-matrix, where the jth column, vj, is the eigenvector associated with the jth largest eigenvalue λj of the (s × s) symmetric matrix
+Γ1/2ΣYXΣ−1 ΣXYΓ1/2. (6.87) XX
+matrix
+are simultaneously minimized by the above μ(t), A(t), and B(t). Hence, any function of those eigenvalues, which is increasing in each argument (e.g., trace or determinant), is also minimized by that choice.
+The minimum value of the criterion W (t) is given by 􏰦􏰧
+A stronger result (Rao, 1979) uses the Poincar ́e Separation Theorem (see Section 3.2.10) to show that if Γ = Σ−1 , then all the eigenvalues of the
+YY
+Γ1/2 (Y − μ − ABX)(Y − μ − ABX)τ Γ1/2 (6.88)
+E tr (Yc − C(t)Xc)(Yc − C(t)Xc)τ Γ
+Wmin(t) =
+= tr⎩ΣYY Γ−Γ−1/2 ⎝
+⎧⎛⎞⎫ ⎨ 􏰏t ⎬
+λjvjvjτ⎠Γ−1/2Γ⎭ ⎧⎫
+j=1
+⎨ 􏰏s⎬
+= tr (ΣYY −ΣYXΣ−1 ΣXY)Γ+ λjvjvjτ ⎩XX ⎭
+j=t+1 􏰨 −1 􏰩􏰏s
+= tr (ΣYY −ΣYXΣXXΣXY)Γ +
+􏰏t
+= tr{ΣYYΓ}− λj .
+λj
+(6.89)
+j=1
+When t = s, we have that 􏰊sj=1 vjvjτ = Is, whence C(t) in (6.83) reduces
+to the full-rank regression coefficient matrix Θ = C(s). Furthermore, for
+any t and positive-definite matrix Γ, the matrices C(t) and Θ are related
+by the expression C(t) = P(t)Θ, where Γ⎛⎞
+􏰏t j=1
+P(t) =Γ−1/2⎝ Γ
+vjvjτ⎠Γ1/2
+(6.90)
+j=t+1
+180 6. Multivariate Regression
+is an idempotent, but not symmetric (unless Γ = Is), (s × s)-matrix. Special Cases of RRR
+We have seen how the RRR model can be used to generalize the classical multivariate regression model by relaxing the implicit constraint on the rank of C. More importantly, by carefully choosing the input vector X, the output vector Y, and the matrix Γ of weights, RRR can be used to play an important role as a unifying treatment of several classical multivariate procedures that were developed separately from each other.
+The primary uses of RRR in the exploratory analysis of multivariate data include the following special cases:
+• If we set X ≡ Y (and r = s) by making the output variables identical to the input variables, and set Γ = Is, then we have Harold Hotelling’s principal component analysis (see Section 7.2) and exploratory factor analysis (see Section 15.4).
+• If we set Γ = Σ−1 , then we have Hotelling’s canonical variate and YY
+correlation analysis (see Section 7.3).
+• Using the canonical variate analysis setup for RRR, if we set Y to be a vector of binary variables whose component values (0 or 1) indicate the group or class to which an observation belongs, then we have R.A. Fisher’s linear discriminant analysis (see Section 8.5).
+• A nonlinear generalization of RRR provides a flexible model for ar- tificial neural networks (see Section 10.7).
+• Using the canonical variate analysis setup for RRR, if we set X and Y each to be a vector of binary variables whose component values (0 or 1) indicate the row and column of a two-way contingency table to which an observation belongs, then we have correspondence analysis (see Section 17.2).
+These special cases of multivariate reduced-rank regression show that the RRR model can be used as a general model for many different types of multivariate statistical analysis. Extensions of this model in other directions (e.g., to multiresponse generalized linear models, wavelets, functional data) are currently undergoing development.
+Sample Estimates
+The mean vectors and covariance matrix of X and Y are typically un- known and have to be estimated before we can draw any useful inferences on the regression problem. Accordingly, we assume that a random sam- ple of n independent observations, (Xτj , Yjτ )τ , j = 1, 2, . . . , n, with values D = { ( x τj , y jτ ) τ , j = 1 , 2 , . . . , n } , i s o b t a i n e d o n t h e ( r + s ) - v e c t o r ( X τ , Y τ ) τ .
+6.3 The Random-X Case First, using D, we estimate μX and μY by
+181
+(6.91)
+(6.92)
+and let
+Then, we estimate the components of the covariance matrix (6.67) by
+μ􏰡X =x ̄=n−1 respectively. We set
+r×1
+xcj= xj −x ̄,
+􏰏n j=1
+xj, μ􏰡Y =y ̄=n−1
+􏰏n j=1
+yj,
+s×1
+ycj= yj −y ̄,
+j = 1,2,...,n,
+r×n
+Xc = (xc1,···,xcn), Yc = (yc1,···,ycn).
+Σ􏰡XX =n−1XcXcτ
+Σ􏰡 Y X = n − 1 Y c X cτ = Σ􏰡 τX Y
+Σ􏰡YY =n−1YcYcτ.
+(6.93)
+(6.94)
+( 6 . 9 5 ) (6.96)
+All estimates of the unknowns in the multivariate regression models are
+based upon the appropriate elements of (6.94), (6.95), and (6.96). Thus, A(t) in (6.85) and B(t) in (6.86) are estimated by
+A􏰡 ( t ) = Γ − 1 / 2 V􏰡 t ,
+B􏰡(t) = V􏰡τΓ1/2Σ􏰡 Σ􏰡−1 ,
+( 6 . 9 7 ) (6.98)
+s×n
+t YXXX V􏰡t =(v􏰡1,...,v􏰡t)
+respectively, where
+is an (s × t)-matrix, the jth column, v􏰡j , of which is the eigenvector asso-
+(6.99) ciated with the jth largest eigenvalue λ􏰡j of the (s × s) symmetric matrix
+Γ1/2Σ􏰡Y XΣ􏰡−1 Σ􏰡XY Γ1/2, (6.100) XX
+j = 1, 2, . . . , s. The reduced-rank regression coefficient matrix C(t) in (6.83) is estimated by
+⎛⎞
+􏰏t
+C􏰡(t) = Γ−1/2 ⎝
+and the full-rank regression coefficient matrix Θ is estimated by
+Θ􏰡 =C􏰡(s) =Σ􏰡YXΣ􏰡−1 . XX
+j=1
+v􏰡jv􏰡jτ⎠Γ1/2Σ􏰡YXΣ􏰡−1 , XX
+(6.101)
+(6.102)
+The sample estimators (6.97), (6.98), (6.100), (6.101), and (6.102) are iden- tical to the estimators that appear in the reduced-rank regression solution
+182 6. Multivariate Regression
+and full-rank regression solution when X is fixed (Exercise 6.4). It fol- lows that the matrix of fitted values and the matrix of residuals for the random-X case are identical to those for the fixed-X case. Although the two formulations of the regression model are different, they yield identical sample estimates.
+In many applications, it is not unusual to find that the matrix Σ􏰡XX and/or the matrix Σ􏰡YY are singular, or at least difficult to invert. This happens, for example, when r,s > n. We could replace their inverses by generalized inverses, but, based upon practical experience with the methods described in Section 6.3.4, we suggest the following alternative solution.
+We borrow an idea from ridge regression, where we replace Σ􏰡XX and Σ􏰡 Y Y in the RRR computations by a slight perturbation of their diagonal entries,
+Σ􏰡(k) = n−1{XcXcτ + kIr}, Σ􏰡(k) = n−1{YcYcτ + kIs}, (6.103) XX YY
+respectively, where k > 0. The estimates (6.103) of ΣXX and ΣY Y are now invertible. The matrix (6.100) is then replaced by
+Γ1/2Σ􏰡 Y X Σ􏰡 (k)−1Σ􏰡 XY Γ1/2, (6.104) XX
+where Σ􏰡(k)−1 is the inverse of Σ􏰡(k) , and its eigenvalues and eigenvectors XX XX
+are denoted by
+The estimated reduced-rank regression coefficient matrix C􏰡(t) is replaced
+by
+(λ􏰡(k),v􏰡(k)), j = 1,2,...,t. (6.105) jj
+⎛⎞
+j=1
+Θ􏰡(k) =C􏰡(s)(k)=Σ􏰡YXΣ􏰡(k)−1. XX
+How to choose k will be discussed in Section 6.3.4. Asymptotic Distribution of Estimates
+C􏰡 ( t ) ( k ) = Γ − 1 / 2 ⎝
+( 6 . 1 0 6 )
+(6.107)
+􏰏t
+jj XX
+v􏰡 ( k ) v􏰡 ( k ) τ ⎠ Γ 1 / 2 Σ􏰡 Y X Σ􏰡 ( k ) − 1 , and the full-rank regression coefficient matrix Θ􏰡 is replaced by
+Because of the form of the LS estimates of matrices involved in the RRR solution, exact distribution results are not available. Fortunately, asymp- totic results are available in some generality.
+The asymptotic distribution of C􏰡(t) is Gaussian with mean zero; that is, √ n v e c ( C􏰡 ( t ) − C ) →D N s r ( 0 , Ψ ( t ) ) , a s n → ∞ , ( 6 . 1 0 8 )
+￼
+where convergence is in distribution. This result has been proved by sev- eral authors for the fixed-X case with Gaussian assumptions on the error variate. The most general result (Anderson, 1999), which applies to both fixed-X and random-X cases without any assumption of Gaussian errors, expresses the asymptotic covariance matrix, Ψ(t), in the form
+where
+⎛ 0.0763 ⎜ −0.0150
+Σ􏰡XX=⎜ −0.0005 ⎜⎝ −0.0010
+0.0682 0.0211
+−0.0150 −0.0005 0.3671 −0.0145 −0.0145 0.0659 0.0015 −0.0017 0.0330 −0.0595 0.0091 −0.0198
+−0.0010 0.0015 −0.0017 0.0011 0.0002 0.0006
+0.0682
+0.0330 −0.0595 0.0002 0.1552 0.0380
+Ψ(t) = (ΣEE ⊗ Σ−1 ) − (M(t) ⊗ N(t)), XX
+(6.109)
+M(t) =
+N(t) = Σ−1
+(6.110) (6.111)
+ΣEE − A(t)(A(t)τ Σ−1A(t))−1A(t)τ EE
+− B(t)τ (B(t) ΣX X B(t)τ )−1 B(t) .
+Thus, Ψ(t) consists of the full-rank covariance matrix, ΣEE ⊗ Σ−1 , with
+XX
+XX
+an adjustment by the matrix M(t) ⊗ N(t) for reduced-rank t. Anderson
+also notes that Ψ(t) is invariant wrt any decomposition C(t) = A(t)B(t) = (A(t)T)(T−1B(t)), where T is an arbitrary nonsingular matrix. Such gen- eral results allow asymptotic confidence regions to be constructed in situ- ations when the errors are non-Gaussian.
+6.3.3 Example: Chemical Composition of Tobacco
+This is a small worked example designed to show the computations of RRR. The data2 are taken from a study on the chemical composition of tobacco leaf samples (Anderson and Bancroft, 1952, p. 205). There are n = 25 observations on r = 6 input variables, percent nitrogen (X1), percent chlorine (X2), percent potassium (X3), percent phosphorus (X4), percent calcium (X5), and percent magnesium (X6), and s = 3 output variables, rate of cigarette burn in inches per 1,000 seconds (Y1), percent sugar in the
+leaf (Y2), and percent nicotine in the leaf as follows:
+(Y3). The covariance
+matrices are 0.0211 ⎞
+0.0091 ⎟ −0.0198 ⎟ 0.0006 ⎟⎠
+0.0380 0.0160
+⎛ 0.0279 −0.1098 0.0189 ⎞ Σ􏰡YY =⎝ −0.1098 4.2277 −0.7565 ⎠
+0.0189 −0.7565 0.2747
+6.3 The Random-X Case 183
+￼2These data are available in the file tobacco.txt, which can be downloaded from the book’s website.
+184 6. Multivariate Regression
+⎛⎞
+C􏰡 (1)
+C􏰡 (2)
+⎛ 0.134 −0.042 −0.046 −0.427 −0.014 0.120 ⎞ = ⎝ −4.195 1.318 1.436 13.318 0.439 −3.751 ⎠ ,
+1.042 −0.327 −0.357 −3.308 −0.109 0.932 ⎛⎞
+0.328 −0.089 −0.218 −1.582 −0.158 −0.459
+= ⎝ −4.276 1.338 1.509 13.806 0.500 −3.507 ⎠ ,
+0.688 −0.242 −0.043 −1.195 0.154 1.989 ⎛⎞
+0.0104 ⎜ −0.0631 Σ􏰡 =⎜ 0.0209 XY ⎜ −0.0018 ⎝ −0.0080 −0.0066
+−0.4004 0.5355 0.1002 0.0164 −0.3904 −0.1364
+0.1112
+−0.0859 ⎟ −0.0396 ⎟=Σ􏰡τ . −0.0008 ⎟YX
+0.1417 ⎠ 0.0486
+We run these data through a reduced-rank regression using the weight matrix Γ = Is. First, we compute (6.100):
+⎛ 0.019 −0.101 0.013 ⎞ Σ􏰡Y XΣ􏰡−1 Σ􏰡XY = ⎝ −0.101 3.090 −0.760 ⎠,
+0.013 −0.760 0.221
+which has eigenvalues λ􏰡1 = 3.2821, λ􏰡2 = 0.0378, and λ􏰡3 = 0.0102, and
+XX
+matrix of eigenvectors
+V􏰡 = (v􏰡1, v􏰡2, v􏰡3) = ⎝ −0.970 0.198 0.140 ⎠ .
+⎛⎞
+0.031 −0.470 0.882 0.241 0.860 0.450
+For the rank-1 solution, V􏰡 1 is the first column of V􏰡 ; for the rank-2 solution, V􏰡 2 is the first two columns of V􏰡 ; and the full-rank solution is V􏰡 3 = V􏰡 .
+The matrices A􏰡 = A􏰡(3) = V􏰡 and B􏰡 = B􏰡(3) = V􏰡Σ􏰡Y XΣ􏰡−1 are given by:
+⎛ 0.031 −0.470 0.882 ⎞ A􏰡 = ⎝ −0.970 0.198 0.140 ⎠
+0.241 0.860 0.450 ⎛⎞
+4.324 −1.359 −1.481 −13.729 −0.453 3.867
+B􏰡 = ⎝ −0.411 0.099 0.365 2.457 0.306 1.230 ⎠ ,
+−0.302 −0.081 0.578 1.048 0.375 0.034
+respectively. The matrix A􏰡 (1) is the first column of A􏰡 , and A􏰡 (2) is the first two columns of A􏰡 . Similarly, the matrix B􏰡 (1) is the first row of B􏰡 , and B􏰡(2) is the first two rows of B􏰡. Estimates of the RRR coefficient matrices, C􏰡(t) = A􏰡(t)B􏰡(t), t = 1,2,3, are given by
+0.062 −0.160 0.292 −0.658 0.173 −0.428
+C􏰡 (3) = Θ􏰡 = ⎝ −4.319 1.326 1.590 13.953 0.553 −3.502 ⎠ .
+0.552 −0.279 0.218 −0.723 0.323 2.005
+XX
+and the vectors μ􏰡(t), t = 1, 2, 3, by ⎛⎞⎛⎞⎛⎞
+1.750 3.474 1.411 μ􏰡(1) = ⎝ 14.688 ⎠, μ􏰡(2) = ⎝ 13.961 ⎠, μ􏰡(3) = ⎝ 13.633 ⎠.
+2.640 −0.512 −1.565 6.3.4 Assessing the Effective Dimensionality
+The most difficult part of the reduced-rank regression procedure is to assess the value of the metaparameter, t, of the multivariate regression. In order to determine t for a given multivariate sample, we recognize that such data will introduce noise into the relationship and, hence, will tend to obscure the actual structure of the matrix C, so that rank determination for any particular problem will be made more dificult.
+We, therefore, distinguish between the “true” or “mathematical” rank of C, which will always be full (because it will be based upon a sample estimate of C) and the “practical” or “statistical” rank of C — the one of real interest — which will typically be unknown. We refer to t as the “effective dimensionality” of the multivariate regression.
+The problem of determining the value of t is a selection problem. From the integers 1 through s (assuming without loss of generality that s ≤ r), we are to choose the smallest integer such that the reduced-rank regression of Y on X with that integer as rank will be close (in some sense) to the corresponding full-rank regression.
+From (6.89), Wmin(t) denotes the minimum value of (6.78) for a fixed value of t. The reduction in Wmin(t) obtained by increasing the rank from t=t0 tot=t1,wheret0 <t1,isgivenby
+t1 􏰏
+j=t0+1
+Note that (6.112) depends upon Γ only through the eigenvalues, {λj}, of the matrix (6.87). As a result, the rank of C can be assessed through some monotone function of the sequence of ordered sample eigenvalues {λˆj,j=1,2,...,s},inwhichλˆj iscomparedwithsuitablereferencevalues for each j, or by using the sum of some monotone function of the smallest s − t0 sample eigenvalues. For example, Bartlett’s likelihood-ratio statistic for testing whether the last s − t0 eigenvalues are zero is proportional to 􏰊sj=t0 +1 log(1 + λˆj ).
+An obvious disadvantage of relying solely on such formal testing pro- cedures is that any routine application of them might fail to take into account the possible need for a preliminary screening of the data. Robust- ness of sample estimates of the eigenvalues and hence of the various tests
+Wmin(t0) − Wmin(t1) =
+λj . (6.112)
+6.3 The Random-X Case 185
+186 6. Multivariate Regression
+TABLE 6.3. Algorithm for using the rank trace to assess the effective dimensionality of a multivariate regression.
+1. DefineC􏰡(0) =0andΣ􏰡(0) =Σ􏰡YY. EE
+2. Carry out a sequence of s reduced-rank regressions for specific values of t. For t = 1, 2, . . . , s,
+• compute C􏰡(t) and Σ􏰡(t), and set C􏰡(s) = Θ􏰡 and Σ􏰡(s) = Σ􏰡EE.
+￼• compute
+ΔC(t) =
+EE
+∥ Θ􏰡 − C􏰡 ( t ) ∥ ∥ Θ􏰡 ∥
+EE
+∥ Σ􏰡 E E − Σ􏰡 ( t ) ∥ EE ,
+∥ Σ􏰡 E E − Σ􏰡 Y Y ∥ 􏰂1/2
+􏰡
+􏰡
+,
+ΔΣ(t) = E E
+￼￼where ∥ A ∥= (tr(AAτ ))1/2 = clidean norm.
+3. Make a scatterplot of the s points (ΔC􏰡(t),ΔΣ􏰡(t)),
+EE
+j a2ij
+t = 0,1,2,...,s,
+is the classical Eu-
+and join up successive points on the plot. This is called the rank trace for the multivariate reduced-rank regression of Y on X.
+4. Assess the rank of C as the smallest rank for which both coordinates from step (3) are approximately zero.
+when outliers or distributional peculiarities are present in the data can be a serious statistical obstacle to overcome.
+Rank Trace
+Suppose t∗ is the true rank of C. The basic idea behind the rank trace (Izenman, 1980) is that for 1 ≤ t < t∗, the entries in both the esti- mated regression coefficient matrix and the residual covariance matrix will “change” quite significantly each time we increase the rank in our sequence of reduced-rank regressions; as soon as the true rank is reached, these ma- trices will then cease to change significantly and will stabilize.
+Let 􏰡t be an estimate of t. We expect the estimated rank-􏰡t regression coefficient matrix, C􏰡(􏰡t), to be very close to the estimated full-rank regres- sion coefficient matrix Θ􏰡 when 􏰡t = t∗. Similarly, we can expect the rank-􏰡t
+residual covariance matrix, Σ􏰡(􏰡t), to be very close to the full-rank residual EE
+􏰁􏰊 􏰊
+i
+￼
+6.3 The Random-X Case 187 covariance matrix, Σ􏰡EE, when 􏰡t = t∗. The steps in the computation of the
+rank trace and the estimation of t are detailed in Table 6.3.
+Thus, the first point (corresponding to t = 0) is always plotted at (1,1)
+and the last point (corresponding to t = s) is always plotted at (0,0).
+The horizontal coordinate, ΔC􏰡(t), gives a quantitative representation of
+the difference between a reduced-rank regression coefficient matrix and
+its full-rank analogue, whereas the vertical coordinate, ΔΣ􏰡(t), shows the EE
+proportionate reduction in the residual variance matrix in using a simple full-rank model rather than the computationally more elaborate reduced- rank model. The reason for including a special point for t = 0 is that without such a point, it would be impossible to assess the statistical rank of C at t = 1. In this formulation, t = 0 corresponds to the completely random model Y = μ + E.
+Assessing the effective dimensionality of the multivariate regression by using step (4) in Table 6.3 involves a certain amount of subjective judgment, but from experience with many of these types of plots, the choice should not be too difficult. Because of the nature of C􏰡(t), the sequence of values for the horizontal coordinate is not guaranteed to decrease monotonically from 1 to 0. It does appear, however, that in many of the applications of this method, and especially when we take Γ = Is as the weight matrix, the plotted points appear within the unit square, but below the (1,1)–(0,0) diagonal line, indicating that the residual covariance matrices typically stabilize faster than do the regression coefficient matrices.
+For example, the estimated RRR coefficient matrices, C􏰡(1), C􏰡(2), and
+C􏰡(3), for the tobacco data (see Section 6.3.3) do not appear to have stabi-
+lized at any specific rank t ≤ 3. In Figure 6.3, we display the rank trace for
+the tobacco data with weight matrix the identity. Note that dC is short-
+hand for ΔC􏰡 (t) and dE is shorthand for ΔΣ􏰡 (t) . The rank-trace plot shows EE
+that a RRR solution with rank 1 is best, with no discernible difference
+between that solution and the full-rank solution. In this simple example,
+this conclusion agrees with the dominant magnitude of the largest sample
+eigenvalue,λ􏰡1,ofΣ􏰡YXΣ􏰡−1 Σ􏰡XY,whichaccountsfor98.6%ofthetraceof XX
+that matrix.
+In certain applications, and when the weight matrix Γ is more com-
+plicated than Is (e.g., Γ = Σ􏰡−1 ), the rank trace often displays a dif- YY
+ferent shape; for example, we may see points plotted outside the unit
+square or a non-monotonic pattern within the unit square. In such sit-
+uations, we fix a positive constant k and replace the sample covariance
+matrices, Σ􏰡XX and Σ􏰡Y Y by Σ􏰡(k) = n−1{XcXcτ + kIr} and Σ􏰡(k) = XX YY
+n−1{YcYcτ + kIs}, respectively, as in (6.103). Then, we compute C􏰡 (t)(k) as in (6.106) and Σ􏰡(t)(k) from the residuals. Using these adjusted esti-
+mates, we plot ΔC􏰡 (t)(k) against ΔΣ􏰡 (t) (k). This gives us a rank trace for a EE
+specific value of k. Start with k = 0; if the rank trace has monotonic shape,
+EE
+188 6. Multivariate Regression
+Tobaccodata,Gamma=Identity,k=0
+0
+￼￼￼￼321
+￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼0.0 0.2 0.4 0.6 0.8 1.0
+dC
+FIGURE 6.3. Rank trace for the tobacco data.
+stop, and estimate the value of t as in Table 6.3. If the rank trace does not have monotonic shape, increase the value of k slightly and draw the resulting rank trace; if that rank trace is monotonic, stop, and estimate t.
+Cross-Validation
+An alternative method for assessing the value of t is the use of cross- validation. For each rank t, compute a sequence of estimates of prediction error using any of CV/5, CV/10, or CV/n. Then, identify the smallest rank such that, for larger ranks, the prediction error has stabilized and does not decrease significantly; this is similar to saying that at 􏰡t, there is an elbow in the plot of prediction error vs. rank.
+6.3.5 Example: Mixtures of Polyaromatic Hydrocarbons
+This example refers to the data on the polyaromatic hydrocarbons (PAHs) and digitized spectra that were described in Section 2.2.2. The 50 spectra are displayed in Figure 2.2 and the scatterplot matrix of the 10 PAHs is displayed in Figure 2.3.
+We use these data to carry out a reduced-rank regression of the PAH mixture concentrations (the Y variables) on the values of the digitized spectra (the X variables), where we treat the X variables as random. For this example, we take Γ = Is. Because of the high correlations between neighboring spectrum values, collinearities in the X variables may make the(27×27)-matrixΣ􏰡XX difficulttoinvert.So,wereplaceΣ􏰡XX andΣ􏰡YY
+dE
+0.0 0.2 0.4 0.6 0.8 1.0
+in the RRR computations by Σ􏰡(k) and Σ􏰡(k) respectively, as in (6.103). XX YY
+These covariance matrix estimates and the RRR estimates now depend upon the constant k > 0.
+The rank trace for Γ = Is and k = 0 is plotted in Figure 6.4 (top-left
+panel). We see the rank trace is monotone within the unit square and so
+we estimate t as 􏰡t = 5. In the other panels, we show rank-trace plots for
+Γ = Σ􏰡 −1 , the weight matrix for canonical variate analysis (CVA). In the YY
+top-right panel, the rank-trace plot for k = 0 (i.e., no regularization) is
+not monotonic; so, we increase the value of k slightly away from k = 0.
+The bottom-left and bottom-right panels show the rank-trace plot for k =
+0.000001 and for k = 0.001, respectively. At k = 0.000001, the rank trace
+is monotone but not smooth, whereas at k = 0.001, the rank trace is a
+smooth, monotone sequence of points. The most appropriate estimate for
+t if we apply the weight matrix Γ = Σ􏰡 −1 is 􏰡t = 5, which agrees with our YY
+estimate for Γ = Is.
+Applying CV to the PAH data yields the CV prediction errors (PEs) as a function of the rank t, and these are given in Table 6.4 and Figure 6.5. As a method for estimating the true rank, t, of C, the CV PEs appear to level off at t = 5, which agrees with the rank assessments from the rank-trace plots.
+6.4 Software Packages
+A good source for SAS programs and discussion of SAS output for multi- variate regression and MANOVA is Khattree and Naik (1999). It should be noted that although there is an RRR method implemented in the SAS pro- cedure PROC PLS, it is not the same as and has no connection to the RRR method discussed in this book. The examples in this chapter were computed using the R program Multanl+RRR (written by Charles Miller), which can be downloaded from the book’s website. An S-Plus package rrr.s (written by Magne Aldrin) for carrying out RRR can be downloaded from the StatLib website at lib.stat/cmu.edu/S/.
+Bibliographical Notes
+In textbooks, multivariate regression is usually discussed within the con- text of the multivariate general linear model or multivariate analysis of vari- ance (MANOVA), where the emphasis is most often placed on the fixed-X case.
+The reduced-rank regression model has its origins in the work of Ander- son (1951), Rao (1965), and Brillinger (1969). The deliberately alliterative
+6.4 Software Packages 189
+￼￼
+190
+6. Multivariate Regression
+PAHdata,Gamma=Identity PAHdata,Gamma=CVA,k=0
+0
+1
+￼￼￼￼￼￼￼￼￼￼1098765
+2 3
+4
+￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼756 98
+0
+1
+2
+3 4
+￼￼￼￼￼￼10
+￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼0.0 0.2 0.4 0.6 0.8 1.0 0.0 0.2 0.4 0.6 0.8 1.0 dC dC
+PAHdata,Gamma=CVA,k=0.000001 PAHdata,Gamma=CVA,k=0.001
+￼￼￼￼￼￼￼765
+0
+1 32
+4
+￼￼￼￼1098
+￼￼￼￼￼￼￼0
+￼￼￼￼￼￼￼￼4
+1 2
+3
+￼￼￼1098
+765
+￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼0.0 0.2 0.4 0.6 0.8 1.0 0.0 0.2 0.4 0.6 0.8 1.0 dC dC
+FIGURE 6.4. Rank trace for reduced-rank regression on the PAH data.
+There are r = 27 wavelengths, s = 10 PAHs, and n = 50 mixtures. Top-
+left panel: Γ = Is. Other panels have Γ = Σ􏰡−1 and k = 0 (top-right); YY
+k = 0.000001 (bottom-left); k = 0.001 (bottom-right).
+dE dE
+0.0 0.2 0.4 0.6 0.8 1.0 0.0 0.2 0.4 0.6 0.8 1.0
+dE dE
+0.0 0.2 0.4 0.6 0.8 1.0 0.0 0.2 0.4 0.6 0.8 1.0
+TABLE 6.4. CV prediction errors for reduced-rank regression of the PAH data.
+6.4 Software Packages 191
+￼Rank CV/5
+1 0.254
+2 0.186
+3 0.143
+4 0.102
+5 0.077
+6 0.070
+7 0.070
+8 0.070
+9 0.068
+10 0.064
+CV/10 CV/n 0.242 0.248 0.171 0.166 0.124 0.117 0.086 0.082 0.060 0.054 0.054 0.047 0.054 0.047 0.053 0.047 0.052 0.046 0.047 0.040
+￼￼name “reduced-rank regression” was coined by Izenman (1972). Since then, the amount of research into the theory of reduced-rank regression models has steadily increased, leading to the monographs by van der Leeden (1990) and Reinsel and Velu (1998).
+Because many authors mistakenly omit the hyphen in the name “reduced- rank regression,” we give reasons why it should be included. The terms “reduced-rank” and “full-rank” are compound adjectives describing the type of regression and, therefore, must take a hyphen. Further, without hyphens the methodology is apt to be confused with the topic of “rank regression,” which deals with multivariate regression of rank data (see, e.g., Davis and McKean, 1993). Of course, we could also study reduced-rank regression of rank data.
+Exercises
+6.1 Using the result in the fixed-X case that the covariance matrix of the matrix of residuals E is cov(vec(E􏰡)) = ΣEE ⊗ (In − H), find expres- sions for the means, variances, and covariances of the elements of the rows and columns of the matrix E. Simplify your results when ΣEE = diag{σ12, · · · , σs2}.
+6.2 If ΣXX and ΣY Y are nonsingular and Γ = Σ−1 , show that the YY
+eigenvalues of R = Σ−1/2ΣY X Σ−1 ΣXY Σ−1/2 lie between 0 and 1. YY XX YY
+6.3 Let X′ = Ψ+ΛX and Y′ = Φ+ΔY, where Λ and Δ are nonsingular. Show that the minimizing criterion (6.79) with Γ = Σ−1 is invariant under
+these nonsingular transformations.
+6.4 Develop a theory of reduced-rank regression for the “fixed-X” case.
+￼YY
+192 6. Multivariate Regression
+￼￼￼￼￼0.25
+0.20
+0.15
+0.10
+0.05
+0.00
+0246810
+rank
+FIGURE 6.5. Prediction errors for PAH example (n = 50, r = 27, s = 10) plotted against rank of the regression coefficient matrix. The PEs were computed using cross-validation: CV/5 (red dots), CV/10 (blue dots), and CV/n (purple dots). The results show a leveling-off of the PE at rank t = 5.
+6.5 Use the results from Exercise 6.1 to develop a theory of residual diag- nostics from a multivariate reduced-rank regression (RRR) for the “fixed- X” case. In particular, derive the distribution theory for RRR residuals and the distribution of quadratic forms in RRR residuals. How could you use this theory to detect multivariate outliers?
+6.6 Consider the likelihood-ratio test statistic for the dimensionality of a multivariate regression. Let the null hypothesis be that the true rank is
+(t)
+at most t with the alternative that the regression is full-rank. Let Qe =
+􏰡e(t)􏰡e(t)τ and Qe = 􏰡e􏰡eτ denote the residual sum of squares matrices for a rank-t reduced-rank regression and a full-rank regression, respectively. Let
+(t) (t) ΛLR = det{Qe
+￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼}/det{Qe}. Show that −2 log Λ(t) = −n
+􏰏s
+eLR ej
+log (1 − λ􏰡 ),
+where λ􏰡j is the jth largest eigenvalue of R􏰡 = Σ􏰡−1/2Σ􏰡Y XΣ􏰡−1 Σ􏰡XY Σ􏰡−1/2.
+YY XX YY (Asymptotically, under the null hypothesis, −2 log Λ(t) ∼ χ2 .)
+e LR (s−t)(r−t)
+6.7 Show that the two procedures described in Section 6.2.1 lead to the
+same results in estimating tr(AΘ). The two procedures are (1) write μ + ΘX =Θ∗X∗,whereΘ∗ =(μ .Θ)andX∗ =(1 .Xτ)τ,andthen
+0n
+estimate Θ∗; (2) remove μ by centering X and Y, and then estimate Θ
+directly.
+j=t+1
+PredictionError
+6.8 Using the data from the Norwegian paper quality example (Section 6.2.2), show that Table 6.1 can also be derived by regressing each of the 13 Y s on all the 9 Xs.
+6.9 In the classical multivariate regression model (Section 6.2.1), show that Se = Yc (In − H)Ycτ , where H = Xcτ (Xc Xcτ )−1 Xc . Hence, or otherwise, show that Se = E(In − H)Eτ .
+6.10 Write a computer program to carry out a multivariate ridge regres- sion, and then apply it to the Norwegian paper quality data. Compare the results with those obtained from separate univariate ridge regressions.
+6.11 The data for this exercise is Table 60.1 in Andrews and Herzberg (1985, pp. 357–360), which can be downloaded from the StatLib website lib.stat.cmu.edu/datasets/Andrews/. The data consist of 8 measure- ments on each of 4 variates on 13 different types of root-stocks of apple trees. The 4 variates are: trunk girth in mm (Y1) and extension growth in cm (Y2) at 4 years after planting, and trunk girth in mm (Y3) and weight of tree above ground in lb (Y4) at 15 years after planting. So, there are s = 4 measurements on each of n = 8 × 13 = 104 trees. Rescaling each variable might be appropriate. The design matrix X is a (13×104)-matrix of 0s and 1s depending upon which tree is derived from which root-stock. Regress the (4 × 104)-matrix Y on X and estimate the (4 × 13) regression coefficient matrix Θ. Estimate the (4 × 4) error covariance matrix ΣEE. Estimate the standard errors for these regression coefficient estimates. Compute the (unconstrained) MANOVA table for these data.
+6.12 Extend the MANOVA analysis to a two-way layout of vector obser- vations Y = (Yij ), where i denotes the row and j denotes the column. The two-way model with one observation in each cell is defined by
+Yij=μ+μi·+μ·j+Eij, i=1,2,...,I,j=1,2,...,J, whereweassumethat􏰊μ =􏰊μ =0,andtheE arerandoms-
+ii· j·j ij
+vectors with mean 0. Write down the design matrix X and the matrix of
+regression coefficients Θ. Write down the partition of Yij − Y ̄ , where Y ̄ is the average of all I J observations, in terms of the ith row effect Y ̄ i· − Y ̄ , the jth column effect Y ̄ ·j −Y ̄ , and the residual effect Yij −Y ̄ i· −Y ̄ ·j +Y ̄ , where Y ̄ i· is the average over all columns for the ith row, and Y ̄ ·j is the average over all rows for the jth column. Derive the corresponding partition in terms of sums-of-squares and determine their respective degrees of freedom. Write down the corresponding two-way MANOVA table.
+6.13 Generalize Exercise 6.12 to the case of m observations Yijk in each cell (k = 1,2,...,m), where an interaction term μ satisfying 􏰊 μ =
+􏰊
+ij i ij
+j μij = 0 is added to the model. The error term now becomes Eijk. The
+ith row effect is Y ̄ i·· − Y ̄ , the jth column effect is Y ̄ ·j· − Y ̄ , the interaction
+6.4 Software Packages 193
+194 6. Multivariate Regression
+effect is Y ̄ij· −Y ̄i·· −Y ̄·j· +Y ̄, and the residual is Yijk −Y ̄ij·. Derive the two-way MANOVA table for this case.
+6.14 Write a program to carry out a constrained multivariate regression including the MANOVA Table 6.2.
+6.15 Run a RRR on the Norwegian paper quality data. Plot the rank trace using Γ = Is as the weight matrix. Estimate the effective dimensionality of the multivariate regression. Compare the estimate with one obtained using CV.
+6.16 Using the results (6.109), (6.110), and (6.111), show that the asymp-
+totic covariance of the regression coefficient matrix vec(C􏰡(t)) reduces to
+ΣEE ⊗ Σ−1 when t = s (i.e., full rank). XX

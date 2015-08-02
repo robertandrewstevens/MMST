@@ -1,0 +1,936 @@
+10
+Artificial Neural Networks
+10.1 Introduction
+The learning technique of artificial neural networks (ANNs, or just neural networks or NNs) is the focus of this chapter. The development of ANNs evolved in periodic “waves” of research activity. ANNs were influenced by the fortunes of the fields of artificial intelligence and expert systems, which sought to answer questions such as: What makes the human brain such a formidable machine in processing cognitive thought? What is the nature of this thing called “intelligence”? And, how do humans solve problems?
+These questions of “mind” and “intelligence” form the essence of cog- nitive science, a discipline that focuses on the study of interpretation and learning. “Interpretation” deals with the thought process resulting from exposure to the senses of some type of input (e.g., music, poem, speech, sci- entific manuscript, computer program, architectural blueprint), and “learn- ing” deals with questions of how to learn from knowledge accumulated by studying examples having certain characteristics.
+There are many different theories and models for how the mind and brain work. One such theory, called connectionism, analogues of neurons and their connections — together with the concepts of neuron firing, ac- tivation functions, and the ability to modify those connections — to form
+A.J. Izenman, Modern Multivariate Statistical Techniques, Springer Texts in Statistics, 315 DOI 10.1007/978-0-387-78189-1_10, © Springer Science+Business Media New York 2013
+￼
+316 10. Artificial Neural Networks
+algorithms for artificial neural networks. This formulation introduces a rela- tionship between the three notions of mind, brain, and computation, where information is processed by the brain through massively parallel computa- tions (i.e., huge numbers of instructions processed simultaneously), unlike standard serial computations, which carry out one instruction at a time in sequential fashion.
+Sophisticated types of ANNs have been used to model human intelli- gence, especially the ability to learn a language. These efforts include pre- diction of past tenses of regular and irregular English verbs (Rumelhart and McClelland, 1986b; Pinsker and Prince, 1988) and synthesis of the pronounciation of English text (Sejnowski and Rosenberg, 1987). A study involving ANNs of how the brain transforms a string of letter shapes into the meaning of a word (Hinton, Plaut, and Shallice, 1993) was instrumen- tal in understanding the capabilities of the human brain, shedding light on specific types of impairments of the neural circuitry (e.g., surface and deep dyslexia), and in training ANNs to simulate brain damage resulting from injury or disease.
+As an overly simplified model of the neuron activity in the brain, “artifi- cial” neural networks were originally designed to mimic brain activity. Now, ANNs are treated more abstractly, as a network of highly interconnected nonlinear computing elements. The largest group of users of ANNs try to re- solve problems involving machine learning, especially pattern classification and prediction. For example, problems of speech recognition, handwritten character recognition, face recognition, and robotics are important appli- cations of ANNs. The common features to all of these types of problems are high-dimensional data and large sample sizes.
+10.2 The Brain as a Neural Network
+To understand how an artificial neural system can be developed, we first provide a brief description of the structure of the brain.
+The largest part of the brain is the cerebral cortex, which consists of a vast network of interconnected cells called neurons. Neurons are elementary nerve cells that form the building blocks of the nervous system. In the human brain, for example, there are about 10 billion neurons of more than a hundred different types, as defined by their size and shape and by the kinds of neurochemicals they produce. A schematic diagram of a biological neuron is displayed in Figure 10.1.
+The cell body (or soma) of a typical neuron contains its nucleus and two types of processes (or projections): dendrites and axons. The neuron receives signals from other neurons via its many dendrites, which operate as input devices. Each neuron has a single axon, a long fiber that operates as an output device; the end of the axon branches into strands, and each
+￼
+10.2 The Brain as a Neural Network 317
+￼FIGURE 10.1. Schematic view of a biological neuron.
+strand terminates in a synapse. Each synapse may either connect to a synapse on a dendrite or cell body of another neuron or terminate into muscle tissue. Because a neuron maintains, on average, about a thousand synaptic connections with other neurons (whereas some may have 10–20 thousand such connections), the entire collection of neurons in the brain yields an incredibly rich network of neural connections.
+Neurons send signals to each other via an electrochemical process. All neurons are electrically charged due to ion concentrations inside and out- side the cell. Under appropriate conditions, an activated neuron fires an electrical pulse (called an action potential or spike) of fixed amplitude and duration. The action potential travels down the axon to its endings. Each ending is swollen to form a synaptic knob, in which neurotransmitters (glu- tamic acid, glu) are stored. Neurons do not join with each other, even though they may be connected; there is a tiny gap (called the synaptic cleft) between the axon of the sending (or presynaptic) neuron and a den- drite of the receiving (or postsynaptic) neuron.
+To send a signal to another neuron, the presynaptic neuron releases neu- rotransmitters across the gap to a cluster of receptor molecules on the dendrites of the postsynaptic neuron; these receptors act like electrical switches. When a neurotransmitter binds to one of these receptors (called an AMPA receptor), it opens up a channel into the postsynaptic neuron. Although that channel remains open for a split second, electrically charged sodium ions flood the channel, producing a local electrical disturbance (i.e., a depolarization), and start a chain reaction in which neighboring channels open up. This, in turn, sends an action potential shooting along the surface of the postsynaptic neuron toward the next neuron.
+There is at least one other type of postsynaptic channel, called an NMDA glutamic acid receptor. This receptor is unusual in that it will not open un- less it receives two simultaneous signals, one of which is either an electrical discarge from the postsynaptic neuron or a depolarization of its AMPA synapses, and the other is emitted by the axon from a presynaptic neuron.
+318 10. Artificial Neural Networks
+When both signals arrive together, calcium ions also enter the dendrite, strengthen the synapse, and provide a mechanism for both short-term and long-term changes in the synapse. A high level of calcium released into the NMDA receptor induces long-term potentiation (LTP), a form of long-term memory (lasting minutes to hours, in vitro, and hours to days and months in vivo, after which decay sets in). LTP enlarges synapses and makes them stronger, and, over time, can also change brain structure.
+Note that the postsynaptic neuron may or may not fire as a result of receiving the pulse. Then, the axon shuts down for a certain amount of time (a refractory period) before it can fire again. To prepare the synapse for the next action potential, the synaptic cleft is cleared by active transport by returning the neurotransmitter to the synaptic knob of the presynaptic neuron.
+Firing tends to occur randomly, but the actual rate of firing depends upon many factors. One of those factors is the status of the total input signal; this is derived from the relative strengths of the two types of synapses, namely, the inhibitory synapses, which prevent the neuron from firing, and the excitatory synapses, which push the neuron closer to firing. Depending upon whether or not the total input signal received at the synapses of a neuron exceeds some threshold limit, the neuron may fire, be in a resting state, or be in an electrically neutral state.
+The brain “learns” by changing the strengths of the connections between neurons or by adding or removing such connections. Learning itself is ac- complished sequentially from increasing amounts of experience.
+10.3 The McCulloch–Pitts Neuron
+The idea of an “artificial” neural network is usually traced back to the “computing machine” model of McCullogh and Pitts (1943), who con- structed a simplified abstraction of the process of neuron activity in the human brain.
+The McCulloch–Pitts neuron consists of multiple inputs (the dendrites)
+and a single output (the axon). The inputs are denoted by X1,X2,...,Xr,
+and each has a value of either 0 (“off”) or 1 (“on”). The signal at each input
+connection depends upon whether the synapse in question is excitatory or
+inhibitory. If any one of the synapses is inhibitory and transmits the value
+1, the neuron is prevented from firing (i.e., the output is 0). If no inhibitory
+￼synapse is present, the inputs are summed to produce the total excitation
+U =􏰊 Xj,andthenU iscomparedwithathresholdvalueθ:ifU ≥θ,the j
+output Y is 1 and the neuron fires (i.e., transmits a new signal); otherwise, Y is 0 and the neuron does not fire.
+X1 HH1( X2XHj U
+￼￼￼. . Xz Σ - - Y . 􏰳􏰳*0)
+10.3 The McCulloch–Pitts Neuron 319
+￼￼Xr 􏰳
+FIGURE 10.2. McCulloch–Pitts neuron with r binary inputs,
+X1,X2,...,Xr, one binary output, Y, and threshold θ.
+An equivalent formulation is to say that the value of Y is determined by the indicator function I[U−θ≥0]. Note that if θ > r, the number of inputs, the neuron will never fire. Also, if θ = 0 and there are no inhibitory synapses, the output will always have the constant value 1.
+Geometrically, the input space is an r-dimensional unit hypercube, and
+each of the 2r vertices of the hypercube is associated with a specific Y -value
+(either 0 or 1). For a given value of θ, the McCulloch–Pitts neuron divides
+the hypercube into two half-spaces according to the hyperplane
+those vertices with Y = 1 lie on one side of the hyperplane, whereas those with Y = 0 lie on the other side.
+The McCulloch–Pitts neuron is usually referred to as a threshold logic unit (TLU) and is displayed in Figure 10.2. It is designed to compute simple logical functions of r arguments, where Y = 1 is translated as the logical value “true” and Y = 0 as “false.” For example, the logical functions AND and OR for three inputs are displayed in Figure 10.3. For the logical function AND, the neuron will fire only if all three inputs have the value 1, whereas, for the logical function OR, the neuron will fire only if at least one of the three inputs have the value 1. The AND and OR functions form a basis set of logical functions. All other logical functions can be computed by building up large networks consisting of several layers of McCulloch–
+X1 HH1( X1 HH1( jHU HjU
+X2 - Σ - -Y X2 - Σ - -Y
+􏰊
+j Xj = θ;
+￼￼￼￼3
+￼￼￼￼￼￼*􏰳
+X3 􏰳􏰳0)
+AND
+􏰳*
+X3 􏰳􏰳0)
+OR
+FIGURE 10.3. McCulloch–Pitts neuron for the AND and OR logical functions with r = 3 binary inputs and thresholds θ = 3 and θ = 1, respec- tively.
+θ
+￼￼￼1
+￼￼
+320 10. Artificial Neural Networks
+Pitts neurons. At the time, it appeared that networks of TLUs could be used to create an intelligent machine.
+Although this model of a neuron was studied by many people, it is not really a good approximation of how a biological system learns. There are no adjustable parameters or weights in the network, which means that different problems can only be solved by repeatedly changing the input structure or the threshold value. Such manipulations are more complicated than adopting a flexible weighting system for the network.
+10.4 Hebbian Learning Theory
+At the time of the introduction of the McCulloch–Pitts neuron, little was known about how the “strength” of signals sent between neurons in the brain are changed by activity and, therefore, how learning takes place.
+The next advance occurred when Donald O. Hebb, in his 1949 book The Organization of Behavior, summarized everything then known about how the central nervous system affects behavior and vice versa. He started out by assuming that all the neurons one needs in life are present at birth, that initial neural connections are randomly distributed, and that as we get older our neural connections multiply and become stronger. He also believed that one’s perceptions, thoughts, emotions, memory, and sensations are strongly influenced by life experiences, and that such experiences leave behind a “memory trace” — via sets of interconnected neurons — which helps determine future behavior.
+Using results derived from published neurophysiological experiments in- volving animals and humans, and from his own life observations, Hebb gave a detailed presentation of biological neurons. In particular, he formulated two new theories as to how the brain works. Building upon the ideas of San- tiago Ramo ́n y Cajal, the 1906 Nobel Laureate, Hebb’s first theory focused on the nature of synaptic change and is referred to as the Hebb learning rule (Hebb, 1949, p. 62):
+When an axon of cell A is near enough to excite cell B and repeatedly or persistently takes part in firing it, some growth process or metabolic change takes place in one or both cells so that A’s efficiency, as one of the cells firing B, is increased.
+In other words, the strength of a synaptic connection between two neurons depends upon their associated firing history: the more often the two neurons fire together, the stronger their connection (and, by implication, the less often, the weaker their connection). The Hebb rule is time-dependent (there is an implicit ordering of events when neuron A helps to fire neuron B)
+￼
+and governs only what happens locally at the synapse. Any synapse that behaves according to the Hebb rule is known as a Hebb synapse.
+The Hebb rule of neural excitation was later expanded (Milner, 1957) by adding the following rule of neural inhibition: if neuron A repeatedly or persistently sends a signal to neuron B, but B does not fire, this reduces the chance that future signals from A will entice B to fire. This inhibitory rule is necessary because otherwise the system of synaptic connections throughout the cerebral cortex would grow without limit as soon as one such connection is activated. Hebb had previously (in his 1932 M.A. thesis) incorporated the inhibitory rule into his theory but did not include it in his book.
+His second theory is probably the more important idea. It was derived from a discovery by Lorente de No ́ in 1944 that the brain contained closed circuits of neurons. Hebb then speculated that memory resides in the cere- bral cortex in the form of overlapping clusters of thousands of highly in- terconnected neurons, which he called cell assemblies. The clusters overlap because a neuron, which has branch-like links to other neurons, can be a member of many different cell assemblies.
+In Hebb’s theory, a cell assembly is organized with reference to a par- ticular sensory input and briefly acts as a closed neural circuit; sensations, thoughts, perceptions, etc., are considered different from each other if dif- ferent cell assemblies are involved in the activity; and the cell assembly also retains a memory of its defining activity even after the triggering event has ceased (e.g., the memory of stubbing one’s toe can remain well after the pain has subsided). Cell assemblies are thought to play an essential role in the learning process. Hebb also defined a phase sequence as a combi- nation of cell assemblies that are simultaneously excited when repeatedly presented with the same sequence of stimuli.
+Hebb’s 1949 book was an international success; it was considered by some as ground-breaking and sensational and a starting point to build a theory of the brain. Yet it took several years before these contributions were fully recognized in the fledgling field of behavioral neuroscience. Subsequently, in the fields of psychology and neuroscience, it inspired a huge amount of research into theories of brain function and behavior. Some of Hebb’s work was speculative and has since been overturned by scientific experiment and discovery. But much of it is still relevant today.
+10.5 Single-Layer Perceptrons
+Hebb’s pioneering work on the brain led to a second wave of interest in ANNs. Frank Rosenblatt, a psychologist, had read Hebb (1949) but was not convinced that most neural connections were random and that cell assemblies could self-generate within a purely homogeneous mass of neurons. He believed that he could improve upon Hebb’s work and, toward
+10.5 Single-Layer Perceptrons 321
+￼
+322
+10. Artificial Neural Networks
+X0 = 1 X1 β1 X1 β1Aβ0
+HHA
+1( 1(
+H H UA X β Hj X β Hj
+2X2U2X2U .XXzΣ--Y .XXzΣ-Y
+￼￼￼￼￼￼θ
+￼￼￼￼. *􏰳
+􏰳􏰳 0)
+Xr βr
+. 􏰳*
+􏰳􏰳 0)
+Xr βr
+￼￼FIGURE 10.4. Rosenblatt’s single-layer perceptron with r inputs, connec- tion weights {βj }, and binary output Y . The left panel shows the perceptron with threshold θ, and the right panel shows the equivalent perceptron with bias element β0 = −θ and X0 = 1.
+that end, he constructed a “minimally constrained” system that he called a “perceptron” (Rosenblatt, 1958, 1962).
+A perceptron is essentially a McCulloch–Pitts neuron, but now input Xi comes equipped with a real-valued connection weight βi , i = 1, 2, . . . , r. The inputs, X1, X2, . . . , Xr can each be binary or real-valued. Positive weights (βj > 0) reflect excitatory synapses, and negative weights (βj < 0) reflect inhibitory synapses. The magnitude of a weight shows the strength of the connection.
+The perceptron, which is more flexible than the McCulloch–Pitts neuron
+for mimicking neural connections, is displayed in Figure 10.4. A weighted
+sum of input values, U = 􏰊 βjXj, is computed, and the output is Y = 1 j
+only if U ≥ θ, where θ is the threshold value; otherwise, Y = 0. Note that we can convert a threshold θ to 0 by introducing a bias element β0 = −θ, so that U −θ = β0 +U, and then comparing U = 􏰊rj=0 βjXj to 0, where X0 =1.IfU≥0,thenY =1;otherwise,Y =0.
+We call a function Y ∈ {0, 1} perceptron-computable if, for a given value of θ, there exists a hyperplane that divides the input space into two half- spaces, R1 and R0, where R1 corresponds to points having Y = 1 and R0 to points having Y = 0. If the points in R1 can be separated without error from those in R0 by a hyperplane, we say that the two sets of points are linearly separable. This binary partition of input space (obtained by comparing U to the threshold value θ) enables a perceptron to predict class membership.
+10.5.1 Feedforward Single-Layer Networks
+One way of representing a network of neural interconnections is as a directed acyclic graph (DAG). A graph is a set of vertices or nodes (rep- resenting basic computing elements) and a set of edges (representing the connections between the nodes), where we assume that both sets are of
+finite size. In a directed graph (or digraph), the edges are assigned an orien- tation so that numerical information flows along each edge in a particular direction. In a feedforward network, information flows in one direction only, from input nodes to output nodes. An acyclic graph is one in which no loops or feedback are allowed.
+The simplest type of DAG organizes the network nodes into two separate groups: r input nodes, X1,...,Xr, and s output nodes, Y1,...,Ys. Input nodes are also referred to as source nodes, input units, or input variables. No computation is carried out at these nodes. The input nodes take on values introduced by some feature external to the network. The output nodes are variously known as sink nodes, neurons, output units, or output variables. These input and output nodes can be real-valued or discrete- valued (usually, binary). Real-valued output nodes are typically scaled so that their values lie in the unit interval [0,1]. Binary input and output nodes are used in the design of switching circuits; real input nodes with binary output nodes are used primarily in classification applications; and real input and output nodes are used mostly in optimization and control applications.
+Despite appearances, this particular type of network is commonly called a single-layer network because only the output nodes involve significant amounts of computation; the input nodes, which are said to constitute a “zeroth” layer of fixed functions, involve no computation, and, hence, do not count as a layer of learnable nodes.
+Every connection Xj → Yl between the input nodes and the output nodes carries a connection weight, βjl, which identifies the “strength” of that connection. These weights may be positive, negative, or zero; positive weights represent excitory signals, negative weights represent inhibitory signals, and zero weights represent connections that do not exist in the network.
+The architecture (or topology) of the network consists of the nodes, the directed edges (with the direction of signal flow indicated by an arrow along each edge), and the connection weights.
+10.5.2 Activation Functions
+In the following, X = (X1, · · · , Xr)τ represents a random r-vector of inputsandx=(x1,···,xr)τ isaspecificvalueofX.GivenX,eachoutput node computes an activation value using a linear combination of the inputs to it plus a constant; that is, for the lth output node or neuron, we compute the value of the lth linear activation function,
+􏰏r j=1
+Ul =β0l +
+βjlXj =β0l +Xτβl, (10.1)
+10.5 Single-Layer Perceptrons 323
+324
+10. Artificial Neural Networks
+X0 = 1 X0 = 1 X1 β1Aβ0 X1 β1Aβ0
+HA HA
+1( 1(
+H UA H AU XβjH  XβHj
+￼2X2 U 2X2 XX
+. . Xz Σ - f - - Y . . zX Σ f - Y . *􏰳  . 􏰳*
+￼￼￼￼􏰳􏰳 0) 􏰳􏰳 0) Xr βr Xr βr
+FIGURE 10.5. Rosenblatt’s single-layer perceptron with r inputs, bias element β0, connection weights {βj}, activation function f, and binary output Y . The left panel shows the perceptron with a separate computing unit for f, and the right panel shows the equivalent perceptron with a single computing unit divided into two functional parts: the addition function is written on the left and the activation function f applied to the result U of the addition is written on the right.
+where β0l is a constant (or bias) related to the threshold for the neuron to fire, and βl = (β1l, · · · , βrl)τ is an r-vector of connection weights, l = 1,2,...,s.
+In matrix notation, we can rewrite the collection of s linear activation functions (10.1) as
+U = β0 + BX, (10.2)
+where U = (U1,···,Us)τ, β0 = (β01,···,β0s)τ is an s-vector of biases, and B = (β1, · · · , βs)τ is an (s × r)-matrix of connection weights. The activa- tion values are then each filtered through a nonlinear threshold activation function f(Ul) to form the value of the lth output node, l = 1,2,...,s. In matrix notation,
+f(U) = f(β0 + BX), (10.3)
+wheref=(f,···,f)τ isans-vectorfunctioneachofwhoseelementsisthe function f, and f(U) = (f(U1),···,f(Us))τ. The simplest form of f is the identity function, f(u) = u. See Figure 10.5.
+A partial list of activation functions is given in Table 10.1. The most interesting of these functions are the sigmoidal (“S-shaped”) functions, such as the logistic and hyperbolic tangent; see Figure 8.2 for a graph of the logistic sigmoidal activation function. A sigmoidal function is a function σ(·) that has the following properties: σ(u) → 0 as u → −∞ and σ(u) → 1 as u → +∞. A sigmoidal function σ(·) is symmetric if σ(u) + σ(−u) = 1 and asymmetric if σ(u) + σ(−u) = 0. The logistic function is symmetric, whereas the tanh function is asymmetric. Note that if f (u) = (1 + e−u )−1 , then its derivative wrt u is df(u)/du = e−u(1 + e−u)−2 = f(u)(1 − f(u)). The hyperbolic tangent function, f (u) = tanh(u), is a linear transformation of the logistic function (see Exercise 10.1). There is empirical evidence that
+TABLE 10.1. Examples of activation functions.
+10.5 Single-Layer Perceptrons 325
+￼Activation Function Identity, linear Hard-limiter Heaviside, step, threshold Gaussian radial basis function Cumulative Gaussian (sigmoid) Logistic (sigmoid) Hyperbolic tangent (sigmoid)
+f(u)
+u
+sign(u)
+I[u≥0] (2π)−1/2e−u2/2
+􏰐2/π 􏰟 u e−z2/2dz 0
+(1 + e−u)−1
+(eu − e−u)/(eu + e−u)
+Range of Values
+R {−1, +1} {0, 1}
+R
+(0, 1)
+(0, 1) (−1, +1)
+￼￼￼ANN algorithms that use the tanh function converge faster than those that use the logistic function.
+10.5.3 Rosenblatt’s Single-Unit Perceptron
+In binary classification problems, each of n input vectors x1, . . . , xn is to be classified as a member of one of two classes, Π1 or Π2. For this type of application, a single-layer feedforward neural network consists of only a single output node or unit (i.e., s = 1).
+A single-unit perceptron (Rosenblatt, 1958, 1962) is a single-layer feedfor- ward network with a single output node that computes a linear combination of the input variables (e.g., β0 + xτ β) and delivers its sign,
+sign{β0 + xτ β}, (10.4)
+as output, where sign(u) = −1 if u < 0, and +1 if u ≥ 0. The activation function used here is the “hard-limiter” function. The output node is gener- ally known as a linear threshold unit. Rosenblatt’s perceptron is essentially the threshold logic unit of McCullogh and Pitts (1943) with weights.
+A generalized version of the single-unit perceptron can be written as f(β0 +xτβ) (10.5) where f(·) is an activation function, which is usually taken to be sigmoidal.
+326 10. Artificial Neural Networks
+10.5.4 The Perceptron Learning Rule
+For convenience in this subsection, we make the following notational changes: β ← (β0,βτ)τ and x ← (1,xτ)τ, where both x and β are now (r + 1)-vectors. Then, we can write β0 + xτ β as xτ β.
+In the binary classification case, the single output variable Y takes on values y = ±1 depending upon whether the neuron fires (y = +1 if x ∈ Π1) or does not fire (y = −1 if x ∈ Π2). Thus, the neuron will fire if xτ β ≥ 0 and will not fire if xτ β < 0.
+Suppose x1, . . . , xn are independent observations on X, and that they are drawn from the two classes Π1 and Π2. Suppose, further, that these observations are linearly separable. That is, there exists a vector β∗ of connection weights such that the observation vectors that belong to class Π1 fall on one side of the hyperplane xτ β∗ = 0, whereas the observation vectors from class Π2 fall on the other side of the hyperplane.
+As our update rule, we use a gradient-descent algorithm, which operates sequentially on each input vector. Such an algorithm is referred to as on- line learning, whereby the learning mechanism adapts quickly to correct classification errors as they occur. The input vectors are examined one at a time and classified to one of the two classes. The true class is then revealed, and the classification procedure is updated accordingly.
+The algorithm proceeds by relabeling the {xi}, one at a time, so that at the hth iteration we are dealing with xh, h = 1,2,.... Set x0 = 0. The algorithm computes a sequence {βh} of connection weights using as initial value β0 = 0. The update rule is the following:
+1. If, at the hth iteration of the algorithm, the current version, βh, correctly classifies xh, we do not change βh in the next iteration; thatis,setβh+1 =βh ifeitherxτhβh ≥0andxh ∈Π1,orxτhβh <0 and xh ∈ Π2.
+2. If, on the other hand, the current version, βh, misclassifies xh, then we update the connection weight vector as follows: if xτhβh ≥ 0 but xh ∈Π2,thensetβh+1 =βh−ηxh;ifxτhβh <0butxh ∈Π1,then set βh+1 = βh + ηxh, where η > 0 is the learning-rate parameter whose value is taken to be independent of the iteration number h.
+This algorithm is popularly known as the perceptron learning rule. Because the value of η is irrelevant (we can always rescale xh and βh), we set η = 1 without loss of generality.
+10.5.5 Perceptron Convergence Theorem
+From the update rule, it follows that βh+1 = 􏰊hi=1 xi. Assume that we have linear separability of the two classes. Suppose also that a solution
+vector β∗ exists. Define
+A=minxτiβ∗, B=max∥xi∥2. (10.6)
+xi ∈Π1 xi ∈Π1
+Transposing βh+1 and postmultiplying the result though by β∗ yields
+􏰏h i=1
+From the Cauchy–Schwarz inequality,
+(βτh+1β∗)2 ≤ ∥ βτh+1 ∥2∥ β∗ ∥2 .
+Substituting (10.7) into (10.8) yields
+with the number, h, of iterations.
+Next, consider again the update rule, βk+1 = βk + xk , at the kth itera-
+tion, where xk ∈ Π1, k = 1,2,...,h. Then,
+∥βk+1 ∥2 =∥βk ∥2 +∥xk ∥2 +2xτkβk. (10.10)
+Because xk has been incorrectly classified, xτkβk < 0. It follows that,
+βτh+1β∗ =
+xτi β∗ ≥ hA.
+(10.7)
+(10.8)
+(10.9) Thus, the squared-norm of the weight vector grows at least quadratically
+2 h2A2 ∥βh+1 ∥ ≥ ∥β∗ ∥2.
+10.5 Single-Layer Perceptrons 327
+￼whence,
+∥βk+1 ∥2 ≤∥βk ∥2 +∥xk ∥2, ∥βk+1 ∥2 −∥βk ∥2 ≤∥xk ∥2,
+(10.11) (10.12)
+Summing (10.12) over k = 1,2,...,h yields
+For large values of h, the inequalities (10.9) and (10.13) contradict each other. Thus, h cannot grow without bound. We need to find an hmax such that (10.9) and (10.13) both hold with equalities. In other words, hmax has to satisfy
+h2max A2
+∥β∗∥2 =hmaxB, (10.14)
+∥βh+1 ∥2 ≤ the number, h, of iterations.
+􏰏h k=1
+∥xk ∥2 ≤ hB.
+Hence, the squared-norm of the weight vector grows at most linearly with
+(10.13)
+￼
+328 10. Artificial Neural Networks
+whence,
+We have shown the following result. Set η = 1 and β0 = 0. Then:
+B ∥ β∗ ∥2
+hmax = A2 . (10.15)
+￼For a binary classification problem with linearly separable classes, if a solution vector β∗ exists, the algorithm will find that solu- tion in a finite number, hmax, of iterations.
+This is the perceptron convergence theorem. At the time, it was regarded as a very appealing result.
+There are two difficulties implicit in this result. First, the existence of a solution vector β∗ turns out to be crucial for the result to hold; this was made clear by Minsky and Papert (1969), who showed that there are many problems for which no perceptron solution exists.
+The second difficulty derives from the fact that, even though the al- gorithm converges, computing hmax is impossible because it depends upon the solution vector β∗, which is unknown. If the algorithm stops, we clearly have a solution. If the two classes are not linearly separable, then the al- gorithm will not terminate. In fact, after some large (unknown) number of iterations, the algorithm will start cycling with unknown period length. In general, if we do not know whether or not linear separability holds, we cannot reliably determine when to stop running the algorithm. If we stop the algorithm prematurely, the resulting perceptron weight vector may not generalize well for test data.
+One suggested approach to this problem is to adopt a specific stopping rule whereby the algorithm is stopped after a fixed number of iterations; another approach is to make the learning-rate parameter η depend upon the iteration number (i.e., ηh) so that as the iterations proceed, the adjustments decrease in size.
+10.5.6 Limitations of the Perceptron
+Despite high initial expectations, perceptrons were found to have very limited capabilities. It was shown (Minsky and Papert, 1969) that a per- ceptron can learn to distinguish two classes only if the classes are linearly separable. This is not always possible as can be seen from the XOR func- tion, which is not perceptron-computable because its input space is not linearly separable (see Exercise 10.6).
+As a result, during the 1970s, research in this area was abandoned by almost everyone in that community. An additional factor to explain the absence of work on neural networks is that hardware to support neural computation did not become available until the 1980s.
+10.6 Artificial Intelligence and Expert Systems 329
+10.6 Artificial Intelligence and Expert Systems
+The downfall of the perceptron led to the introduction of artificial intelli- gence (AI) and rule-based expert systems as the main areas of research into machine intelligence. AI was viewed, first, as the study of how a human brain (or any natural intelligence) functions, and, second, as the study of how to construct an artificial intelligence (i.e., a machine that could solve problems requiring “cognition” when performed by humans). In early AI systems, problems were solved in a sequential, step-by-step fashion, by manipulating a dictionary of symbolic representations of the available knowledge on a particular subject of interest. An AI system had to store information specific to a domain of interest, use that information to solve a broad range of problems in that domain, and acquire new information from experience by solving problems in that domain.
+A typical AI application was of the following type. Suppose we would like to predict the intuitive decisions made by an experienced loan officer of a bank based only on the answers given to questions on a loan application. One might first ask the loan officer to explain the value (e.g., on a 5-point scale) he or she places on the answers to each question. The points scored by an applicant on each question could be totalled and compared with some given threshold; the loan officer’s decision on the loan could then be predicted based upon whether or not the applicant’s total score surpassed the threshold.
+This approach to predicting the decisions of a loan officer ignores possi- ble nonlinearities in the decision-making process. For example, if the loan applicant scores high on a few specific questions, the loan officer may ignore the responses to all other questions in making a positive decision, whereas if a particular question scores low, this by itself may be sufficient to render the application unsuccessful, even though all other variables score high. Listing all the rules the loan officer can possibly use in the decision process constitutes a rule-based expert system.
+Expert systems are knowledge-based systems, where “knowledge” repre- sents a repository of data, well-known facts, specialized information, and heuristics, which experts in a field (e.g., medicine) would agree upon. Such expert systems are interactive computer programs that provide users (e.g., physicians) with computer-based consultative advice.
+The earliest example of a rule-based expert system was Dendral, a system for identifying chemical structures from mass spectrograms. This was followed in the mid-1970s by Mycin, which was designed to aid physi- cians in the diagnosis and treatment of meningitis and bacterial infections. Mycin was made up of a “knowledge base” and an “inference engine”; the knowledge base contained information specific to the area of medical diag- nosis, and the inference engine would recommend treatments to physicians
+￼
+330 10. Artificial Neural Networks
+who consulted the knowledge base. A generic version, known as Emycin (“empty” Mycin), was then built using only the inference engine and shell, not the knowledge base. (Although never regarded by mathematicians as an AI or expert system as such, the symbolic mathematics system Mac- syma also emerged from the early AI world.) In the 1980s, expert systems were popularly regarded as the future of AI.
+During this time, there were also ambitious attempts at AT&T Bell Lab- oratories to create an expert system to help users carry out statistical anal- yses of data. One such expert system was Rex (Pregibon and Gale, 1984), which was written in the Lisp language and provided rule-based guidance for simple linear regression problems. Rex (short for Regression EXpert) acted as an interface between the user and a statistical software package through a flexible interactive dialogue, which only requested help when it encountered problems with the data. Rex did not survive long for many reasons, including apathy due to constantly changing computational envi- ronments (Pregibon, 1991).
+Despite all this activity, expert systems never lived up to their hype; they proved to be expensive, were successful only in specialized situations, and were not able to learn from their own experiences. In short, expert systems never truly possessed “cognition,” which was the primary goal of AI.
+The failure of AI and expert systems to come to grips with these aspects of “cognition” has been attributed to the fact that traditional computers and the human brain function very differently from each other. It was argued that AI was not providing the right environment for the emergence of a truly intelligent machine because it was not delivering a realistic model of the structure of the brain. Whereas human brains consisted of massively parallel systems of neurons, AI digital computers were serial machines; overall, the latter were incredibly slow by comparison. If one wanted to understand “cognition” (so the argument went), one should build a model based upon a detailed study of the architecture of the brain.
+10.7 Multilayer Perceptrons
+The most recent wave of research into ANNs arrived in the mid-1980s and has continued until the present time. Earlier suggestions of Minsky and Papert (1969) — that the limitations of the perceptron could be over- come by “layering” the perceptrons and applying nonlinear transformations prior to combining the transformed weighted inputs — were not adopted at that time due to computational limitations. Minsky and Papert’s sug- gestions turned out to be more meaningful when high-speed computers became readily available and with the discovery of the “backpropagation” algorithm.
+￼
+Z0 = 1
+X0 = 1 Aα01  AU
+X - β11 Aβ01 -Y 1 PP α􏰴􏰴1Σg 1
+@β12 qPΣf􏰴 􏰷􏰶
+10.7 Multilayer Perceptrons 331
+￼￼￼P UA 11􏰴  P􏰴
+￼@1􏰴 􏰶
+􏰴 􏰴 21
+α β􏰴21 @
+X2 - 􏰴@􏰷􏰶 @􏰶
+β @􏰶 􏰶 P 22
+￼P  P R@ α @
+􏰶P 􏰶 12
+￼􏰶
+qPΣfP @
+ 􏰴1P  β31􏰴 PR@
+􏰶􏰴 α22P X3-􏰴􏰴􏰲􏰵 qPΣg-Y2
+￼ββ
+￼￼􏰲  X0=1 􏰵􏰲
+32 02
+input layer hidden layer output layer
+FIGURE 10.6. Multilayer perceptron with a single hidden layer, r = 3 input nodes, s = 2 output nodes, and t = 2 nodes in the hidden layer. The αs and βs are weights attached to the connections between nodes, and f and g are activation functions.
+A multilayer feedforward neural network (perceptron) is a multivariate statistical technique that maps the input variables, X = (X1,···,Xr)τ, nonlinearly to the output variables, Y = (Y1, · · · , Ys)τ . Between the in- puts and outputs there are also “hidden” variables arranged in layers. The hidden and output variables are traditionally called nodes, neurons, or pro- cessing units. A typical ANN is given in Figure 10.6, which has two com- putational layers (i.e., the hidden layer and the output layer), r = 3 input nodes, s = 2 output nodes, and t = 2 nodes in the hidden layer.
+ANNs can be used to model regression or classification problems. In a multiple regression situation, there is only one (s = 1) output variable Y and node, whereas in a multivariate regression situation, there are s output variables, Y1,...,Ys, and nodes. In a binary classification situation, there is only one (s = 1) output variable Y with value 0 or 1, whereas in a multiclass classification problem with K classes, there are s = K − 1 output variables, Y1, . . . , Ys, and nodes, with each Y -variable taking on the value 0 or 1.
+10.7.1 Network Architecture
+Multilayer perceptrons have the following architecture: r input nodes X1,...,Xr; one or more layers of “hidden” nodes; and s output nodes Y1,...,Ys. It is usual to call each layer of hidden nodes a “hidden layer”; these nodes are not part of either the input or output of the network. If there is a single hidden layer, then the network can be described as being
+􏰲 α02 Z0 = 1
+332 10. Artificial Neural Networks
+a “two-layer network” (the output layer being the second computational layer); in general, if there are L hidden layers, the network is described as being an (L + 1)-layer network.
+A fully connected network has all r input nodes connected to the nodes in the first hidden layer, all nodes in the first hidden layer connected to all nodes in the second hidden layer, ..., and all nodes in the last (Lth) hidden layer connected to all s output nodes. If some of the connections are missing, we have a partially connected network. We can always represent a partially connected network as a fully connected network by setting the weights of the missing connections to zero.
+Given the values of the input variables, each hidden node computes an activation value by taking a weighted average of its input values and adding a constant. Similarly, each output node computes an activation value from a weighted average of the inputs to it from the hidden nodes plus a constant. The activation values are then each filtered through an activation function to form the output value of the neuron.
+10.7.2 A Single Hidden Layer
+Suppose we have a two-layer network with r input nodes (Xm, m = 1,2,...,r), a single layer (L = 1) of t hidden nodes (Zj, j = 1,2,...,t), and s output nodes (Yk, k = 1,2,...,s). Let βmj be the weight of the connection Xm → Zj with bias β0j and let αjk be the weight of the connection Zj → Yk with bias α0k. See Figure 10.6 for a schematic diagram of a single hidden layer network with r = 3, s = 2, and t = 2.
+Let X = (X1,···,Xr)τ and Z = (Z1,···,Zt)τ. Let Uj = β0j +Xτβj and Vk = α0k + Zτ αk . Then,
+Zj = fj(Uj), j = 1,2,...,t, (10.16) μk(X) = gk(Vk), k = 1,2,...,s, (10.17)
+where βj = (β1j,···,βrj)τ and αk = (α1k,···,αtk)τ. Putting these equa- tions together, the value of the kth output node can be expressed as
+where
+Yk = μk(X) + εk, (10.18) ⎛ 􏰈 􏰙⎞
+μk(X) =
+gk ⎝α0k +
+􏰏t j=1
+αjkfj
+􏰏r
+β0j + βmjXm ⎠, (10.19)
+m=1
+k = 1,2,...,s, and the fj(·), j = 1,2,...,t, and the gk(·), k = 1,2,...,s, are activation functions for the hidden and output layers of nodes, respec- tively.
+The activation functions, {fj(·)}, are usually taken to be nonlinear con- tinuous functions with sigmoidal shape (e.g., logistic or tanh functions).
+The functions {gk(·)} are often taken to be linear (in regression problems) or sigmoidal (in classification problems). The error term, εk, can be taken as Gaussian with mean zero and variance σk2.
+Let s = 1, so that we have a single output node. Suppose also that all hidden nodes in the single hidden layer have the same sigmoidal activation function σ(·). We further take the output activation function g(·) to be linear. Then, (10.18) reduces to Y = μ(X) + ε, where
+􏰏t 􏰈 􏰏r 􏰙 μ(X) = α0 + αjσ β0j + βmjXm
+j=1 m=1
+, (10.20)
+and the network is equivalent to a single-layer perceptron. If, alternatively, both f(·) and g(·) are linear, then (10.19) is just a linear combination of the inputs.
+Note that sigmoidal functions play an important role in network design. They are quite flexible as activation functions and can approximate dif- ferent types of other functions. For example, a sigmoidal function, σ(u), is very close to linear when u is close to zero. Thus, we can substitute a sigmoidal function for a linear function at any hidden node while, at the same time, making the weights and bias that feed into that node very small; to compensate for the resulting scaling problem, the weights cor- responding to connections emanating from that hidden node to the out- put node(s) are usually made much larger. Sigmoidal functions, which are smooth, monotonic functions, are especially useful for approximating dis- continuous threshold functions (e.g., I[u≥0]) when evaluating the gradient for a loss function of a multilayer perceptron.
+We also mention the skip-level connection, which refers to a direct con- nection from input node to output node, without first passing through a hidden node. Skip-level connections can be included in the model either ex- plicitly or through an implicit arrangement of connection weights — from input node to hidden node and then from hidden node to output node — which approximates the skip-level connection.
+10.7.3 ANNs Can Approximate Continuous Functions
+An important result used to motivate the use of neural networks is given by Kolmogorov’s universal approximation theorem, which states that:
+Any continuous function defined on a compact subset of Rr can be uniformly approximated (in an appropriate metric) by a func- tion of the form (10.20).
+In other words, we can approximate a continuous function by a two-layer network incorporating a single hidden layer, with a large number of hid- den nodes of continuous sigmoidal nonlinearities, linear output units, and
+10.7 Multilayer Perceptrons 333
+334 10. Artificial Neural Networks
+suitable connection weights. Furthermore, the closer the approximation de- sired, the larger the number of hidden nodes required.
+Consider, for example, the Fourier series representation of the real-valued function F,
+􏰏∞ k=0
+where the {ak,bk} are Fourier coefficients. The function F can be approx- imated by a neural network (see Exercise 10.14), which produces the ap- proximation,
+F (x) =
+{ak cos(kx) + bk sin(kx)}, x ∈ R. (10.21)
+􏰡 􏰏t F (x) =
+j=0
+The weights {βj} yield the amplitudes of the sine functions. and the con- stants {β0j} yield the phases; if, for example, we set β0j = π/2, then sin(x + β0j ) = cos(x), and so we do not need to include explicit cosine terms in the network. The weights {αj} are the amplitudes of the individ- ual Fourier terms.
+The universal approximation theorem is an existence theorem: it shows, theoretically, that one can approximate an arbitrary continuous function by a single hidden-layer network. Unfortunately, it does not specify how to find that approximation; that is, how to determine the weights and the number, t, of nodes in the hidden layer (a problem known as network complexity). It also assumes that we know the continuous function being approximated and that the available set of hidden nodes is of unlimited size. Furthermore, the theorem is not an optimality result: it does not show that a single hidden layer is the best-possible multilayer network for carrying out the approximation.
+10.7.4 More than One Hidden Layer
+We can express (10.19) in matrix notation as follows:
+μ(X) = g(α0 + Af (β0 + BX)), (10.23)
+where B = (βij ) is a (t × r)-matrix of weights between the input nodes and the hidden layer, A = (αjk) is an (s × t)-matrix of weights be- tween the hidden layer and the output layer, β0 = (β01, · · · , β0t)τ , and α0 = (α01,···,α0s)τ; also, f = (f1,···,ft)τ and g = (g1,···,gs)τ are the vectors of nonlinear activation functions. In (10.23), the notation h(U) represents the vector (h1(U1), · · · , ht(Ut))τ , where h = (h1, · · · , ht)τ is a vector of functions and U = (U1, U2, · · · , Ut)τ is a random vector. Note,
+αj βj sin(x + β0j ). (10.22)
+however, that μ(X) = (μ1(X), · · · , μs(X))τ . Clearly, this representation permits straightforward extensions to more than one hidden layer.
+An important special case of (10.23) occurs when the {fj} and the {gk} are each taken to be identity functions. In that case, (10.23) reduces to the multivariate reduced-rank regression model, μ(X) = μ + ABX, where μ = α0 +Aβ0. We could use the (s×r) weight-matrix C = AB for a single- layer network (i.e., no hidden layer) and the results would be identical. The results change only when we use nonlinear activation functions at the hidden nodes.
+Thus, a neural network with r input nodes, a single hidden layer with t nodes, s output nodes, and sigmoidal activation functions at the hidden nodes can be viewed as a nonlinear generalization of multivariate reduced- rank regression.
+10.7.5 Optimality Criteria
+Let the (st + rt + t + s)-vector ω consist of the parameters of a fully connected network — the connection weights (elements of the matrices A and B) and the biases (the vectors α0 and β0). Suppose yi = (yi,k) is the value of the “target” output s-vector and y􏰣i = (y􏰣i,k) is the value of the fitted output s-vector, where y􏰣i,k = μk(xi) = μk(xi,ω) is the fitted value at the kth output node corresponding to the value xi of the ith input vector, k ∈ K, i = 1, 2, . . . , n. To estimate ω in either binary classification (where outputs are either 0 or 1) or multivariate regression problems (where outputs are real-valued), it is customary to minimize the error sum of squares (ESS):
+( 1 0 . 2 4 )
+E S S ( ω ) =
+with respect to the elements of ω, where
+E(ω)=−
+􏰏n 􏰏 evi,k
+y logy􏰣 , y􏰣 =􏰊 ,
+i=1 k∈K
+(10.26)
+􏰏n i=1
+∥ y i − y􏰣 i ∥ 2 ,
+􏰏
+∥ y i − y􏰣 i ∥ 2 = ( y i − y􏰣 i ) τ ( y i − y􏰣 i ) =
+and K is the set of output nodes. In binary classification problems, there
+is a single output node.
+For multiclass classification problems, where each observation belongs to one of K > 2 possible classes, there are usually K output nodes, one for each class. In this case, an error criterion is minus the logarithm of the conditional-likelihood function,
+i,k i,k i,k
+l∈K evi,l
+10.7 Multilayer Perceptrons 335
+k∈K
+( y i , k − y􏰣 i , k ) 2 ,
+( 1 0 . 2 5 )
+￼where yi,k = 1 if xi ∈ Πk and zero otherwise, and vi,k = α0,k + zτi αk is the value of Vk for the ith input vector xi. This criterion is equivalent to the
+336 10. Artificial Neural Networks
+Kullback–Leibler deviance (or cross-entropy), and y􏰣i,k, which is known as the softmax function, is the multiclass generalization of the logistic function.
+Because the fitted value, y􏰣i,k, is a nonlinear function of ω, it follows that both the ESS and E criteria are nonlinear functions of ω. The ω that minimizes ESS(ω) or E(ω) is not available in explicit form and, therefore, has to be found using a nonlinear optimization algorithm. The most popular numerical method for estimating the network parameters is the “backpropagation”-of-errors algorithm.
+10.7.6 The Backpropagation-of-Errors Algorithm
+The backpropagation algorithm (Werbos, 1974) efficiently computes the first derivatives of an error function wrt the network weights {αkj} and {βjm}. These derivatives are then used to estimate the weights by mini- mizing the error function through an iterative gradient-descent method.
+To simplify the description of the algorithm, we treat the network as a single-hidden-layer network. All the details we present here can be general- ized to a network having more than one hidden node. We denote by M the set of r input nodes, J the set of t hidden nodes, and K the set of s output nodes, so that m ∈ M indexes an input node, j ∈ J indexes a hidden node, and k ∈ K indexes an output node. In other words, m → j → k. As before, the input r-vectors are indexed by i = 1, 2, . . . , n.
+We start at the kth output node. Denote the error signal at that node by
+ei,k=yi,k−y􏰣i,k, k∈K, (10.27) and the error sum of squares (usually referred to as the error function) at
+that node by
+Ei = 1 􏰏e2i,k = 1 􏰏(yi,k −y􏰣i,k)2, i=1,2,...,n. (10.28)
+The optimizing criterion is the error sum of squares (ESS) for the entire data set; that is, the error function (10.28) averaged over all data in the learning set:
+￼￼2 k∈K 2 k∈K
+1 􏰏n
+ESS = n
+i=1
+1 􏰏n 􏰏 2
+Ei = 2n ei,k. (10.29)
+i=1 k∈K
+￼￼The learning problem is to minimize ESS wrt the connection weights, {αi,kj} and {βi,jm}. Because each derivative of ESS wrt those weights is a sum over the learning set of data of the derivatives of Ei, i = 1,2,...,n, it suffices to minimize each Ei separately.
+In the following description of the backpropagation algorithm, it may be helpful to refer to Figure 10.7.
+input nodes
+X1 Hβj1 X0 = 1
+. HHH A βj0 jth hidden node UA 
+βjmHjH 􏰊
+- j - Uj = mβjmXm-Zj =fj(Uj) -
+Xm
+. 􏰳􏰳􏰳􏰳􏰳*
+10.7 Multilayer Perceptrons 337
+￼￼￼￼X 􏰳βjr r
+hidden nodes
+Z1Hαk1 Z0 =1
+.
+Z
+.
+Zs
+HH A αk0 kth output node H U A 
+αHj 􏰊
+k j - k - V = α Z - Y􏰣 = g ( V )
+j 􏰳*􏰳kjkjjkkk 􏰳􏰳􏰳
+￼￼￼􏰳αks
+FIGURE 10.7. Schematic diagram of the backpropagation of errors al- gorithm for a single-hidden-layer ANN. The top diagram relates the input nodes to the jth hidden node, and the bottom diagram relates the hidden nodes to the kth output node. To simplify notation, all reference to the ith input vector has been dropped.
+For the ith input vector, let
+􏰏
+αkjzi,j=αk0+zτiαk, k∈K, (10.30) be a weighted sum of inputs from the set of hidden units to the kth output
+node, where
+zi = (zi,1,...,zi,t)τ, αk = (αk1,...,αkt)τ, (10.31) and zi,0 = 1. Then, the corresponding output is
+y􏰣i,k = gk(vi,k), k ∈ K, (10.32) where gk(·) is an output activation function, which we assume is differen-
+tiable.
+The backpropagation algorithm is an iterative gradient-descent-based algorithm. Using randomly chosen initial values for the weights, we search for that direction that makes the error function smaller.
+Consider the weights αi,kj from the jth hidden node to the kth output node. Let αi = (ατi,1, · · · , ατi,s)τ = (αi,kj ) to be the ts-vector of all the hidden-layer-to-output-layer weights at the ith iteration. Then, the update rule is
+vi,k=
+j∈J
+338 10. Artificial Neural Networks
+where
+αi+1 = αi + Δαi, ∂E 􏰃 ∂E 􏰄
+(10.33) (10.34)
+Δαi =−η i = −η i ∂αi ∂αi,jh
+=(Δαi,kj).
+￼￼Similar update equations hold also for αi,k0. In (10.34), the learning pa- rameter η specifies how large each step should be in the iterative process. If η is too large, the iterations will move rapidly toward a local minimum, but may possibly overshoot it, whereas if η is too small, the iterations may take a long time to get anywhere near a local minimum.
+Using the chain rule for differentiation, we have that
+∂Ei = ∂Ei · ∂ei,k · ∂y􏰣i,k · ∂vi,k ∂ α i , k j ∂ e i , k ∂ y􏰣 i , k ∂ v i , k ∂ α i , k j
+= ei,k · (−1) · gk′ (vi,k) · zi,j
+= −ei,kgk′ (αi,k0 + zτi αi,k)zi,j.
+(10.35)
+(10.36)
+(10.37)
+￼￼￼￼￼This can also be expressed as
+∂Ei = −δi,kzi,j,
+￼where
+∂αi,jh
+δi,k = − ∂Ei · ∂y􏰣i,k = ei,kgk′ (vi,k)
+￼￼∂ y􏰣 i , k ∂ v i , k
+is the sensitivity (or local gradient) of the ith observation at the kth output node. The expression for δi,k is the product of two terms associated with the kth node: the error signal ei,k and the derivative, gk′ (vi,k), of the activation function. The gradient-descent update to αi,kj is given by
+αi+1,kj = αi,kj − η ∂Ei = αi,kj + ηδi,kzi,j, (10.38) ∂αi,kj
+where η is the learning rate parameter of the backpropagation algorithm.
+The next part of the backpropagation algorithm is to derive an update rule for the connection from the mth input node to the jth hidden node. At the ith iteration, let
+ui,j= 􏰏βi,jmxi,m=βi,j0+xτiβi,j, j∈J, (10.39) m∈M
+be the weighted sum of inputs to the jth hidden node, where
+xi = (xi,1,···,xi,r)τ, βi,j = (βi,j1,···,βi,jr)τ, (10.40)
+￼
+and xi,0 = 1. The corresponding output is
+zi,j = fj(ui,j), (10.41)
+where fj(·) is the activation function, which we assume is differentiable, at the jth hidden node. Let βi = (βτi,1, · · · , βτi,t)τ = (βi,jm) be the ith iteration of the (r+1)t-vector of all the input-layer-to-hidden-layer weights. Then, the update rule is
+βi+1 = βi + Δβi,
+(10.42)
+Δβi = −η
+Again, similar update formulas hold for the bias terms βi,j0. Using the
+where
+∂E 􏰃 ∂E 􏰄 i = −η i
+￼￼∂βi ∂βi,jm
+= (Δβi,jm).
+(10.43)
+chain rule, we have that
+∂Ei = ∂Ei · ∂zi,j · ∂ui,j .
+∂βi,kj ∂zi,j ∂ui,j ∂βi,kj The first term on the rhs is
+(10.44)
+10.7 Multilayer Perceptrons 339
+￼￼￼￼∂Ei = ∂zi,j
+􏰏 ei,k · ∂ei,k k∈K ∂zi,j
+￼￼= 􏰏 ei,k · ∂ei,k · ∂vi,k k∈K ∂vi,k ∂zi,j
+= −􏰏ei,k ·gk′ (vij)·αi,kj k∈K
+􏰏
+k∈K
+￼￼= −
+δi,k αi,kj ,
+(10.45)
+(10.46)
+(10.47)
+whence, from (10.44),
+∂Ei = − 􏰏 ei,kgk′ (αi,k0 + zτi αi,k)αi,kjfj′(βi,j0 + xτi βi,j)xi.m.
+￼∂βi,kj k∈K
+Putting (10.37) and (10.45) together, we have that
+δi,j = fj′ (ui,j ) 􏰏 δi,k αi,kj . k∈K
+This expression for δi,j is the product of two terms: the first term, fj′(ui,j), is the derivative of the activation function fj(·) evaluated at the jth hidden node; the second term is a weighted sum of the δi,k (which requires knowl- edge of the error ei,k at the kth output node) over all output nodes, where
+340 10. Artificial Neural Networks
+the kth weight, αi,kj, is the connection weight of the jth hidden node to the kth output node. Thus, δi,j at the jth hidden node depends upon the {δi,k} from all the output nodes.
+The gradient-descent update to βi,jm is given by
+βi+1,jm = βi,jm − η ∂Ei = βi,jm + ηδi,jxi,m, (10.48)
+￼∂βi,jm
+where η is the learning rate parameter of the backpropagation algorithm.
+The backpropagation algorithm is defined by (10.38) and (10.48). These update formulas identify two stages of computation in this algorithm: a “feedforward pass” stage and a “backpropagation pass” stage. After an initialization step in which all connection weights are assigned values, we have the following stages in the algorithm:
+Feedforward pass Inputs enter the node from the left and emerge from the right of the node; the output from the node is computed as (10.30) and (10.31), and the results are passed, from left to right, through the layers of the network.
+Backpropagation pass The network is run in reverse order, layer by layer, starting at the output layer:
+1. The error (10.27) is computed at the kth output node and then multiplied by the derivative of the activation function to give the sensitivity δi,k at that output node (10.37); the weights, {αi,kj}, feeding into the output nodes are updated by using (10.38).
+2. We use (10.47) to compute the sensitivity δi,j at the jth hidden node; and, then, we use (10.48) to update the weights, {βi,jm}, feeding into the hidden nodes.
+This iterative process is repeated until some suitable stopping time.
+10.7.7 Convergence and Stopping
+There is no proof that the backpropagation algorithm always converges. In fact, experience has shown that the algorithm is a slow learner, the estimates may be unstable, there may exist many local minima, and con- vergence is not assured in practice. There have been many explanations of why this should happen.
+One possible reason is that the backpropagation algorithm is a first-order approximation to the method of steepest-descent and, hence, is a version of stochastic approximation. As the algorithm tries to find the minimum along fairly flat regions of the surface of the error criterion, it takes many iterations to reduce the error criterion significantly; in other, highly curved
+10.8 Network Design Considerations 341
+regions, the algorithm may miss the minimum entirely. Another possible reason (Hwang and Ding, 1997) is that, for any ANN, instability and con- vergence problems may be partly caused by the “unidentifiability” of the parameter vector ω; for example, certain elements of ω can be permuted without changing the value of μ(X) in (10.20).
+Because of the slow progression of the backpropagation algorithm, which is both frustrating and expensive, overfitting the network has been (accord- ing to ANN folklore) accidentally avoided by stopping the algorithm prior to convergence (usually referred to as early stopping). Other researchers prefer to continue running the algorithm until the weights stabilize (e.g., the normed difference between successive iterates is smaller than some ac- ceptable bound) or until the error criterion is at (or close to) a minimum. Another practical strategy is to increase the value of η to produce faster convergence, but that action could also result in oscillations.
+10.8 Network Design Considerations
+When fitting an ANN, the user is faced with a number of algorithmic details that need to be resolved as part of the design of the network. In this section, we discuss a collection of problems often referred to as network complexity.
+10.8.1 Learning Modes
+The most popular methods of running the backpropagation algorithm are the “on-line,” “stochastic,” and “batch” learning modes.
+In on-line mode, each observation (xi, yi), i = 1, 2, . . . , n, is run through the network in sequential fashion, one at a time, and adjustments are made to the estimates of the connection weights each time. The iteration steps (10.38) and (10.48) give an on-line update of the weights. Thus, (x1,y1) is run through the network first. The feedforward and backpropagation stages of the algorithm are immediately carried out, yielding updated initial val- ues of the connection weights. Next, we run (x2,y2) through the network, whence the feedforward and backpropagation stages are again carried out, resulting in further updated values of the connection weights. This pro- cedure is repeated once and only once for every observation in the entire learning set, until the last observation (xn,yn) is run through the network and the connection weights are updated. The process then stops.
+A variation on on-line learning is stochastic learning, where an observa- tion is chosen at random from the learning set, run through the network, and the parameter values are updated using (10.38) and (10.48). As in on-
+￼
+342 10. Artificial Neural Networks
+line learning, each observation is run through the network once and only once, but in random order.
+In batch mode, all n observations in the learning set (referred to as an epoch) are run through the network in any order. After all the observations are entered, the weights are updated by summing the derivatives over the entire learning set; that is, for the ith epoch, the updates are
+􏰏n h=1
+On-line learning tends to be preferred to batch learning: on-line learning is generally faster, particularly when there are many similar data values (redundancy) in the learning set; it can adapt better to nonstandard con- ditions of the data (e.g., nonstationarity); and it can more easily escape from local minima. Moreover, batch learning in very high-dimensional sit- uations can cause computational difficulties (e.g., memory problems, cost considerations), especially when it comes to deriving the matrices A and B in (10.23).
+10.8.2 Input Scaling
+Inputs are often measured in widely differing scales, which may affect the relative contribution of each input to the resulting analysis. This is a common concern in data analysis. The same problem occurs when fitting an ANN. In general, it is a good idea, prior to fitting an ANN to data, to scale each input variable. A number of ways have been suggested to accomplish this objective, including (1) scale the data to the interval [0,1]; (2) scale the data to [−1, 1] or to [−2, 2]; or (3) standardize each input variable to have zero mean and unit standard deviation.
+ANN theory does not require the input data to lie in [0, 1]; in fact, scaling to [0, 1] may not be a good choice and that it is better to center the input data around zero. This implies that options (2) and (3) should be preferred to option (1). These latter two scaling options may enable an ANN to be run more efficiently and may help to avoid getting bogged down in local extrema.
+If a weight-decay penalty is to be incorporated as part of the optimization process (see Section 10.8.5), then it makes sense to scale or standardize each input variable. When the data are split into learning and test sets, then the same scaling or standardization transformation applied to the learning
+αi+1,jk = βi+1,jm =
+αi,jk + η βi,jm +η
+δh,kzh,j,
+(10.49)
+δh,jxh,m,
+h = 1, 2, . . . . This entire process is repeated, epoch by epoch, until ESS
+becomes smaller than some preset value.
+􏰏n h=1
+(10.50)
+10.8 Network Design Considerations 343
+set should also be applied to the test set. Note that the standardization transformation can only be used for stochastic or batch learning; it cannot be used for on-line learning, where the data are presented to the network one observation at a time.
+10.8.3 How Many Hidden Nodes and Layers?
+One of the main problems in designing a network is to determine how many hidden nodes and layers to include in the network; this, in turn, determines how many parameters are needed to model the data. The cen- tral principle here is that of Ockham’s razor: keep the model as simple as possible while maintaining its ability to generalize well.
+One way of choosing the number of hidden nodes is by employing cross- validation (CV). However, the presence of multiple local minima at each iteration, which result in quite different performances, can confuse the issue of deciding which solution should be used for each round of CV. Most applications of ANN determine the number of hidden nodes and layers either from the context of the problem or by trial-and-error.
+10.8.4 Initializing the Weights
+As with any numerical and iterative method, the backpropagation algo- rithm requires a choice of starting values to estimate the parameters (i.e., connection weights and biases) of the network. In general, we initialize the network by using small (close to zero), random-generated (uniformly dis- tributed with small variance) starting values for the parameter estimates.
+10.8.5 Overfitting and Network Pruning
+Building a neural network can easily yield a model with a huge number of parameters. If we try to estimate all those parameters optimally by waiting for the algorithm to converge, this can lead to severe overfitting. We would like to reduce (as much as possible) the size of the network while retaining (as much as possible) its good performance characteristics.
+Setting parameters to zero. One way to counter overfitting is to set some connection weights to zero, a method known as network pruning or, more delightfully, optimal brain surgery, because of the notion that ANNs try to approximate brain activity (Hassibi, Stork, Wolff, and Wanatabe, 1994). If, however, a parameter (connection weight) in the model is set to zero and the inputs are close to being collinear, then the standard errors for the remaining estimated parameters could be significantly affected; thus, it is not generally recommended to set more than one connection weight to
+344 10. Artificial Neural Networks
+zero (Ripley, 1996, p. 169), a strategy that defeats the objective of reducing network size.
+Shrinking parameters toward zero. Another approach is to “shrink” the magnitudes of network parameters toward zero by incorporating regular- ization into the criterion. In such a formulation, we minimize
+ESSλ(ω) = ESS(ω) + λp(ω), (10.51)
+where λ ≥ 0 is a regularization parameter and p(·) is the penalty function. The term λp(ω) is known as the complexity term. The regularization pa- rameter λ measures the relative importance of ESS(ω) to p(ω), and is usually estimated by cross-validation.
+There are two popular assignments of penalty functions in this ANN context. The simplest regularizer is weight-decay, whose penalty is defined
+by
+p ( ω ) = ∥ ω ∥ 2 = 􏰏 ω l2 , ( 1 0 . 5 2 ) l
+where ωl is equal to αjm or βkj , as appropriate, and the summation is taken over all weight connections in the network (Hinton, 1987). In this case, λ is referred to as the weight-decay parameter. A more elaborate penalty function is the weight-elimination penalty, given by
+􏰏 (ωl/W)2
+p(ω) =
+where W is a preassigned free parameter (Weigend, Rumelhart, and Huber- man, 1991), such as W =∥ ω ∥2. If, for some l, |ωl| ≪ W, the contribution of that connection weight to (10.53) is deemed negligible and the connection may be eliminated; if |ωl| ≫ W, then that connection weight contributes a significant amount to (10.53) and, hence, should be retained in the net- work. When using penalty function (10.52) or (10.53), it is usual to start with λ = 0, which allows the network weights to be unconstrained, and then adjust that solution by increasing the value of λ in small increments.
+Reducing dimensionality of input data. The user can also apply princi- pal component analysis to the input data, thereby reducing the number of inputs, and then estimate the parameters of the resulting reduced-size ANN.
+10.9 Example: Detecting Hidden Messages in Digital Images
+Steganography (“covered writing,” from the Greek) is “the art and science of communicating in a way which hides the existence of the communica- tion” (Kahn, 1996). It is a method for hiding messages in different types
+￼l
+1 + (ωl/W )2 , (10.53)
+￼
+￼￼￼jpeg
+color image
+10.9 Example: Detecting Hidden Messages in Digital Images 345
+￼￼￼grayscale bitmap image
+cover image
+￼􏰴􏰴􏰴1 PPPq
+-
+-- 􏰸􏰸􏰸3
+￼￼￼￼￼￼￼￼￼￼￼￼￼￼grayscale bitmap image
+￼Jsteg v4
+stego image
+￼￼￼￼￼￼￼￼random message
+￼FIGURE 10.8. Flow chart for the steganography example.
+of media, such as webpage HTML text, Microsoft Word documents, exe- cutable and dynamic link library files, digital audio files, and digital image files (bmp, gif, jpg). Reasons for hiding messages include the need for copyright protection of digital media (audio, image, and video), for Inter- net security and privacy, and to provide “stealth” military and intelligence communication.
+There are many ways in which information can be hidden in digital me- dia, including least significant bit (lsb) embedding, digital watermarking, and wavelet decomposition algorithms. A major disadvantage to lsb inser- tion is that it is vulnerable to slight image manipulation, such as cropping and compression. See Petitcolas, Anderson, and Kuhn (1999) for a survey.
+In this example, 1,000 color jpeg images consisting of a mixture of vari- ous science fiction environments (including indoors, outdoors, outer space), characters, and images with special effects, were obtained from the Star Trek website.1 These color images were converted into grayscale bitmap images to remove any existing digital watermarks or other hidden identi- fiers and cropped to a central 640 × 480 pixel area. These grayscale bitmap images were then duplicated to form two sets of the same 1,000 images. One set of grayscale images was decompressed to produce 1,000 “cover images.” The second set was used to hide messages of random strings of characters of sufficient length (2–3 KB). Using the software package Jsteg v4,2 1,000
+1The Star Trek website is www.startrek.com. The author thanks Joseph Jupin for use of the data that formed the basis for his 2004 report Steganography at the website astro.temple.edu/~joejupin/Steganography.pdf.
+2Derek Upham’s Jsteg v4 is available at ftp.funet.fi/pub/crypt/steganography.
+￼
+346 10. Artificial Neural Networks
+“stego images” were formed. A flow chart of the steganographic process is given in Figure 10.8.
+The next step is to extract from the 1,000 cover images and the 1,000 stego images a common set of variables. To identify images that contain a hidden message, we use a methodology based upon the wavelet decompo- sition of digital images (Farid, 2001). First, we compute a multiresolution analysis of each set of 1,000 images using quadrature mirror filters. For each such set, this creates orthonormal basis functions that partition the frequency space into m resolution levels and three orientations — horizon- tal, vertical, and diagonal. At each resolution level, separable low-pass and high-pass filters are applied along the image axes, which generate low-pass, vertical, horizontal, and diagonal subbands. Additional resolution levels are created by recursively filtering the low-pass subband.
+Hiding messages in a digital image often leads to a significant change in the statistical properties of the wavelet decomposition of that image. Given an image decomposition, we compute two sets of statistical moments: (1) the mean, variance, skewness, and kurtosis of the subband coefficients at each of the three orientations and at resolution levels 1, 2, . . . , m − 1; (2) the same statistics, but computed from the residuals of the optimal linear predictor of coefficient magnitudes and the true coefficient magnitudes for each of the three orientation subbands at each level. This creates a total of 24(m − 1) variables for each image decomposition. In our example, a four-level (m = 4), three-orientation decomposition scheme results in a 72- dimensional vector of the moment statistics of estimated coefficients and residuals for each image.
+From each set of 1,000 images, 500 images are randomly selected, but no duplicate images are taken. The resulting 1,000 images constitute our data set. The problem is to distinguish the stego images from the cover images.
+We randomly divided the data from the 1,000 images into a learning set (650) and a test set (350). The learning set consists of 322 stego images and 328 cover images, and the test set consists of 178 stego images and 172 cover images. The learning set was standardized and an ANN was fit with a single hidden layer, varying the decay parameter λ between 0.0001 and 0.9, and varying the number of nodes in the hidden layer from 1 to 10. Each of these fitted models was used to predict the two classes (cover or stego) for the data in the test set, which had previously been standardized using the same scaling obtained from the learning set.
+This fitting and prediction strategy is repeated 10 times using randomly generated starting values for each combination of λ and number of hidden nodes; the misclassification rates were averaged for each such combination. Figure 10.9 shows parallel boxplots of the individual results for λ = 0.01 (left panel) and 0.5 (right panel). Notice the high variability for λ = 0.01
+10.10 Examples of Fitting Neural Networks 347
+Decay=0.01 Decay=0.5 0.10 0.10
+0.08 0.08
+0.06 0.06
+0.04 0.04
+12345678910 12345678910 NumberofHiddenNodes NumberofHiddenNodes
+FIGURE 10.9. Steganography example: parallel boxplots for the misclas- sification rate of the test set for a neural network with a single hidden layer and number of hidden nodes as displayed, and decay parameter λ = 0.01 (left panel) and 0.5 (right panel). A randomly generated start was used to fit each such model, and this was repeated 10 times for each number of hidden nodes.
+compared with λ = 0.5. The smallest average misclassification rate for the test set is 0.0463, which is obtained for λ = 0.5 and seven hidden nodes.
+10.10 Examples of Fitting Neural Networks
+In Table 10.2, we list the estimated misclassification rates of neural net- work models applied to data sets detailed in Chapter 8. The misclassifi- cation rates are estimated here by randomly dividing each data set into two subsets, a learning set (2/3) and a test set (1/3). With certain excep- tions, each learning set was first standardized by subtracting the mean of each input variable and then dividing the result by the standard deviation of that variable. The same standardization was also applied to the input variables in the test set. The exceptions to this standardization are those data sets whose values fall in [0, 1] (E-coli, Yeast), [−1, 1] (Ionosphere), or [0, 100] (Pendigits), where no transformations are made.
+For each learning set, we set up a neural network model with a single hidden layer of between 0 and 10 nodes and decay parameter λ ranging from 0.00001 to 0.1. A set of initial weights is randomly generated to fit the ANN model to the learning set, the fitted ANN model is then applied to the test set, and the misclassification rate computed. This is repeated 10 times, and the resulting misclassification rates are averaged to produce the “TestSetER” in Table 10.2.
+￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼MisclassificationRate,TestSet
+MisclassificationRate,TestSet
+348 10. Artificial Neural Networks
+TABLE 10.2. Summary of artificial neural network (ANN) models with a single hidden layer fitted to data sets for binary and multiclass classifica- tion. Listed are the sample size (n), number of variables (r), and number of classes (K). Also listed for each data set is the number of observations in the learning set (2/3) and in the test set (1/3) and the test-set error (mis- classification) rate computed from the average of 10 random initial starts. Each learning set was standardized, and the same standardization was used for the test set (with the exception of Ionosphere, where the input values fall into [−1,1], and E-coli, Yeast, and Pendigits, whose values fall in [0,1]). The data sets are listed in increasing order of LDA misclassification rates (see Tables 8.5 and 8.7).
+￼Data Set Breast cancer (logs) Spambase Ionosphere Sonar BUPA liver disorders Wine Iris Primate scapulae Shuttle Diabetes Pendigits E-coli Vehicle Letter recognition Glass Yeast
+n r K
+569 30 2 4,601 57 2 351 33 2 208 60 2 345 6 2 178 13 3 150 4 3 105 7 5 58,000 8 7 145 5 3 10,992 16 10 336 7 8 846 18 4 20,000 16 26 214 9 6 1,484 8 10
+Learn Test 379 190 3,067 1,534 234 117 138 70 230 115 118 60 100 50 70 35 43,500 14,500 95 50 7,328 3,664 224 112 564 282 13,000 7,000 143 71 989 495
+TestSetER 0.0174 0.0669 0.0863 0.1571 0.3183 0.0167 0.0420 0.0114 0.0002 0.0020 0.0251 0.1161 0.1897 0.0987 0.2056 0.4026
+￼￼￼We see that a single hidden-layer ANN model fits some data sets better than others. Comparing Table 10.2 with Tables 8.5 and 8.7 (ANN misclas- sification rates are computed using an independent test set, whereas LDA and QDA used 10-fold CV), a single-hidden-layer ANN model fares better than LDA for the spambase, ionosphere, sonar, primate scapulae, shut- tle, diabetes, pendigits, e-coli, vehicle, glass, and yeast data, whereas LDA comes out ahead for the breast cancer, BUPA liver, wine, and iris data. The misclassification rate for the letter-recognition data is significantly reduced if there are a large number of hidden nodes (20 or more).
+10.11 Related Statistical Methods
+Alternative approaches to statistical curve-fitting, such as projection- pursuit regression and generalized additive models, try to address a more general functional form than linearity. Although these methods are closely
+￼
+10.11 Related Statistical Methods 349
+related in appearance to the ANN model, their computations are carried out in completely different ways.
+10.11.1 Projection-Pursuit Regression
+Consider the input r-vector X and a single output variable Y (i.e., s = 1). Suppose the model is
+Y = μ(X) + ε, (10.54)
+where μ(X) = E{Y |X} is the regression function, and the errors ε are
+independent of X and have E(ε) = 0 and var(ε) = σ2. The goal is to
+estimate μ(X). For example, suppose r = 2 and μ(X) = X1X2; we can
+write μ(X) = 1(X1 +X2)2 − 1(X1 −X2)2, which is the sum of squares of 44
+￼￼the projections Xτ β1 = (X1, X2)(1, 1)τ and Xτ β2 = (X1, X2)(1, −1)τ . So, a regression surface can be approximated by a sum of nonlinear functions, {fj}, of projections Xτβj.
+This idea is implemented in projection-pursuit regression (PPR) (Fried- man and Stuetzle, 1981), where the regression function is taken to be
+􏰏t
+j=1
+where α0, {β0j}, {βj = (β1j,···,βrj)τ}, and the {fj(·)} are the unknown parameters of the model. This is the sum of t nonlinearly transformed linear projections of the r input variables, where t is a user-chosen parameter, and has the same form as a two-layer feedforward perceptron for a single output variable (see (10.20)). Parallel to the discussion in Section 10.5.3, it has been shown that any smooth function of X can be well-approximated by (10.55), where the approximation improves as t gets large enough (Diaconis and Shahshahani, 1984). It is worth noting that as we increase t, it becomes more and more difficult to interpret the fitted functions and coefficients in the PPR solution.
+The linear combinations, β0j + Xτβj, j = 1,2,...,t, are linear pro- jections of the inputs X onto t different hyperplanes, and the activation functions fj(·), j = 1,2,...,t, are (possibly, different) smooth but un- known functions; we assume that the {fj(·)} are each normalized to have zero mean and unit variance. These t nonlinearly transformed projections are then linearly combined to produce μ(X) in (10.55). The components fj(β0j +Xτβj), j = 1,2,...,t, are often referred to as ridge functions in r dimensions; the name derives from the fact that, in two-dimensional in- put space (i.e., r = 2), a peaked fj(·) produces output with a ridge in the graph.
+When there is more than one output variable, the output can be repre- sented as a multiresponse s-vector, Y = (Y1,···,Ys)τ. Then, each com-
+μ(X) = α0 +
+fj (β0j + Xτ βj ), (10.55)
+350 10. Artificial Neural Networks
+ponent of the regression function, μ(X) = (μ1(X),···,μs(X))τ, where μk(X) = E{Yk|X}, can be written in the form,
+􏰏t j=1
+where the fj(·), j = 1,2,...,t, are taken to be a common set of arbi- trarily smooth functions having zero mean and unit variance. Models such as (10.56) are referred to as SMART (smooth multiple additive regression technique) (Friedman, 1984).
+Letα=(α0,α1,···,αt)τ andβj =(β0j,β1j,···,βrj)τ,j=1,2,...,t,be each of unit length. Given data, {(xi,yi),i = 1,2,...,n}, the (t(r+2)+1)- vector ω = (ατ , {βτj }tj=1)τ of parameters of the PPR single-output model (10.55) can be estimated by minimizing the error sum-of-squares,
+⎧ ⎫2 􏰏n⎨􏰏t ⎬
+ESS(ω)= ⎩yi−α0− αjfj(β0j+xτiβj)⎭ , (10.57) i=1 j=1
+for nonlinear activation functions {fj(·)}, which are also determined from the data.
+The function ESS(ω) is minimized in stages, and the parameters are esti- mated in sequential fashion: first, the {αj } are fitted by linear least-squares; next, the {fj(·)} are found using one-dimensional scatterplot smoothers, and finally, the {βkj} are fitted by nonlinear least-squares (e.g., Gauss– Newton). Scatterplot smoothers used to estimate the PPR functions {fj(·)} include supersmoother (or variable span smoother) (Friedman and Stuetzle, 1981), Hermitian polynomials (Hwang, Li, Maechler, Martin, and Schimert, 1992), and smoothing splines (Roosen and Hastie, 1994). These steps to minimizing (10.57) are then iterated until some stopping criterion is satis- fied. Stopping too early produces an increased bias for the estimate, and waiting too long produces an enlarged variance. Typically, the process is stopped when successive iterative values of the residual sum of squares, RSS(ω􏰡), become small and stable. In certain examples, the amount of computation involved in finding a PPR solution could be quite large and expensive.
+10.11.2 Generalized Additive Models
+An additive model in X = (X1, · · · , Xr)τ is a regression model that is additive in the inputs. Specifically, we assume that Y = μ(X) + ε, where the regression function, μ(X) = E{Y |X}, has the form,
+􏰏r j=1
+μk(X)=α0k +
+αjkfj(β0j +Xτβj), k=1,2,...,s, (10.56)
+μ(X) = α0 +
+fj (Xj ), (10.58)
+10.11 Related Statistical Methods 351
+and the error ε is independent of X. If fj(Xj) = βjXj, then the additive
+model reduces to the standard multiple regression model. The key aspect of
+an additive model is that interactions between input variables (e.g., XiXj)
+are not allowed as part of the model. If simple interactions are thought to
+be important, we can introduce into an additive model additional terms
+constructed as the products X X , f (X X ), or f􏰡(X ) · f􏰡(X ), where ijijij iijj
+f􏰡(·) and f􏰡(·) are the functions obtained from fitting the additive model. ij
+The {fj(·)} are typically taken to be nonlinear transformations of the input variables. For example, we could transform the input variables by using logarithmic, square-root, reciprocal, or power transformations, where the choice would depend upon what we know or suspect about each input variable. In general, it is more useful if we take the {fj(·)} to be a set of smooth, but otherwise unspecified, functions, which are centered so that E{fj(Xj)} = 0, j = 1,2,...,r.
+To estimate μ(X), the strategy is to estimate each fj (·) separately. Esti-
+mation is based upon a backfitting algorithm (Friedman and Stuetzle, 1981).
+The key is the identity, E{Y −α0 −􏰊 fk(Xk)|Xj} = fj(Xj). Given ob- k̸=j
+servations {(xi,yi),i = 1,2,...,n} on (X,Y), we estimate α0 by α􏰡0 = y ̄ and use the most current function estimates {f􏰡 , k ̸= j} to update f􏰡 by a
+k􏰊j curve obtained by smoothing the “partial residuals,” y −α􏰡 − f􏰡 (x ),
+i 0 k̸=j k ki against xji, i = 1,2,...,n. This update procedure is applied by cycling
+through the {Xj} until convergence of the smoothed partial residuals. The smoothing step uses a scatterplot smoother such as a cubic regres- sion spline, which is a set of piecewise cubic polynomials joined together at a sequence of knots and which satisfy certain continuity conditions at the knots. There are many other possible smoothing techniques, including kernel estimates and spline smoothers. In practice, the choice of smoother used depends upon the degree of “smoothness” desired.
+Generalized additive models (GAMs) (Hastie and Tibshirani, 1986) ex- tend both the class of additive models (10.58) and the class of general- ized linear models (McCullagh and Nelder, 1989). The generalized additive model is usually written in the form,
+􏰏r
+j=1
+where μ = μ(X) and h(μ) is a specified link function. Maximum-likelihood estimates of the parameter α0 and the functions f1, f2, . . . , fr are obtained in a nonparametric fashion by maximizing a penalized log-likelihood func- tion using a local scoring procedure (a version of the IRLS algorithm de- scribed in Section 9.3.5, where we fit a weighted additive model rather than a weighted linear regression), which is equivalent to a version of the Newton–Raphson algorithm.
+h(μ) = α0 +
+fj (Xj ), (10.59)
+352 10. Artificial Neural Networks
+A popular example of h(μ) is the so-called logistic link function, h(μ) = log{μ/(1−μ)}, which is used to model binary output. If we apply the logistic link function to (10.59), then the GAM can be inverted and re-expressed as follows:
+⎛⎞
+􏰏r j=1
+where g(x) = (1 + e−x)−1. In this particular form, we see that the GAM is closely related to a neural network with logistic (sigmoid) activation function (see Exercise 10.6).
+10.12 Bayesian Learning for ANN Models
+Bayesian treatments of neural networks have been quite successful. As usual, (x1,y1),...,(xn,yn) is the learning set of data. We assume the in- puts, x1,...,xn, are given and so are omitted from any probability cal- culation, and the outputs, D = {y1,...,yn}, constitute the data to be modeled. For this exposition, we assume a single output variable Y ; the results generalize to multiple output variables Y in a straightforward way.
+An ANN model is specified by its network architecture A (i.e., the num- ber of layers, number of nodes within each layer, and the activation func- tions) and the vector of all network parameters ω (i.e., all connection weights and biases). Let Q be the total number of elements in the vector ω. We assume that the architecture A is given and, hence, does not enter the probability calculations; if different architectures are to be compared, then the influence of A would have to be taken into account in the calculations. In some Bayesian models, A is included as part of the definition of ω.
+Denote the likelihood function of the parameters given the data by p(D|ω) and let p(ω) denote the prior distribution of the parameters in the model. The likelihood function gives us an idea of the extent to which the observed data D can be predicted using the parameters ω. Note that it is a function of the parameters, not the data. The likelihood function of the parameters conditional upon the data is the probability of the data given the parameters, but where the data D are fixed and the parameters ω are variable. The prior distribution displays whatever knowledge and information we have about the parameters in the model before we observe the data.
+The complexity of the model is governed by the use of a hyperprior, a joint distribution on the parameters of the prior distribution; the param- eters of the hyperprior distribution are called hyperparameters. Much of Bayesian inference in ANNs uses vague (non-informative) priors for the
+μ(X) = g⎝α0 +
+fj(Xj)⎠, (10.60)
+￼
+10.12 Bayesian Learning for ANN Models 353
+hyperparameters; such hyperpriors represent our lack of specific knowledge about any prior parameters needed to describe the model.
+From Bayes’s theorem, the posterior distribution of the parameters given the data is given by
+p(ω|D) = p(D|ω)p(ω), (10.61) p(D)
+where p(D) = 􏰟 p(D|ω′)p(ω′)dω′ operates as a normalization factor to
+In this section, we give brief descriptions of two popular techniques for estimating the parameters ω in an ANN: Laplace’s method for deriving maximum a posteriori (MAP) estimates (MacKay, 1991) and Markov chain Monte Carlo (MCMC) methods (Neal, 1996). Exact analytical Bayesian computations are infeasible for neural networks, and so approximations offer the only way of obtaining a solution in practice.
+10.12.1 Laplace’s Method
+Predictions can be obtained by calculating the maximum (i.e., mode) of the posterior distribution (MAP estimation). As such, it is the Bayesian equivalent of maximum likelihood. In our discussion of this technique, we consider models for regression and classification networks separately.
+Regression Networks
+Suppose the output Y = y corresponding to input X = x is generated by a Gaussian distribution with mean y(x,ω) and known variance σ2. Then, assuming that D = {yi} is a random sample of values of Y , the likelihood function, LD(ω), of the parameters given the data is given by
+￼􏰟
+ensure that
+p(D|A), not as the probability of obtaining that particular set of data D. Usually, the best we can hope for is that inference based upon the posterior is robust (i.e., fairly insensitive) to the choice of prior.
+p(ω|D)dω = 1. Note that p(D) should be interpreted as
+e−κED (ω) LD(ω) = p(D|ω) = cD(κ) ,
+(10.62)
+(10.63)
+￼where
+1 􏰏n
+ED(ω)= 2
+(yi −y(xi,ω))2
+￼is the error sum-of-squares, κ = 1/σ2 is a (known) hyperparameter, 􏰞
+cD(κ) =
+e−κED(ω)dD = (2π/κ)n/2 (10.64)
+i=1
+354 10. Artificial Neural Networks
+􏰟􏰟
+is the normalization factor, and dD = dy1 · · · dyn.
+We take the prior distribution over the parameters to be the Gaussian
+density,
+where
+e−λEQ (ω) p(ω) = cQ(λ) ,
+q=1
+(10.65)
+( 1 0 . 6 6 )
+￼1 1􏰏Q
+ω q2 ,
+E Q ( ω ) = 2 ∥ ω ∥ 2 = 2
+￼￼ωq is equal to αjk, βij, α0k, or β0j as appropriate, λ is a hyperparameter
+(which we assume to be known), and cQ(λ) = (2π/λ)Q/2 is the normaliza-
+tion factor. We note that other types of priors for ANN modeling have been
+used;theseincludetheLaplacianprior(i.e.,(10.65)withEQ(ω)=􏰊 |wq|) q
+and entropy-based priors (Buntine and Weigend, 1991).
+Multiplying (10.62) by (10.65) and using (10.61), we get the posterior distribution of the parameters,
+￼where
+e−S(ω) p(ω|D) = cS (λ, κ) ,
+S(ω) = κED(ω)+λEQ(ω)
+(10.67)
+(10.68)
+􏰏n = κ
+i=1
+􏰏Q (yi −y(xi,ω))2 +λ ωq2
+q=1
+and the normalization factor, cS(λ,κ) = 􏰟 e−S(ω)dω, is an integration that cannot be evaluated explicitly. To find the maximum of the posterior distri- bution, we can minimize − loge p(ω|D) wrt ω. Because cS is independent of ω, it suffices to minimize S(ω). The value of ω that maximizes the pos- terior probability p(ω|D) (or, equivalently, minimizes S(ω)) is regarded as the most probable value of ω and is denoted by the MAP estimate ωMP. It can be found by an appropriate gradient-based optimization algorithm. The network corresponding to the parameter values ωMP is referred to as the most-probable regression network.
+From (10.68), we see that S(ω) is a constant (κ) times the error sum-of- squares of learning-set predictions plus a complexity term composed of a weight-decay penalty and regularization parameter λ. Because S(ω) has a form very similar to (10.51) and (10.52), the MAP approach can be used to determine λ in the weight-decay penalty for network pruning. Some simple arguments lead to a suggested range of 0.001 to 0.1 for exploratory values of λ (Ripley, 1996, Section 5.5). It is for this reason that MAP estimation has
+10.12 Bayesian Learning for ANN Models 355
+been characterized as “a form of maximum penalized likelihood estimation” (Neal, 1996, p. 6) rather than as a Bayesian method.
+Rather than having to work with the form of the posterior density just de- rived, we can make the following useful approximation, known as Laplace’s method or approximation (Laplace, 1774/1986). Suppose that ωMP is the location of a mode of p(ω|D). Consider the following Taylor-series expan- sion of S(ω) around ωMP:
+S(ω) ≈ S(ωMP) + 1(ω − ωMP)τ A(ω − ωMP), (10.69) 2
+where A = ∂2S(ω)/∂ω2|ω=ωMP , is the (Q × Q) Hessian matrix (assumed to be positive-definite) of second-order derivatives evaluated at ω = ωMP. Substituting (10.69) into the numerator of (10.67), we can approximate p(ω|D) by
+e−S(ωMP ) − 1 Δωτ AΔω
+p􏰣 ( ω | D ) = c ∗S ( λ ) e 2 , ( 1 0 . 7 0 )
+where Δω = ω − ωMP and the denominator (i.e., the normalizing factor)
+is equal to
+c∗S(λ) = (2π)Q/2|A|−1/2e−S(ωMP). (10.71) Thus, we can approximate p(ω|D) by
+2
+p􏰣(ω|D) = (2π)−Q/2|A|1/2e− 1 Δωτ AΔω, (10.72)
+which is the multivariate Gaussian density, NQ(ωMP,A−1), with mean vector ωMP and covariance matrix A−1. This approximation is reinforced by an asymptotic result that a posterior density converges (as n → ∞) to a Gaussian density whose variance collapses to zero (Walker, 1969). Note that the Gaussian approximation p􏰣(ω|D) is different from p(ωMP|D), the posterior density corresponding to the most-probable network.
+For any new input vector x, we can now write down an expression for the predictive distribution of a new output Y from a regression network using the learning data D:
+􏰞
+￼￼￼￼p(y|x, D) =
+p(y|x, ω)p(ω|D)dω, (10.73)
+where p(ω|D) is the posterior density of the parameters derived above. This integral cannot be computed because of all the nonlinearities involved in the network.
+To overcome this impass, we use the Gaussian approximation (10.72) to the posterior and assume that p(y|x,D) is a univariate Gaussian density with mean y(x,ω) and variance 1/ν. Then, (10.73) is approximated by
+􏰞
+p􏰣 ( y | x , D ) ∝
+e − ν ( y − y ( x , ω ) ) 2 − 1 Δ ω τ A Δ ω d ω . ( 1 0 . 7 4 ) 22
+￼￼
+356 10. Artificial Neural Networks
+We next assume that y(x,ω) can be approximated by a Taylor-series ex- pansion around ωMP,
+y(x, ω) ≈ y(x, ωMP) + gτ Δω, (10.75)
+where g = ∂y/∂ω|ωMP is the gradient. Set yMP = y(x,ωMP). Substitut- ing (10.75) into (10.74) and evaluating the resulting integral, we find that p(y|x, D) can be approximated by the Gaussian density,
+p􏰣 ( y | x , D ) = 1 e − ( y − y M P ) 2 / 2 σ y2 , ( 1 0 . 7 6 ) (2πσy2 )1/2
+with mean yMP and variance σy2 = 1 + gτ A−1g (see Exercise 10.10). This ν
+result can be used to derive approximate confidence bounds on the most- probable output yMP.
+So far, we have assumed the hyperparameters κ and λ are known. But, in practice, this is a highly unlikely scenario. In a fully hierarchical-Bayesian approach to this problem, we would incorporate the hyperparameters into the model and then integrate over all parameters and hyperparameters. However, such integrations are not possible analytically, and so another approach has to be taken.
+To deal with unknown κ and λ within a Bayesian framework, two dif- ferent approaches to this problem have been proposed: (1) integrating out the hyperparameters analytically and then using numerical methods to es- timate the most-probable parameter values (Buntine and Weigend, 1991); (2) estimating the hyperparameter values by maximizing something called “evidence” (MacKay, 1992a). These two approaches have attracted a cer- tain amount of controversy (see, e.g., Wolpert, 1993; MacKay, 1994).
+Analytically integrating out the hyperparameters. The first method in- volves supplying prior densities for the hyperparameters, then integrating them out (a method called marginalization), and finally applying numerical methods to determine ωMP. Thus, we can write
+􏰞􏰞 􏰞􏰞
+￼￼p(ω|D) = =
+p(ω, κ, λ|D)dκdλ
+p(ω|κ, λ, D)p(κ, λ|D)dκdλ. (10.77)
+Now, we use Bayes’s theorem for each term in the integrand: p(ω|κ, λ, D) = p(D|ω, κ, λ)p(ω|κ, λ)/p(D|κ, λ) = p(D|ω, κ)p(ω|λ)/p(D|κ, λ), because the likelihood does not depend upon λ and the prior does not depend upon κ; similarly, p(κ, λ|D) = p(D|κ, λ)p(κ, λ)/p(D) = p(D|κ, λ)p(κ)p(λ)/p(D), where we have assumed that the two hyperparameters, κ and λ, are dis- tributed independently of each other. We take these (improper) priors to be defined over (0, ∞) as p(κ) = 1/κ and p(λ) = 1/λ. The integral (10.77)
+1􏰞􏰞
+10.12 Bayesian Learning for ANN Models 357
+reduces to
+p(ω|D) = p(D) p(D|ω, κ)p(ω|λ)p(κ)p(λ)dκdλ. (10.78)
+This integral can be divided up into the product of two integrals and re- expressed as (10.61). Here,
+p(ω) = =
+￼􏰞
+􏰞 e−λEQ(ω) 1
+p(ω|λ)p(λ)dλ cQ(λ) λdλ
+￼￼λQ/2−1e−λEQ(ω)dλ. p. 100), we have that (10.79) reduces to
+􏰞
+= π−Q/2
+Using the value of a gamma integral (see, e.g., Casella and Berger, 1990,
+Multiplying (10.80) and (10.81) to get the posterior density, taking the negative logarithm of the result, and simplifying, we get
+− loge p(ω|D) = n loge ED(ω) + Q loge EQ(ω) + constant, (10.82) 22
+where the constant does not depend upon ω. We differentiate (10.82) wrt ω,
+d {− loge p(ω|D)} = κ d {ED(ω)} + λ d {EQ(ω)}, (10.83) dω dω dω
+to find its minimum, where
+κ = n/2ED(ω), λ = Q/2EQ(ω). (10.84)
+This result is next used in a nonlinear optimization algorithm in which the values of κ and λ are sequentially updated to find the most-probable parameters ωMP, and then a multivariate Gaussian approximation to the posterior density is obtained centered around ωMP.
+Maximizing the evidence. Another method for dealing with unknown κ and λ is to maximize the “evidence” of the model, p(D|κ, λ), which can be
+(10.79)
+￼Similarly, we obtain p(D|ω) =
+􏰞
+p(ω) = Γ(Q/2) . (πEQ(ω))Q/2
+Γ(n/2) p(D|ω, κ)p(κ)dκ = (πED (ω))n/2 .
+(10.80)
+(10.81)
+￼￼￼￼￼￼
+358 10. Artificial Neural Networks
+expressed as
+p(D|κ, λ)
+􏰞
+= p(D|ω, κ, λ)p(ω|κ, λ)dω 􏰞
+= p(D|ω, κ)p(ω|λ)dω
+􏰞
+= (cD(κ)cQ(λ))−1 = cS (κ, λ) ,
+e−S(ω)dω
+cD (κ)cQ (λ)
+where S(ω) is given by (10.68). As usual, it is easier to maximize the
+logarithm of (10.85),
+loge p(D|κ, λ) = −κED(ωMP) − λEQ(ωMP) − 1 loge |A| 2
++ n loge(κ) + Q loge(λ) − Q loge(2π). (10.86) 222
+We maximize this expression in two steps: first, fix κ and differentiate (10.86) wrt λ, set the result to zero, and solve for a maximum; next, fix λ and differentiate (10.86) wrt κ, set the result equal to zero, and solve for a maximum. These manipulations yield the following formulas (MacKay, 1992b):
+(10.85)
+￼￼￼￼￼where
+λ∗ = κ∗ =
+γ 2EQ(ωMP)
+n−γ , 2ED(ωMP)
+(10.87) (10.88)
+(10.89)
+￼￼γ=􏰏Q ηq , q=1 ηq +λ∗
+￼and the {ηq} are the eigenvalues of A−1.
+Thus, we set initial values for κ∗ and λ∗ by sampling from their respec- tive prior densities and determine ωMP by applying a suitable nonlinear optimization algorithm to S(ω); during the progress of these iterations, the values of κ∗ and λ∗ are sequentially updated using (10.87)–(10.89): an initial λ∗0 gives a γ0 using (10.89), which yields λ∗1 from (10.86) and κ∗1 from (10.88); the new λ∗1 is fed back into (10.89) to provide a new γ1, which, in turn, gives λ∗2 and κ∗2, and so on. These steps in the algorithm should be repeated a large number of times each time using different initial values for the parameter vector ω.
+We note that this computational technique of dealing with hyperparame- ters is equivalent to the empirical Bayes (Carlin and Louis, 2000, Chapter 3)
+where
+lD(ω) = −
+􏰏n i=1
+{yi loge y(xi, ω) + (1 − yi) loge(1 − y(xi, ω))}
+p(D|ω) =
+􏰛n i=1
+p(Yi = 1|xi,ω) = e−lD(ω),
+10.12 Bayesian Learning for ANN Models 359
+or type II maximum-likelihood (ML-II) approach to prior selection (Berger, 1985, Section 3.5.4).
+Multiple modes. A major problem in practice, however, is that it is not generally realistic to assume that the posterior density has only a single mode. From experience of fitting Bayesian models to nonlinear networks, we find it more reasonable to assume that there will be multiple local maxima of the posterior density (see, e.g., Ripley, 1994a, p. 452, who, in a particular example, found at least 22 distinct local modes). As usual in such situations, one should try to identify as many of the distinct local maxima as possible by running the optimization algorithm using a large number of randomly chosen starting points for the parameters.
+A potentially better modeling strategy for multiple modes is to use an approximation to the posterior based upon a mixture of multivariate Gaus- sian densities, where the component densities are assumed to have minimal overlap; each component density is centered at a different local mode of the posterior p(ω|D), and the inverse of its covariance matrix is matched to the Hessian of the logarithm of the posterior density at the mode (MacKay, 1992a). Although some work has been carried out on Gaussian mixture models for neural networks (see, e.g., Buntine and Weigend, 1991; Ripley, 1994b), more research is needed on this topic.
+Classification Networks
+If the problem involves classifying data into one of two classes, Π1 or Π2, then the output variable Y is binary, taking on the value 1 (for Π1) or 0 (for Π2). The network output y(x,ω) = p(Y = 1|x,ω) is the conditional probability that the particular input vector X = x is a member of Π1.
+The probability that Yi = 1 is
+p(Yi = 1|xi, ω) = (y(xi, ω))yi (1 − y(xi, ω))1−yi .
+The likelihood function of the parameters ω (given the data D) is
+(10.90)
+(10.91)
+(10.92)
+is the negative log-likelihood function. Again, the network’s architecture A is assumed to be given. Note that, compared to (10.62) for regression networks, (10.91) has neither a hyperparameter κ nor a denominator cD(κ).
+360 10. Artificial Neural Networks
+For a prior on the parameters, we use the Gaussian density (10.65), which is proportional to e−λEQ(ω).
+Assuming the {Yi} are iid copies of Y , the posterior density (10.61) is e−S(ω)
+￼where
+p(ω|D) = cS(λ) , (10.93) S(ω) = lD(ω) + λEQ(ω), (10.94)
+λ is, again, the regularization parameter (also known as a weight-decay regularizer), and cS(λ) is the normalization factor. Finding ω to maximize the posterior distribution is equivalent to minimizing S(ω). The value of ω that maximizes the posterior distribution is denoted by ωMP.
+We can now find the probability that the input vector, X = x, is a member of class Π1 (i.e., Y = 1). MacKay (1992b) suggests that if f(·) is one of the activation functions in Table 10.1 and u = u(x, ω), then,
+􏰞 􏰞
+p(Y = 1|x, D) = =
+p(Y = 1|u)p(u|x, D)du
+f (u)p(u|x, D)du (10.95) provides a better estimate of the class probability than y(x, ωMP). To eval-
+uate this integral, MacKay first expands u in a Taylor series, u(x, ω) ≈ u(x, ωMP) + g(x)τ Δω,
+where g(x) = ∂u(x, ω)/∂ω|ωMP and Δω = ω − ωMP. Thus, 􏰞
+(10.96)
+(10.97)
+p(u|x, D) = =
+􏰞
+p(u|x, ω)p(ω|D)dω
+δ(u − uMP − g(x)τ Δω)p(ω|D)dω,
+where uMP = u(x,ωMP) and δ is the Dirac delta-function. This result implies that if we use Laplace’s method and approximate the posterior density p(ω|D) in (10.93) by the multivariate Gaussian density,
+2
+p􏰣 ( ω | D ) ∝ e − 1 Δ ω τ A Δ ω ,
+where A is the (local) Hessian matrix, then, u is Gaussian, p(u|x, D) ∝ e−(u−uMP)2/2ν2 ,
+with mean uMP and variance
+ν2 = g(x)τ A−1g(x).
+( 1 0 . 9 8 )
+(10.99)
+(10.100)
+￼
+p(y∗|x∗, L) =
+p(y∗|x∗, ω)p(ω|L)dω. (10.102)
+10.12 Bayesian Learning for ANN Models 361
+When f is sigmoidal and p(u|x, D) is Gaussian, the integral (10.95) does not have an analytic solution. MacKay (1992b) suggests the following simple approximation for (10.95):
+p􏰣(Y =1|x,D)=f(α(ν)uMP), (10.101) where α(ν) = (1 + (πν2/8))−1/2. Note that the probability (10.101) is not
+the same as y(x, ωMP).
+10.12.2 Markov Chain Monte Carlo Methods
+As we have seen, the main computational difficulty in applying Bayesian methods involves the evaluation of complicated high-dimensional integrals. For example, the predictive distribution of the output value Y = y∗ of a new test case (x∗,y∗), given the learning data, L = {(xi,yi),i = 1,2,...,n}, is given by
+􏰞
+If we were to estimate y∗ in a regression model using squared-error as our loss function, then, the best predictor is the expectation of the predictive
+distribution (10.102),
+E{Y ∗|x∗, L} =
+􏰞
+p(x∗, ω)p(ω|L)dω. (10.103) Problems of approximating the posterior density or its expectation have
+been summarized well by Neal (1996, Section 1.2).
+A recent popular and highly successful addition to the Bayesian’s toolkit is a method known as Markov chain Monte Carlo (MCMC), which is actu- ally a collection of related computational techniques designed for simulating from nonstandard multivariate distributions (see, e.g., Gilks, Richardson, and Spiegelhalter, 1996; Robert and Casella, 1999). It was proposed as a method for estimating the predictive distributions of regression and classi- fication network parameters and their expectations by Neal (1996).
+The essential idea behind MCMC is to approximate the desired inte- gration by simulating from the joint probability distribution of all the model parameters and hyperparameters. Thus, we, first, use a Monte Carlo method to draw a sample of B values, ω(1),...,ω(B), from the predictive density (10.99), where ω now includes all weights, biases, and hyperparam- eters; then, we approximate the expectation (10.103) by
+1 􏰏B
+∗ ∗(b)
+y􏰡=B p(x,ω). (10.104) b=1
+￼When the predictive density is complicated, as it is in nonlinear neural network applications, then the sequence of generated values, {ω(b)}, has to be viewed as a dependent sequence.
+362 10. Artificial Neural Networks
+One way of generating such a dependent sequence is by using an er- godic Markov chain with stationary distribution P = p(x,ω). A Markov chain is defined on a sequence of states, ω(b), by an initial distribution for the startup state, ω(0), of the chain and a set of transition probabilities, {Q(ω(b)|ω(b−1))}, for a future state, ω(b), to succeed the current state, ω(b−1). The distribution P is called stationary (or invariant) if it remains the same for all states in the sequence that follow the bth state. If a sta- tionary distribution P exists and is unique, then the Markov chain is called ergodic and its stationary distribution P is known as the equilibrium dis- tribution. If we can find an ergodic Markov chain that has equilibrium distribution P, then it does not matter from which initial state we start the chain, convergence of the sequence will always be to P . In such a case, we can estimate (10.103) wrt P by using (10.104).
+Because the members of the sequence {ω(b)} are dependent, we need a much larger value of B than if the sequence consisted of independent values. At the beginning, the iterates will look like the starting values, ω(0), and then, after a long time, the Markov chain will settle down. To take this into account, the first B0 iterates are considered as the “burn-in” period; these values are discarded as not resembling the equilibrium distribution P , and only the subsequent B − B0 values are regarded as essentially independent observations from P to be used for predictive purposes.
+The two most popular methods for MCMC are Gibbs sampling and the Metropolis algorithm. Both (and variations of those themes) have been used extensively in mathematical physics, chemistry, biology, statistics, and image restoration.
+The Gibbs sampler (Geman and Geman, 1984) can be applied when sampling from any distribution defined by a vector, ω = (ω1, · · · , ωQ)τ , Q ≥ 2, of parameters. Considering these parameters as random variables, we assume that all one-dimensional conditional distributions of the form p(ωq|{ωi,i ̸= q}),q = 1,2,...,Q, are available to be sampled. The entire set of these conditional distributions is (under mild conditions) sufficient to determine the joint distribution and all its margins. Given a vector of starting values ω(0), we define a Markov chain by generating ω(b) from ω(b−1) according to the algorithm in Table 10.3, where we use notation from Besag, Green, Higdon, and Mengersen (1995). This process generates a sequence (or trajectory) of the chain, ω(0),ω(1),...,ω(b),..., and, as b gets larger and larger (after a long enough “burn-in” period), the vector ω(b) becomes approximately distributed as the desired P.
+The Metropolis algorithm (Metropolis, Rosenbluth, Rosenbluth, Teller, and Teller, 1953) introduces a candidate or proposal density, f, whose form depends upon the current state; one generates a candidate state, ω∗, from f, and then decides whether or not to “accept” that candidate state. If the candidate state is accepted, it becomes the next state in the Markov chain; otherwise, it remains at the current state. See Table 10.4. The iter-
+10.12 Bayesian Learning for ANN Models 363
+TABLE 10.3. The Gibbs sampler. 1. Letω(0),...,ω(0) bestartingvalues.Define
+￼1Q
+ω−q = {ωj,j ̸= q} = {ω1,ω2,...,ωq−1,ωq+1,...,ωQ}.
+2. Forb=1,2,...:
+draw ω(b) ∼ pq(ωq|ω(b−1)), q = 1,2,...,Q.
+q −q
+3. Continue the 2nd step until the joint distribution of ω(b), . . . , ω(b) stabilizes.
+1Q
+ative process moves from the current state, ω(b−1), to the next state, ω(b), corresponding to a higher-density region of p(ω|L), whereas it rejects a per- centage of those steps that move to lower-density regions of p(ω|L). Note that the candidate densities may change from step to step; typically, the candidate density f is selected to be a member of a family of distributions, such as Gaussian densities centered at ω(b−1).
+Unfortunately, neither the Gibbs sampler nor the Metropolis algorithm are recommended for sampling from the posterior distribution of a neural network model. Because of the huge numbers of parameters involved and the nonlinearity of the model, such MCMC procedures are either compu- tationally infeasible or are very slow for this type of application.
+TABLE 10.4. The Metropolis algorithm.
+1. Let ω(0) be starting values. Let p(ω|L) be the joint posterior density of ω. 2. Forb=1,2,...:
+(i) Draw a candidate state, ω∗, from a proposal density f, which depends upon the current state; i.e., ω∗ ∼ f (·, ω(b−1) ).
+(ii) Compute the ratio r = p(ω∗|L)/p(ω(b−1)|L).
+(iii) (a) If r ≥ 1, accept the candidate state and set ω(b) = ω∗.
+(b) Otherwise, accept the candidate state with probability r or reject it with probability 1 − r. If the candidate state is rejected, set
+ω(b) = ω(b−1).
+3. Continue the 2nd step until the joint distribution of ω(b) stabilizes.
+￼￼￼
+364 10. Artificial Neural Networks
+To overcome these difficulties, Neal (1996, Chapter 3) successfully im- plemented a combination procedure based upon the hybrid Monte Carlo algorithm of Duane, Kennedy, Pendleton, and Roweth (1987). Neal’s pro- cedure separates the hyperparameters from the network parameters (i.e., weights and biases) and alternates their updates: the Gibbs sampler is used for updating the hyperparameters, and the hybrid Monte Carlo algorithm, an elaborate version of the Metropolis algorithm, is used to update the network parameters.
+10.13 Software Packages
+S-Plus and R (Venables and Ripley, 2002, Sections 8.8–8.10) have com- mands to carry out neural networks (nnet), projection pursuit regres- sion (ppr), and generalized additive models (gam). Matlab has a Neural Network Toolbox with tools for designing, implementing, visualizing, and simulating neural networks. Weka (Waikato Environment for Knowledge Analysis) is a collection of open-source machine-learning algorithms for data-mining tasks, including neural network modeling, from the University of Waikato, Hamilton, New Zealand (Witten and Frank, 2005). Weka is downloadable from www.cs.waikato.ac.nz/ml/weka.
+Gibbs sampling can be used to simulate from almost any probability model through BUGS (Bayesian inference Using Gibbs Sampling), Win- BUGS, and OpenBUGS software, which is downloadable from
+www.mrc-bsu.cam.ac.uk/bugs/. OpenBUGS can be run from R in Windows.
+Bibliographical Notes
+Groundbreaking work on the neural biology of the brain appeared in the book Hebb (1949), which was reprinted in 2002 with additional mate- rial. The historical remarks in this chapter about Hebb were adapted from Milner (1993), the edited volume by Jusczyk and Klein (1980), and the ex- cellent individual articles by Sejnowski, Milner, Kolb, Tees, and Hinton in the February 2003 issue of Canadian Psychology. Also highly recommended is the fascinating book by Calvin and Ojemann (1994), who use conversa- tions between an epileptic patient and his surgeon to carry out a learning tour of the cerebral cortex.
+There are many good treatments of artificial neural networks. Books include MacKay (2003, Part V), Hastie, Tibshirani, and Friedman (2001, Chapter 11), Duda, Hart, and Stork (2001, Chapters 6 and 7), Vapnik (2000), Fine (1999), Haykin (1999), Ripley (1996, Chapter 5), Rojas (1996),
+￼￼
+and Bishop (1995). Statistical perspectives of neural networks can be found in the articles by Ripley (1994a), Cheng and Titterington (1994), and Stern (1996).
+The universal approximation theorem derives from the work of Kol- mogorov (1957), Sprecher (1965), and others, who showed that a continuous function could have an exact representation in terms of the superposition of a few functions of one variable. Dissatisfaction with these representations for motivating neural networks led to a variety of approximation results (e.g., Cybenko, 1989; Funahashi, 1989; Hornick, Stinchcombe, and White, 1989).
+The backpropagation algorithm (also referred to as the generalized delta rule) was independently discovered by several researchers at the same time. Werbos (1974) had published the basic idea of backpropagation for general networks in his doctoral dissertation, which was written during the “quiet” period of neural networks. As fate would have it, the idea lay dormant until the mid-1980s when Parker (1985) and LeCun (1985) independently rediscovered versions of the algorithm. The paper by Rumelhart, Hinton, and Williams (1986) and an expanded version, Rumelhart and McClelland (1986a), enabled the algorithm to be given wide attention. An excellent discussion of the backpropagation algorithm from the point of view of a graph-labeling problem is given by Rojas (1996, Chapter 7).
+The paper by Huber (1985) and the discussion following give an excellent description of PPR and its advantages and disadvantages. Additive models and generalized additive models are described in detail in the monograph by Hastie and Tibshirani (1990). A Bayesian backfitting algorithm for fitting additive models is given by Hastie and Tibshirani (2000).
+Bayesian modeling of neural networks can be found in Bishop (2006, Section 5.7), Titterington (2004), MacKay (2003, Chapter 41), Lampinen and Vehtari (2001), Fine (1999, Section 6.2), Barber and Bishop (1998), Ripley (1996, Section 5.5), Bishop (1995, Chapter 10), and Cheng and Titterington (1994).
+An excellent reference to Laplace’s method is Tierney and Kadane (1986), who showed how it could be used to approximate posterior expectations and, therefore, how important the method is for Bayesian computation. See also Kass, Tierney, and Kadane (1988), Bernardo and Smith (1994, Section 5.5.1), and Carlin and Louis (2000, Section 5.2.2).
+Markov chain Monte Carlo (MCMC) is currently a very active field of research within the Bayesian statistical community. Books that discuss MCMC include MacKay (2003, Chapter 29), Carlin and Louis (2000, Chap- ter 5), Robert and Casella (1999), Neal (1996), Gilks, Richardson, and Spiegelhalter (1996), and Gelman, Carlin, Stern, and Rubin (1995, Chap- ter 11). Survey articles on MCMC include Cowles and Carlin (1996) and Besag, Green, Higdon, and Mengersen (1995). See also the November 2001
+10.13 Bibliographical Notes 365
+366 10. Artificial Neural Networks
+and February 2004 issues of Statistical Science. The Gibbs sampler was first used as an MCMC method by Geman and Geman (1984) in the context of image restoration. Its introduction to the statistical community is due to Gelfand and Smith (1990), who broadened its appeal considerably.
+The field of neural networks is now regarded by many as part of a larger field known as softcomputing (due to L.A. Zadeh), which includes such topics as fuzzy logic (e.g., computing with words), evolutionary computing (e.g., genetic algorithms), probabilistic computing (e.g., Bayesian learning, statistical reasoning, belief networks), and neurocomputing. The primary goal of softcomputing is to create a new AI that will reflect the workings of the human mind. According to Zadeh, this is to be accomplished using computing tools and methods that exploit a tolerance for imprecision, un- certainty, partial truth, and approximation in order to achieve robustness and a low-cost solution.
+Exercises
+10.1 Let φ(x) = a tanh(bx) be the hyperbolic tangent activation function, where a and b are constants. Show that φ(x) = 2aψ(bx) − a, where ψ(x) = (1 + e−x)−1 is the logistic activation function.
+10.2 Show that the logistic function is symmetric, whereas the tanh func- tion is asymmetric.
+￼10.3 Show that the Gaussian cumulative distribution function, Φ(x) = (2π)−1/2 􏰟 x e−u2/2du, is a sigmoidal function.
+−∞
+10.4 Show that ψ(x) = (2/π) tan−1(x) is a sigmoidal function.
+10.5 For r = 3 inputs, draw the hyperplane in the unit cube corresponding to the McCulloch–Pitts neuron for the logical OR function.
+10.6 (The XOR Problem.) Consider four points, (X1,X2), at the corners of the unit square: (0, 0), (0, 1), (1, 0), (1, 1). Suppose that (0, 0) and (1, 1) are in class 1, whereas (0, 1) and (1, 0) are in class 2. The XOR problem is to construct a network that classifies the four points correctly. By setting Y =1topointsinclass1andY =0topointsinclass2(orviceversa),show algebraically that a straight line cannot separate the two classes of points and, hence, that a perceptron with no hidden nodes is not an appropriate network for this problem.
+10.7 (The XOR Problem, cont.) Consider a fully connected network with two input nodes (X1,X2), two hidden nodes (Z1,Z2), and a single output node (Y ). Let β11 = β12 = 1 be the connection weights from X1 to Z1 and Z2, respectively; let β01 = 1.5 be the bias at hidden node 1; let β21 =
+β22 = 1 be the connection weights from X2 to Z1 and Z2, respectively; and letβ02 =0.5bethebiasathiddennode2.Next,letα1 =−2andα2 =1 be the connection weights from Z1 to Y and from Z2 to Y , respectively, with bias α0 = 0.5. Draw the network graph. Find the linear boundaries as defined by the two hidden nodes; in the unit square, draw the boundaries and identify which class, 0 or 1, corresponds to each region of the unit square. Show that this network solves the XOR problem. Find another solution to this problem using different weights and biases.
+10.8 Write a computer program to carry out the backpropagation algo- rithm as detailed in Section 10.7.6 for the squared-error loss function, and then apply it to a classification data set of your choice.
+10.9 Study the correspondences between a single hidden layer neural net- work (10.18) and a generalized additive model (10.54).
+10.10 Prove that 􏰞
+e−1zτBz+hτzdz = (2π)Q/2|B|−1/2e1hτB−1h. 22
+10.11 Prove (10.74). (Hint: Use Exercise 10.10 with z = Δω, B = A + νggτ , and h = −ν(y − yMP)g. Then, multiply numerator and denominator by gτ (I + νA−1ggτ )g, and simplify.)
+10.12 Use the logistic function as the sigmoid activation function g(·) and a linear function f(·) to derive the computational expressions for the back- propagation algorithm. Discuss the properties of this particular algorithm.
+10.13 Use the cross-entropy loss function to derive the appropriate com- putational expressions for the backpropagation algorithm. Program the re- sulting algorithm, use it with a data set of your choice, and compare its output with that obtained from the squared-error loss function.
+10.14 Construct a network diagram based upon the sine function that will approximate the function F(x) in (10.21) by F􏰡(x) in (10.22).
+10.15 Suppose we construct a neural network with no hidden layer, just input and output nodes. Let Xj be the jth input, j = 1,2,...,r, and let Y = f(β0 + Xτ β) denote the output, where f(u) = (1 + e−u)−1, X = (X1,···,Xr)τ, and β = (β1,···,βr)τ is an r-vector of weights. Show that the decision boundary of this network is linear. If there are two input variables (i.e., r = 2), draw the corresponding decision boundary.
+10.16 Fit a neural network to the gilgaied soil data set from Section 8.6. How could the two-way format of the data be taken into account in a neural network model?
+10.13 Exercises 367
+￼￼
+368 10. Artificial Neural Networks
+10.17 Fit a neural network to the Cleveland heart-disease data from Section 9.2.1. Compare results with that given by using a classification tree.
+10.18 Fit a neural network to the Pima Indians diabetic data set pima from Section 9.2.4. Compare results with that given by using a classification tree.
+10.19 Fit a regression neural network to the 1992 Major League Baseball Salaries data from Section 9.3.5. Compare results with that given by using a regression tree.
+10.20 Write a computer program to implement projection pursuit regres- sion and use it to fit the 1992 Major League Baseball Salaries data.
+10.21 Consider a regression neural network in which the outputs are iden- tical to the inputs. Generate input data from a suitable multivariate Gaus- sian distribution and use that same data as outputs. Fit a neural networks model to these data and comment on your results. What is the relationship between this network analysis and principal component analysis?
+10.22 In the discussion of Bayesian neural networks (Section 10.12), the binary classification problem was addressed. Redo the section on Bayesian classification networks using Laplace’s approximation method so that now there are more than two classes.
+10.23 Take any classification data set and divide it up into a learning set and an independent test set. Change the value of one observation on one input variable in the learning set so that that value is now a univari- ate outlier. Fit separate single-hidden-layer neural networks to the original learning-set data and to the learning-set data with the outlier. Comment on the effect of the outlier on the fit and on its effect on classifying the test set. Shrink the value of that outlier toward its original value and eval- uate when the effect of the outlier on the fit vanishes. How far away must the outlier move from its original value so that significant changes to the network coefficient estimates occur?

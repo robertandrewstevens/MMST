@@ -1,0 +1,742 @@
+4
+Nonparametric Density Estimation
+4.1 Introduction
+Nonparametric techniques consist of sophisticated alternatives to tradi- tional parametric models for studying multivariate data. What makes these alternative techniques so appealing to the data analyst is that they make no specific distributional assumptions and, thus, can be employed as an initial exploratory look at the data. In this chapter, we discuss methods for nonparametric estimation of a probability density function.
+Suppose we wish to estimate a continuous probability density function p of a random r-vector variate X, where
+􏰞
+Rr
+Any p that satisfies (4.1) is called a bona fide density. The nonparametric density estimation (NPDE) problem is to estimate p without specifying a formal parametric structure. In other words, p is taken to belong to a large enough family of densities so that it cannot be represented through a finite number of parameters. It is usual to assume instead that p (and its derivatives) satisfy some appropriate “smoothness” conditions. However, there are applications (e.g., X-ray transition tomography) in which dis-
+A.J. Izenman, Modern Multivariate Statistical Techniques, Springer Texts in Statistics, 75 DOI 10.1007/978-0-387-78189-1_4, © Springer Science+Business Media New York 2013
+￼p(x) ≥ 0,
+p(x)dx = 1. (4.1)
+76 4. Nonparametric Density Estimation
+continuities in p (in that case, tissue density) are natural (Johnstone and Silverman, 1990)
+Perhaps the earliest nonparametric estimator of a univariate density p was the histogram. Further breakthroughs — initially, with the kernel, orthogonal series, and nearest neighbor methods — came from researchers working in nonparametric discrimination and time series analysis. Indeed, Parzen (1962), in his seminal work on kernel density estimators, noted the resemblance between probability density estimation and spectral density estimation for stationary time series and then went on to say that “the methods employed here are inspired by the methods used in the treatment of the latter problem.”
+Nonparametric density estimates can be effective in the following situa- tions. Descriptive features of the density estimate, such as multimodality, tail behavior, and skewness, are of special interest, and a nonparametric approach may be more flexible than the traditional parametric methods; NPDE is used in decision making, such as nonparametric discrimination and classification analysis, testing for modes, and random variate testing; and statistical peculiarities of the data often can be readily explained in presentations to clients through simple graphical displays of estimated den- sity curves.
+4.1.1 Example: Coronary Heart Disease
+A popular application of nonparametric density estimation is that of comparing data from two independent samples. In this example, data on a large number of variables were used to compare 117 coronary heart disease patients (the “coronary group”) with 117 age-matched healthy men (the “control group”) (Kasser and Bruce, 1969). These variables included heart rates recorded at rest and at their maximum after a series of exercises on a treadmill.
+Figure 4.1 shows kernel density estimates of resting heart rate and maxi- mum heart rate for both groups. The maximum heart rate density estimate (see right panel) for the coronary group appears to be bimodal, possibly a mixture of the unimodal control-group density and a contaminating density having a smaller mean. The opposite conclusions appear to be the case for resting heart rate (left panel). For each density estimate, we used a smooth- ing parameter (window width) that reflected sample variation. Both graphs show a considerable amount of overlap in their density estimates, making it difficult to distinguish between the groups on the basis of either of these two variables.
+A statistic used to monitor activity of the heart is the change in heart rate from a resting state to that after exercise; that is, maximum heart rate minus resting heart rate. As can be seen from Figure 4.1, many of the
+￼￼￼￼￼￼￼Control Group
+￼￼￼0.04
+0.03
+0.02
+0.01
+0.03
+0.02
+0.01
+4.2 Statistical Properties of Density Estimators 77
+￼Control Group
+￼￼￼Coronary Group
+￼￼￼￼Coronary Group
+￼￼￼￼￼￼0.00 ￼ ￼ ￼ ￼ ￼ ￼ ￼ ￼ ￼ ￼ 0.00
+40 60 80 100 120 6590115140165190215
+RestingHeartRate Maximum HeartRate
+FIGURE 4.1. Gaussian kernel density estimates for comparing a “coro- nary group” of 117 male heart patients (red curves) with a “control group” of 117 age-matched healthy men (blue curves) in a coronary heart disease study. Left panel: resting heart rate. Right panel: maximum heart rate after a series of exercises on a treadmill. For each density estimate, the window width was taken to reflect sample variation.
+coronary group will have very small values of this difference (one patient has a difference of 3), whereas the bulk of the control group’s values will tend to be larger. Indeed, 20% of the coronary group had differences strictly smaller than the smallest of the differences of the control group, and 14% of the control group had differences lying strictly between the two largest differences of the coronary group.
+4.2 Statistical Properties of Density Estimators
+Like any statistical procedure, nonparametric density estimators are rec- ommended only if they possess desirable properties. In general, research emphasis has centered upon developing large-sample properties of non- parametric density estimators.
+4.2.1 Unbiasedness
+An estimator p􏰡 of a probability density function p is unbiased for p if, for all x ∈ Rr, Ep{p􏰡(x)} = p(x). Although unbiased estimators of parametric densities, such as the Gaussian, Poisson, exponential, and geometric, do ex- ist, no bona fide density estimator (i.e., satisfying (4.1)) based upon a finite data set can exist that is unbiased for all continuous densities (Rosenblatt, 1956). Hence, attention has focused on sequences {p􏰡n} of nonparametric
+￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼
+78 4. Nonparametric Density Estimation
+density estimators that are asymptotically unbiased for p; that is, for all x ∈ Rr, Ep{p􏰡n(x)} → p(x), as the sample size n → ∞.
+4.2.2 Consistency
+A more important property is consistency. The simplest notion of consis- tency of a density estimator is where p􏰡 is weakly-pointwise consistent for p if p􏰡(x) → p(x) in probability for every x ∈ Rr, and is strongly-pointwise con- sistent for p if convergence holds almost surely. Other types of consistency depend upon the error criterion.
+The L2 Approach. This has always been the most popular approach to nonparametric density estimation. If p is assumed to be square integrable, then the performance of p􏰡 at x ∈ Rr is measured by the mean-squared error (MSE),
+MSE(x) = Ep{p􏰡(x) − p(x)}2 = var{p􏰡(x)} + [bias{p􏰡(x)}]2, var{p􏰡(x)} = Ep[p􏰡(x) − Ep{p􏰡(x)}]2
+(4.2)
+A more important performance criterion relates to how well the entire curve p􏰡 estimates p. One such measure of goodness of fit is found by inte- grating (4.2) over all values of x, which yields the integrated mean-squared error (IMSE),
+where
+bias{p􏰡(x)} = Ep{p􏰡(x)} − p(x). IfMSE(x)→0forallx∈Rr asn→∞,thenp􏰡issaidtobeapointwise
+consistent estimator of p in quadratic mean.
+􏰞
+Ep{p􏰡(x) − p(x)}2dx
+􏰇􏰞 􏰢 􏰞
+(4.5)
+[p(x)]2dx.
+If we let R(g) = 􏰟 [g(x)]2dx, then the last term, R(p), on the rhs of (4.6)
+is a constant and, hence, can be removed:
+IMSE − R(p) = Ep{R(p􏰡) − 2p􏰡}. (4.7)
+Thus, R(p􏰡) − 2p􏰡 is an unbiased estimator for IMSE − R(p).
+Another popular measure is integrated squared error (ISE, or L2-norm),
+􏰞
+Rr
+Taking expectations over p in (4.8) gives the mean-integrated squared error; that is, Ep(ISE) = MISE = IMSE (Fubini’s theorem). ISE is often preferred
+IMSE = =
+Rr
+Ep [p􏰡(x)]2dx − 2Ep{p􏰡(x)} +
+(4.6)
+ISE =
+[p􏰡(x) − p(x)]2dx. (4.8)
+(4.3) (4.4)
+􏰞
+KL = and Hellinger distance (HD),
+p􏰡(x) log
+􏰇 p􏰡 ( x ) 􏰢 p(x) dx,
+(4.10)
+4.2 Statistical Properties of Density Estimators 79
+as a performance criterion (rather than its expected value IMSE) because ISE determines how closely p􏰡 approximates p for a given data set, whereas MISE is concerned with the average over all possible data sets. For bona fide density estimates, the best possible asymptotic rate of convergence for MISE is O(n−4/5); by dropping the restriction that p be a bona fide density, a density estimate can be constructed with MISE better than O(n−1).
+The L1 Approach. One problem with the L2 approach to NPDE is that the criterion pays less attention to the tail behavior of a density, possibly resulting in peculiarities in the tails of the density estimate. An alterna- tive L1-theory of NPDE is also available (Devroye and Gyorfi, 1985). The integrated absolute error (IAE, or total variation or L1-norm) is given by
+􏰞
+|p􏰡(x) − p(x)|dx. (4.9) IAE is always well-defined as a norm on the L1-space, is invariant under
+monotone transformations of scale, and lies between 0 and 2.
+If IAE → 0 in probability as n → ∞, then p􏰡 is said to be a consistent es- timator of p; strong consistency of p􏰡 occurs when convergence holds almost surely. The IAE distance is related to Kullback–Leibler relative entropy (KL),
+IAE =
+Rr
+￼HD(m) =
+􏰇􏰞 􏰁
+[p􏰡(x)]1/m − [p(x)]1/m
+􏰂m 􏰢1/m
+dx (4.11)
+(Devroye and Gyorfi, 1985, Chapter 8). The expectation of (4.9) over all densities p yields the mean integrated absolute error, MIAE = Ep{IAE}. Some quite remarkable results can be proved concerning the asymptotic behavior of IAE and MIAE under little or no assumptions on p. One thing, however, is clear: The technical labor needed to get L1 results is substan- tially more difficult than that needed to obtain analogous L2 results.
+4.2.3 Bona Fide Density Estimators
+Some density estimation methods always yield bona fide density esti- mates, and others generally yield density estimates that contain negative ordinates (especially in the tails) or have an infinite integral. Negativity can occur naturally as a result of data sparseness in certain regions or it can be caused by relaxing the nonnegativity constraint in (4.1) in order to improve the rate of convergence of an estimator of p. Negativity in a density estimate can lead to an especially undesirable interpretation if a
+80 4. Nonparametric Density Estimation
+function of that estimate is needed in a practical situation. For example, Terrell and Scott (1980) remarked that “a negative hazard rate implies the spontaneous reviving of the dead.” Moreover, in the quest for faster rates of convergence for density estimators, some researchers have chosen to relax the integral constraint in (4.1) rather than the nonnegativity constraint.
+There are several ways of alleviating such problems. The density estimate may be truncated to its positive part and renormalized, or a transformed version of p (e.g., log p or p1/2) may be estimated and then backtransformed to get a nonnegative estimate of p.
+4.3 The Histogram
+The histogram has long been used to provide a visual clue to the general shape of p. We begin with the univariate case, where x ∈ R. Suppose p has support Ω = [a,b], where a and b are usually taken to contain the entire collection of observed data. Create a fixed partition of Ω by using a grid (or mesh) of L nonoverlapping bins (or cells), Tl = [tn,l,tn,l+1), l = 0,1,2,...,L−1, where a = tn,0 < tn,1 < tn,2 < ··· < tn,L = b, and the bin edges {tn,l} are shown depending upon the sample size n. Let ITl denote the indicator function of the lth bin and let Nl = 􏰊ni=1 ITl (xi) be the number of sample values that fall into Tl, l = 0,1,2,...,L−1, where 􏰊L−1 Nl = n.
+L−1
+p􏰡 ( x ) = 􏰏 N l / n I T l ( x ) , ( 4 . 1 2 )
+satisfies (4.1). If we fix hn = tn,l+1 − tn,l, l = 0,1,2,...,L − 1, to be a common bin width, and if we take tn,0 = 0, then the bins will be T0 = [0, hn), T1 = [hn, 2hn), . . . , TL−1 = [(L − 1)hn, Lhn). Then, (4.12) reduces to
+￼l=0
+Then, the histogram, defined by
+￼l=0 tn,l+1 − tn,l
+L−1
+p􏰡(x) = 1 􏰏 NlITl (x).
+(4.13)
+( 4 . 1 4 )
+￼So, if x ∈ Tl, then,
+nhn l=0
+p􏰡 ( x ) = N l .
+￼As a density estimator, the histogram leaves much to be desired, with de- fects that include “the fixed nature of the cell structure, the discontinuities at cell boundaries, and the fact that it is zero outside a certain range” (Hand, 1982, p. 15).
+A much more serious defect relates to the sensitivity of histogram shapes to the choice of origin. Figure 4.2 displays histograms for the data set
+nhn
+￼￼￼￼￼￼￼￼￼￼￼30
+20
+10
+40
+30
+20
+10
+4.3 The Histogram 81
+￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼00
+1400144014801520156016001640168017201760 1409144914891529156916091649168917291769
+velocity velocity
+FIGURE 4.2. Histograms of the radial velocities of 323 locations in the area of the spiral galaxy NGC7531 in the Southern Hemisphere (Buta, 1987). In both panels, the bin width is h = 20. In the left panel, the origin is 1,400; in the right panel, it is 1,409, the minimum data value.
+galaxy, which consists of the radial velocities of 323 locations in the area of the spiral galaxy NGC7531 in the Southern Hemisphere (Buta, 1987). The bin width is h = 20 and the origins are 1,400 (left panel) and 1,409 (right panel). We see how different the histograms look when the origin is changed.
+In general, histograms tend not to have symmetric, unimodal, or Gaus- sian shapes. Indeed, in many large data sets, we often see histograms that are highly skewed with short left-hand tails, very long right-hand tails, sev- eral modes (some more prominent than others), and multiple outliers. In many cases, the modes can be modeled parametrically as components of a mixture of distributions.
+4.3.1 The Histogram as an ML Estimator
+Let H(Ω) be a specified class of real-valued functions defined on Ω. Given a random sample of observations, x1,x2,...,xn, the maximum-likelihood (ML) problem is to find a p ∈ H(Ω) that maximizes the likelihood function
+￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼or its logarithm, subject to
+􏰞
+Ω
+L(p) =
+􏰛n i=1
+p(xi),
+(4.15)
+(4.16)
+p(t)dt=1, p(t)≥0forallt∈Ω.
+If H(Ω) is finite dimensional, then a (not necessarily unique) solution to this problem exists and is called an ML estimator of p. The uniqueness of the solution depends upon the specification of H(Ω). If we restrict H to contain
+only functions of the form p(x) = 􏰊L−1 ylITl (x), where h 􏰊L−1 yl = 1, l=0 l=0
+82 4. Nonparametric Density Estimation
+then the histogram (4.13) is the unique ML estimator of p based on the observations x1, x2, . . . , xn; see Exercise 4.1.
+4.3.2 Asymptotics
+If n observations are randomly drawn from the probability density p, then thebincountN inintervalT canbeviewedasabinomialrandomvariable;
+and
+Tl
+E{p􏰡(x)} = pl = p(ξl) hn
+var{p􏰡(x)} = var{Nl} = npl(1 − pl) ≤ pl n 2 h 2n n 2 h 2n n h 2n
+(4.19)
+(4.20)
+􏰟 􏰃n􏰄
+ll
+that is, Nl ∼ Bin(n, pl), where pl = Tl p(x)dx. Thus, the probability that Nl out of the n observations will fall into bin Tl is given by
+Prob{Nl ∈ Tl} = pNl (1 − pl)n−Nl . (4.17) Nl l
+Hence, E{Nl} = npl and var{Nl} = npl(1 − pl). Under suitable continuity conditions for p(x) and assuming that p(x) does not vary much for x ∈ Tl, there exists ξl ∈ Tl such that, by the mean-value theorem,
+􏰞
+pl =
+where hn is the width of Tl. Then, from (4.14), we have that, for x ∈ Tl,
+p(x)dx = hnp(ξl), (4.18)
+￼= p(ξl), n h n
+￼￼￼￼because pl(1 − pl) ≤ pl.
+Now, consider the bin T0 = [0, hn). By expanding p(y) around p(x) using
+a Taylor series, we have that
+􏰞 􏰃h􏰄
+p = p(y)dy=h p(x)+h n −x p′(x)+O(h3). (4.21)
+0nn2 T0
+￼The bias of p􏰡(x) is Ep{p􏰡(x)}−p(x), where, from (4.19), Ep{p􏰡(x)} = p0/hn. By the generalized mean value theorem, there exists ξ0 ∈ T0 such that the leading term of the integrated squared bias for bin T0 is
+􏰞
+T0
+[bias{p􏰡(x)}]2dx ∼ p′(ξ0)
+􏰞􏰃h􏰄2 h3
+− x dx = n [p′(ξ0)]2. (4.22)
+￼￼T02 12
+A similar result holds for bin Tl. The total integrated squared bias (ISB) is obtained by multiplying this result by hn, summing over all bins, and arguing that the sum converges to an integral. The asymptotic integrated
+squared bias (AISB), which is defined as the leading term in ISB, is given by
+AISB = 1 h2nR(p′), (4.23) 􏰟 12
+where R(g) = R{g(u)}2du. Next, define the integrated variance (IV) as 􏰞􏰏􏰞
+IV = var{p􏰡(x)}dx = var{p􏰡(x)}dx. (4.24) R lTl
+Substituting from (4.20), summing over all bins, and setting 􏰊 p = 􏰟ll
+p(x)dx = 1, we have that
+IV= 1 − 1 􏰏p2l. (4.25)
+(4.26)
+(4.27)
+4.3 The Histogram 83
+￼￼￼nhn nhn l
+Now, from (4.18), we have that 􏰊 p2 = h 􏰊 [p(ξ )]2h . The summation
+􏰟llnlln
+on the rhs approximates hn [p(x)]2dx. The asymptotic integrated variance
+(AIV) is defined as the leading terms in IV and is given by AIV = 1 − R(p).
+￼￼nhn n
+Combining AIV with AISB yields the asymptotic MISE (AMISE),
+AMISE = 1 + 1 h2nR(p′). nhn 12
+￼￼Ifhn →0andnhn →∞asn→∞,thenIMSE→0.
+Differentiating (4.27) wrt hn, setting the result equal to zero, and solving,
+we have that AIMSE is minimized wrt hn by the optimal bin width, 􏰇 6 􏰢1/3
+h ∗n = R ( p ′ ) n , ( 4 . 2 8 )
+where p′ = p′(x) = dp(x)/dx is the first derivative of p wrt x, and R(p′) is a measure of roughness of the density function p (see Exercise 4.2). If X ∼ N (0, σ2), then (4.28) reduces to
+h∗n ≈ 3.4908σn−1/3. (4.29)
+In Figure 4.3, we graph the histogram of 5,000 observations randomly drawn from N(0,1) using bin widths 0.1, 0.2 (optimal using (4.29)), 0.3, and 0.4.
+The asymptotic IMSE corresponding to the optimal choice (4.29) of bin width is given by
+AIMSE∗ = (3/4)2/3[R(p′)]1/3n−2/3, (4.30)
+￼
+84
+4. Nonparametric Density Estimation
+￼￼￼￼h=0.2
+￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼h=0.1
+0.4
+0.3
+0.2
+0.1
+￼￼￼0.4
+0.3
+0.2
+0.1
+0.0
+0.4
+0.3
+0.2
+0.1
+0.0
+0.0
+-4-3-2-101234 -4-3-2-101234
+xx
+0.4
+0.3
+0.2
+0.1
+0.0
+-4-3-2-101234 -4-3-2-101234
+xx
+￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼h=0.3
+￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼h=0.4
+￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼FIGURE 4.3. Histograms of 5,000 observations randomly drawn from a standard Gaussian distribution. The optimal bin width is 0.2 (top-right panel). The other three histograms have bin widths of 0.1 (top-left panel), 0.3 (bottom-left panel), and 0.4 (bottom-right panel).
+which reduces to AIMSE∗ ≈ 0.43n−2/3 in the N(0,1) case. This conver- gence rate of O(n−2/3) is substantially slower than most other types of density estimators, which gives a more technical reason why histograms do not make good density estimators.
+4.3.3 Estimating Bin Width
+An important aspect of drawing histograms is choice of bin width, which operates as a smoothing parameter. The two most popular methods for choosing the most appropriate histogram bin-width for a given data set are the “plug-in” method and cross-validation.
+The obvious estimate of h∗n in the Gaussian case is given by substituting the sample standard deviation s in (4.29) in place of the unknown σ; that is, 􏰡h∗n = 3.5sn−1/3 (“Scott’s rule”). This “plug-in” estimator generally works well, but for non-Gaussian data, it can lead to overly smoothed histograms (via too-wide bin widths or, equivalently, too-few bins). Slightly narrower
+bin widths can be obtained using the more robust rule 􏰡h∗n = 2(IQR)n−1/3, where IQR is the interquartile range of the data. The robust rule will yield
+a narrower bin width than the Gaussian rule if s/IQR > 0.57. Although this robust rule can sometimes yield wider bin widths than the Gaussian rule, we should not see much difference between the two choices in practice.
+The second method uses leave-one-out cross-validation, CV/n, to esti- mate h∗n. From (4.8), ISE can be expanded into three terms:
+􏰞􏰞􏰞
+ISE = [p􏰡(x)]2dx − 2 p􏰡(x)p(x)dx + [p(x)]2dx. (4.31)
+The last term, which depends only upon the unknown p, is not affected by changes in bin-widths h, and so can be ignored. The first term only depends upon the density estimate p􏰡 and can be easily computed. Because the middle integral is the expected height of the histogram, Ep{p􏰡(X)}, CV/n can be used to estimate this integral. Accordingly, the unbiased cross- validation (UCV) criterion for a histogram is
+U C V ( h )
+= R ( p􏰡 ) − n
+= (n−1)h − n2(n−1)h
+2 􏰏n
+p􏰡 − i ( x i )
+2 n+1􏰏L
+See Exercise 4.10. The CV/n estimate, 􏰡hUCV , of h is that value of h that minimizes UCV(h). A biased cross-validation (BCV) criterion for choosing the bin width of a histogram has also been proposed and studied; for details, see Scott and Terrell (1987). The BCV bin width, 􏰡hBCV , is the value of h that minimizes BCV(h), a similar-looking criterion to (4.32). Both UCV and BCV criteria yield consistent estimates of h, but convergence is slow in either case, the relative error being O(n−1/6).
+4.3.4 Multivariate Histograms
+The univariate results on optimal bin width and asymptotically optimal IMSE can be extended to the multivariate case.
+In this case, we are given a random sample of observations, x1 , x2 , . . . , xn , where xi = (x1i, x2i, · · · , xri)τ , from the multivariate density p(x), x ∈ Rr. Each axis is partitioned in the form of a grid of uniformly spaced bins. If the jth axis is partitioned by bins of width hj,n, j = 1,2,...,r, the space Rr is partitioned into hyperrectangles, each having volume h1,nh2.n · · · hr,n.
+Now, suppose Nl multivariate observations fall into the lth hyperrect- angle Bl, where 􏰊 Nl = n. Then, our histogram estimate of p(x) is
+p􏰡 ( x ) = 1 􏰏 N l I B l ( x ) . ( 4 . 3 3 ) nh1,nh2,n · · · hr,n l
+l
+4.3 The Histogram 85
+￼i=1
+l=1
+Nl2. (4.32)
+￼￼￼
+￼86 4. Nonparametric Density Estimation
+FIGURE 4.4. Bivariate histograms for the coronary heart disease study. Variables plotted are resting heart rate and maximum heart rate. Left panel: control group. Right panel: coronary group.
+It can be shown (Scott, 1992, Theorem 3.5) that the asymptotically optimal bin width, h∗l,n, for the lth variable is given by
+⎛ ⎞1/(2+r) 􏰛r
+h∗l,n = [R(pl)]−1/2 ⎝6 [R(pj)]1/2⎠ j=1
+and the asymptotically optimal IMSE is
+⎛ ⎞1/(2+r)
+n−1/(2+r)
+(4.34)
+AIMSE∗ = 462/(2+r) ⎝ where pj = ∂p(x)/∂xj .
+n−2/(2+r),
+(4.35)
+1 􏰛r
+R(pj)⎠
+In the multivariate Gaussian case, Nr (0, Σ), where Σ = diag{σ12 , . . . , σr2 },
+(4.35) reduces to
+h∗l,n = 2 · 31/(2+r)πr/(4+2r)σln−1/(2+r). (4.36)
+For r = 1, the constant in (4.36) reduces to 2 · 31/3π1/6 = 3.4908, and as r → ∞, the constant becomes 2π1/2 = 3.5449. So, for all r, the constant lies between 3.4908 and 3.5449. A rule-of-thumb, therefore, for this particular case is to use h∗l,n ≈ 3.5σln−1/(2+r).
+Figure 4.4 displays bivariate histograms of both the control group (left panel) and coronary group (right panel) for the coronary heart disease study (see Section 4.1.1). In particular, the control-group histogram has a unimodal and sharply skewed shape, whereas the coronary-group histogram has a bimodal and more blocky shape. Problems in visualizing important characteristics of a bivariate histogram, due to its “blocky” and discontin- uous nature, often make such density estimators difficult to work with in practice.
+j=1
+to be maximized subject to
+􏰞
+Ω
+p∈H(Ω),
+p(u)du=1, p(u)≥0forallu∈Ω.
+􏰣 􏰛n L(p) =
+p(xi)e−Φ(p).
+The optimization problem calls for L􏰣(p), or its logarithm,
+i=1
+􏰣 􏰏n L(p) = loge L(p) =
+loge p(xi) − Φ(p),
+4.4 Maximum Penalized Likelihood 87
+4.4 Maximum Penalized Likelihood
+The ML method of Section 4.3.3 fails miserably when the class H of den- sities over which the likelihood L is to be maximized is unrestricted. For that case, the likelihood is maximized by a linear combination of Dirac delta functions (or “spikes”) at the n sample values, resulting in a value of +∞ for the likelihood. There have been several approaches to ML density esti- mation in which restrictions are placed on H; these include order-restricted methods and sieve methods (see, e.g., Izenman, 1991). Here, we restrict the likelihood L by penalizing L for producing density estimates that are “too rough.”
+Let Φ be a given nonnegative (roughness) penalty functional defined on H. The Φ-penalized likelihood of p is defined to be
+(4.37)
+(4.38)
+(4.39)
+￼i=1
+If it exists, a solution, p􏰡, of that problem is called a maximum penalized
+likelihood (MPL) estimate of p corresponding to the penalty function Φ and
+class of functions H . For example, Φ(p) = α 􏰟 ∞ [p′′ (x)]2 dx is used in the −∞
+IMSL Fortran routine DESPL, where α > 0 is a smoothing parameter. IMSL recommends α = 10 for N (0, 1) data and using a grid of α = 1(10)100 for other situations.
+Good and Gaskins (1971) observed that the MPL method could, for certain types of problems, be interpreted as “quasi-Bayesian” because L􏰣(p) in (4.37) resembles a posterior density for a parametric estimation problem. Furthermore, the MPL method is closely related to Tikhonov’s method of regularization used for solving ill-posed inverse problems (O’Sullivan, 1986).
+The existence and uniqueness of MPL density estimates have been estab- lished, and it has been shown that such estimates are intimately related to spline methods (de Montricher, Tapia, and Thompson, 1975). For example, if p has finite support Ω and if H(Ω) is a suitable class of smooth functions
+88 4. Nonparametric Density Estimation
+on Ω, then the MPL estimate p􏰡 exists, is unique, and is a polynomial spline with join points (or “knots”) only at the sample values.
+The case when p has infinite support is more complicated. Good and Gaskins (1971) proposed penalty functionals designed to estimate the “root- density,” so that p􏰡 = γ􏰡2 would be a nonnegative (and bona fide) estimator of p. The penalty functionals were
+Φ1(p) = 4αR(γ′), α > 0, (4.40) Φ2(p) = 4αR(γ′) + βR(γ′′), α ≥ 0, β ≥ 0, (4.41)
+where, as before, R(g) = 􏰟[g(x)]2dx, for any square-integrable function g, and the hyperparameters α and β, with α + β > 0 in (4.41), control the amount of smoothing. The choice of Φ1 or Φ2 depends upon how best to represent the “roughness” of p. Good and Gaskins preferred Φ2 to Φ1, arguing that curvature as well as slope of the density estimate should be penalized.
+If the optimization problem is set up correctly, and we use the penalty function Φ1 and a given value of α, then the resulting estimator, γ􏰡α, say, exists, is unique, and is a positive exponential spline with knots only at the sample values (de Montricher, Tapia, and Thompson, 1975). An expo- nential spline rather than a polynomial spline is the price to be paid for requiring nonnegativity of the density estimator. The MPL estimator is then given by p􏰡α = γ􏰡α2 . This density estimator is consistent over a number of norms, including L1 and L2. Similar statements can be made about the optimization problem where Φ2 is the penalty function and α and β are given.
+Implementation of the MPL method depends upon the quality of the numerical solutions to the restricted optimization problems. Scott, Tapia, and Thompson (1980) studied a discrete approximation to the spline so- lutions of the MPL problems and proved that the resulting discrete MPL estimator exists, is unique, converges to the spline MPL estimator, and is a strongly pointwise consistent estimator of p. Fortunately, solutions to the MPL density-estimation problem can be expressed in terms of kernel density estimates, where the kernels are weighted according to the other observations in the sample rather than with a uniform n−1 weight as in (4.42) below.
+4.5 Kernel Density Estimation
+The most popular density estimation method is the kernel density esti- mator. Given n iid univariate observations, x1,x2,...,xn, drawn from the
+￼
+density p, the kernel density estimator,
+1 􏰏n 􏰃 x − x 􏰄
+p􏰡h(x)= K
+nh h
+i , x∈R, h>0, (4.42)
+4.5 Kernel Density Estimation 89
+￼￼i=1
+of p(x), x ∈ R, is used to obtain a smoother density estimate than the histogram. In (4.42), K is a kernel function, and the window width h deter- mines the smoothness of the density estimate. Choice of h is an important statistical problem: too small a value of h yields a density estimate too dependent upon the sample values, whereas too large a value of h produces the opposite effect and oversmooths the density estimate by removing in- teresting peculiarities. Given a kernel K and window width h, the resulting kernel density estimate is unique for a specific data set; hence, kernel den- sity estimates do not depend upon a choice of origin as do histograms.
+There are several ways to define a multivariate version of (4.42). In the following, we use the formulation provided by Scott (1992, Section 6.3.2). Given the r-vectors x1, x2, . . . , xn, the multivariate kernel density estimator of p is defined to have the general form,
+1 􏰏n
+p􏰡H(x) = n|H|
+where H is an (r×r) nonsingular matrix that generalizes the window width h, and K is a multivariate function with mean 0 and integrates to 1. If, for example, we take H = hA, where h > 0 and |A| = 1, the size and elliptical shape of the kernel will be determined completely by h and the matrix AAτ, respectively. If A = Ir, then (4.43) reduces to
+K(H−1(x − xi)), x ∈ Rr, (4.43)
+￼i=1
+1􏰏n 􏰃x−x􏰄 p􏰡 h ( x ) = r K i
+, x ∈ R r . ( 4 . 4 4 )
+In (4.44), the choice of kernel function K and window width h control the performance of p􏰡h as an estimator of p. Because p􏰡h inherits whatever properties the kernel K possesses, it is important that K has desirable statistical properties.
+4.5.1 Choice of Kernel
+The simplest class of kernels consists of multivariate probability density functions that satisfy
+􏰞
+Rr
+If a kernel K from this class is used in (4.44), then p􏰡h will always be a bona fide probability density.
+￼￼nh h
+K(x) ≥ 0,
+K(x)dx = 1. (4.45)
+i=1
+90 4. Nonparametric Density Estimation
+TABLE 4.1. Examples of univariate kernel functions with compact sup- port.
+￼Kernel Function
+Rectangular Triangular Bartlett–Epanechnikov Biweight Triweight Cosine
+K(x)
+1 I[|x|≤1] 2
+(1 − |x|)I[|x|≤1] 3 (1 − x2 )I[|x|≤1]
+4
+15 (1 − x2)2I[|x|≤1] 16
+35 (1 − x2)3I[|x|≤1] 32
+π cos(πx)I[|x|≤1] 42
+￼￼￼￼￼￼￼￼Popular choices of univariate kernels include the Gaussian kernel with unbounded support,
+K(x) = (2π)−1/2e−x2/2, x ∈ R, and the compactly supported “polynomial” kernels,
+K(x)=κij(1−|x|i)jI[|x|≤1], κij = i 2Beta(j + 1, 1/i)
+(4.46)
+, i>0,j≥0.
+￼(4.47) Special cases of the polynomial kernel are the rectangular kernel (j = 0, κi0 = 1/2), the triangular kernel (i = 1,j = 1, κ11 = 1), the Bartlett– Epanechnikov kernel (i = 2,j = 1, κ21 = 3/4), the biweight kernel (i = 2,j = 2, κ22 = 15/16), the triweight kernel (i = 2,j = 3, κ23 = 35/32), and, after a suitable rescaling, the Gaussian kernel (i = 2, j = ∞). Their
+specific forms are listed in Table 4.1 and graphed in Figure 4.5.
+It has been known for some time that the Bartlett–Epanechnikov kernel minimizes the optimal asymptotic IMSE with respect to K. However, IMSE is, in fact, quite insensitive to the shape of the kernel, so the Gaussian or rectangular kernels are just as good in practice as the optimal kernel.
+Multivariate kernels are usually radially symmetric unimodal densities, such as the Gaussian,
+K(x) = 1 e−xτx/2, x ∈ Rr, (4.48) (2π)r/2
+￼
+4.5 Kernel Density Estimation 91
+￼￼￼￼￼Triangular
+Rectangular
+￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼Triweight
+Biweight
+Bartlett- Epanechnikov
+￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼1.0
+0.8
+0.6
+0.4
+0.2
+0.0 0.0
+-1.6 -1.1 -0.6 -0.1 0.4 0.9 1.4 xx
+FIGURE 4.5. Univariate kernel functions with compact support. Left panel: rectangular and triangular kernels. Right panel: Bartlett– Epanechnikov, biweight, and triweight kernels.
+and the compactly supported Bartlett–Epanechnikov, r+2 τ πr/2
+￼1.0 0.8 0.6 0.4 0.2
+￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼-1.6 -1.1 -0.6 -0.1 0.4 0.9 1.4
+(1 − x x)I[xτ x≤1], cr = Γ((r/2) + 1). (4.49)
+K(x) = 2c
+In certain multivariate situations, it may be convenient to use product ker-
+￼￼nels of the form,
+r
+K(x) =
+􏰛r j=1
+K(xj), (4.50)
+which is a product of univariate kernel functions, where the kernels are the same for each dimension. If we take H in (4.43) to be the diagonal ma- trix H = diag{h1,n, · · · , hr,n} = hA with different window widths in each dimension, where A = diag{h1,n/h,···,hr,n/h}, and let K be a product kernel, then (4.43) reduces to
+⎧ 􏰃 􏰄⎫
+1 􏰏n ⎨ 􏰛r x j − x i j ⎬ r
+p􏰡H(x)=nhr ⎩ K hj,n ⎭,x∈R, (4.51) i=1 j=1
+￼￼where x = (x1,···,xr)τ, xi = (xi1,···,xir)τ, and h = (h1,n ···hr,n)1/r is the geometric mean of the r window widths.
+4.5.2 Asymptotics
+Early work on kernel density estimation emphasized asymptotic results, which depended upon the particular viewpoint considered.
+The L1 Approach. Among the remarkable L1 results proved for kernel density estimates, we have that if K satisfies (4.45), then the kernel esti- mator (4.44) will be a strongly consistent estimator of p iff hn → 0 and
+K(x)
+K(x)
+92 4. Nonparametric Density Estimation
+nhn → ∞, as n → ∞, without any conditions on p (Devroye, 1983). More- over, in the univariate case, MIAE is of order O(n−2/5) (Devroye and Pen- rod, 1984), which is better than the corresponding L1 rate for histograms. Explicit formulas for the minimum MIAE and the asymptotically optimal smoothing parameters for kernel estimators are available (Hall and Wand, 1988).
+The L2 Approach. Under regularity conditions on K and p, it can be shown that if hn → 0 as n → ∞, then the univariate kernel density estima- tor is both asymptotically unbiased and asymptotically Gaussian (Parzen, 1962). In the multivariate case, the MISE is asymptotically minimized over all h satisfying the above conditions by
+h∗n = α(K)β(p)n−1/(r+4), (4.52)
+where r is the dimensionality, α(K) depends only upon the kernel K, and β(p) depends only upon the unknown density p (Cacoullos, 1966). This result shows that the window width should get smaller as the sample size n gets larger; this reflects a commonsense notion that “local” smoothing information becomes more important as more data become available. More- over, MISE → 0 at the rate O(n−4/(r+4)). These L2 results show clearly the dimensionality effect, because these convergence rates become slower as the dimensionality r increases.
+In the univariate case, the pointwise variance (4.3) and bias (4.4) of p􏰡h(x) are found by using Taylor-series expansions:
+v a r { p􏰡 ( x ) } ≈ n h
+n
+− n ,
+( 4 . 5 3 ) ( 4 . 5 4 )
+R(K )p(x) [p(x)]2
+￼￼b i a s { p 􏰡 ( x ) } ≈ 1 σ K2 h 2 n p ′ ′ ( x ) ; 􏰟2
+￼[g(x)]2dx for any square-integrable function g, and σ2 = 􏰟2K
+where R(g) =
+x K(x)dx. See Exercise 4.11. Thus, we can reduce the variance by in-
+creasing the size of hn (i.e., by oversmoothing), and bias reduction can take place if we make hn small (i.e., by undersmoothing). This is the clas- sical bias-variance trade-off dilemma, and so, to choose hn, a compromise is needed.
+Adding the variance term and the square of the bias term and then integrating wrt x gives us the asymptotic MISE (AMISE) for a univariate kernel density estimator:
+AMISE(hn) = R(K) + 1σK4 h4nR(p′′). (4.55) nhn 4
+Minimizing AMISE(hn) wrt hn yields the asymptotically optimal window
+￼￼width,
+􏰇 R(K) 􏰢1/5
+h∗n = σK4 R(p′′) n−1/5, (4.56)
+￼
+so that α(K) = {R(K)/σK4 }1/5 and β(p) = {R(p′′)}−1/5 in (4.52). Substi- tuting the expression for h∗n into AMISE shows that
+AMISE∗ = 5[σKR(K)]4/5[R(p′′)]1/5n−4/5. (4.57) 4
+See Scott (1992, p. 131).
+Consider the special case where K is a product Gaussian kernel (4.50) and the density p is multivariate Gaussian with diagonal covariance matrix, diag{σ12, . . . , σr2} (i.e., the variables are independent). Then, (4.52) reduces to
+􏰃 4 􏰄1/(r+4)
+h∗j,n = r+2 σjn−1/(r+4), j=1,2,...,r. (4.58)
+In the univariate case, where K is the standard Gaussian kernel and p is a Gaussian density with variance σ2, then
+h∗n = 1.06σn−1/5 (4.59)
+is the asymptotically optimal window width. In the bivariate case, the constant in (4.58) is exactly 1. In general, (4/(r + 2))1/(r+4) attains its minimum as a function of r when r = 11, where its value is 0.924. For general r, Scott (1992, p. 152) recommends the rule h∗j,n = σjn−1/(r+4).
+4.5.3 Example: 1872 Hidalgo Postage Stamps of Mexico
+This example shows the effect of varying the window width h of a Gaus- sian kernel density estimate. The data1 consist of 485 measurements of the thickness of the paper on which the 1872 Hidalgo Issue postage stamps of Mexico were printed (Izenman and Sommer, 1988). This example is partic- ularly interesting because of the fact that these stamps were deliberately printed on a mixture of paper types, each having its own thickness charac- teristics due to poor quality control in paper manufacture.
+Today, the thickness of the paper on which this particular stamp image is printed is a primary factor in determining its price. In almost all cases, a stamp printed on relatively scarce “thick” paper is worth a great deal more than the same stamp printed on “medium” or “thin” paper. It is, therefore, important for stamp dealers and collectors to know how to dif- ferentiate between thick, medium, and thin paper. Quantitative definitions of the words thin and thick do not appear in any current stamp catalogue,
+1The Hidalgo stamp data can be found in the file Hidalgo1872 on the book’s website.
+4.5 Kernel Density Estimation 93
+￼￼￼
+94
+4. Nonparametric Density Estimation
+￼￼￼￼￼￼￼￼￼￼25 20 15 10
+5
+40
+30
+20
+10 10
+(a)
+(b)
+(c)
+￼￼￼￼40 30 20
+￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼000
+0.04 0.06 0.08 0.10 0.12 0.14 0.16 0.06 0.08 0.10 0.12 0.14 0.06 0.08 0.10 0.12 0.14
+Thickness(mm) Thickness(mm) Thickness(mm)
+￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼50 40 30 20 10
+60
+40
+20
+80 60 40 20
+(d)
+(e)
+(f)
+￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼000
+0.06 0.08 0.10 0.12 0.14 0.06 0.08 0.10 0.12 0.14 0.06 0.08 0.10 0.12 0.14
+Thickness(mm) Thickness(mm) Thickness(mm)
+￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼FIGURE 4.6. Gaussian kernel density estimates of the 485 measurements on paper thickness of the 1872 Hidalgo Issue postage stamps of Mexico. The window widths are (a) h = 0.01; (b) h = 0.005; (c) h = 0.0036; (d) h = 0.0025; (e) h = 0.0012; and (f) h = 0.0005. Notice the smooth appearance of the density estimates and the emergence of more modes as h is decreased.
+and decisions as to the financial worth of such stamps are left to personal subjective judgment.
+Figure 4.6 displays Gaussian kernel density estimates of the Hidalgo stamp data for six window widths: h = 0.01,0.005,0.0036,0.0025,0.0012, and 0.0005. As h is reduced in magnitude, more structure and detail of the underlying density become visible and more modes emerge. Clearly, the estimate in panel (a) is too smooth, and that in panel (f) is too noisy. The most reasonable density estimate is that which corresponds to a window width of h = 0.0012 (see panel (e)) and has seven modes. The two biggest modes occur at thicknesses of 0.072 mm and 0.080 mm; a cluster of three side modes occur at 0.090 mm, 0.100 mm, and 0.110 mm; and there are two tail modes at 0.120 mm and 0.130 mm.
+Our analysis does not stop there. We have more information regarding this particular stamp issue. Every stamp from the 1872 Hidalgo Issue was overprinted with year-of-consignment information: there was an 1872 con- signment (289 stamps) and an 1873–1874 consignment (196 stamps). We divided these 485 thickness measurements into two groups according to the appropriate consignment overprint.
+Gaussian kernel density estimates (with common window width h = 0.0015) were computed for the data from each consignment. The resulting
+120 100 80 60 40 20 0
+4.5 Kernel Density Estimation 95
+￼￼￼￼1873-1874 Consignment
+1872 Consignment
+￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼0.06 0.08 0.10 0.12 0.14 Thickness(mm)
+FIGURE 4.7. Gaussian kernel density estimates from data on the 1872 consignment (n = 289) and 1873–1874 consignment (n = 196) of the 1872 Hidalgo Postage Stamp Issue of Mexico. For both density estimates, a com- mon window width of h = 0.0015 was used.
+density estimates, which are graphed in Figure 4.7, show clearly that the paper used for printing the stamps in the two consignments had very dif- ferent thickness characteristics. It appears that a large proportion of the 1872 consignment of stamps was printed on very thick paper, which was not used for the 1873–1874 consignment.
+Because 1872 Hidalgo Issue stamps printed on thick paper command much higher prices, these results show that one should look at year-of- consignment as an important factor for valuation purposes.
+4.5.4 Estimating the Window Width
+For kernel density estimation, rather than trying an ad hoc sequence of different window widths until we find one with which we are satisfied, it would be much more convenient to have an automated method for deter- mining the optimal window width for any given data set.
+For the L2 approach, we see from (4.52) that the optimal window width, h∗n, depends explicitly on the unknown density p through the quantity β(p), and so cannot be computed exactly. The most popular methods for estimating h∗n are the so-called “rule-of-thumb” method, cross-validation, and the “plug-in”method.
+Rule-of-Thumb Method An obvious way to estimate the window width is to insert a parametric estimate p􏰡 of p into β(p).
+96 4. Nonparametric Density Estimation
+In the univariate case, we can choose a “reference density” for p, find
+R(p′′), and then estimate the result using a random sample from p. If we
+take p to be N(0,σ2) and K to be a standard Gaussian kernel, then the
+“optimal” rule-of-thumb (ROT) window width for a Gaussian reference
+density (see (4.59)) would be 􏰡hROT = 1.06sn−1/5, where the sample stan- n
+dard deviation s is the usual estimate for σ. Otherwise, a more robust estimate of σ may be used, such as min{s,IQR/1.34}, where IQR is the interquartile range, and for Gaussian data, IQR ≈ 1.34s (Silverman, 1986, pp. 45–47).
+For example, the Hidalgo postage stamp data has standard deviation s = 0.015, so that the optimal ROT window width is given by 􏰡hROT =
+n (1.06)(0.015)(485)−1/5 = 0.005; as we see from Figure 4.6(b), this value
+yields an overly smoothed density estimate.
+Rule-of-thumb estimators for window widths are generally regarded as unsatisfactory (with some exceptions). Simulations and case studies with real data both indicate that window widths produced by this method tend to be overly large; if that happens, the density estimate will be drastically oversmoothed and the presence of an important mode may be unknowingly removed.
+Cross-Validation A popular method for determining the optimal window width is leave-one-out cross-validation (CV/n). In the univariate case, the basic algorithm removes a single value, say xi, from the sample, computes the appropriate density estimate at that xi from the remaining n−1 sample values,
+1 􏰏􏰃x−x􏰄
+p􏰡 h , − i ( x i ) = K i j , ( 4 . 6 0 )
+￼￼(n − 1)h j̸=i h
+and then chooses h to optimize some given criterion involving all values of p􏰡h,−i(xi), i = 1,2,...,n. A number of different versions of CV/n have been used for determining h in density estimation, including unbiased and biased cross-validation.
+The unbiased cross-validation choice, hUCV, of window width is that h n
+that minimizes
+2 􏰏n
+p􏰡 h , − i ( x i ) , ( 4 . 6 1 ) where R(g) = 􏰟 [g(x)]2dx. The criterion (4.61), which is derived in exactly
+R
+the same manner as the CV-expression for the histogram given in (4.32), is referred to as an unbiased cross-validation (UCV) criterion because it is exactly unbiased for a shifted version of MISE; that is,
+Ep{UCV(h)} = MISE(h) − R(p). (4.62)
+U C V ( h ) = R ( p􏰡 h ) − n
+i=1
+￼
+Only very mild tail conditions on K and p are needed to prove that hUCV n
+asymptotically minimizes ISE and gives good results even for long-tailed p; it has also been shown to perform asymptotically as well as the MISE- optimal (but unattainable) window width h∗n, and even though convergence tends to be slow, it cannot be improved upon asymptotically.
+Another approach to the problem of choosing h is to minimize AMISE(h)
+directly. In the univariate case, AMISE depends upon the unknown R(p′′),
+which we, therefore, need to estimate. Scott and Terrell (1987) showed that
+′′′′′′52 ′′
+Ep{R(p􏰡 )} = R(p ) + R(K )/nh + O(h ), so that R(p􏰡 ) asymptotically
+overestimates R(p′′). From this result, they proposed the modified estima-
+tor
+, ( 4 . 6 3 ) which is an asymptotically unbiased estimator of R(p′′). See also Hall and
+Marron (1987).
+If we define Kh(u) = h−1K(u/h), then, K′′(u/h) = h3K′′(u). Differen-
+tiating p􏰡h(x) (see (4.44)) twice wrt x gives
+i=1
+􏰡 ′′ ′′
+R ( p ) = R ( p􏰡 ) −
+R(K′′) nh5
+′′
+′′
+p􏰡 ( x ) =
+Squaring (4.64), integrating the result wrt x, and then using a change of
+variable gives
+1 􏰏n 􏰏n
+h n2 hhij
+′′
+′′ ′′
+R ( p􏰡 ) =
+4.5 Kernel Density Estimation 97
+K ( x − x ) .
+( 4 . 6 4 )
+h
+￼1 􏰏n hnhi
+h
+h
+￼K ∗ K ( x − x )
+= 1K′′∗K′′(0)+1􏰏􏰏K′′∗K′′(x−x)
+￼i=1 j=1
+nhhn2 hhij
+￼￼i̸=j
+= R(K′′)+ 1 􏰏􏰏K′′∗K′′(x−x),
+(4.65) where the convolution of two functions f and g is defined by f ∗ g(u) =
+h h i j
+￼￼􏰟
+nh5 n2h5
+f (z)g(u − z)dz. Substituting (4.65) into the expression (4.63) yields
+R􏰡(p′′)= 1 􏰏􏰏K′′∗K′′(x−x). (4.66) hn2h5 hhij
+i̸=j
+Substituting (4.66) as an estimator of R(p′′) into AMISE (4.55) and setting
+h = hn yields a biased cross-validation (BCV) criterion,
+B C V ( h ) = R ( K ) + σ K4 􏰏 􏰏 K ′ ′ ∗ K ′ ′ ( x − x ) . ( 4 . 6 7 )
+i<j
+i̸=j
+￼n nhn 2n2hn
+hn hn i j
+￼￼
+98 4. Nonparametric Density Estimation
+The BCV estimator of h is that value, hBCV that (locally) minimizes the n
+BCV(hn) criterion.
+For the Hidalgo stamp data example, the BCV choice of h is 0.0036, corresponding to Figure 4.6(c) and yielding an overly smoothed density estimate, whereas the UCV choice of h is 0.0005, corresponding to Figure 4.6(f) and yielding an undersmoothed density estimate.
+Even though CV methods are popular, they have been strongly criticized. In general, we have seen that UCV tends to undersmooth, whereas BCV tends to oversmooth, especially for skewed distributions. Both methods are computationally intensive because they involve computing the differences between all pairs of data values (see (4.67) for BCV, and a similar formula can be given for UCV); thus, for large quantities of data (i.e., thousands of observations), these methods tend to becomes impractical. Furthermore, the UCV and BCV methods have been found to produce multiple local minima, and the question becomes one of which to choose (a recommended action in each case is to take the largest local minimum).
+These criticisms, plus recent successful work on “plug-in” methods, have relegated the UCV and BCV methods to “first-generation” status.
+Plug-in Methods The “plug-in” idea for estimating h∗n can be traced back to Woodroofe (1970), who proposed a two-step procedure:
+1. Choose a window width gn for a “pilot” density estimate p􏰡gn (x), and use this density estimate to compute R􏰡(p′′) = R(p􏰡gn );
+2. Plug R􏰡(p′′) into (4.56) to obtain the final window width, 􏰡h∗n.
+This idea of estimating R(p′′) in two steps via a pilot estimate has since been modified in a number of different ways, including a fully iterated ver- sion and a version that uses (4.63) to reduce the bias. Some of these candi- date ideas proved useful, others less so. For example, in certain situations, using (4.63) can produce negative values for R􏰡(p′′).
+The most successful of these modifications was proposed by Sheather and
+Jones (1991). Estimating R(p′′) is different from estimating p, and so we
+expect the corresponding window widths, gn and hn, to be different, but
+related; that is, we expect the pilot window width gn = g(hn). Rather than
+hSJ, is that value of h that solves the equation, nn
+′′ ′′
+use (4.63), we estimate R(p ) by R(p􏰡 ). The proposed window width, g(hn)
+􏰘
+hn =
+The optimal choice for gn is given by
+􏰠1/5
+R(K)
+n−1/5. (4.68)
+￼4 ′′ σR(p􏰡 )
+K g(hn)
+􏰇 R(p′′) 􏰢1/7
+g(h ) = C(K) h5/7, n R(p′′′) n
+(4.69)
+￼
+where C(K) is a constant dependent only upon the kernel K. The un-
+known quantities R(p ) and R(p ) are estimated by R(p􏰡 ) and R(p􏰡 ), ab
+respectively, where the window widths, a and b, are chosen according to the asymptotic optimality results. At this second step in the computa- tions, R(p′′) and R(p′′′) are estimated using the Gaussian reference density method, as we did for the ROT window width. The resulting convergence rate of hSJ is O(n−5/14).
+Applying the Sheather–Jones plug-in (SJPI) method to the Hidalgo stamp data yields an estimated window width of 0.0012, which corresponds to the density estimate in Figure 4.6(e). Thus, the plug-in estimator clearly out- performs any of the competing window-width estimators for the Hidalgo stamp data.
+Plug-in methods are currently being promoted as “second-generation” methods. This viewpoint is based upon strong evidence of superior per- formance from asymptotics, simulations, and experience with real data. Despite this evidence, however, there are some reservations regarding the superiority of the plug-in method. In particular, Loader (1999) makes the following points: (1) the success of plug-in methods depends crucially upon an arbitrary specification of the pilot window width, and if misspecification occurs, poor density estimates will result; (2) in difficult examples, where there are many modes in the data, the SJPI method oversmoothes and completely misses the fine structure, whereas UCV, with its tendency to undersmooth, gives a good accounting of itself; and (3) the poor perfor- mance of the UCV method may be due to an inappropriate use of a fixed window width, and that instead a more data-adaptive window width would be a better choice.
+Example: Eruptions of Old Faithful Geyser
+Another example of the different window-width selection methods is dis- played in Figure 4.8 for the well-known Old Faithful Geyser data.2 This data set, which has been explored at length in the density estimation lit- erature, consists of the duration, in minutes, of 107 consecutive eruptions of Old Faithful Geyser (a hot spring that erupts hot water and steam at intervals ranging from 30 to 90 minutes, in Yellowstone National Park, Wyoming), 1–8 August 1978 (Weisberg, 1985, pp. 230–235).
+We see the bimodality in the data; we also see that UCV provides a noisier density estimate than does BCV, with SJPI providing some degree of compromise between them. Compared with a histogram of the data, SJPI and BCV have substantially reduced the magnitude of the left mode
+2The data can be found in the file geyser available on the book’s website.
+n
+4.5 Kernel Density Estimation 99
+′′ ′′′ ′′ ′′′
+￼
+100 4. Nonparametric Density Estimation
+￼￼￼￼￼￼￼￼￼UCV
+0.6 0.6 0.6
+0.4 0.4 0.4
+0.2 0.2 0.2
+0.0 0.0 0.0
+12345 12345 123456
+Durationoferuption,minutes Durationoferuption,minutes Durationoferuption,minutes
+FIGURE 4.8. Gaussian kernel density estimators of the Old Faithful Geyser data. The window widths for the estimates were selected by un- biased cross-validation (left panel), Sheather–Jones plug-in method (center panel), and biased cross-validation (right panel).
+relative to the right mode, whereas UCV retains that particular feature of the data.
+4.6 Projection Pursuit Density Estimation
+Multivariate kernel density estimators tend to be poor performers when it comes to high-dimensional data because extremely large sample sizes are needed to match the sort of numerical accuracy that is possible in low dimensions. In light of this, Friedman and Stuetzle (1982) and Friedman, Stuetzle, and Schroeder (1984) developed projection pursuit density esti- mation (PPDE) based upon the general projection pursuit algorithm. The PPDE method has been shown in simulations to possess excellent proper- ties, and several striking applications of PPDE to real data have also been published.
+4.6.1 The PPDE Paradigm
+When dealing with small samples of high-dimensional data, the PPDE procedure may be jump-started by restricting attention to the subspace spanned by the first few significant principal components. A projection pursuit density estimator of p is then formed using the iterative procedure given in Table 4.2.
+The iterative procedure is repeated as many times as necessary. At the kth iteration,
+􏰛k j=1
+SJPI
+BCV
+￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼(k) (0)
+p􏰡 (x) = p􏰡 (x)
+τ (k−1) τ
+gj(aj x) = p􏰡 (x)gk(akx) (4.70)
+4.6 Projection Pursuit Density Estimation 101
+TABLE 4.2. Projection pursuit density estimation algorithm.
+1. Input: Observed data, L = {xi,i = 1,2,...,n}. Sphere the data to have mean 0 and covariance matrix Ir.
+(0)
+• Find the direction aj ∈ Rr for which the (model) marginal paj along aj differs most from the current estimated (data) marginal p􏰡aj along aj. Choice of direction aj will not generally be unique.
+• Given aj , define a univariate “augmenting function” gj(aτj x) = paj (aτj x).
+p􏰡a (aτx) jj
+￼2. Initialize: Choose p􏰡 to be an initial multivariate density estimate of p, usually taken to be the standard multivariate Gaussian.
+3. Doj=1,2,...:
+￼• Update the previous estimate so that
+(j) (j−1) τ
+p􏰡 (x) = p􏰡 (x)gj(aj x).
+￼will be the current multivariate density estimate, where
+gj(aτj x) = paj (aτj x), j = 1,2,...,k. (4.71)
+￼p􏰡 a j ( a τj x )
+The vectors {aj} are unit-length directions in Rr, and the augmenting (or
+ridge) functions {gj} are used to build up the structure of p􏰡 so that (k)
+p􏰡 converges to p in some appropriate sense as k → ∞. The number k of iterations operates as a smoothing parameter, and a stopping rule is determined by balancing bias against the variance of the estimator.
+Friedman, Stuetzle, and Schroeder (1984) suggest graphical inspection of the augmenting functions (i.e., plotting gj(aτjx) against aτjx for j = 1,2,...,k) as a termination criterion for the iterative procedure. Compu- tation of the augmenting functions {gj (aτj x)} is discussed in Huber (1985, Section 15) and discussants Buja and Stuetzle (especially pp. 487–489), and Jones and Sibson (1987, Section 3). Given aj , estimate paj by first pro- jecting the sample data along the direction aj, thus obtaining zi = aτjxi, i = 1, 2, . . . , n, and then compute a kernel density estimate from the {zi}. Monte Carlo sampling is used to compute p􏰡aj , followed by kernel den- sity estimation. Alternatives to kernel smoothing include cubic spline func- tions (Friedman, Stuetzle, and Schroeder, 1984) and the average shifted histogram (Jee, 1987).
+(0)
+102 4. Nonparametric Density Estimation
+4.6.2 Projection Indexes
+PPDE is driven by a projection index usually of the form
+􏰞
+I(p) =
+J(p(z))p(z)dz = Ep{J(p)}, (4.72)
+where J is a smooth real-valued functional and z is a one-dimensional projected version of x. As a functional of p, I(p) should be absolutely con- tinuous with easily computable first derivatives. “Interesting” projections should correspond to random or unstructured projections.
+Estimates of I(p) should be amenable to fast computation, unaffected by the overall covariance structure of the data or by outliers or heavy tails. A very reliable and thorough numerical optimizer is absolutely essential for finding “substantive” maxima of I(p), because sampling fluctuations tend to trap ineffective optimizers within a multitude of local maxima (Fried- man, 1987).
+If {zi} are the projected data, then we can estimate (4.72) by
+􏰞 􏰡􏰡
+1 􏰏n
+I(p) = J(p􏰡(z))dFn(z) = n
+i=1 h i h
+other choice is to take J(p(z)) = loge p(z), so that I(p) =
+􏰟
+which is (negative) cross-entropy, and (4.73) can be estimated at the kth
+􏰊n
+iteration by (1/n) i=1 loge p􏰡 (zi).
+Other projection indexes that have been used for PPDE include a mo- ment index based upon the sum of squares of the third and fourth sample cumulants of the projected data (Jones and Sibson, 1987) and the ISE criterion (Friedman, 1987; Hall, 1989a). The latter approaches, though re- lated, differed on whether or not to transform the projected data first. Friedman used ISE between the transformed projected data density and the uniform density, and Hall’s version used the ISE between the untrans- formed projected data density and the standard Gaussian. Both Friedman and Hall used orthogonal series density estimators (Legendre polynomials and Hermite functions, respectively) to study their projection indexes.
+Each of these indexes was designed to search for deviations from “unin- terestingness,” whose definition depended upon the specific context. Thus, the Friedman–Tukey index searched for evidence of “clottedness” as well as departures from a parabolic density; the entropy index searched for de- partures of the projected data from Gaussian form because the Gaussian distribution maximizes entropy; and the moment index and ISE criteria also set up the Gaussian distribution as the least-interesting data feature.
+(k)
+J(p􏰡(zi)). 2􏰡
+(4.73) [p(z)] dz can be estimated by I(p) =
+￼i=1 􏰟
+Thus, if J(p(z)) = p(z), then I(p) =
+(1/n) 􏰊n p􏰡 (z ), where p􏰡 is a kernel estimator with window width h. An-
+p(z) loge p(z)dz,
+4.7 Assessing Multimodality
+As we have seen, it is not unusual for a data set, large or small, to have several modes (or local maxima) in its density estimate. Multiple modes strongly suggest that the underlying probability distribution can be modeled parametrically as a mixture of several probability distributions (each usually Gaussian), where initial values of the EM algorithm (see Section 12.9.1) can be set by centering each mixture component at the location of a mode and setting the weight attached to that component according to the relative magnitude of the corresponding mode.
+Of course, there is no guarantee that a mixture of unimodal densities will produce a multimodal density with the same number of modes as there are densities in the mixture; similarly, there is no guarantee that those indi- vidual modes will remain at the same locations in such a mixture. Indeed, the shape of the mixture distribution depends upon both the spacings of the modes and the relative shapes of the component distributions.
+In many practical instances, however, the presence of more than a single mode does suggest evidence for a mixture; this has led to several tests being proposed for detecting multimodality in a distribution (see, e.g., Hartigan and Hartigan, 1985). Given a sample of data and some degree of assurance in multimodality, the modes can be evaluated in several ways. For example, Good and Gaskins (1980) used the MPL method of density estimation to- gether with certain “bump-hunting” surgical techniques, whereas Silverman (1981, 1983) combined kernel-based density estimation with a hierarchical bootstrap testing procedure to determine the most probable number of modes in the underlying density. See Izenman and Sommer (1988) for an extensive discussion of Silverman’s test and application to the 1872 Hidalgo postage stamp data. Both methods are nonparametric, data-adaptive, and computationally intensive.
+Bibliographical Notes
+There is a huge literature on nonparametric density estimation. Because of the amount of material published, we cannot list all pertinent articles or even books on the subject. Furthermore, due to space considerations, there are many nonparametric density estimation methods, including orthogonal series estimators and adaptive-kernel estimators, that are not described in this chapter. For descriptions of these methods, see Izenman (1991) and the references therein.
+The most useful books on the subject are by Scott (1992), Silverman (1986), and Simonoff (1996). Chapters on nonparametric density estimation
+4.7 Assessing Multimodality 103
+￼￼
+104 4. Nonparametric Density Estimation
+in books include Bishop (1995, Chapter 2), Ripley (1996, Chapter 6), and Duda, Hart, and Stork (2001, Chapter 4).
+The origin of the histogram has been traced variously back to Galileo’s star observations of 1632, John Graunt’s mortality tables of 1662, the bar charts of William Playfair in 1786, and Karl Pearson in 1805 for the name.
+There are several surveys on choices of window width, including Jones, Marron, and Sheather (1996).
+Multivariate kernel density estimation was studied by Cacoullos (1966) and Epanechnikov (1969). Cacoullos (1966) appears to have been the first to call K in (4.28) a kernel function; previously, K was known as a weight function. He also was the first to use product kernels.
+Exercises
+4.1 Consider the class of functions of the form p(x) = 􏰊L−1 ylITi (x), 􏰊L−1 l=0
+￼where h l=0 yl = 1. Given an iid sample, x1,x2,...,xn, from p(x), max- imize the log-likelihood function, L = 􏰊n log [􏰊L−1 y I (x )], subject
+􏰊L−1 i=1 e l=0 l Tl i
+to the condition that h l=0 yl = 1. Show that the histogram (4.13) is the
+unique ML estimator of p. [Hint: Use Lagrangian multipliers.]
+4.2 By minimizing AMISE in (4.27) wrt hn, show that the optimal bin width, h∗n, is given by (4.28) and that the AMISE∗ = AMISE(h∗n) of the histogram with the optimal bin width is (4.30).
+4.3 The average shifted histogram (ASH) (Scott, 1985a) is constructed by taking m histograms, p􏰡1,p􏰡2,...,p􏰡m, say, each of which has the same bin width hn, but with different bin origins, 0,hn/m,2hn/m,...,(m−1)hn/m, respectively, and then averaging those histograms,
+− 1 􏰏m k=1
+The resulting ASH is piecewise constant over intervals [kδ, (k + 1)δ) of width δ = hn/m; it has a similar block-like structure as a histogram but is defined over narrower bins. Derive the integrated variance and integrated squared-bias of the average shifted histogram. Show that the asymptotic MISE of the ASH is
+AMISE = 1 + 3nhn
+2m2
++ n 12m2
+n 1 − 144
+m2
++ R(p′′). 5m2
+2 􏰃 1 􏰄 h2
+R(p′)+
+h4 􏰃 2 3 􏰄
+p􏰡ASH(x) = m
+p􏰡k(x).
+￼￼￼￼￼￼4.4 The frequency polygon (FP) (Scott, 1985b) connects the center of each pair of adjacent histogram bin-values with a straight line. If two adjacent
+bin-valuesarep􏰡 =N/nh andp􏰡 =N /nh ,thenthevalueofthe l l n l+1 l+1 n
+FP at x ∈ [(l − 1 )hn, (l + 1 )hn) is 22
+􏰃􏰃 1􏰄 x􏰄 􏰃x 􏰃 1􏰄􏰄 p􏰡(x)= l+ − p􏰡+ −l− p􏰡.
+FP 2hlh2l+1 nn
+4.7 Assessing Multimodality 105
+￼￼￼￼￼￼Whereas the histogram is discontinuous, the FP is a continuous density estimator. Derive the integrated variance and integrated squared-bias of the frequency polygon. [Hint: For ISB, use a Taylor series expansion of p(x) to the term involving p′′; then, for IV, use var(X + Y ) = var(X) + var(Y ) + 2cov(X, Y ) for binomial X and Y .] Show that if p′′ is absolutely continuous and R(p′′′) < ∞, then the asymptotic MISE is given by
+AMISE(hn) = 2 + 49 h4nR(p′′). 3nhn 2880
+Show that the hn that minimizes AMISE(hn) is
+4.6 By considering m shifted histograms, let Bk = [kδ, (k + 1)δ) be the kth bin of the ASH, where δ = hn/m, and let νk be the bin count in Bk. Note that the ASH bin count for bin Bk is the average of the bin counts of the m shifted histograms, each of width δ, in bin Bk. Show that, for x ∈ Bk and m large, the ASH can be expressed as a kernel density estimator with triangular kernel on (−1, 1).
+4.7 The ASH is not continuous but can be made continuous by linearly interpolating using the FP approach. Show that this ASH-FP density esti- mate can be expressed as a kernel estimator.
+4.8 Rosenblatt’s density estimator is
+􏰅 􏰃 h􏰄 􏰃 h􏰄􏰆
+p􏰡n(x)=h−1 Fn x+2 −Fn x−2 ,
+where Fn(x) is the empirical cumulative distribution function, x ∈ R. Show that this estimator is a kernel density estimator. Which type of kernel corresponds to Rosenblatt’s estimator? Apply this kernel to estimate the density of the 1872 Hidalgo stamp data. What do you notice about the smoothness of the resulting density estimate?
+4.9 Find the bias and variance of Rosenblatt’s estimator (Exercise 4.8). From these expressions, find the MISE of that estimator.
+￼￼􏰃 15 􏰄1/5 49R(p′′)
+n−1/5.
+4.5 Write a computer program to compute the FP and the ASH and try
+h∗n = 2
+them out on a data set of your choice.
+￼￼￼
+106 4. Nonparametric Density Estimation
+4.10 Verify equation (4.32).
+4.11 Verify equations (4.53) and (4.54).
+4.12 Generate n observations from the claw density,
+􏰏4 􏰃k 􏰄
+N 2 −1,(0.1)2 ,
+and estimate that density using a kernel density estimator. Take n = 100,200, and 300, and repeat 1,000 times at each sample size. Compare the performances of UCV, BCV, and SJPI window-width estimators for each simulation. Which window-width estimation method best finds the claws?
+4.13 The galaxy velocity data consist of the radial velocities of 323 loca- tions in the area of the spiral galaxy NGC7531 in the Southern Hemisphere; the data can be found on the book’s website. Compare the kernel density estimates of the galaxy data using UCV, BCV, and SJPI window-width estimators. Pay special attention to the number of modes in the estimates. Use Silverman’s test to determine the number of modes (see Silverman, 1981; Izenman and Sommer, 1988).
+4.14 The ushighways data consist of the approximate length (in miles) of all 212 U.S. 3-digit interstate highways (spurs and connectors). The data were extracted by L. Winner from the Rand McNally 1993 Business Traveler’s Road Atlas and Guide to Major Cities and can be found on the book’s website. Compare the kernel density estimates for these data using UCV, BCV, and SJPI window-width estimators.
+p(x) = 0.5N(0,1)+(0.1)
+￼k=0

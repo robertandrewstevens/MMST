@@ -1,0 +1,1015 @@
+7
+Linear Dimensionality Reduction
+7.1 Introduction
+When faced with situations involving high-dimensional data, it is natural to consider the possibility of projecting those data onto a lower-dimensional subspace without losing important information regarding some character- istic of the original variables. One way of accomplishing this reduction of dimensionality is through variable selection, also called feature selection (see Section 5.7). Another way is by creating a reduced set of linear or nonlin- ear transformations of the input variables. The creation of such composite variables (or features) by projection methods is often referred to as feature extraction. Usually, we wish to find those low-dimensional projections of the input data that enjoy some sort of optimality properties.
+Early examples of projection methods were linear methods such as prin- cipal component analysis (PCA) (Hotelling, 1933) and canonical variate and correlation analysis (CVA or CCA) (Hotelling, 1936), and these have become two of the most popular dimensionality-reducing techniques in use today. Both PCA and CVA are, at heart, eigenvalue-eigenvector problems. Furthermore, both can be viewed as special cases of multivariate reduced- rank regression. This latter connection to regression is fortuitous. Whereas PCA and CVA were once regarded as isolated statistical tools, their now
+A.J. Izenman, Modern Multivariate Statistical Techniques, Springer Texts in Statistics, 195 DOI 10.1007/978-0-387-78189-1_7, © Springer Science+Business Media New York 2013
+￼
+196 7. Linear Dimensionality Reduction
+being part of such a well-traveled tool as regression means that we should be able to carry out feature selection and extraction, as well as outlier detection within an integrated framework.
+7.2 Principal Component Analysis
+Principal component analysis (PCA) (Hotelling, 1933) was introduced as a technique for deriving a reduced set of orthogonal linear projections of a single collection of correlated variables, X = (X1 , · · · , Xr )τ , where the projections are ordered by decreasing variances. Variance is a second-order property of a random variable and is an important measurement of the amount of information in that variable. PCA has also been referred to as a method for “decorrelating” X; as a result, the technique has been indepen- dently rediscovered by many different fields, with alternative names such as Karhunen–Lo`eve transform and empirical orthogonal functions, which are used in communications theory and atmospheric sciences, respectively.
+PCA is used primarily as a dimensionality-reduction technique. In this role, PCA is used, for example, in lossy data compression, pattern recogni- tion, and image analysis. We have already seen in Section 5.7.2 how PCA is used in chemometrics to construct derived variables in biased regres- sion situations, when the number of input variables is too large for useful analysis.
+In addition to reducing dimensionality, PCA can be used to discover im- portant features of the data. Discovery in PCA takes the form of graphical displays of the principal component scores. The first few principal compo- nent scores can reveal whether most of the data actually live on a linear subspace of Rr and can be used to identify outliers, distributional pecu- liarities, and clusters of points. The last few principal component scores show those linear projections of X that have smallest variance; any princi- pal component with zero or near-zero variance is virtually constant, and, hence, can be used to detect collinearity, as well as outliers that pop up and alter the perceived dimensionality of the data.
+7.2.1 Example: The Nutritional Value of Food
+Nutritional data from 961 food items are listed alphabetically in this data set.1 The nutritional components of each food item are given by the follow- ing seven variables: fat (grams), food energy (calories), carbohydrates
+1The data are given in the file food.txt, which can be downloaded from the book’s website or from http://www.ntwrks.com/~mikev/chart1.html.
+￼￼
+7.2 Principal Component Analysis 197
+TABLE 7.1. Coefficients of the six principal components of the covariance matrix of the transformed food nutrition data.
+￼Food Component
+Fat Food energy Carbohydrates Protein Cholesterol Saturated fat Variance % Total Variance
+PC1 0.557 0.536
+–0.025 0.235 0.253 0.531 2.649
+44.1
+PC2 0.099 0.357 0.672
+–0.374 –0.521 –0.019
+1.330 22.2
+PC3 0.275 –0.137 –0.568 –0.639 –0.326 0.261 1.020 17.0
+PC4 0.130 0.075
+–0.286 0.599 –0.717 –0.150 0.680 11.3
+PC5 0.455 0.273
+–0.157 –0.154 0.210 -0.791 0.267 4.4
+PC6 0.617 -0.697 0.344 0.119 –0.003 0.022 0.055 0.9
+￼￼￼￼(grams), protein (grams), cholesterol (milligrams), weight (grams), and saturated fat (grams). Food items are listed according to very dis- parate serving sizes, which include teaspoon, tablespoon, cup, loaf, slice, cake, cracker, package, piece, pie, biscuit, muffin, spear, pat, wedge, stalk, cookie, and pastry. To equalize out the different types of servings for each food, we first divide each variable by weight of the food item (which leaves us with 6 variables), and then, because of wide variations in the different variables, each variable is standardized by subtracting its mean and divid- ing the result by its standard deviation. The resulting data are X = (Xij ).
+A PCA of the transformed data yields six principal components or- dered by decreasing variances. The first three principal components, PC1, PC2, and PC3, which account for more than 83% of the total variance, have coefficients given in Table 7.1. Notice that PC1 puts little weight on carbohydrates, and PC2 puts little weight on fat and saturated fat.
+The scatterplot of the first two principal components is given in Fig- ure 7.1. The scatterplot appears to show a number of interesting features. Notice the almost straight-line edge to the plotted points at the upper left- hand corner. We also can identify various groups of points in this display, where the food items in each group have been ordered by magnitude of that nutritional component, starting at the largest value:
+1. Cholesterol:318(raweggyolk),189(chickenliver),62(beefliver),312 (fried egg), 313 (hard-cooked egg), 314 (poached egg), 315 (scrambled egg), and 317 (raw whole egg).
+2. Protein: 357 (dry gelatin), 778 (raw seaweed), 952 and 953 (yeast), and 578–580 (parmesan cheese).
+3. Saturated fat: 124–129 (butter), 441 and 442 (lard), 212 (bitter choco- late), 224–226 (coconut), 326 and 327 (cooking fat), and 166–168 (cheddar cheese).
+￼198
+7. Linear Dimensionality Reduction
+1
+-3
+-7
+-11
+836-840,893
+61
+315 357
+326,327
+488-492 441,442
+339,386,393
+427 553
+214 141
+764 248,249
+765 549,550 224 410 841 603,604 842 810-813
+312 317 62
+189
+313,314
+2ndPrincipalComponentScore
+-202468 1stPrincipalComponentScore
+FIGURE 7.1. Scatterplot of the first two principal components of the food nutrition data. A number next to a point identifies the food item cor- responding to that point. Multiple food items may be plotted at the same point.
+4. Fat and food energy: 326 and 327 (cooking fat), 441 and 442 (lard), 603 and 604 (peanut oil), 549–550 (olive oil), 248 and 249 (corn oil), 764 and 765 (safflower oil), 810–813 (soybean cottonsead oil), 841 and 842 (sunflower oil), 124–129 (salted butter), and 488–492 (margarine).
+5. Carbohydrates: 837–840 (white sugar), 393 (hard candy), 836 (brown sugar), 553 (onion powder), 339 (fondant), 834 (Kellogg Sugar Frosted Flakes), 843 (sunflower seeds), 844 (Super Sugar Crisp Cereal), 427 (jelly beans), 141 (carob flour), and 221 (coca powder).
+Most of these points are identified in the scatterplot, but some are covered too well to be displayed clearly. We see that food item 318 (raw egg yolk) is an outlier along an imaginary cholesterol axis and 124–129 (butter) and 441 and 442 (lard) are outliers along an imaginary saturated-fat axis. Similarly, in scatterplots of PC1 and PC3, and of PC2 and PC3 (not shown here), we see that food items 357 (dry gelatin) and 779 (raw seaweed) are outliers along an imaginary protein axis.
+212
+166-168 673 580
+578,579
+124-129
+318
+7.2 Principal Component Analysis 199
+7.2.2 Population Principal Components
+Assume that the random r-vector
+X = (X1,···,Xr)τ (7.1)
+has mean μX and (r×r) covariance matrix ΣXX. PCA seeks to replace the set of r (unordered and correlated) input variables, X1,X2,...,Xr, by a (potentially smaller) set of t (ordered and uncorrelated) linear projections, ξ1,...,ξt (t ≤ r), of the input variables,
+ξj =bτjX=bj1X1+···+bjrXr, j=1,2,...,t, (7.2) where we minimize the loss of information due to replacement.
+In PCA, “information” is interpreted as the “total variation” of the orig- inal input variables,
+􏰏r
+var(Xj) = tr(ΣXX). (7.3)
+j=1
+From the spectral decomposition theorem (Section 3.2.4), we can write
+ΣXX = UΛUτ, UτU = Ir, (7.4)
+where the diagonal matrix Λ has diagonal elements the eigenvalues, {λj}, of ΣXX, and the columns of U are the eigenvectors of ΣXX. Thus, the total variation is tr(ΣXX ) = tr(Λ) = 􏰊rj=1 λj .
+The jth coefficient vector, bj = (b1j , · · · , brj )τ , is chosen so that:
+• The first t linear projections ξj, j = 1,2,...,t, of X are ranked in importance through their variances {var{ξj}}, which are listed in decreasing order of magnitude: var{ξ1} ≥ var{ξ2} ≥ . . . ≥ var{ξt}.
+• ξj is uncorrelated with all ξk, k < j.
+The linear projections (7.2) are then known as the first t principal compo-
+nents of X.
+There are two popular derivations of the set of principal components of X: PCA can be derived using a least-squares optimality criterion, or it can be derived as a variance-maximizing technique. In the next two subsections, we discuss these two definitions.
+7.2.3 Least-Squares Optimality of PCA
+Let
+B = (b1,···,bt)τ, (7.5)
+be a (t × r)-matrix of weights (t ≤ r). The linear projections (7.2) can be written as a t-vector,
+ξ = BX, (7.6)
+200 7. Linear Dimensionality Reduction
+where ξ = (ξ1, · · · , ξt)τ . We want to find an r-vector μ and an (r×t)-matrix A such that the projections ξ have the property that X ≈ μ + Aξ in some least-squares sense. We use the least-squares error criterion,
+E{(X−μ−Aξ)τ(X−μ−Aξ)}, (7.7) as our measure of how well we can reconstruct X by the linear projection
+ξ.
+We can write the criterion (7.7) in a more transparent manner by sub- stituting BX for ξ. The criterion is now a function of an (r × t)-matrix A and a (t × r)-matrix B (both of full rank t), and an r-vector μ. The goal is to choose A, B, and μ to minimize
+E{(X−μ−ABX)τ(X−μ−ABX)}. (7.8) For example, when t = 1, we can write (7.8) as the least-squares problem,
+􏰏r
+min E (Xj − μj − aj1bτ1X)2, (7.9)
+μ,A,B j=1
+where μ = (μ1,···,μr)τ, A = a1 = (a11,···,ar1)τ, and B = bτ1.
+The criterion (7.8) is just (6.80) with Y ≡ X, s = r, and Γ = Ir. Hence, (7.8) is minimized by the reduced-rank regression solution,
+A(t) = (v1,···,vt) = B(t)τ, (7.10) μ(t) =(Ir −A(t)B(t))μX, (7.11)
+where vj = vj(ΣXX) is the eigenvector associated with the jth largest eigenvalue, λj , of ΣXX . Thus, our best rank-t approximation to the original X is given by
+where
+􏰏t j=1
+X􏰡(t) =μ(t) +C(t)X=μX +C(t)(X−μX),
+(7.12)
+(7.13)
+C(t) = A(t)B(t) =
+vjvjτ
+is the reduced-rank regression coefficient matrix with rank t for the princi- pal components case. From (6.91), the minimum value of (7.8) is given by 􏰊rj=t+1 λj , the sum of the smallest r − t eigenvalues of ΣXX .
+It may be helpful to think of these results in the following way. Let V = (v1,···,vr) be the (r×r)-matrix whose columns are the complete set of r ordered eigenvectors of ΣXX. We have shown that the most accurate rank-t least-squares reconstruction of X can be obtained by using the composition of two linear maps L′ ◦L. The first map L : Rr → Rt takes the first
+7.2 Principal Component Analysis 201
+t columns of V to form t linear projections of X, and then the second map L′ : Rt → Rr uses those same t columns of V to carry out a linear reconstruction of X from those projections.
+The first t principal components (also known as the Karhunen–Lo`eve transform) are given by the linear projections, ξ1, . . . , ξt, where
+ξj = vjτX, j = 1,2,...,t. (7.14) The covariance between ξi and ξj is
+cov(ξi,ξj) = cov(viτXc,vjτXc) = viτΣXXvj = λjviτvj = δijλj, (7.15)
+where δij is the Kronecker delta, which equals 1 if i = j and zero otherwise. Thus, λ1, the largest eigenvalue of ΣXX, is var{ξ1}; λ2, the second-largest eigenvalue of ΣXX , is var{ξ2}; and so on, while all pairs of derived variables are uncorrelated, cov(ξi,ξj) = 0, i ̸= j.
+A goodness-of-fit measure of how well the first t principal components represent the r original variables in the lower-dimensional space is given by the ratio
+λt+1 +···+λr λ1 +···+λr
+(7.16)
+￼which is the proportion of the total variation in the input variables that is explained by the last r − t principal components. If the first t principal components explain a large proportion of the total variation in X, then the ratio (7.16) should be small.
+Actually, more is true. Not only do μ(t), A(t), and B(t) minimize the scalar criterion (7.8), but also they simultaneously minimize all the eigen- values of the (r × r)-matrix
+Ψ(t) = E{(X−μ−ABX)(X−μ−ABX)τ}, (7.17)
+thereby also minimizing any function of those eigenvalues, such as their sum (trace of (7.17) and, hence, (7.8)) and their product (determinant of (7.17)). To see this, write (7.17) in the form E{(y − a − bx)(y − a − bx)τ }, where y = X, x = ABX, b = I, a = μ. From (6.70), we have that
+where
+Ψ(t) ≥ ΣXX −ΣX,ABXΣ−1 ΣABX,X ABX,ABX
+= ΣXX −D,
+D = ΣXX Bτ Aτ (ABΣXX Bτ Aτ )−1ABΣXX .
+(7.18)
+(7.19)
+Note that the (r × r)-matrix D has rank at most t (≤ r). We wish to find μ, A, and B to minimize the jth largest eigenvalue of D. From the
+202 7. Linear Dimensionality Reduction
+Courant–Fischer Min-Max theorem (see Section 3.2.10),
+λj(ΣXX −D)
+= min max ατ(ΣXX −D)α L:rank(L)≤j−1 α:Lα=0 ατ α
+￼ατΣXXα L α:Lα=0,Dα=0 ατ α
+≥ min max
+= min max ατΣXXα
+￼￼L α:(L|D)α=0 ατ α
+≥ min max ατΣXXα
+￼L,D α:(L|D)α=0 ατ α = λt+j (ΣX X ),
+(7.20)
+(7.21)
+because rank((L|D)) ≤ j − 1 + t. Thus,
+λj(Ψ(t)) ≥ λj+t(ΣXX).
+By plugging in the above μ(t), A(t), and B(t) into the expression for Ψ(t), it follows immediately that the minimum value of λj(Ψ(t)) is actually given by λt+j(ΣXX).
+7.2.4 PCA as a Variance-Maximization Technique
+In the original derivation of principal components (Hotelling, 1933). the coefficient vectors,
+bj = (bj1,bj2,...,bjr)τ, j = 1,2,...,t, (7.22)
+in (7.5) were chosen in a sequential manner so that the variances of the derived variables (var{ξj } = bτj ΣX X bj ) are arranged in descending order subject to the normalizations bτjbj = 1, j = 1,2,...,t, and that they are uncorrelated with previously chosen derived variables (cov(ξi,ξj) = b τi Σ X X b j = 0 ,
+The first principal component, ξ1, is obtained by choosing the r coef- ficients, b1 , for the linear pro jection ξ1 , so that the variance of ξ1 is a maximum. A unique choice of {ξj} is obtained through the normalization constraint bτj bj = 1, for all j = 1,2,...,t. Form the function
+f(b1) = bτ1ΣXXb1 + λ1(1 − bτ1b1), (7.23) where λ1 is a Lagrangian multiplier. Differentiating f(b1) with respect to
+b1 and setting the result equal to zero for a maximum yields
+∂f(b1) = 2(ΣXX − λ1Ir)b1 = 0. (7.24) ∂b1
+￼
+7.2 Principal Component Analysis 203
+This is a set of r simultaneous equations. If b1 ̸= 0, then λ1 must be chosen to satisfy the determinantal equation
+|ΣXX − λ1Ir| = 0. (7.25) Thus, λ1 has to be the largest eigenvalue of ΣXX, and b1 the eigenvector,
+v1, associated with λ1.
+The second principal component, ξ2, is then obtained by choosing a sec- ond set of coefficients, b2, for the next linear projection, ξ2, so that the variance of ξ2 is largest among all linear projections of X that are also uncorrelated with ξ1 above. The variance of ξ2 is var(ξ2) = bτ2ΣXXb2, and this has to be maximized subject to the normalization constraint bτ2 b2 = 1 and orthogonality constraint bτ1 b2 = 0. Form the function
+f(b2) = bτ2ΣXXb2 + λ2(1 − bτ2b2) + μbτ1b2, (7.26) where λ2 and μ are the Lagrangian multipliers. Differentiating f(b2) with
+respect to b2 and setting the result equal to zero for a maximum yields ∂f(b1) = 2(ΣXX − λ2Ir)b2 + μb1 = 0. (7.27)
+∂b1
+Premultiplying this derivative by bτ1 and using the orthogonality and nor- malization constraints, we have that 2bτ1 ΣX X b2 + μ = 0. Premultiplying the equation (ΣXX − λ1Ir)b1 = 0 by bτ2 yields bτ2ΣXXb1 = 0, whence μ = 0. Thus, λ2 has to satisfy (ΣXX −λ2Ir)b2 = 0. This means that λ2 is the second largest eigenvalue of ΣXX, and the coefficient vector b2 for the second principal component is the eigenvector, v2, associated with λ2.
+In this sequential manner, we obtain the remaining sets of coefficients for the principal components ξ3, ξ4, . . . , ξr, where the ith principal component ξi is obtained by choosing the set of coefficients, bi, for the linear projection ξi so that ξi has the largest variance among all linear projections of X that are also uncorrelated with ξ1,ξ2,...,ξi−1. The coefficients of these linear projections are given by the ordered sequence of eigenvectors {vj}, where vj is associated with the jth largest eigenvalue, λj , of ΣXX .
+7.2.5 Sample Principal Components
+We estimate the principal components of X using a random sample {Xi, i = 1,2,...,n} with observed values D = {xi,i = 1,2,...,n}. We
+￼estimate μX by
+Let xci = xi −x ̄, i = 1,2,...,n, and set Xc = (xc1,···,xcn) to be an
+(r × n)-matrix. We estimate ΣXX by the sample covariance matrix,
+Σ􏰡XX = n−1S = n−1XcXcτ. (7.29)
+μ􏰡 X = x ̄ = n
+− 1 􏰏n i=1
+x i . ( 7 . 2 8 )
+204 7. Linear Dimensionality Reduction
+The ordered eigenvalues of Σ􏰡XX are denoted by λ􏰡1 ≥ λ􏰡2 ≥ ... ≥ λ􏰡r ≥ 0, and the eigenvector associated with the jth largest sample eigenvalue λ􏰡j is the jth sample eigenvector v􏰡j, j = 1,2,...,r.
+We estimate A(t) and B(t) by
+A􏰡(t) = (v􏰡1,···,v􏰡t) = B􏰡(t)τ, (7.30)
+where v􏰡j is the jth sample eigenvector of Σ􏰡XX, j = 1,2,...,t (t ≤ r). The best rank-t reconstruction of X = x is given by
+x􏰡(t) =x ̄+C􏰡(t)(x−x ̄),
+j=1
+cipal components case.
+The jth sample PC score of X = x is given by
+ξ􏰡=v􏰡τx, j=1,2,...,t, (7.33) jjc
+where xc = x − x ̄. The variance, λj , of the jth principal component is estimated by the sample variance λ􏰡j , j = 1, 2, . . . , t. A sample estimate of the measure (7.16) of how well the first t principal components represent the r original variables is given by the statistic
+λ􏰡t+1+···+λ􏰡r , (7.34) λ􏰡 1 + · · · + λ􏰡 r
+which is the proportion of the total sample variation that is explained by the last r − t sample principal components.
+It is hoped that the sample variances of the first few sample PCs will be large, whereas the rest will be small enough for the corresponding set of sample PCs to be omitted. A variable that does not change much (relative to other variables) in independent measurements may be treated approxi- mately as a constant, and so omitting such low-variance sample PCs and putting all attention on high-variance sample PCs is, therefore, a conve- nient way of reducing the dimensionality of the data set.
+The exact distribution of the eigenvalues of the random matrix XXτ ∼ Wr(n, Ir), where X = (X1, · · · , Xn), was discovered independently and simultaneously in 1939 by Fisher, Girshick, Hsu, and Roy and in 1951 by Mood and has the form,
+􏰛r 􏰛
+p(λ1,...,λr)=cr,n [w(λj)]1/2 (λj −λk), (7.35)
+j=1 j<k
+where
+C(t) = A(t)B(t) =
+􏰡 􏰡 􏰡 􏰏t
+v􏰡jv􏰡jτ
+is the reduced-rank regression coefficient matrix corresponding to the prin-
+(7.31)
+(7.32)
+￼
+7.2 Principal Component Analysis 205
+where λ1 ≥ λ2 ≥ ··· ≥ λr are the ordered eigenvalues of XXτ, w(x) = xn−r−1e−x is the weight function for the Laguerre family of orthogonal polynomials, and cr,n is a normalizing constant dependent upon r and n. For a proof, see, for example, Anderson (1984, Section 13.3). The second product in (7.35) involving the pairwise differences of eigenvalues is the Jacobian term, also known as the Vandermonde determinant (Johnstone, 2006). In the case when the population eigenvalues are not all equal, the exact distribution of the sample eigenvalues is known (James, 1960) but is extremely complicated.
+When the dimensionality, r, is very large, maybe even larger than the sample size n, then the exact distribution result (7.35) does not hold. In such situations, random-matrix theory has proved to be very useful in pro- viding asymptotic results; see, e.g., Johnstone (2001, 2006). As before, sup- pose XXτ ∼ Wr(n,Ir). The empirical distribution function computes the proportion of sample eigenvalues that is smaller than a given value of k,
+Gr(k) = 1#{λ􏰡j ≤ k}. (7.36) r
+It can be shown that if r/n → γ ∈ (0, ∞), then, Gr (k) → G(k) a.s., where the limiting distribution G(k) has density g(k) = G′(k), and
+􏰐
+￼￼g(k)= (b+−k)(k−b−), b±=(1±√
+γ )2 . (7.37) This so-called Quarter-Circle Law is due to Mar ̆cenko and Pastur (1967);
+￼￼2πγk
+it also holds in more general situations.
+In Figure 7.2, we display the density g(k) for γ = 1/4 and γ = 1. The
+larger is r/n, the more spread out is the limiting density. When r = n/4,
+the density is concentrated on the interval [1,9], and when r = n, the 44
+density is spread out over the interval [0, 4].
+7.2.6 How Many Principal Components to Retain?
+Probably the main question asked while carrying out a PCA is how many principal components to retain. Because the criterion for a good projection in PCA is a high variance for that projection, we should only retain those principal components with large variances. The question, therefore, boils down to one involving the magnitudes of the eigenvalues of Σ􏰡XX: how small can an eigenvalue be while still regarding the corresponding principal component as significant?
+Scree Plot: The sample eigenvalues from a PCA are ordered from largest to smallest. It is usual to plot the ordered sample eigenvalues against their order number; such a display is called a “scree plot” (Cattell, 1966), after the break between a mountainside and a collection of boulders usually found
+￼￼
+206 7. Linear Dimensionality Reduction
+￼￼￼￼gamma=1
+gamma=1/4
+￼1.2
+0.8
+0.4
+0.0
+￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼012345 k
+FIGURE 7.2. Density g(k) of eigenvalues of a Wishart matrix in the limiting case when r/n → γ ∈ (0,∞). The two curves correspond to the values γ = 1/4 and γ = 1. The larger r/n, the more spread out are the eigenvalues.
+at its base. If the largest few sample eigenvalues dominate in magnitude, with the remaining sample eigenvalues very small, then the scree plot will exhibit an “elbow” in the plot corresponding to the division into “large” and “small” values of the sample eigenvalues. The order number at which the elbow occurs can be used to determine how many principal components to retain. It is usually recommended to retain those PCs up to the elbow and also the first PC following the elbow. A related popular criterion for use when an elbow may not be present in the scree plot is to use a cutoff point of 90% of total variance.
+What would a scree plot look like for the eigenvalues of the covariance matrix of Gaussian data? We display two scenarios, where the only differ- ence is the sample size. Generate an (r × n)-matrix Z all of whose entries are iid N(0,1), let D be an (r × r) diagonal matrix, and set X = DZ. Let Σ􏰡XX = n−1XXτ be an (r × r) covariance matrix. Let r = 30 and set D2 = Diag(12,11,10,9,8,7,3,3,3,···,3). Then, XXτ ∼ Wr(n,D2). The scree plot of the eigenvalues of Σ􏰡XX in the case that n = 300 is given in the left panel of Figure 7.3, where there is an elbow at 7. Now, suppose n = 30. Then, the scree plot of the eigenvalues is given in the right panel of Figure 7.3 and shows no discernible elbow. This example suggests that the relationship between n and r can determine whether or not the scree plot is useful in determining how many PCs to retain.
+In the food nutrition example, the eigenvalues of the covariance matrix of the transformed data are given in Table 7.1. The scree plot of these
+Density
+￼￼￼￼￼￼￼￼￼12
+8
+4
+0
+20 15 10
+5 0
+051015202530 051015202530 OrderNumber OrderNumber
+7.2 Principal Component Analysis 207
+￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼FIGURE 7.3. Scree plots of the ordered eigenvalues of Σ􏰡XX = n−1XXτ, where X = DZ, D is a diagonal (r × r)-matrix, and the elements of the (r × n)-matrix Z are each independent Gaussian deviates. In this simula- tion, r = 30 and D2 = Diag(12,11,10,9,8,7,3,3,3,···,3). The left panel corresponds to n = 300 and has an elbow at 7, and the right panel corre- sponds to n = 30 and shows no elbow.
+eigenvalues, which is given in the left panel of Figure 7.4, shows no elbow. This may be explained by the fact that the leading PC explains only a 44% share of the total variance, there is no really dominant group of eigenvalues, and it takes four PCs to pass 90% of total variance.
+PC Rank Trace: The problem of deciding how many principal compo- nents to retain is equivalent to obtaining a useful estimate of the rank of the regression coefficient matrix C in the principal components case. So, if we can obtain a good estimate of the rank, we should have a solution to this problem.
+We saw in Chapter 6 that the rank trace plots the loss of information when approximating the full-rank regression by a sequence of reduced-rank regressions having increasing ranks. When the true rank of the regression, t0, say, is reached, the points in the rank trace plot following that rank (i.e., ranks t0 + 1, . . . , r) should cease to change significantly from both the point for t0 and the full-rank point (rank r).
+In the principal components case, the expressions for the points in the rank trace simplify greatly and are very simple to compute. It is not difficult to show (see Exercise 7.6) that
+􏰃 t􏰄1/2 ΔC􏰡(t)= 1−r ,
+􏰈 􏰡2 􏰡2 􏰙1/2 ΔΣ􏰡(t)= λt+1+···+λr ,
+EE λ􏰡21 +···+λ􏰡2r
+(7.38)
+(7.39)
+￼￼OrderedSampleEigenvalue
+OrderedSampleEigenvalue
+208
+7. Linear Dimensionality Reduction
+￼￼￼￼0
+￼￼￼1 2
+￼￼3 4
+￼65
+￼￼￼￼￼￼￼￼￼￼￼1.0 0.8 0.6 0.4 0.2
+￼￼2.5
+2.0
+1.5
+1.0
+0.5
+0.0 ￼ 0.0
+￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼0.10.30.50.70.91.1 OrderNumber DeltaC(t)
+FIGURE 7.4. Food nutrition example. Left panel: Scree plot. Right panel: PC rank-trace plot with values of t placed next to the plotted point. The scree plot for the sample covariance matrix of the transformed data does not offer any advice on the number of principal components to retain, whereas the rank trace plot suggests retaining 4 or 5 principal components. The modified version of Kaiser’s rule recommends retaining three PCs.
+t = 0,1,2,...,r. Comparing (7.39) with (7.34), we see that we are again looking at the smallest r − t sample eigenvalues (although this time they are each squared). A plot of (7.39) against (7.38) is called a PC rank trace plot (Izenman, 1980). All the information regarding the dimensionality of the regression is, therefore, contained in the residual covariance matrices and not in the regression coefficients. Furthermore, the r + 1 plotted points decrease monotonically from (1, 1) to (0, 0). We assess the rank t of C by 􏰡t, the smallest integer value between 1 and r at which an “elbow” can be detected in the PC rank trace plot.
+In Figure 7.4, the right panel shows the PC rank trace plot for the sample covariance matrix of the food nutrition data. We assess the rank from the rank-trace plot as 􏰡t = 4 or 5.
+Kaiser’s Rule: When dealing with the PCA of a sample correlation ma- trix, Kaiser (1960) suggested (in the context of exploratory factor analysis) that only those principal components be retained whose eigenvalues exceed unity. This decision guideline is based upon the argument that because the total variation of all r standardized variables is equal to r, it follows that a principal component should account for at least the average variation of a single standardized variable. This rule is popular but controversial; there is evidence that the cutoff value of 1 is too high. A modified rule retains all PCs whose eigenvalues of the sample correlation matrix exceed 0.7.
+For the food nutrition data, the eigenvalues of the sample correlation ma- trix are 2.6486, 1.3301, 1.0201, 0.6801, 0.2665, and 0.00546. Three of these
+1 2 3 4 5 6
+OrderedSampleEigenvalue
+Delta-SigmaEE(t)
+7.2 Principal Component Analysis 209
+eigenvalues are greater than 0.7, and so the modified version of Kaiser’s rule says that we should retain the first three principal components.
+7.2.7 Graphical Displays
+For diagnostic and data analytic purposes, it is usual to plot the first sample PC scores against the second sample PC scores,
+(ξ􏰡 ,ξ􏰡 ), i = 1,2,...,n, (7.40) i1 i2
+whereξ􏰡 =v􏰡τx andx =x−x ̄,i=1,2,...,n,j=1,2.Amore ij jci ci i
+general graphical tool for displaying the sample PC scores associated with the largest few sample eigenvalues (variances) is the scatterplot matrix, in which all possible pairs of variables are plotted in two dimensions.
+See Figure 7.1 for a graphical display of the first two PCs of the food nutrition data and Figure 7.6 for a graphical display of the first three PCs of the pendigits data.
+A three-dimensional scatterplot of the first three sample PC scores is also strongly recommended, especially if a “brush and spin” feature is available.
+7.2.8 Example: Face Recognition Using Eigenfaces
+In this example, we apply PCA to a single face photographed under n = 11 illumination and expression conditions; see Figure 2.4. Recall from Section 2.3.3 that each face, as a picture image, starts out as a (320 × 243)- matrix of intensity values, which are quantized to 8-bit grayscale (0–255, with 0 as black and 255 as white), and then translated into a stacked vector of length r = 77, 760.
+From a PCA of the n r-vectors, x1 , . . . , xn , of stacked images, we compute the first t PC scores, 􏰡ξ(t),...,􏰡ξ(t), where 􏰡ξ(t) = B􏰡(t)x = (ξ􏰡 ,···,ξ􏰡 )τ is
+1 n i ci i1 it
+a t-vector, 1 ≤ t ≤ r. It is usual to plot the points (ξ􏰡 ,ξ􏰡 ), i = 1,2,...,n,
+i1 i2
+and annotate the scatterplot with face identifiers. Faces corresponding to the same individual should project to points very close to each other in the scatterplot, whereas faces corresponding to different individuals should project to more distant points. Also, faces of the same individual with very similar poses should be plotted close to each other, whereas different poses
+should be plotted far away from each other.
+The best rank-t reconstruction of the ith original face is obtained by
+computing x􏰡(t) = x ̄+C􏰡(t)(xi −x ̄), i = 1,2,...,n, where x ̄ is the “average” i
+face given by (7.28) and C􏰡 (t) is given by (7.32). The average of all the faces can be seen in the left panel of Figure 7.5. If the r-vectors x􏰡(t),...,x􏰡(t)
+1n are unstacked and displayed as images, they each have the appearance of a “ghostly” face. The reconstructed face image improves as we increase
+210 7. Linear Dimensionality Reduction
+￼￼￼￼￼￼￼￼￼￼￼￼￼￼FIGURE 7.5. The cumulative effect of the nine principal components, adding one PC at a time, for eigenface 6 (“sad”). The sad face starts to appear by the fifth PC. The average eigenface is given in the left panel.
+t. Each face image in the data set can be represented exactly as a linear combination of all r such ghostly faces or eigenfaces, or approximately as a linear combination of the first t eigenfaces, which are ordered by decreasing eigenvalues.
+In the right panel of Figure 7.5, we see the effect of increasing the number of principal components on the reconstruction of face 6 (“sad”). The first eigenface is fuzzy but recognizable as a face. Adding PCs increases the sharpness of the image, and the “sad” face starts to emerge at eigenface 5.
+7.2.9 Invariance and Scaling
+A shortcoming of PCA is that the principal components are not invariant under rescalings of the initial variables. In other words, a PCA is sensitive to the units of measurement of the different input variables. Standardizing (centering and then scaling) the X-variables,
+Z ← ( d i a g { Σ􏰡 X X } ) − 1 / 2 ( X − μ􏰡 X ) , ( 7 . 4 1 )
+is equivalent to carrying out PCA using the correlation (rather than the covariance) matrix. When using the correlation matrix, the total variation of the standardized variables is r, the trace of the correlation matrix. The lack of scale invariance implies that a PCA using the correlation matrix may be very different from a similar analysis using the corresponding covariance matrix, and no simple relationship exists between the two sets of results. In the initial formulation and application of PCA, we note that Hotelling
+7.2 Principal Component Analysis 211
+(1933), who was dealing with a battery of test scores, extracted principal components from the correlation matrix of the data.
+Standardization in the PCA context has its advantages. In some fields, standardization is customary. In heterogeneous situations, where the units of measurement of the input variables are not commensurate or the ranges of values of the variables differ considerably, standardization is especially relevant. If the variables have heterogeneous variances, it is a good idea to standardize the variables before carrying out PCA because the variables with the greatest variances will tend to overwhelm the leading principal components with the remaining variables contributing very little.
+On statistical inference grounds, standardization is usually regarded as a nuisance because it complicates the distributional theory. Indeed, the asymptotic distribution theory for the eigenvalues and eigenvectors of a sample correlation matrix turns out to be extremely difficult to derive. Furthermore, certain simplifications, such as pretending that the sample correlation matrix has the same distributional properties as the sample covariance matrix, tend not to work and, hence, lead to incorrect inference results for principal components.
+7.2.10 Example: Pen-Based Handwritten Digit Recognition
+These data2 were obtained from 44 writers, each of whom handwrote 250 examples of the digits 0,1,2,...,9 in a random order (Alimoglu, 1995). The digits were written inside boxes of 500 × 500 pixel resolution on a pressure-sensitive tablet with an integrated LCD screen. The subjects were monitored only during the first entry screens. Each screen contained five boxes with the digits to be written displayed above. Subjects were told to write only inside these boxes. If they made a mistake or were unhappy with their writing, they were instructed to clear the contents of a box by using an on-screen button. Unknown to the writers, the first 10 digits were ignored as writers became familiar with the input device.
+The raw data on each of n = 10, 992 handwritten digits consisted of a sequence, (xt, yt), t = 1, 2, . . . , T , of tablet coordinates of the pen at fixed time intervals of 100 milliseconds, where xt and yt were integers in the range 0–500. These data were then normalized to make the representations invariant to translation and scale distortions. The new coordinates were such that the coordinate that had the maximum range varied between 0 and 100. Usually xt stays in this range, because most integers are taller than they are wide. Finally, from the normalized trajectory of each handwritten
+2These data are available in the file pendigits on the book’s website. The description was obtained from www.ics.uci.edu/~learn/databases/pendigits.
+￼
+212 7. Linear Dimensionality Reduction
+digit, 8 regularly spaced measurements, (xt,yt), were chosen by spatial resampling, which gave a total of r = 16 input variables.
+A PCA of the correlation matrix (i.e., the covariance matrix of normal- ized variables) reveals that the variances of the first five principal compo- nent (PC) scores are larger than unity: 4.717, 3.229, 2.577, 1.230, 1.063; thus, the first five PCs together explain about 80% of the total variation, 16, in the data. A reduction in dimensionality from 16 to 5, therefore, retains a substantial amount of the total variation. Scatterplots of the first three PC scores, which explain about 66% of the total variation, are displayed in Figure 7.6, where the points are colored by type of digit.
+From these three 2D scatterplots, we can make the following observa- tions: the majority of handwritten examples of each digit cluster together, although there is a great deal of overlapping of clusters; each scatterplot has a distinctive shape, with strong suggestions of circular or torus-like appearance; and there appears to be many outlying points. A 3D-rotating scatterplot of the first three principal components reveals a hollow, hemi- spherical point configuration with crab-like arms.
+7.2.11 Functional PCA
+In some situations, we may need to analyze data consisting of functions or curves. Although such functional data are often time-dependent, we do not assume that time itself plays a special role. In fact, functional data from different and independent individuals may be recorded at different sets of time points, and in each of those instances, the data may not be equally spaced. In such cases, it is advantageous to view an individual’s functional observations as a continuously defined record observed at a set of discrete points, so that a single data point is the entire function (rather than each observed data value). In other cases, we may be able to view independent replications of the entire curve.
+Given a set of sample curves from a number of individuals, where each curve represents repeated measurements on the same individual, we may wish to characterize the main features of those curves. One method of doing this is through a functional version of PCA (see, e.g., Ramsay and Silver- man, 1997, Chapters 6 and 7). Because we are observing curves rather than individual values, the vector-valued observations X1, . . . , Xn are replaced by the univariate functions X1(t),...,Xn(t), where t may indicate time, but in general is to be thought of as a continuous index varying within a closed interval [0,T].
+In functional PCA, each sample curve is considered to be an indepen- dent realization of a univariate stochastic process X(t) (having possibly cyclical or periodic form) with smooth mean function E{X(t)} = μ(t) and
+￼5 3 1 -1 -3 -5
+9999999 5 9 99 9999
+1
+0
+9
+91139119919191917991311391119911119993399999119339111131139771378999997133971179321979799997797399998979739773399993991193393793999997779997989979999999989397799199387799797999999999999993797999919999999999999999999999999999979999999999999999999999999999999999999999999999999944 4449944 44444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444440004444
+0
+0
+1
+1 1111651 16116181186115161131111361115161116111371161616911916161331171961179617616193131711966716161761111111111161171131191981931113111696631161861666911711761167169961667661711616111911611211911611663111111166679678661171811166716111666191161167616616166676118611616118611161166117671117711617616176196177117776661166761661111611611197111611611117177661161161716611116761166198179161667611171666111611161161111667111666111616661116677716616166161646119116169711616161617619166166816161161661667169166666116111616614661169611966161911616961166161191616666611611611661111161916616416911611111161166619661161646161661111611646461666666116961114619669616161466141161669661141611161641466666611461166616664466661164446111161464666641611466646646146616164661649464166666164696646466666666196414666666664696614664466664644144666666666661666666466466616666461666464666466466666464666466644466644416446666446446666644464646666444444666666466446444646664646646444644646644446444444664444446444446414444446444444444646444466444444444444444444444644444444444464444444446464444444444644444444444464444444444444444444444444444644444446444444444444444444444444444444444444444444444444444444444444464444444444444444444444444444444444444444444444444444444044404444
+008 0000080000008000000000000000000000000000000000000000000000000080000000000000000000000008000000 88 008 00000000000800000000000000000000000000000000000000000000000000000000
+1 131115111151111513333633331333131333316396113331331331113333131633311131133131361633311131336396633131131316317391633736763318433377131719733717937361861383113136938179891788319179131189811317118618181313661693616767611718111367666681771718697766117660761617666911776716666746166669961666616991669966644661666666666666696666966666766666144966667376666716696169966766661116966646966666696696664666964116666614664666666666661666664666466666466616666646444666166966666644466664666441666464666666666666666666614666666666666666644666666666666666666666664666646666666966666664666466966666166666646646664666666666664664666666664666666666666466644446666666664446664446446446466444146446444444464464646646446464446446644664444444664446444446444446464444644444464444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444
+11 1533531355133335335533335113333333133313333113331333313313333333333333333333333333333361333331333333333333333333333133333333383133633333383333331133339393933333331336361333333383363636633336368393639336136663666796333679676679797666499696676666649647466646667666766666666666966666666677669676766466646666676666666666764649666646646669766694444446444669467444444444444464444444444444444444444444444444444444444444444444444444444444444044444444444444444444444 51351353535335355335133313331333333333353333333333333333333333333333333313333333331313333333333333333333333333333333333333333333313333333333333333333333331333333333333333333333333333333333333333933333333333333333363333333333333333333333339333333333333333633333331333333333333333333333333333333333333333333333333333336633333943667369649676666965666466616666466966666966469696744477746997644744797447494 4444444444444444444444444444444444444444444444 444 44440
+4 44
+0
+1191193919183111111199911111119199119193913911119189191911911199987998389199979997999199911997999999999973971799939979999999997991998999999799779999999999999999999999999999999999999999999999999999999999999999999999999999999949999999444949444444444444444444444444444444444444444444444444444444444444444444444444444444444044444444444444 1119111999999111199891181911189119193719887777997799799999991999797919999991909799999999999979999999999999999999999999499999999999994999999999999494444444444444444444444444444444444444444444444444444444444444444444444444444
+440
+4
+44 0
+8
+0
+5555555355353355335335353333333333333331333335333333333333333333336333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333333933333333333333333333333333333333336333933333393336933333333333333335939349633934793969999994944499444999944474444444474444444444444444444444444444
+0
+1 111199111111119111181111119111919919971913111177991199919999799719789799999719999999797999919979919999979999799999991999199999999999999999999999999949949499 999 4994 4444444444 44444 44444444444444444444444444444444444444444444444444444444 4
+0
+80
+555555555513353535553335333333335333533353353333333335333633333333335333333333333333333333333333333333333335333333393333333333333333333333333633339333333333333333333353633333333593333353333353333339333335333436993399966999999969993999949994999994944999994994994979494494499444499 99444
+1
+1111111111111911191991111899919111191977117979119719997791199119979991199999999999999999999999999 999999994 4444444444444444444444444444444444444444444444 111111111911191111911119111111119111111111191119119711119711191719199191991999919199999999999999999999949999999994444444444444444444444444044444
+444 40444
+44
+0
+5
+555559999959955955559559995995995599999999559959559595959559999599959955999999995995559999959955999995959959999955999959999999995999999995959999599999999999999999995995999999559959959599999999999999599959999999999995999999999999999599999995999999999999999999999999999999999999999999999999999999999999999999999 5 9999 9599 999 999995599995559999999555995999959999959999999999999999599995999999999999999999999999999999999999999999999999999999999 999999999 99 9 9
+93
+11111111111111111111191111111111911799179979799979999999999 9 9499 4444
+4 9444 9
+4 40 44
+4
+09 99 9 0
+000000 000 0000000000000000000000000000 00000000000000000000000000
+5
+555555355553555335333335333533333533353355333333533335535535335353333393335333335333333333595595353553559555599955953955359699359939593995999999949499999599944994499994999494949949499949999 944 55555555555535555555555355335593555539555555933359595559359533535593553335355955595555395555535555539935555959595559559555599959559553555595595599995555995955999595959595959999599995999955959959959995955999599995994999999999599999599999999999999999999999949999444494499499999999494999999994999 9 4 9 55595959555559555555555595555595559955599595955559355595555555959559595559595559595559595959555995599955999955599559999999599999559999995999959999999999595999995999995999955959955999999599999555999999959999999995995999995599999599959999999999999999999999999999999999999999999999999999999 9999999
+94
+1
+1 111111199111111111111111111111719111111197971911111971111911171111197919979991999999999999491999999949994494 44449444444444444444 44
+1 1 11111111119111111111171111911111111191171999399111111111111797971191991999999999 99999949 4 4 4444444444444444444 444 4 4 44
+00
+1
+11211111717171281121121112111711111171171111721212211711117722111717717712771221777177771177717171711771771117717177717787777777117177717717777771719717477777777717777 7777
+11111 2111221112721222212127111122222272212212111237712212217111217222221122212117122222112211827822222272177212171221711122771887722122722722728127111271227271721727122217122227127771712772717272771722277777727777722172287117717772277277771772227777777271272792127777777777777177277777722171817717772277772227972877227777777727271772722272177221297277778777777787777772727777887721777777777777777877777747777777777777777777774777777777777777777777877478777884
+5 9999999999999999959999999999999999999999999999999 9
+9
+11111111111111111111 1977177979 99939 111111111111111111111 111 11 1111 1 9
+4
+99
+0 0 00 0000 0000000 0 0 0 00 0 0
+9
+9
+9 999 9 9
+999 999
+9
+9
+090999 9
+00 0 0 0 0 00 0 0000 0 000 00000000
+0 09 0
+0 0
+5
+5
+5
+5
+11 1 11 2112122102122211121111212222171277771777222127712222227827172177827271217721227212177277772222722227227762771171227727771227277727772772777772771776877877817677787672178788177716861777868666616668766668667888666666646666618866666666686666668686886666668666686668666666666666668866666866666668666666666666686666868668666688866068866 5 80 85 8000850088088000880888880888880880888888580588805885855555855555555855555555555555555555555555
+55 5 5555555555555555555555555 55 5555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555 5 555
+712777177222172271222221817272171222272222227222122222222722222771812222222222222228772222228277222222012227227222722227282772772222727787727727778877770777777777777777888778777778788787 88 888 7888 5 55555555555555 555 55
+1 111111272221212122271212222211222721227222221221221712222212222122212212172112122227271727778717212772272222712222222222222212282122122212221827212221272871272272111222272122221172122212222222172222772272222172222222220222277222262222227222272727272222222211721122027221222722717121221272727212227172212717622712222221712222722227722222127722222222202227272712222222182222220222222277772222272272127212822217722227227722622227227222282212222722226222622222272262222122712222227222226221727222272877022277272222227222227722712727221222722227282622722607222222672672222722222212222221128822277077777076222227782227602672622262676872222272727722622227262727727626127267667866222262822722222276777778778727827288227722772777802776726876727727667222726222722722778220667827626726777768766286728767672762727277827767727772667676786677677277666727277667768682268287878276777227677677228726226767282678876276026286676867767777767767777772226067727788666677867767672676627776728886678767667677766666776788626777766676617767767687787688766776667767676778666888878887776866076778877677766777077667777788767777868667868767677707787878677887776766767687768077886887667677768867878888868868888768088788888078887888888888887708888580808808888888887088858858808508588885888555855555855855858588585855555555888585858558558558588555555555555555555855555558555558555555555555855555555555555585555555585558555555555855555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555
+5555555855 55555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555556555555555555555555555555555555555555555555555555555555 5555555 5 5 55555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555555 55558 55555555555558555555555555555555555555
+1 11 1 1111221112211211222222222222222222122211212721121222121112112112212281677122111117222122212212211721221222711122121122222212161112272221222221727622212212222722217222272727221227677772272727772727722222722777227227822277222722222222766767277822272282777227272777272672777277277227827227278766777787276767762677777727778267762676777666786776676677767868667867767777666678778686666666677668676777866767666667767786668666768677668768867687666766667666666668666867667686866666868888668688866666886866888868886866888688668880888888888808888888880000555885055850505088508085585855885885555558888888558858555555855555555555555555555555555555558855555855555555555555555555555555655555555555555555555555555555555555555555555555555555 112111 2122222222222121221217212211231222111221222111227111218212711711727812177277122222722202727777222777727277221727727272777227272777222777777722777277222772222772722272277772777777217177872772778287771677767776677778776777788688617787676687764776676876866686667666867866668667486666668868866668668666666666766666666668688666868666688666668866666688668888606868686688060058088888558888 0 08880 580850085585885888088858885080858858858888558055885855585585555585858585555555555555555555555555555555555555555555555555555555555
+5 55
+7 7777 7 77 777 7777 777 8 8 878888878877888888888888888888 888 888 88 88 888898 859888888 88888888858 988599898 8588 5 9 8 8 9 0
+58 88558 888 77777777777777777777777777777777777777777777777777777777777777777777777778787778878888878888888888888888888888888888888888888888889888888888888898888888888888898889888999988
+5
+11
+7 77777772777777777227772777772177772712727727777777277777772772777222772777221727777717777227277227717277227772722277772722272222727222727227722277772717277727722727722227277717777227727221277722272122272722722727222227272227772277772777277277272727277277772777277277777777277777777727777777777222727772777777777227722777787777777777277777227777777777777777777777772777777777778777777777277877777777777777777777777227777777777777277777777777777777777777777777777777777777777777777778777777777787887777777778787777777777877777777777877777777778878777777787887787777877787888778878877777777788777787777877778777788778877787878778787888888888888787878888888788788888888888888888888888888888889888878888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888888988888888888888888888888888888888888888888888898888888888889888888888880888888880889888888888888888808889888888890898888888880880008080088880080088000088000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+5
+00000 11227212122211222222222222222222212122112112221221121222117112122211272232212122222212211227222122222722112271712221711217271212712177212222222771712217222221122121121211111227172272212122212222722172212722217772222112222221127127127722721227127172212222211222222222127112222127222121222117127212222227122827722128221272272212272222112772222122227272212272272222121222221272722722222222272222222271212222721222272222222122222227221222117171227122222122122711221222712122222111781222211722717727222222222272272222722222227222222271222277222122712221272222777122772221772222222222227227727227227277277272177222222272822777222212227277272222772277122722172227272722721227271877222222227772117222771172227772272222772712212822272227277722222222222777222272222272222172272227722722227772722887272222787727222722777227228727228722227222227772227212722212778227227722221772222812172778272787822272227272277788272272272277272722827288222777222287282822787277222182287722227722172277272228278822272288782212722827787878878288228888887182878878872188278881788877888187888888888888888887888888888888888888888888888888888888888888 88888888 88888 8888888080888808008888088888888088888888888880888888008809888888808888888808088008008880800088000800080088000880008880880000808888808000888000088080880880080000800000800000008000080008000008000080800800808000000000800800000000000800008000800000000000000000000800800000000000000000000000000000000000080000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000800000000000000000008000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+1 515511555355555515353555352555133353125535333333533513335553235353535537511535133253353535333333355355523333333733333515253355535953533553339333333573533535353533335551355333993353323335523533335253353255313339535355399552151155539553335135995355575551375235935355559535959595593955593535895595555555555375555535555555555555555555555555444454578384444444444444444446444444444444444444444444444444444444446644444444644444446446444644644446464444446444466464 60
+11111111111121221221222122222222112217212112212122117121212222122111211222221212272127111222222822217211227211227212212211711121221111222122212122122181121711272222222212122221722222282271212222227227172221772722782272272212811722272227177227212877222277227272222222222222228222722222272222222272721227227827881282728772882212212221882228881888888 8888 80 00 000080000008008800000800000080000088000008000008880000008000008000000008008000000000000000800000000800000000000080000000000000000000000008000000000000000008000000000000000080800
+11515113555358555555531335555551513553553533533335333333333313335333133133533333333532553333333353353333353333333553333355337535333533535533333333533533335339393335537555955353332535539351335535353559993353553551555 4444144 4444444444444444446444446444444444644
+1 1111115355555113355533353313533333533533313333333333335333333335533333331333353131333733333337533515357535333333333333333133333333333333335335333333373333335333353333333133333535333353333333333333333333333333333533133335329333333333333333333333351533333333333953553333533333333533355353533335333333535333533331335533353333335355355335995539533533933335333333333353553539533353533555533335973355915995358559555 4444444444 4444444444444444446444444444444644444444444444 4
+8
+00 404 4 0 4 04
+4
+0 0
+8888808880808080080000000000808080880000000080080000080000000 8888888 888088800808800000000008000000000000000000000000800008000800000000
+111111111121112111111212222222112221211222222222212222122222222122271222122217121112711218118112822111112812272221722221727121212117222212272727227122212212221712227772122272727721222222212777721722172727222222772127222272872727272228272177722282771222228277127227727772227112882272288772888888282821212828828882888882818 87878788811888 88 8 0 06 0 40 0000000080000000000000000000000008000000400040800000000000000000000000000000000000000000000000000000040800000000000000000080000000000000000000088000000000000000000000000000000000000000000000000000
+0
+112122212171122202872221222221272217272227271122020222228777787781888888788188888 09000 000004 000000000000000000000044000000000040000 1111081821211781818801202801222202227272721111217110121200801172277288320611878872187767888609301788087819761188781788188078178918887748917808111811878778711710871177871797777177077778410777481116440701417404400049004019440404040044041100004104060041404004000440444440400440040 00 2118881118881818617111619111317111111117111271112112111111176116611671111227111177129117111016161116111716781776771116118166267911167791126711171667161177687611886977118111776767761767766176161171767196676881876671771114667676618661161116668161197767111161107161719671171167111117116119111676111171169161141111118141166116166917317811111111861189111167411111111171181167911616116161111111614611191144117116141114644414111114111464406464406044046446014444144644644444044441641416616446441644444161616646444664164444446444646464046664444644444446444444446444444446444444444444444644644446644444444444444444444464444444444446444444444460444444444404004
+1 15511539523333333133513331353333113313333333333333331133933933333333333353333333333333333333331333333331333333335333333333335335133333333333333353333333333333535333133333339533339333319333939939333333951559335393333353395553399595
+519133331319333533333331119313393933913113313331133333373131233353337313373131933333333131373913133333333333313333533339733393153331333339338335333333333333333333331333333333333333333399335333333333353393333393933733933393533333333333125333339333953333539393993599333313939999395393393995939993595399999995
+9115113395133133991119199939113331113333133313139395135313139311317733937331333333397333391333991333739997531333333979393937973373391787933117939333839599839373337133378933393739973333999733959399973999939339935999133939119999339933395999999973993999999999339999999959399999999999 99944944994494944444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444 4
+0888088000808000000000880000000000080 08008880808800008000808000000000000000000000000000000000000000000000 8088888800000000008000808000000000000000008000000000000000000000000000000000000000000000000
+0
+0
+0
+0000000000000000000000000000080 008 00 0000000000000000000000000000000000 8 000000000000000000000000000000000000000000
+5
+1112222222211222272222121271222171112221182277272712772772777272717171187277177777777778717888886 78861688778666666766666766866867468666669666666666666666664666666666666666666666686666666668666868 80880880885088880058808880585888888808858585888885558855555555555 222227722122127711717812281222211227217717221727711 771171688188876188811866888688667666666666666664646646664666666666666666666666666666668666666666666666666860 850805808800800 888088880888888588888888555555 1112 1122221271221821222811282221111717118211177282212277211277177177712122277772172117177261277677717127711181111811881111468817888788878178177768868777847877648468664647766887744664644666666668466666676466666666466664666464476664666646666646666644666646666666666666666666666666666666666666666664666866666666666666666666666666664666646666666666666666666666666666068666666866666666666666666666666666686668 000008888888888008080088000008808088088800880005880885580888808088888008888880058880088888880885888858888888585855 111122821222217111112111121222112777772727117777777157157217211111111171112871888778787778848778747888877877771746444644664667644666666446466666666666466666666646646666666666666666666466666666666666666666666666866666660668 888888880088800808080880008008080080080008880088888888888885
+1 11 11518281881125212212711235215378152553355585372212111313222581215151311521122125122711752212253715737231222577211212177317121773985195915179522915555151818977551958517155155555555559515155558558188858875857488874 7788777877678477777748447764464464446664444444446644446446444444446466664446444464664666464666446446466664666446466644444644466644446664644606666666666664664666666666684646656666466666666646 66666668888880608008888888088888888808080888800808800000808880800008000088080008800008000000800000000000000080000080880800008000080008805080008000000880888888888 85 8 08888880888888888088888080888808800000000800880800000008088000008000000000000000800800000000000800080000000000000000000080080008808080
+7.2 Principal Component Analysis
+213
+999 999
+99999 99999
+999 999
+9990
+90990 90990 0000 0000
+00 55 5500
+011000001
+111111 1 0 010 001010 11000000000 10 01
+5
+555
+5 555 5555555555 5
+55 555555555555 555 5555555555 5555555555555
+11 1 1 111111
+0
+55550 00000 5555 5 505555005 5005055000500008 00 0
+111011011110010010111111
+1 1 000001000000011 111111 1 11111111110101111110011010111111101111010100010010011000011111101001001001111101100110111111111111111 11111
+5 1122271122212222277212727125577551255555515555155755555555575555555555557555555775555555555555555555555555555555555555555555555555555555575555558555555555555555555555555
+1 111111111
+1
+55555555005555055050
+5555 5 5 555555555555550 5505555005500050 0000
+0
+0 0
+1111111110111110111111110111101111111101101000000111111001011101011110111011000000111101001001011110111011010111113111110011101101011100011111111111110110111111101111111111011111111111111111111371111
+1
+5
+5855555555555555555555055555555555550055555555555555555555055505505555550550555055555550555505505055555555555555055500555055050555005555555000000550500055000000505050550000000
+5 55855 55555505555805085055055555055550055555555505555555555555555550555556555550555555500555550055550555005555005555050550005005050000000550
+1
+0
+8
+8
+55 5 555
+1 1 111111111111111 1
+1
+1
+1
+1
+5
+5
+055555555555055555555555555555555555055555555555505505550055550505555555055555055555500500000050000 0005005000
+1 11
+21
+1
+3 1
+1
+1
+1
+1111 111111
+5
+11111171111
+11111111111011100101111111110111011011011101000111100000001100110111011100110110170110001111110111110111111117111110111111111111011011111711717171171711111771191111111111171111111 128222221171725115121122122752521252222217282227212277125528515555557557555155555555555555555556555555555555575755787777555555555555555555555575755757757555555755577555555755557
+111111211222222222121121211712112212121111211111111111112221111117127212111112111111117177211211117111711777117171111711717717172111711171711711717111111171111111111111111111111179711111711177111111711711171111177771 1 121 21222122117117122222212111122112111112127121211127271217111722111111117111118171117811212172111117111173777111117711711777117111212171171111177177111777717177117711177117777817171717717111777717777171777777777 7
+5
+1 000111111110100101017100000010010011111101117100101110101101101111010101100101110110011711171117081711111111111718711111117 12171131 18 1282 2251 7728182771228 12221728551722712112555115295112152117715121271122712717277722551772752551577755575755157557555555775557775575755557777755577575755577555755755572755775575555755577777755577
+1101 1107110000001010017004010101141011011007701011110011110770171118111111 1711771917117111711117111 11 1 1 17 11 2 781118171277171572751221757775225777575771211552517778157572577552572277755555275775757775755757777755757577755777777777775757755555575557775777 5 7 10 010100010000117117010100010110110187001110111011011071110711111017711777710177877111119171771111117118 8787271812727888771117212771812872721721778721122225771217781771725717722217177755771127777272212727527777777222717522157875271515258755771522278225557827775557525757725775252555777775757757572727755777777757257777727577757577777777777777577777
+111 11 11111182111711812111112211111221221111221127711711712227727217171171771222211217127111111111711711177221177217177711112877711777177127177772777777172772722277177777177717777177772221722222771277117277727277727777777777777772777777777777717777777777777797777777777777
+79
+5058588558555508555555555055550055555555055505555505555555055500550555500500005505500050005505050500005005505055
+4 8 55555555 55558050555505555055550550500555550555550055005005050000500 0500550
+8 888 558885808805580585555555585558555550555555555555055005550500500000000000000000
+93
+5
+8 1 12212 22112 511155125 5 55755555555555555555555555555555555555555555555555555555555555555555555555
+82227882281122222772287277777271777212778217781177227788272718125728727578272127522277777722277871117171272727727125127725787721122778212777772728711177177215231222817221177272711725157777772252812221772211122157178221771527725128771272755222877212222777227227272725277777257277722257227772587577775727822278757727812255527227577877587277277222122755777727777772777727777557277277777777722777572775772225777775775572775775277557777577777777777 74707900707070040000000000100011100140008809000800403000010070087771797778117970733988181317819787832788828282712828877227777172778171127727177778577287782787855712757725227822815727288717772271772777122178581122271171771227718772222257872158125777117785777171272127572527271272227272271772722777772772227277722222725757777277218222217527577775222222522217555727177527277772277777572722777222777771772727275727527772777772727777727777777 7
+4 888888848 48555558585508588855058855555885555805585050505555555055500000550005000000000500050000000000 81211211112111122271711712171112331112732712133111128722222272122181872271212281721277792727222118171227222221772722727727272227271777277721222277277727227222772771721272227712797777272222727727722272777272287777278222227777772772777772272777779722872722777777877277777777774797777777787777777777777777877777777777777777777979777777777777777477 488888885 088084885885588885558085558085855555805500550500050500500500005000000000000000000000 11 11111881118121351281213221232222211233322232112221113212131881722218771711277722722122112112122231228227112222772222222277122222212227122227292827222172228222221212212222122721277222272229222222272272222272222292222227221227912277122111202217722292212772922222222717222772112722272227772717227772722777221227277227227922272227211722727272272872282177278777272771272777212222772777987777777222217278222717277797772287727777272797772727772777777777797777777778277777777777777877777777477797777777877877777777777477778777478777777777777774777777777778478777777477447774788487777448447484884478878877447874888888888888478088887887888484884808084885888888885880888858888888888558858855888055858005008050080005050000050080000000000005000000000000000000000000000050 1811112133113113313333382333833123229723321137111228212211222328131322211118771111212221121128221232228712182222122711221227212222222221222222222221822222772222227717122222722222212222227122222921227122222722222222922222222122222219222822212221212122292288171287279712727829221297272728728272282777881288297222948782747782877877777774788788784477777777744847477744484488887788844844877888888488884880888788 84048 888848858088588888800058008085000550000000005000800000800000000000000000000000000
+7707140007404101100000080710700700140104700001070081011407808010970811870117711701204177117071711818211191981818111 777
+977774777747704777044741444400047494040000000000400009404744440090800004038404174007000000000004070010700007030000007070087077083373397098737377073391899 111189189285881189218122872881882887882878182828517282188888881871812827188827878727287727818851227275278725727777277728872887878882188272781782187227282277718272728127817781722288275172282722828278211782271872152271218881721722278121722121877782217277727772227178871722255127227117127251817727287152228278775287222722722128722782722772177878222212722827122718222272727272222222118822777727287777277227282277287272787222222277212722785722212722722222722227222722871227778217222277222215777277722227222227572177771777727222727251727725227771772775227777272277277277777722272277727777777777227725777727277777 7
+1
+794 44444444004444040704400074784407434704000047000003000000000008803070313070008000090009030030380078833090031399338333993013331318011819813891888888888 18888228228888828818288887278585222218827877228212222172828522228222721128888122881127121272218872187812115722511211718222788171222222171588287222888282288282212221222212228281822278222227127172212127828222212272122778122827282222121782252112222221121222722717122221221222222222822217771277772112727827272272221722222272222227272277272777777
+7 497449444444444409444444044909449494040440000884439000000004309000000090300000300930900099090000030000380330381090080033303013393388139378337873218988288 88888888888888887728888888888888887888888822882128218808288822127222888828822222228288288222282282822222781212281282282221281822222182228228222211288222222822221222282182188122122282287212222122222127222127822822811288721272882822282228882828 7974 4494444444444444044444444949044944749044800904000000090080030000390938900303900309003090303809030330388303330930003303933930901333083031381333383303803133983388503833559988989889888108888888778818118888888288888888888888881888882888822888228888222828288222882822288822828812221222222222188288828888822212812822882822222221282282872822212222222218221228122282288222882828881282888722227
+999 7 949494944444440944444444444444444944449449444044494447444444944494949444094490444440444844444444444044094404409004040804430000000040903040309003330009303033303303333900033303000300303339003034933390830093333333300308043003033301333330003033333030380333033933803338133833383333333303333598330333883333333333333030338330333983333333033033003383333033305333083338381033331335353833833333830338830855588303853338381833889319039358888877159817888877877818818888881797188775818888877888888888888888888888888888888788888888788888888888888878828278788888788888787888888888887888878888888808888888888822888888182282882288881882828188228822222882222282822882282822888882288282222222822888218222822822288228882282822282288888828882822228222282822222228221822288288288228222822882182828282288822882828
+1
+1
+13013313332832332332323133333331222218823871312222227922122112213222272222111229121277212222222222222222228122222122222292292222221227729282222922222222229282221228272122288928278292282298297221989198228222497999818782797 7888888888848844848488884444444884448488888844844448444888844888888848808488888 8488 8888888888888880880888088088888888008080008000000000800000800000000000000008000000000000000 15113333335313333332533233233333283133333333333333213383322993183222222221193199239122222121297289211882222722212229222222122722222229222222992299422822222822989928818992922222229221272888928172888422287288988988898488844448848888888844488444488487484884447884844488884844044448888888888884888888888888888808888888888888880888088800888008800800080088880000008000000000000000000000000000000 15315 13553323515333333335333335335333333133533333133333333333333333333331333333333333333333331353338333333333333839333333333339333333333338333333333313333333332333333033332339333339233333933239333113132333223919337292228281822718222229728222922272122272928282272289282722229918878227999822227982822287822822897212228222228929828822299979992922222928228282872872222828729222828872227222228828988979872894787888848741888878447888889884888488488448844884444888488844888844884844844444848484444488444484488884484444848844844448444448448444484444444888848484488484444444884848 4884884808888 88808888848888888888888888888888888880888888888888888880888888888888888888088888088888888888880808880880088888800088080808880808000000800008008000080000080008008080000000000000000808008000000000080000800008000
+5 5335333333333533333313331333333333333393333333333333333333333333333333333333339339333333333333333333333333339183933933393391339399933992329333922222283399882288292222928228982877998727828782222998282879882728782897278872874 84448484484444484484484444484444844884844444448444444444844444444444448448404 484888888880888808888000880800880008008000000000080000000000888000000000
+9999999444499444444444494944944444444944444444444449444444494444444943449444049400933030330000003403933033333333390400333333303393933303333000030030333330303303033333330303333333393333033338333833300333333393333333343330035303033333030333333333039538053383118358 888898777818878777718778887888788888888888888 88888882882888828222282288888222228222222222828228888288282228828
+9 0999 9999999999999499949494949999449999994444999494944944444444499944999994049994499944949449444494499494944494944944494499999994944994494944444444449444994449444444944449449494949499449444494444499944444499044484044044444344409394444444349404440439439433303093303003433330043340330333333333334333333333000300303333043333334333303303033330333303333303000343333300343300303003333330333433333334333433033833443303303333333303033333333333330333333335333333303330333333333333300333833033333033333333333000033333333333330353333333393330330333330333393303403303338330333433333033333330035539333338033003335330835330338338303833333330533003330013030093033303330333303053838330339349393330333333383055555335300583039039810855340908031913953313187501308380879471978111889348187787878777888778818888770181818787877818887788184888888888888888887888888887888888888818888888888888288888288888888888888808882022828828822228822222222222882228822828282882888882 2
+9999999949999999999499999999499499994994499994449444994999944449944999949999444449994499494994944999449999449444449499499444444444944499444444994444494499493443444444944494454443344343043333343333330933333343334303043333353343333333533333333333333333304333333003033003333333303333333333303403333333433333330333339004333333043333033531033330333334333303333350330803033300030500303033885044001303030083013384004150051000138081411141184778181788177171111718881111788888888888828088087028222222828
+-1 -3 -5
+555555559553513535353335333335539933935333333339335333333333333333333333333331313313333333933333933333333333933333333333333333933333333333391333333333331339833331313333933339333939933333333333333333339333333991333333333333313333333333333333339333333333333333333333333933119333933333339339333939333939333333393339333333339139333333333393339333333933333339330333393933993399313932393333131333333399933939913933939931333933339199933993299939999999999299990992293292398982998997992299298222229972992228987792897977287289972898792989288228299282888877888479888827992878877778748789744487844949894848444444844484448444444444444444484444484444444448844444444444444444484444448444444444844444444444484444444444844444444444444448844444484444444484444444444444448448448084 8888880840888888888888888888888888888888808880088888088808080008800008080800800000088088080808808000000080008800008000080000000000000800008800800080000080000000000800000880000000000088 9555353335953539955393913333339139333333339333333933933313333393333133333313333933339933333313931333393339399393333333913339333333333333333399933333339339933933333331313393333399393991133939919319913013393319133333193339313910911993339991933933993999390979992229899897999997999992927399922799282799994741944447484444444474444844844444444444844448848444444444444444444844444448444444444484444444444444444844444444444444444484488888 888008000880008080800000000080000000000080080000000800000008000 55555555959553395533939599953599399353333399199393331131393339393933339339313399393993391393311333933333933319999333333119393339399999913993339393191913339939993399391991339939339999913939919991393993331999909911911913113999999139111199993933193999991999999933399192939910999949799949999979997988784444844444444444744844444444444444444444444444444444444444444444444444444444444444444444444 0 084808 0880880080080800800800000000800000008800000000000000000000000000800000088 9555955559555959595559555535995595599993999339339393399339999339399939599933535393399599993399939339399399993919393393939933993396999939999393991993393999199999999993999939939399999999313993993999999999911999919939999919999909999999919999969 99991999499979999449999 944444444377444444444444444444444444444444484444444444444444444444444444444444464444444444444444444444444404444444444 4 4 08000080008000000000008000008000000800080000000000080000800008 55555999955559555559355539555553959595995955535999956359339995599999959939599369995939939993995999995599999995999969999959596599995999999399599999999999999999999999999995999999999999999999990909696999998999999899999699999998944494619741894474444944444444444444444444444444444444444440444444444444444444444444464444444644444444444444644446444444644464448446400 000000000000000000008000000000000000000000000000 55555555955555535995555555559955555555555595395599955955959559959955555559999999599599999559699995959939996999599959999959995999995959999969996959999999469999999999699999990969699099599999969999990909499449946909464449044444444449444444444444464444444444444444444444464446444444444444444644444044444464466464 606000000000000000000000000000000000000008 5555955555555555595555555599999555595995955995959666659999966969999999999646999996969996496404444444444444446464444460446444666444646464644666604400600000 0000000000000
+99999999 99999999999999999999999999999999999949999944994944449999949999994994999449999999499999999499999499499449499944949949499449449494949999449494499440999494990394339444543994444444939343433343444343434334933444944994333443334033333330433394349494333333433343353033333330333333533333034935533053435003000334053033303335303333303533030504080040350153043004043300400300300004500000080050101005100148005801111101410011818111111087111888781177111181781118181188888 8 8 008
+9999999999 9990999999999999999999994999999999499999999999949999999499999944449999949999499999999449999999999949999999949994999999994449999494944949949999944449449949994994444999444499449994444499444994494444455994344344949449944354349493449344395549934334399443343334434504433336335533330304395333404403035535354540835335330355334053059030984505335033344040003050000044500504400504030040044000005004444084104081018 104404871801104708411 17808 6 6 08 99999999999999999999999999999999999949999999999949999499999999999999999999999994949999499999499949949999999999499994944499949944949999999999944999909994499944499499949994545499944494495944959444444494494949494494944454539554544445544444554355345556555444505533355350344544445450536335344444445554000344640554454040006055440550045550445056604004000044440400444001000000806804040800000044007760461880 66668 6060 99999999999999999999999999999999999949999999999999499999999999999999944999999999944499999449999944999999444999944499499999499994499444999994444949945494595445495549555444554555545444555543445554545544454554455554555545655555555546044544555453605453556545954544555445450444085445004605666400646404000000040040000000404006060400004000 6400666 66606600000
+2
+9
+9
+9
+99999999999999999999999999944999949599559444995449455495445544455555555554554564454545445464454544450646554565454666466466606065046040066000604000000060 0600666666660
+9999 99999999999999499999494495444459945459094454544555554555595455544445454545454446455555554555445555555465466564456444656546646666666546660664466666664466664666666650640466666464646464000600 60666606606006606000666666660606606606666666666606666660666600666 999999999999994995994445449445449455545955454555444555954455545454455454544455555455555554545564545455455444644556465654445455566664650554466566665646466644666666646666666446666466666666446664666666666664666666666664666660666466666666666646466606666666666666666606660666066060466006666606666060066666666606666606666060066666666666666666666666666666606666666666666660 9 999 99 540445555555545545554555545544555554554544556545555656554545546545644665666566666666666666646066666666664644666666666666666666666666666666666666466666666666666666666646644666660666666666466666606666666666606606666666606666666666066666666606666666666660666666666666666666666666666666666666666066666666666
+595555555555555555555996595555555555955555599559559555659556999966699965966696996664666699966999966666 966666666664644444646496666466664946064464664640464444466406446464464446664466446446664604046604646446446646666606446466464466606666600060660600 060000000 5 555555955555555556555555555555555555959595555555559565555555959559969696466969695596699666669964644666669656666666666666664666669666666496666646666646666666646646646666444664464666666664646646466666464666664446646444446464466446664646646066464666644666666666666646666646446444464646046646666666664066606066666446666066666666644666066466604006666606644660600060000
+00
+9
+4 5555555554555555455545555555 6666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666 6 5 555 5 6666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666 6666
+5
+5
+5 6 6 66666 666666666666666666666666666666666666666 66666 66666 6 66666666666666666666666 6666666 66
+6
+5
+5
+6
+6 6
+5
+66
+6 666 6666 6 66 6 66 66666666666666666666666 666666 66 6666 6666 666 6 66666666666 6666 6666 66 666666 6
+2
+2 12121222211111112121111111111111171181111111111111111111111111111111111111111111111111111
+-4-2024 -4-2024 2ndPrincipalComponentScore 1stPrincipalComponentScore
+FIGURE 7.6. Scatterplots of the first three principal components (PCs) of the correlation matrix from the pendigits data, where r = 16 and n = 10, 992. The top-left panel displays the scatterplot of the first three principal component scores. The top-right panel shows the first and second PCs, the bottom-right panel shows the first and third PCs, and the bottom-left panel shows the second and third PCs. The 10 digits are shown by the following colors: green (0), brown (1), light blue (2), light magenta (3), purple (4), blue (5), light red (6), light green (7), orange (8), and light cyan (9).
+covariance function
+cov{X (s), X (t)} = σ(s, t). (7.42)
+By a spectral decomposition of the covariance function, we can express σ as an orthogonal expansion (in the l2 sense) in terms of its eigenvalues {λj} and associated eigenfunctions {Vj(t)}, so that
+􏰏∞ j=1
+where the eigenvalues quickly tend to zero and the first few eigenfunctions are slowly varying. The covariance function σ is positive-definite and, hence, we can take the eigenvalues to be nonnegative and ordered: λ1 ≥ λ2 ≥ ··· ≥ 0. The goal is to determine the primary components of functional
+σ(s, t) =
+λj Vj (s)Vj (t), (7.43)
+-1 -3 -5
+44 44444444444444444444444444444404444444
+9 9 94444444444444444444444444444444444444444444444444444444444444444444444444444444444444444444404
+3 1
+17277727772771227222227272272722177172722271222722222222227227222222728722227722282827177771722727222227227722722772227222272222227777272278727227772727222777822777282777772877788787878777777877 88788 887778888878888 888888887888888888888858878888 8 88 5888885 5 55 55
+278
+111111111111111117111111111111111111919711119991199971799979799799999797979 99999999999 44499 1 11111111111111111111111111911111117 9191 71199 79799 9 99 9
+4
+0
+0 0000000000000000 00
+0
+9
+111111111111 099990000
+1111111111 1111 19 1111111 1 11 1
+9
+111111111111 1 0 0 00 0 119
+0
+-4-2024 1stPrincipalComponentScore
+1 1111112222211121211217212112111121111121211111711721111117111111171717121711371111111111111111111111111117171111711111111111111111111711113111111111111111111111111111111111111111111111111111771111111 1 11
+7 7
+7
+5 5555 5555555556555955555555559596565555965656555559595645666566656666666666664666646666666666664466666666666666664666666466666446466664666666666664666666666666646666666446644666644664666464664664666666666666666666664666666666666464666666666666666666666666666466066666666666066666666660646666066666666 6 0006 00 555555555 95555556555655555565666666646646666666666666666666666666666646666666666666666666666664666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666 666
+55 5 5 5 6 6666666 66666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666666 6
+0
+4444
+000000 00000000000000000000000000 0000000000000000000000000000000000
+0 0000 00000000000000000000000000000000000
+9099
+0
+0 0
+0
+3rdPrincipalComponentScore
+3rdPrincipalComponentScore
+2ndPrincipalComponentScore
+214 7. Linear Dimensionality Reduction
+variation in σ(s,t), where the eigenvalues indicate the amount of total variance attributed to each component.
+A random curve can then be expressed as
+􏰏∞ j=1
+where the coefficient
+􏰞􏰞
+[Vj(t)]2dt = 1, Vj(t)Vk(t)dt = 0,j ̸= k, (7.46)
+where the integrals are taken over [0,T], which may be periodic. The ex- pansion (7.44) is the well-known Karhunen–Lo`eve expansion of X(t). Thus, X(t) − μ(t) may be thought of as a finite sum of orthogonal curves each having uncorrelated random amplitudes.
+Although a scientific phenomenon may be viewed as functional, in reality
+we typically only have a finite amount of knowledge about that phenomenon
+through sampling. Consequently, estimates of the mean curve μ(t) and
+X (t) = μ(t) +
+􏰞
+ξj Vj (t),
+(7.44)
+[X(t)−μ(t)]Vj(t)dt
+is a scalar random variable (called the jth functional PC score) with E{ξj } =
+ξj =
+0, var{ξj} = λj, 􏰊 λj < ∞, and cov{ξj,ξk} = 0, j ̸= k. The eigenfunc-
+j
+tions {Vj(t)} (called PC functions) satisfy
+the covariance function σ are based upon a collection of n sample curves,
+X1(t), . . . , Xn(t), where Xi(t) = μ(t) + 􏰊 ξij Vj (t) is the ith individual j
+curve. The kth point on the ith curve is denoted by Xik = Xi(tk).
+We briefly mention possible estimation procedures and refer the inter- ested reader to the excellent books by Ramsay and Silverman on this topic. One approach to analyzing such data is, first, to smooth each individual sample curve (e.g., using spline methods or local-linear smoothers), and then apply functional PCA assuming that the smooth curves are the com- pletely observed curves. This gives a set of eigenvalues {λ􏰡j} and (smooth) eigenfunctions {V􏰡j(t)} extracted from the sample covariance matrix of the smoothed data. The first and second estimated eigenfunctions are then graphed with a view to examining the extent and location of individual curve variation.
+Other approaches to functional PCA have been developed, including the use of roughness penalties and regularization, which optimize the selection of smoothing parameter and choice of the number of PCs simultaneously rather than separately in two stages.
+(7.45)
+We assume that
+􏰃􏰄
+X Y
+7.3 Canonical Variate and Correlation Analysis 215
+7.2.12 What Can Be Gained from Using PCA?
+The short answer is that it depends on what we are trying to accomplish and the nature of the application in question. PCA is a linear technique built for several purposes: it enables us, first, to decorrelate the original variables in the study, regardless of whether r < n or n < r; second, to carry out data compression, where we pay decreasing attention to the numerical accuracy by which we encode the sequence of principal compo- nents; third, to reconstruct the original input data using a reduced number of variables according to a least-squares criterion; and fourth, to identify potential clusters in the data.
+In certain applications, PCA can be misleading. PCA is heavily influ- enced when there are outliers in the data (e.g., in computer vision, images can be corrupted by noisy pixels), and such considerations have led to the construction of robust PCA. In other situations, the linearity of PCA may be an obstacle to successful data reduction and compression, and so in Chapter 16, we consider nonlinear versions of PCA.
+7.3 Canonical Variate and Correlation Analysis
+Canonical variate and correlation analysis (CVA or CCA) (Hotelling, 1936) is a method for studying linear relationships between two vector variates, which we denote by X = (X1,···,Xr)τ and Y = (Y1,···,Ys)τ. As such, it has been used to solve theoretical and applied problems in econometrics, business (primarily, finance and marketing), psychometrics, geography, education, ecology, and atmospheric sciences (e.g., weather pre- diction).
+Hotelling applied CVA to the relationship between a set of two read- ing test scores (X1 = reading speed, X2 = reading power) and a set of two arithmetic test scores (Y1 = arithmetic speed, Y2 = arithmetic power) obtained from 140 fourth-grade children, so that r = s = 2.
+￼7.3.1 Canonical Variates and Canonical Correlations
+is a collection of r + s variables partitioned into two disjoint subcollections, where X and Y are jointly distributed with mean vector and covariance
+matrix given by
+􏰇􏰃X􏰄􏰢 􏰃μ 􏰄
+E =X, (7.48) Y μY
+(7.47)
+216 7. Linear Dimensionality Reduction
+where
+􏰇􏰃 X−μ 􏰄􏰃 X−μ 􏰄τ􏰢 E X X
+Y − μY Y − μY
+􏰃 Σ Σ 􏰄
+= XX XY , (7.49)
+ΣY X ΣY Y
+respectively, where ΣXX and ΣY Y are both assumed to be nonsingular.
+CVA seeks to replace the two sets of correlated variables, X and Y, by t pairs of new variables,
+(ξi,ωi), i = 1,2,...,t, t ≤ min(r,s),
+ξ =gτX=g X +g X +···+g X ⎫⎬
+(7.50)
+(7.51)
+j = 1,2,...,t, are linear projections of X and Y, respectively. The jth pair of coefficient vectors, gj = (g1j,···,grj)τ and hj = (h1j,···,hrj)τ, are chosen so that
+• the pairs {(ξj,ωj)} are ranked in importance through their correla- tions,
+ρj = corr{ξj,ωj} = gjτΣXY hj , j = 1,2,...,t, ( g jτ Σ X X g j ) 1 / 2 ( h τj Σ Y Y h j ) 1 / 2
+(7.52) which are listed in descending order of magnitude: ρ1 ≥ ρ2 ≥ · · · ≥ ρt.
+• ξj is uncorrelated with all previously derived ξk:
+cov{ξj,ξk} = gjτΣXXgk = 0, k < j. (7.53)
+• ωj is uncorrelated with all previously derived ωk: cov{ωj,ωk}=hτjΣYYhk =0, k<j. (7.54)
+The pairs (7.50) are known as the first t pairs of canonical variates of X and Y and their correlations (7.52) as the t largest canonical correlations.
+The CVA technique ensures that every bit of correlation is wrung out of the original X and Y variables and deposited in an orderly fashion into pairs of new variables, (ξj,ωj), j = 1,2,...,t, which have a special correlation structure. If the notion of correlation is regarded as the primary determinant of information in the system of variables, then CVA is a major tool for reducing the dimensionality of the original two sets of variables.
+7.3.2 Example: COMBO-17 Galaxy Photometric Catalogue
+The data for this example consist of a subset of a public catalogue of a large number of astronomical objects (e.g., stars, galaxies, quasars) with
+jj1j12j2 rjr ωj =hτjY=h1jY1 +h2jY2 +···+hsjYs
+⎭
+￼
+7.3 Canonical Variate and Correlation Analysis 217
+TABLE 7.2. Variables used to analyze 3,438 galaxies from the Chandra Deep Field South area of the sky. The variables are divided into r = 23 X-variables and s = 6 Y -variables.
+X -variables
+UjMag, BjMag, VjMag, usMag, gsMag, rsMag, UbMag, BbMag, VbMag, S280Mag,
+W420F E, W462F E, W485F D, W518F E, W571F S, W604F E, W646F D, W696F E, W753F E, W815F S, W856F D, W914F D, W914F E
+Y -variables
+Rmag, ApD Rmag, mu max, MC z, MC z ml, chi2red
+brightness measurements in 17 passbands covering the range 350–930 nm (Wolf, Meisenheimer, Kleinheinrich, Borch, Dye, Gray, Wisotski, Bell, Rix, Cimatti, Hasinger, and Szokoly, 2004).3 All objects in the catalogue are found in the Chandra Deep Field South, one of the most popularly studied areas of the sky. Figure 7.7 shows a high-resolution composite image of the Chandran Deep Field South, based upon images obtained in 2003 with the Wide Field Imager on the ground-based 2.2-m MPG/ESO telescope located at the European Southern Observatory (ESO) on La Silla, Chile. The image displays more than 100,000 galaxies, several thousand stars, and hundreds of quasars. COMBO-17 (“Classifying Objects by Medium-Band Observations in 17 filters”) is an international collaboration project whose mission is to study the evolution of galaxies.
+This particular subset of the data set consists of the n = 3,438 objects in the Chandra Deep Field South that are classified as “Galaxies” and for which there are no missing values for any of the 65 variables (24 observa- tions were omitted because of missing data). We also omitted five redundant variables and all error variables in the data set; the 29 remaining variables were then divided into a group of r = 23 X-variables and a group of s = 6 Y -variables, which are listed in Table 7.2.
+Of the Y -variables, Rmag is the total R-band magnitude (magnitudes are inverted logarithmic measures of brightness), ApD Rmag is the aperture difference of Rmag, mu max is the central surface brightness in Rmag, MC z is the mean redshift in the distribution p(z), MC z ml is the peak
+3The complete catalogue of 63,501 astronomical objects can be obtained from the website vizier.u-strasbg.fr/viz-bin/VizieR-4 or from the COMBO-17 website www.mpia.de/COMBO/combo index.html. The data set used in this example is a subset and can be downloaded from astrostatistics.psu.edu/datasets/COMBO17.html. The author thanks Donald Richards for very helpful discussions on this data set.
+￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼
+218 7. Linear Dimensionality Reduction
+￼FIGURE 7.7. High-resolution three-color composite image of the Chandra Deep Field South, obtained in January 2003 with the Wide Field Imager camera on the 2.2m MPG/ESO telescope at the Euro- pean Southern Observatory (ESO), La Silla, Chile. This image is based upon a total exposure time of nearly 50 hours and displays more than 100,000 galaxies, several thousand stars, and hundreds of quasars. Source: www.eso.org/public/outreach/press-rel/pr-2003/phot-02-03.html.
+of the redshift distribution p(z), and chi2red is the reduced χ2-value of the best-fitting template.
+Of the X-variables, UjMag, BjMag, VjMag, usMag, gsMag, rsMag, Ub- Mag, BbMag, VbMag, and S280Mag are all absolute magnitudes of the galaxy in 10 bands. The first nine of these magnitudes are very highly cor- related with each other, with all pairwise correlations greater than 0.93. They are based upon the measured magnitudes and the redshifts and rep- resent the intrinsic luminosities of the galaxies. The other variables are the observed brightnesses in 13 bands in sequence from 420 nm in the ultra- violet to 915 nm in the far red; these variables are also highly correlated with each other, with correlations decreasing as distance between bands increases.
+The pairwise plots of all six pairs of canonical variates of the COMBO-17 data are displayed in Figure 7.8. The canonical correlations are, in decreas- ing order of magnitude, 0.942, 0.538, 0.077, 0.037, 0.030, and 0.020; two of
+￼14 12 10
+20 15 10
+9
+5 0
+-10 10
+-15
+-11
+-9
+-7 -5 -12.5 -10.0 -7.5 -5.0 -2.5 0.0 2.5 -1.6 -1.1 -0.6 -0.1 0.4 0.9 1.4 1.9 Xi_1 Xi_2 Xi_3
+7.3 Canonical Variate and Correlation Analysis 219
+23 214 19 -1 17 -6
+815-11
+10
+5 0 -5
+20
+15
+Omega_4 Omega_1
+Omega_5 Omega_2
+Omega_6 Omega_3
+5
+Xi_4 Xi_5 Xi_6
+-0.50.00.51.01.52.02.5 -1 0 1 2 3 4
+0.0 0.5 1.0 1.5 2.0
+FIGURE 7.8. Pairwise canonical variate plots of COMBO-17 galaxy data. There are n =3,438 galaxies with r = 23 and s = 6 variables. Top-left panel: First pair of canonical variates (CVs), canonical correlation (CC) = 0.942. Top-center panel: Second pair of CVs, CC = 0.538. Top-right panel: Third pair of CVs, CC = 0.077. Bottom-left panel: Fourth pair of CVs, CC = 0.037. Bottom-center panel: Fifth pair of CVs, CC = 0.030. Bottom-right panel: Sixth pair of CVs, CC = 0.020. For the jth CV plot, ξj is plotted on the horizontal axis, and ωj is plotted on the vertical axis.
+these correlations are large, whereas the rest are very small. We also see many outliers in these plots. For example, galaxy Nr = 3605 is prominent in all six plots, and galaxies Nr = 3033, 3277, and 6423 are prominent in at least three plots.
+7.3.3 Least-Squares Optimality of CVA
+Let the (t×r)-matrix G and the (t×s)-matrix H, with 1 ≤ t ≤ min(r, s), be such that X and Y are linearly projected into new vector variates,
+ξ=GX, ω=HY, (7.55) respectively. Consider the problem of finding ν, G, and H so that
+HY ≈ ν + GX (7.56) in some least-squares sense. More precisely, we wish to find ν, G, and H
+to minimize the (t × t)-matrix,
+E{(HY − ν − GX)(HY − ν − GX)τ }, (7.57)
+where we assume that the covariance matrix of ω is Σωω = HΣY Y Hτ = It.
+220 7. Linear Dimensionality Reduction
+Fix the matrix H and minimize the error criterion (7.57) first with respect toνandG.Wesetωc =ω−μω =ω−GμX,andwriteω−ν−GXas ωc+(HμY −ν−GμX)−GXc,whereXc =X−μX.Then,
+min E{(ω − ν − GX)(ω − ν − GX)τ } ν,G
+≥ min E{(ωc − GXc)(ωc − GXc)τ } G
+=tr{Σωω−ΣωXΣ−1 ΣXω} XX
++ min tr{(GΣ1/2 − ΣωX Σ−1/2)(GΣ1/2 − ΣωX Σ−1/2)τ } G XX XX XX XX
+≥tr{Σωω−ΣωXΣ−1 ΣXω} XX
+= tr{HΣYY Hτ −HΣYXΣ−1 ΣXY Hτ} XX
+second inequality becomes an equality iff G = ΣωX Σ−1 = HΣY X Σ−1 . XX XX
+Now set Uτ = HΣ1/2 , so that Uτ U = It. Then, by the Poincar ́e Sepa- YY
+ration Theorem (see Section 3.2.10), (7.58) becomes
+􏰏t j=1
+λj(HΣYXΣ−1 ΣXY Hτ), XX
+= t−
+where the first inequality becomes an equality iff ν = HμY −GμX , and the
+􏰏t t−
+􏰏t j=1
+λj(UτRU) ≥ t− R=Σ−1/2ΣYXΣ−1 ΣXYΣ−1/2,
+j=1
+where
+with equality only when the columns of U are the eigenvectors associated
+with the first t eigenvalues of R.
+To summarize: The ν, G, and H that minimize (7.57) are given by
+YY XX YY
+(7.59)
+ν(t) =H(t)μY −G(t)μX, ⎛vτ ⎞ ⎛λ uτ ⎞
+(7.60) (7.61)
+(7.62)
+111
+⎟⎠Σ−1/2, .YYYXXX .XX
+G(t) = ⎜⎝ . ⎟⎠Σ−1/2Σ Σ−1 = ⎜⎝ .
+v tτ
+λ t u τt H(t) = ⎜⎝ . ⎟⎠Σ−1/2,
+⎛ v 1τ ⎞ .YY
+vtτ
+respectively, where uj is the eigenvector associated with the jth largest eigenvalue λ2j of
+R∗ = Σ−1/2ΣXY Σ−1 ΣY X Σ−1/2, (7.63) XX YY XX
+λj(R),
+(7.58)
+is given by
+where
+ξ(t) = G(t)X, ω(t) = H(t)Y, 􏰃􏰄
+(7.67)
+(7.68)
+(7.69)
+(7.70)
+7.3 Canonical Variate and Correlation Analysis 221
+and vj is the eigenvector associated with the jth largest eigenvalue λ2j of R in (7.59), j = 1,2,...,t.
+Let gjτ = (g1j,...,grj) and hτj = (h1j,...,hsj) be the jth rows of G(t) and H(t), respectively, j = 1,2,...,t. The r-vector gj and the s-vector hj are generally assumed to have unit length; that is, gjτ gj = hτj hj = 1, j = 1,2,...,t. The jth pair of canonical variates scores, (ξj,ωj), is given by
+where
+ξj =gjτX, ωj =hτjY,
+gj = Σ−1 ΣXY Σ−1/2vj = λjΣ−1/2uj,
+(7.64)
+(7.65)
+XX YY XX
+hj =Σ−1/2vj, YY
+(7.66) j = 1, 2, . . . , t. The covariance matrix of the canonical variates scores,
+cov{ξ(t), ω(t)} = cov{(ξ(t)τ , ω(t)τ )τ } =
+⎛λ21 0 ... 0⎞ Λ=⎜ 0 λ2 ... 0 ⎟,
+⎝ . . ... . ⎠ 0 0 ... λ2t
+Λ Λ , Λ It
+and the correlation matrix is
+corr{ξ(t), ω(t)} = corr{(ξ(t)τ , ω(t)τ )τ } = t .
+If we set ρj = λj, j = 1,2,...,t, then, (7.68) shows us that • corr{ξj,ξk} = δjk, j,k = 1,2,...,t,
+• corr{ξj,ωk} = ρjδjk, j,k = 1,2,...,t, • corr{ωj,ωk} = δjk, j,k = 1,2,...,t,
+where δjk is the Kronecker delta (i.e., δjj = 1, δjk = 0, j ̸= k).
+We can, therefore, view the coefficients, {gij} and {hij}, of the linear combinations (7.51) as being chosen in the following sequential manner. The first pair (ξ1,ω1) has the largest possible correlation ρ1 among all such linear combinations of X and Y. The second pair, (ξ2,ω2), has the largest possible correlation ρ2 among all linear combinations of X and Y in which ξ2 is uncorrelated with ξ1 and ω2 is uncorrelated with ω1. The
+􏰃I Λ1/2􏰄 Λ1/2 It
+222 7. Linear Dimensionality Reduction
+jth pair, (ξj , ωj ), has the largest possible correlation ρj among all linear combinations of X and Y in which ξj is uncorrelated with ξl, ξ2, . . . , ξj−1 and ωj is uncorrelated with ωl, ω2, . . . , ωj−1. See Exercise 7.1. It follows that
+1>ρ1 >ρ2 >ρ3 >···>ρt >0. (7.71)
+The pairs of canonical variates, (ξj,ωj), j = 1,2,...,t, are usually ar- ranged in computer output in the form of two groups, ξl , ξ2 , . . . , ξt and ωl,ω2,...,ωt.Thecorrelation,ρj,betweenξj andωj iscalledthecanoni- cal correlation coefficient associated with the jth pair of canonical variates, j = 1,2,...,t.
+7.3.4 Relationship of CVA to RRR
+Compare the expressions (7.60), (7.61), and (7.62) with those of the reduced-rank regression solutions, (6.86), (6.87), and (6.88).
+When Γ = Σ−1 , the matrices B(t) in (6.88) and G(t) in (7.61) are YY
+identical. Furthermore, the matrices A(t) in (6.87) and H(t) in (7.62) are related by
+H(t)A(t)H(t) = H(t), A(t)H(t)A(t) = A(t). Thus, A(t) is a g-inverse of H(t), and vice versa. That is,
+(7.72)
+(7.73)
+(7.74)
+(7.75)
+H(t) = A(t)−. A(t)−Y ≈ A(t)−μ(t) + B(t)X.
+When t = s, two further relations hold,
+(A(s)H(s))τ = A(s)H(s), (H(s)A(s))τ = H(s)A(s).
+Thus, in a least-squares sense,
+Hence, in the full-rank case only, H(s) = A(s)+, the unique Moore–Penrose generalized inverse of A(s) (see Section 3.2.7). Also, ν (s) = A(s)+ μ(s) . Computationally, the CVA solution, ν(t), G(t), and H(t), can be obtained directly from the RRR solution, μ(t), A(t), and B(t) (and, of course, vice versa).
+This relationship allows us to carry out a CVA using reduced-rank regres- sion (RRR) routines. Moreover, the number t of pairs of canonical variates with nonzero canonical correlations is equal to the rank t of the regres- sion coefficient matrix C. This is a very important point. We have shown that the pairs of canonical variates can be computed using a multivariate RRR routine. Instead of having an isolated methodology for dealing with two sets of correlated variables (as Hotelling developed), we can incorpo- rate canonical variate analysis as an integral part of multivariate regression methodology.
+given by
+⎛⎞ 􏰏t
+C(t) =Σ1/2 ⎝ vjvjτ⎠Σ−1/2ΣYXΣ−1 , (7.76) CVAYY YYXX
+7.3 Canonical Variate and Correlation Analysis 223
+The reduced-rank regression coefficient matrix corresponding to CVA is
+j=1
+where vj is the eigenvector associated with the jth largest eigenvalue λj of
+R.
+Because the (s × s)-matrix R plays such a major role in CVA, the fol-
+lowing special cases may aid in its interpretation.
+• When s = 1, R reduces to the squared multiple correlation coefficient (also called the population coefficient of determination) of Y with the best linear predictor of Y using X1,X2,...,Xr,
+στ Σ−1 σXY
+R=ρ2 = YX XX , (7.77)
+Y .X, ···,Xr σY2
+where σY2 is the variance of Y and σXY is the r-vector of covariances
+￼of Y with X.
+• When r = s = 1, R is the squared correlation coefficient between Y
+and X,
+σ2
+R=ρ2= XY , (7.78)
+σXY is the covariance between X and Y .
+The jth canonical correlation coefficient, ρj, can, therefore, be inter- preted as the multiple correlation coefficient of either ξj with Y or ωj with X. Using a multiple regression analogy, we can interpret ρj either as that proportion of the variance of ξj that is attributable to its linear regression on Y or as that proportion of the variance of ωj that is attributable to its linear regression on X.
+7.3.5 CVA as a Correlation-Maximization Technique
+Hotelling’s approach to CVA maximized correlations between linear com- binations of X and of Y. Consider, again, the arbitrary linear projections ξ = gτ X and ω = hτ Y, where, for the sake of convenience and with no loss of generality, we assume that E(X) = μX = 0 and E(Y) = μY = 0. Then, both ξ and ω have zero means. We further assume that they both have unit variances; that is, gτΣXXg = 1 and hτΣY Y h = 1.
+The first step is to find the vectors g and h such that the random variables ξ and ω have maximal correlation,
+corr(ξ, ω) = gτ ΣXY h, (7.79)
+￼σ X2 σ Y2
+where σX2 and σY2 are the variances of X and Y , respectively, and
+224 7. Linear Dimensionality Reduction
+among all such linear functions of X and Y. To find g and h to maximize (7.79), we set
+f (g, h) = gτ ΣX Y h − 1 λ(gτ ΣX X g − 1) − 1 μ(hτ ΣY Y h − 1), (7.80) 22
+where λ and μ are Lagrangian multipliers. Differentiate f (g, h) with respect to g and h, and then set both partial derivatives equal to zero:
+∂f =ΣXYh−λΣXXg=0, (7.81) ∂g
+∂f =ΣYXg−μΣYYh=0. (7.82) ∂h
+Multiplying (7.81) on the left by gτ and (7.82) on the left by hτ , we obtain
+￼￼￼￼gτΣXY h−λgτΣXXg = 0, hτ ΣY X g − μhτ ΣY Y h = 0,
+respectively, whence, the correlation between ξ and ω satisfies gτΣXY h = λ = μ.
+(7.83) (7.84)
+(7.85)
+Rearranging terms in (7.83), and then substituting λ for μ into (7.84), we get that
+−λΣXXg+ΣXYh = 0, (7.86) ΣYXg−λΣYYh = 0. (7.87)
+Premultiplying (7.86) by ΣY X Σ−1 , then substituting (7.87) into the re- XX
+sult, and rearranging terms gives
+(ΣY XΣ−1 ΣXY − λ2ΣY Y )h = 0.
+which is equivalent to
+(Σ−1/2ΣYXΣ−1 ΣXYΣ−1/2−λ2Is)h=0.
+For there to be a nontrivial solution to this equation, the following deter- minant has to be zero:
+|Σ−1/2ΣYXΣ−1 ΣXYΣ−1/2−λ2Is|=0. (7.90) YY XX YY
+It can be shown that the determinant in (7.90) is a polynomial in λ2 of degree s, having s real roots, λ21 ≥ λ2 ≥ ··· ≥ λ2s ≥ 0, say, which are the ordered eigenvalues of
+R = Σ−1/2ΣY XΣ−1 ΣXY Σ−1/2 (7.91) YY XX YY
+with associated eigenvectors v1,v2,...,vs. The maximal correlation be- tween ξ and ω would, therefore, be achieved if we took λ = λ1, the largest
+XX
+(7.88)
+(7.89)
+YY XX YY
+7.3 Canonical Variate and Correlation Analysis 225
+eigenvalue of R. The resultant choice of coefficients g and h of ξ and ω, respectively, are given by the vectors
+g1 = Σ−1 ΣXY Σ−1/2v1, h1 = Σ−1/2v1; (7.92) XXYY YY
+compare with (7.65) and (7.66). In other words, the first pair of canonical variates is given by (ξ1, ω1), where ξ1 = g1τ X and ω1 = hτ1 Y, and their correlation is corr(ξ1, ω1) = g1τ ΣXY h1 = λ1.
+Given (ξ1,ω1), let ξ = gτX and ω = hτY denote a second pair of ar- bitrary linear projections with unit variances. We require (ξ,ω) to have maximal correlation among all such linear combinations of X and Y, re- spectively, which are also uncorrelated with (ξ1,ω1). This last condition translates into gτ ΣX X g1 = hτ ΣY Y h1 = 0. Furthermore, by (7.86) and (7.87), we require
+corr(ξ, ω1) = gτ ΣXY h1 = λ1gτ ΣXX g1 = 0, (7.93) corr(ω,ξ1)=hτΣYXg1 =λ1hτΣYYh1 =0. (7.94)
+We choose g and h to maximize (7.79) subject to the above conditions. Set f(g,h) = gτΣXY h− 1λ(gτΣXXg−1)− 1μ(hτΣYY h−1)
+￼￼22
++ηgτΣXXg1 +νhτΣYY h1, (7.95)
+where λ,μ,η, and ν are Lagrangian multipliers. Differentiate f(g,h) with respect to g and h, and then set both partial derivatives equal to zero:
+∂f =ΣXYh−λΣXXg+ηΣXXg1 =0, (7.96) ∂g
+∂f =ΣYXg−μΣYYh+νΣYYh1 =0. (7.97) ∂h
+Multiplying (7.96) on the left by gτ and (7.97) on the left by hτ, and taking note of (7.93) and (7.94), these equations reduce to (7.86) and (7.87), respectively. We, therefore, take the second pair of canonical variates to be (ξ2, ω2), where
+g2 = Σ−1 ΣXY Σ−1/2v2, h2 = Σ−1/2v2, (7.98) XXYY YY
+and their correlation is corr(ξ2, ω2) = g2τ ΣXY h2 = λ2.
+We continue this sequential procedure, deriving eigenvalues and eigen- vectors, until no further solutions can be found. This gives us sets of co- efficients for the pairs of canonical variates, (ξ1,ω1),(ξ2,ω2),...,(ξk,ωk), k = min(r,s), where the ith pair of canonical variates (ξi,ωi) is obtained by choosing the coefficients gi and hi such that (ξi,ωi) has the largest cor- relation among all pairs of linear combinations of X and Y that are also uncorrelated with all previously derived pairs, (ξj , ωj ), j = 1, 2, . . . , i − 1.
+￼￼
+226 7. Linear Dimensionality Reduction
+7.3.6 Sample Estimates
+Given a set of data, (xτi ,yiτ)τ, i = 1,2,...,n, observed on (Xτ,Yτ)τ, i = 1,2,...,n, we estimate G and H by
+⎛ v􏰡 τ ⎞ ⎜.1⎟ −1/2
+⎛ λ􏰡 u􏰡 τ ⎞
+⎜1 1⎟ −1/2
+G􏰡 ( t ) = ⎝ . ⎠ Σ􏰡 Σ􏰡 v􏰡 tτ
+= ⎝ . . ⎠ Σ􏰡 , λ􏰡 t u􏰡 τt
+Σ􏰡 − 1 .YYYXXX .XX
+( 7 . 9 9 )
+(7.100) respectively, where u􏰡j is the eigenvector associated with the jth largest
+⎛ v􏰡 1τ ⎞
+H􏰡 ( t ) = ⎜⎝ . . ⎟⎠ Σ􏰡 − 1 / 2 ,
+.YY v􏰡tτ
+eigenvalue λ􏰡2j of the (r × r) symmetric matrix
+R􏰡 ∗ = Σ􏰡 − 1 / 2 Σ􏰡 X Y Σ􏰡 − 1 Σ􏰡 Y X Σ􏰡 − 1 / 2 , (7.101)
+XX YY XX
+j = 1, 2, . . . , t, and v􏰡j is the eigenvector associated with the jth largest
+eigenvalue λ􏰡2j of the (s × s) symmetric matrix
+R􏰡 = Σ􏰡−1/2Σ􏰡Y XΣ􏰡−1 Σ􏰡XY Σ􏰡−1/2, (7.102)
+YY XX YY
+j = 1,2,...,t. The jth row of ξ􏰡= G􏰡(t)X and the jth row of ω􏰡 = H􏰡(t)Y
+together form the jth pair of sample canonical variates (ξ􏰡 , ω􏰡 ), jj
+ξ􏰡=g􏰡τX, ω􏰡=h􏰡τY, jjjj
+with values (or canonical variate scores) of
+ξ􏰡 =g􏰡τx, ω􏰡 =h􏰡τy, i=1,2,...,n,
+(7.103)
+(7.104) (7.105)
+(7.106) is the jth row of H􏰡 = H􏰡 (t). The sample canonical correlation coefficient for
+the jth pair of sample canonical variates, (ξ􏰡 , ω􏰡 ), is given by jj
+ρ􏰡j =λ􏰡j = g􏰡jτΣ􏰡XYh􏰡j , j=1,2,...,t, (7.107) ( g􏰡 jτ Σ􏰡 X X g􏰡 j ) 1 / 2 ( h􏰡 τj Σ􏰡 Y Y h􏰡 j ) 1 / 2
+It is usually hoped that the first t pairs of sample canonical variates will be the most important, exhibiting a major proportion of the correlation
+where
+i s t h e j t h r o w o f G􏰡 = G􏰡 ( t ) a n d
+ij ji ij ji
+g􏰡τ =v􏰡τΣ􏰡−1/2Σ􏰡 Σ􏰡−1 =λ􏰡u􏰡τΣ􏰡−1/2 j jYY YXXX jjXX
+h􏰡 τ = v τ Σ􏰡 − 1 / 2 jjYY
+￼
+7.3 Canonical Variate and Correlation Analysis 227
+present in the data, whereas the remainder can be neglected without losing too much information concerning the correlational structure of the data. Thus, only those pairs of canonical variates with high canonical correlations should be retained for further analysis.
+An estimator of the rank-t regression coefficient matrix corresponding to the canonical variates case is given by
+⎛⎞ 􏰏t
+C􏰡 ( t ) = Σ􏰡 1 / 2 ⎝ v􏰡 j v􏰡 jτ ⎠ Σ􏰡 − 1 / 2 Σ􏰡 Y X Σ􏰡 − 1 , ( 7 . 1 0 8 ) YY YY XX
+j=1
+where v􏰡j is the eigenvector associated with the jth largest eigenvalue of R􏰡, j = 1,2,...,s. When X and Y are jointly Gaussian, the asymptotic distribution of C􏰡(t) in (7.108) is available (Izenman, 1975).
+The exact distribution of the sample canonical correlations when X and Y are jointly Gaussian and some of the population canonical correlations are nonzero is extremely complicated, having the form of a hypergeometric function of two matrix arguments (Constantine, 1963; James, 1964). In the null case, when X and Y are independent and all the population canonical correlations are zero, the exact density of the squares of the nonzero sample canonical correlations is given by
+􏰛s 􏰛
+p(x1,...,xt)=cr,s,n [w(xj)]1/2 (xj −xk), (7.109)
+j=1 j<k
+where the x1,≥ x2 ≥ ··· ≥ xs are the ordered eigenvalues of R, w(x) = xr−s−1(1 − x)n−r−s−1 is the weight function corresponding to the Jacobi family of orthogonal polynomials, and cr,s,n is a normalization constant depending upon r, s, and n. For details, see, for example, Anderson (1984, Section 13.4). The second product in (7.109) is the Jacobian, also known as the Vandermonde determinant (Johnstone, 2006). Asymptotic distribution results are also available when the first t canonical correlations are positive, smaller than unity, and distinct.
+7.3.7 Invariance
+Unlike principal component analysis, canonical correlations are invari- ant under simultaneous nonsingular linear transformation of the random vectors X and Y. Suppose we consider linear transformations of X and Y:
+X → DX, Y → FY, (7.110)
+where the (r×r)-matrix D and the (s×s)-matrix F are nonsingular. Then, the canonical correlations of DX and FY are identical to those of X and Y. See Exercise 7.11. A consequence of this result is that a CVA using the
+228 7. Linear Dimensionality Reduction
+covariance matrix will yield the same canonical correlations as a CVA using the corresponding correlation matrix.
+7.3.8 How Many Pairs of Canonical Variates to Retain?
+Because the question of how many pairs of canonical variates to retain is equivalent to determining the rank t of the regression coefficient matrix C(t) in a reduced-rank regression for CVA, we approach this problem as a rank- determination problem. Although X and Y are treated symmetrically in CVA, the RRR formulation turns CVA into a supervised learning technique. Prediction error can be used as a measure of how good X is in predicting Y using cross-validation. In the case of the rank trace, no reductions of the expressions for the coordinates of the plotted points can be obtained for the CV case as we were able to do for the PC case. The CV rank trace can have points plotted on the exterior to the unit square, and the sequence of points may not be monotonically decreasing; we can, however, introduce a regularization parameter into the rank-trace computations to keep the plotted points within the unit square.
+7.4 Projection Pursuit
+Projection pursuit (PP) was motivated by the desire to discover “inter- esting” low-dimensional (typically, one- or two-dimensional) linear projec- tions of high-dimensional data (Friedman and Tukey, 1974). The Gaussian distribution, which has always occupied a central place in statistical the- ory and application, turns out to be “least interesting” when dealing with low-dimensional projections of multivariate data. This is due to the fact that each of the marginals of a multivariate Gaussian distribution is Gaus- sian and that most low-dimensional projections of high-dimensional data look approximately Gaussian-distributed (Diaconis and Freedman, 1984). We should, therefore, not expect to see unusual patterns or structure in low-dimensional projections of highly multivariate data.
+PP was originally driven by the desire to expose specific non-Gaussian features (variously referred to as “local concentration,” “clusters of distinct groups,” “clumpiness,” or “clottedness”) of the data. An exhaustive search for such features is clearly impossible, and so the search was automated. Indexes of interestingness were created and optimized numerically in an attempt to imitate how users instinctively (by eye) choose interesting pro- jections. This formulation was later replaced by a search for projections that are as far from Gaussianity as possible.
+The general strategy behind PP consists of the following two-step pro- cess:
+￼
+1. Set up a projection index I to judge the merit of a particular one- or two-dimensional (or sometimes three-dimensional) projection of a given set of multivariate data.
+2. Use an optimization algorithm to find the global and local extrema of that projection index over all m-dimensional projections of the data (m = 1, 2 or 3).
+For a given m, the optimization step determines the most informative m- dimensional projection of the data. A graphical display of the projections is the output of choice in practice.
+7.4.1 Projection Indexes
+Huber (1985) argues that projection indexes should be chosen to possess certain computational and analytical properties, especially that of affine invariance (location and scale invariance). Examples of affine invariant in- dexes include absolute cumulants (e.g., skewness and kurtosis), and Shan- non negative entropy (negentropy), both of which are nonnegative in gen- eral, but are equal to zero if the underlying distribution is Gaussian. If, however, the data are centered and sphered (having mean zero and covari- ance matrix the identity), then there is no reason to require affine invari- ance of the projection index because every projection of the sphered data inherits its properties (i.e., also has mean zero and covariance matrix the identity).
+A special case of PP occurs when the projection index is the variance, var(Y)=wτΣXXw,oftheunit-lengthprojectionY =wτX.Inthiscase, maximizing the variance with respect to w reduces PP to PCA, and the resulting projections are the leading principal components of X. Bolton and Krzanowski (1999) show that maximizing the variance is equivalent to minimizing the corresponding Gaussian log-likelihood; in other words, the projection is most interesting (in a variance sense) when X is least likely to be Gaussian.
+Cumulant-Based Index
+The absolute value of kurtosis, |κ4(Y )|, of the one-dimensional projection Y = wτ X has been widely used as a measure of non-Gaussianity of Y . It has value zero for a Gaussian variable and is positive for a non-Gaussian variable. An unbiased estimate of κ4(Y ) is given by the so-called k-statistic k4 (see, e.g., Kendall and Stuart, 1969, p. 280). Although κ4(Y ) is affine invariant and fast to compute, it is not robust, and outliers can have a pretty drastic effect on estimates of |κ4(Y )|.
+7.4 Projection Pursuit 229
+230 7. Linear Dimensionality Reduction
+In fact, maximizing or minimizing the kurtosis, κ4(Y ), of projected data Y with respect to direction w has been advocated as a way of detecting multivariate outliers (Gnanadesikan and Kettenring, 1972; Pen ̃a and Prieto, 2001). A maximal value of kurtosis would result from a small, concentrated amount of outlier contamination, whereas a minimal value of kurtosis would be due to a large amount of contamination.
+Polynomial-Based Indexes
+Let Y = wτX denote a continuous random variable having probabil- ity density function pY (y). Polynomial-based projection indexes take the general form of weighted versions of integrated squared error,
+􏰞
+I(Y ) =
+[φ(y) − pY (y)]2w(y)dy, (7.111)
+where w(y) is a given weight function on R. Examples of w(y) include w(y) = 1/φ(y),1, and φ(y), where φ(y) is the standard Gaussian density with zero mean and unit variance.
+Now, Y is standard Gaussian with density φ(y) iff U = 2Φ(Y ) − 1 is uniformly distributed on the interval [−1,1], where Φ(Y) = 􏰟Y φ(y)dy
+−∞
+(see Exercise 7.12). Hence, the integrated squared error between the density of U, pU(u), say, and the uniform density,
+􏰞1 􏰞1
+IF(Y) = [pU(u)− 1]2du = [pU(u)]2du− 1 , (7.112) 22
+can be used as a projection index (Friedman, 1987). The idea is that the further pU(u) is from the uniform density, the further Y would be from Gaussianity. It turns out that this index, if transformed back to the orig- inal scale, can be reexpressed as (7.111) with w(y) = 1/φ(y), assuming pY (y)/[φ(y)]1/2 is square-integrable. For heavy-tailed pY (y), IF (Y ) can be infinite, and so will not be very useful as a projection index. It can be shown that IF (Y ) can be approximated by
+[κ3(Y )]2 [κ4(Y )]2
+IF(Y) ≈ 12 + 48 , (7.113)
+which is the moment-based projection index of Jones and Sibson (1987).
+Interestingly enough, it turns out that outliers in projected data are not unusual. In simulation experiments using a moment-based index similar to (7.113) (see Friedman and Johnstone’s discussions of Jones and Sibson, 1987), outliers were observed to appear repeatedly in projections of even well-behaved multivariate Gaussian data. Furthermore, there is no obvious way to robustify (7.113).
+￼￼−1 −1
+￼￼
+Another possibility is to take w(y) = 1 in I(Y ) (Hall, 1989). It is not difficult to show that Hall’s index, IH (Y ), can be approximated by
+IH0 (Y ) ∝ (E{φ(Y )} − E{φ(Z)})2, (7.114)
+where Z is standard Gaussian and E{φ(Z)} = (2π1/2)−1. Hall’s index (and its two-dimensional analogue) appears to identify projections of the data that have a “hole” in their center (Cook, Buja, Cabrera, and Hurley, 1995).
+Taking w(y) = φ(y) in I(Y) puts more weight around the center of the distribution, rather than at the tails (Cook, Buja, and Cabrera, 1993). It can be shown that ICBC(Y) can also be approximated by (7.114). We shall see a generalized form of (7.114) again when we discuss independent component analysis.
+Two-dimensional projection indexes are generally built by simple exten- sions of their one-dimensional versions. Suppose X has been centered and sphered as before. Let Y = (Y1,Y2)τ be a bivariate projection of X, where Y1 =w1τXandY2 =w2τX.Wewanttofindw1 andw2 sothatY1 andY2 are uncorrelated (i.e., w1τ w2 = 0) and that the joint distribution, pY (y1, y2), of (Y1,Y2) has some interesting structure. Furthermore, we require the pro- jections to have equal variances (i.e., w1τ w1 = w2τ w2 = 1). In this case, the bivariate Gaussian density, φ(y1,y2), is deemed the least-interesting two-dimensional structure.
+Shannon Negentropy
+The entropy of a random variable, which was introduced by Claude E. Shannon in 1948, has become a valuable concept in information the- ory. The entropy of the random variable Y gives us a notion of how much information is contained in Y . Essentially, entropy is largest when Y has greatest variance (i.e., when Y is most unpredictable). If Y is a contin- uous random variable with probability density function pY (y), then the (differential) entropy H(Y ) of Y is defined by
+􏰞
+H(Y ) = −
+pY (y) log pY (y)dy. (7.115)
+Amongst all random variables having equal variance, the largest value of H(Y ) occurs when Y has a Gaussian distribution (Rao, 1965, p. 132). Small values of H(Y ) occur when the distribution of Y is concentrated on specific values. Huber (1985) had the idea of using differential entropy as a measure of non-Gaussianity and, hence, as a projection index.
+If we normalize H(Y ) so that it has the value zero for a Gaussian variable and otherwise is always nonnegative, we arrive at negentropy defined by
+J(Y) = H(Z)−H(Y), (7.116)
+7.4 Projection Pursuit 231
+232 7. Linear Dimensionality Reduction
+where Z is a Gaussian random variable having the same variance as Y . If Z ∼ N (0, 1), it is easy to show that H(Z) = 1 [1 + log 2π] ≈ 1.419. Jones
+2
+and Sibson (1987) derive an efficient projection index based upon J (Y ). 7.4.2 Optimizing the Projection Index
+Given a projection index, the next step is to optimize that index, if pos- sible using an algorithm with high speed and low memory requirements. Researchers have preferred different types of optimizing algorithms, includ- ing steepest ascent and genetic algorithms. In fact, projection indexes are notorious for getting trapped in numerous local maxima. Getting trapped repeatedly in suboptimal local maxima can delay convergence to the global maximum. It is important, therefore, to use a numerical optimizer that has the ability to avoid such local maxima.
+7.5 Visualizing Projections Using Dynamic Graphics
+Graphical methods are vital tools for exploring multivariate data. Most statistical graphics methods in common use today can be classified as static graphics, such as scatterplots, scatterplot matrices, and displays of projec- tion pursuit results. Additional details from static displays can be visualized by using a range of colors or different shapes, characters, or symbols for various levels or characteristics of the data.
+Innovative and more informative dynamic graphics were devised by John W. Tukey during the early 1970s for visually searching for low-dimensional structure within multivariate data. Such searches were enhanced by the development of custom-designed computer hardware and software (PRIM- 9) to carry out the operations of picturing (“an ability to look at data from several different directions in multidimensional space”), rotation (“at a minimum, the ability to turn the data so that it can be viewed from any direction that is chosen”), isolation (“the ability to select any subsample of the data points for consideration”), and masking (“the ability to select suitable subregions of the multidimensional space for consideration”) in up to 9 dimensions (Fisherkeller, Friedman, and Tukey, 1974).
+The graphical data analysis concepts embedded in PRIM-9 have been upgraded and enhanced by the XGobi/GGobi data visualization system (Swayne, Cook, and Buja, 1998; Cook, Buja, Cabrera, and Hurley, 1995). Examples of the types of dynamic graphics included in the XGobi/GGobi system are
+• The grand tour (Asimov, 1985) of data recorded on an r-dimensional set of variables, X, seeks to generate a continuous sequence of low-
+￼￼
+dimensional projections of the X-data, where projections are visual- ized in one, two, or three dimensions and are designed to be repre- sentative of all possible projections of the data.
+• The correlation tour of data recorded on two nonoverlapping sets of variables, an r-dimensional set X and an s-dimensional set Y, seeks to generate a continuous sequence of one-dimensional projections of the X-data and of the Y-data in order to display the amount of correlation in those projections.
+The grand tour can be regarded as a dynamic version of PCA and the cor- relation tour as a dynamic version of CVA. The main problem is the huge number of potentially interesting projections. Some guidance is, therefore, needed. For both tours, “interesting” projections can be automatically se- lected by optimizing one of the objective functions associated with projec- tion pursuit methods. The objective functions discussed above are included in a menu of indexes in the XGobi/GGobi system.
+7.6 Software Packages
+PCA is included in R, S-Plus, SAS, SPSS, Matlab, and Minitab. CVA (or CCA) is usually confused with linear discriminant analysis (see, e.g., Venables and Ripley, 2002, p. 332), which is a special case of CVA (see Chapter 8). CVA — in the sense of this chapter — is not included in most major software packages.
+PCA and CVA are included as special cases of multivariate reduced-rank regression in the RRR+Multanl package, which can be downloaded from the book’s website. Versions of this package are available for use with R, S-Plus, and Matlab.
+Bibliographical Notes
+Classical descriptions of PCA and CVA can be found in any text on multivariate analysis; in particular, we recommend Anderson (1984, Chap- ters 11 and 12) and Seber (1984, Chapter 5) for theoretical treatments and Gnanadesikan (1977, Chapters 2 and 3) and Lattin, Carroll, and Green (2003, Chapters 4 and 9) for applied viewpoints. Detailed treatments of PCA can be found in Jackson (2003) and Jolliffe (1986). The relationships between multivariate reduced-rank regression and PCA and CVA can be found in Izenman (1975).
+The original concept of projection pursuit was formulated by Kruskal (1969, 1972), but it was Friedman and Tukey (1974) who gave it the catchy
+7.6 Software Packages 233
+￼￼
+234 7. Linear Dimensionality Reduction
+name. The development of PP was based upon the experience (and frus- trations) of working with an interactive computer graphics program called PRIM-9 (Fisherkeller, Friedman, and Tukey, 1974), which was the first pro- gram to use operations such as picturing, rotation, isolation, and masking for visually exploring multivariate data in up to 9 dimensions. The high- point of PRIM-9 was a 25-minute movie taken in 1974 of Tukey analyzing high-dimensional particle physics data. Friedman and Stuetzle (2002) give an historical account of the origins and development of PRIM-9 and PP. The XGobi/GGobi computer graphics programs are the improved and enhanced descendants of PRIM-9. PP has recently been rediscovered by researchers in independent component analysis (see Chapter 15).
+Exercises
+7.1 Generate a random sample of size n = 100 from a three-dimensional (r = 3) Gaussian distribution, where one of the variables has very high variance (relative to the other two). Carry out PCA on these data using the covariance matrix and the correlation matrix. In each case, find the eigenvalues and eigenvectors, draw the scree plot, compute the PC scores, and plot all pairwise PC scores in a matrix plot. Compare results.
+7.2 Carry out a RRR on the data from Exercise 7.1 using the PCA for- mulation (i.e., Y = X, Γ = Ir). Compute the rank trace and determine the number of principal components to retain. Compare results with those of Exercise 7.1.
+7.3 In the file turtles.txt, there are three variables, length, width, and height, of the carapaces of 48 painted turtles, 24 female and 24 male. Take logarithms of all three variables. Estimate the mean vector and covariance matrix of the male turtles and of the female turtles separately. Find the eigenvalues and eigenvectors of each estimated covariance matrix and carry out a PCA of each data set. Find an expression for the volume of a turtle carapace for males and for females. (Hint: use the fact that the variables are logarithms of the original measurements.) Compare volumes of male and female carapaces.
+7.4 In the pen-based handwritten digit recognition (pendigits) exam- ple of Section 7.2.1, compute the variance of each of the 16 variables and show that they are very similar. Then, carry out PCA using the covari- ance matrix. How many PCs explain 80% and 90% of the total variation in the data? Display the first three PCs using pairwise scatterplots as in Figure 7.1. Do you see any differences between a covariance-based and a correlation-based PCA for this example?
+￼
+7.5 For the pendigits data, draw the scree plot and the rank trace plot. How many PCs would you retain based upon each plot? Do you get the same answer from both plots?
+7.6 For the principal components case, show that the points in the PC rank trace are given by (7.38) and (7.39).
+7.7 The file SwissBankNotes.txt consists of six variables measured on 200 old Swiss 1,000-franc bank notes. The first 100 are genuine and the second 100 are counterfeit. The six variables are length of the bank note, height of the bank note, measured on the left, height of the bank note, measured on the right, distance of inner frame to the lower border, distance of inner frame to the upper border, and length of the diagonal. Carry out a PCA of the 100 genuine bank notes, of the 100 counterfeit bank notes, and of all 200 bank notes combined. Do you notice any differences in the results?
+7.8 In Section 5.5, condition number and condition indices were discussed as a means of detecting and identifying ill-conditioned data and collinearity in regression problems. How would such measures help in PCA or CVA? Compute these various statistics for the pendigits data.
+7.9 Carry out a PCA of Fisher’s iris data. These data consist of 50 observations on each of three species of iris: Iris setosa, Iris versicolor, and Iris virginica. The four measured variables are sepal length, sepal width, petal length, and petal width. Ignore the species labels. Compute the PC scores and plot all pairwise sets of PC scores in a matrix plot. Explain your results, taking into consideration the species labels.
+7.10 Consider an (r × r) correlation matrix with the same correlation, ρ, say, in the off-diagonal entries. Find the eigenvalues and eigenvectors of this matrix when r = 2, 3, 4. Generalize your results to any r variables. As examples, set ρ = 0.1, 0.3, 0.5, 0.7, 0.9.
+7.11 Show that the set of canonical variates is invariant under simultaneous nonsingular linear transformations of the random vectors X and Y.
+7.12 Let r = s = 2 and suppose the equicorrelation model holds for X 􏰃􏰄 􏰃􏰄
+andY.Then,ΣXX =ΣYY = 1 ρ andΣXY = ρ ρ .Findthe ρ1 ρρ
+canonical correlations and the canonical variates. Generalize your results to general r and s. Find the matrix R and the RRR solutions for t = 1, 2.
+7.13 For the COMBO-17 galaxy data, compute a rank-2 multivariate RRR of Y on X in which Γ = Σ−1 for the CV situation. Compute the multi-
+variate residuals from the regression, plot them in any way you regard as interesting, and try to find the outliers mentioned in the example.
+YY
+7.6 Exercises 235
+236 7. Linear Dimensionality Reduction
+7.14 Show that Y is standard Gaussian with density φ(y) iff U = 2Φ(Y )−1 is uniformly distributed on the interval [−1, 1], where Φ(Y ) = 􏰟 Y φ(y)dy.
+−∞
+7.15 Draw the density of the eigenvalues of a Wishart matrix, XXτ ∼ Wr(n,Ir), where r/n → γ ∈ (0,∞), for γ equal to 0.2, 0.5, 1, 4, 9, 16.

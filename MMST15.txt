@@ -1,0 +1,840 @@
+15
+Latent Variable Models for Blind Source Separation
+15.1 Introduction
+Models incorporating “latent” variables have been commonplace in the social and behavioral sciences for a long time. The most popular of those models is the factor analysis model, in which a set of observed continuous variables is explained in terms of a much smaller set of continuous latent variables (called factors), and the relationship is taken to be a linear one.
+Latent variables, which can be continuous or discrete, are quite differ- ent from observed variables in that they are artificial or hypothetical con- structs. Latent variables are typically used to give a formal representation of ideas or concepts that cannot be well-defined or measured directly. In educational and psychometric research, for example, fuzzy concepts such as “general intelligence,” “verbal ability,” “ambition,” “socioeconomic sta- tus,” “quality of life,” and “happiness” are constructed from certain ob- served variables that are regarded as proxies for those unobservable con- cepts. Moreover, it is not unusual to hear of a causal relationship between a latent variable and a set of given observable variables (e.g., “it is be- cause of a person’s high level of intelligence that he or she does so well on standardized tests”).
+A.J. Izenman, Modern Multivariate Statistical Techniques, Springer Texts in Statistics, 551 DOI 10.1007/978-0-387-78189-1_15, © Springer Science+Business Media New York 2013
+￼
+552 15. Latent Variable Models for Blind Source Separation
+Latent variables are also known, for example, as hidden variables in neu- ral network modeling and as sources that are statistically independent of each other in independent component analysis. Latent variables have been introduced into MCMC sampling as auxiliary variables and as a data- augmentation technique in missing-value problems. Latent variables are usually formed as linear combinations of observable variables for the pur- pose of reducing the dimensionality of a data set. Indeed, it is easier to consider a single latent variable interpreted as “quantitative ability” than to have to deal with understanding a battery of different arithmetic and mathematics test scores. As we will see, latent variables play the funda- mental role of “sources” in blind source separation problems.
+15.2 Blind Source Separation and the Cocktail-Party Problem
+A common type of problem that arises in such diverse fields as telecom- munications, sound and image processing, brain imaging, speech enhance- ment, predicting stock-price movements, remote sensing, biomedical engi- neering, and signal processing — all situations in which the data consist of multiple time series — is to find a way of solving the blind source separa- tion (BSS) problem. The BSS problem involves decomposing an unknown mixture of non-Gaussian signals into its independent component signals (Cardoso, 1998). BSS is similar to the classical electrical engineering prob- lem of source separation, but in BSS there is no prior knowledge of the signals that make up the mixture.
+The best-known example of BSS is the so-called cocktail-party problem (Cherry, 1953). In this problem, m people are speaking simultaneously at a party, and each of r microphones placed in the same room at different dis- tances from each speaker records a different mixture of the speakers’ voices at n time points. The question is whether, based upon these microphone recordings, we can separate out the individual speech signals of each of the m speakers. Despite the fact that the cocktail-party problem assumes the speakers babble on independently without considering the presence of other partygoers (who usually speak in clustered groups), it does give a fairly simplistic explanation of how one can envision BSS problems.
+Thus, we see that mixtures of signals occur everywhere, and it is of great interest to develop methods for separating (or “unmixing”) those signals so that we can view the individual raw signals that make up that mixture. With this in mind, we describe in this chapter a general latent variable model that is proposed to solve the BSS problem. Special cases of this model include independent component analysis, (exploratory) factor analysis, and independent factor analysis.
+￼
+15.3 Independent Component Analysis 553
+15.3 Independent Component Analysis
+Independent component analysis (ICA) is a multivariate statistical tech- nique that seeks to uncover hidden variables in high-dimensional data. As such, it belongs to the class of latent variable models. Furthermore, because of its success in analyzing signal processing data, ICA is also regarded as a digital signal transform method.
+In its most basic form, the ICA model is assumed to be a linear mix- ture of an unknown number of unknown hidden source variables, where the mixing coefficients are also unknown. A totally “blind” approach to deter- mining both the hidden variables and the mixing coefficients solely from the observed multivariate data fails because the problem as stated is not well-defined.
+To build more structure into the problem, we require the hidden vari- ables to be mutually independent and also (with at most one exception) non-Gaussian. ICA is actually an amalgam of several related approaches to this problem, and these approaches are characterized by the types of assumptions visited upon the distributions of the independent source vari- ables and whether or not a separate noise component should be included in the ICA model.
+15.3.1 Applications of ICA
+ICA has been extensively applied to the study of human brain functions. Patterns of human brain-wave activity can be viewed through noninvasive recordings made by r (usually around 20, sometimes a lot more) electrodes placed evenly around a subject’s head during different periods of conscious- ness and sleep. The electrodes capture a mixture of brain waves from dif- ferent areas of the brain. Electroencephalographic (EEG) recordings make it possible to relate certain types of behavior to changes in the electrical activity of the cerebral cortex; event-related potential (ERP) recordings are finely-tuned EEGs resulting from the stimulation of specific visual, audi- tory, or sensory systems; and magnetoencephalographic (MEG) recordings measure the strength of magnetic fields that are generated by cortical ac- tivity. ICA has been used successfully to separate EEG, ERP, and MEG recordings into individual (and meaningful) source signals.
+ICA has also been successful in extracting three-dimensional spatial recordings (called component maps) from functional magnetic resonance imaging (fMRI) experiments used to study the human brain. These ex- periments consist of a number of trials in which subjects perform certain experimental and control psychomotor tasks. The component maps take
+￼
+554 15. Latent Variable Models for Blind Source Separation
+the form of a mixture of signals from thousands of voxels (volume ele- ments) located in each of several brain slices and measured over a given period of time. The voxel values indicate brain regions that are actively in- volved in the cognitive processing of the specified tasks. If the active voxels are sparsely distributed in the maps and are mostly nonoverlapping, then the maps are considered to be independent. ICA has been used to sepa- rate fMRI data into m independent component maps together with their corresponding component activation patterns.
+Other applications of ICA include extracting structure from financial stock returns, mapping the cosmic microwave background anisotropy from satellite radiometric sky maps, separating out the effects of major volcanic eruptions from climate and temperature data, identifying spatial-variation patterns in manufacturing processes such as automobile assembly, Web im- age retrieval and classification, wireless communications and speech recog- nition systems, and agricultural remote sensing images. Classification of microarray gene expression profiles using ICA methods has also become a popular research issue.
+15.3.2 Example: Cutaneous Potential Recordings of a Pregnant Woman
+In prenatal diagnostics, it is important for a physician to be able to monitor — in a non-invasive way — the fetal heart activity of a pregnant woman so that the health and condition of the fetus can be assessed. A multichannel electrocardiogram (ECG) can be used to obtain a mixture of maternal and fetal electrical activity, including fetal heart rate and ma- ternal heart rate; however, the maternal ECG signal is many hundreds or thousands times stronger than the fetal ECG signal, and the signals are further contaminated by respiration baseline wandering and other sources of electrical interference.
+The data1 for this example consist of 2,500 ECG points sampled at 500 Hz using 8-channel cutaneous (i.e., on the skin) potential recordings of a pregnant woman (de Lathauwer, de Moor, and Vandewalle, 2000). The 8 sets of cardiac rhythms are displayed in Figure 15.1; the 2,500 points are recorded over a period of 5 seconds, one point every 0.002 seconds. Note that the range of amplitudes increases as we go from Channel 1 to Channel 8. The first five channels (1–5) are measured near the fetus and, hence, show abdominal signals. Fetal contributions are visible in Channels 1, 2,
+1 These data are included in DaISy: Database for the Identification of Sys- tems,” de Moor, B.L.R. (1997) (ed.), Department of Electrical Engineering, ESAT/SISTA, K.U. Leuven, Belgium, and can be downloaded from the website www.esat.kuleuven.ac.be/~smc/daisy/daisydata.html.
+￼
+￼0
+0
+0
+0
+0
+0
+0
+0
+500 1000 1500 2000 2500
+500 1000 1500 2000 2500
+500 1000 1500 2000 2500
+500 1000 1500 2000 2500
+500 1000 1500 2000 2500
+500 1000 1500 2000 2500
+500 1000 1500 2000 2500
+500 1000 1500 2000 2500
+15.3 Independent Component Analysis 555
+87654321 -4000400800-200200600 -600-200200-80-400 -40-20020-60-2020-4004080 -40040
+FIGURE 15.1. Cardiac rhythms obtained from 2,500 ECG points sampled at 500 Hz using an 8-channel cutaneous potential recording of a pregnant woman.
+and 3, but their magnitudes are quite weak. The other three channels (6– 8) were placed on the mother’s thorax (chest), near the heart; note that the high magnitudes of the maternal ECG in the thoracic signals tend to swamp the fetal ECG signals. We illustrate the power of ICA methods for this example by reconstructing the fetal ECG from multichannel potential recordings on the mother’s skin.
+First, we preprocess the data by applying PCA to the sample correlation matrix; this produces 8 uncorrelated and ordered principal components whose variances decrease in magnitude. Only the first two PCs have eigen- values greater than unity, and together they account for about 93% of the total variation of the data. For this example, we retain all 8 PCs as inputs to ICA.
+￼556
+15. Latent Variable Models for Blind Source Separation
+0
+0
+0
+0
+0
+0
+0
+0
+500 1000 1500 2000 2500
+500 1000 1500 2000 2500
+500 1000 1500 2000 2500
+500 1000 1500 2000 2500
+500 1000 1500 2000 2500
+500 1000 1500 2000 2500
+500 1000 1500 2000 2500
+500 1000 1500 2000 2500
+IC8 IC7 IC6 IC5 IC4 IC3 IC2 IC1 -8-6-4-202 -3-113 -20246 -4-2024 -8-6-4-202 -3-113 -6-4-2024 -4-20246
+FIGURE 15.2. Eight independent components from the ICA of the 8- channel cutaneous potential recordings of a pregnant woman. The red curves (IC1, IC2, IC4, IC8) reflect the cardiac rhythms of the mother, whereas the blue curves (IC5, IC6) reflect the cardiac rhythms of the fetus. The purple curve (IC3) shows a respiration component, and the black curve (IC7) shows the noise level of the sensors.
+We then apply the FastICA algorithm (see Section 15.3.11) to all 8 sets of principal component scores, which, in turn, yields 8 independent components (ICs). These ICs are displayed in Figure 15.2. We see four ICs that reflect the mother’s cardiac rhythm (red curves: IC1, IC2, IC4, IC8) and two ICs reflecting the fetal cardiac rhythm (blue curves: IC5, IC6). The purple curve (IC3) probably reflects a low-periodic respiration component, and IC7 displays a noise component.
+15.3.3 Connection to Projection Pursuit
+The technical aspects of ICA in its basic formulation are remarkably sim- ilar to those of exploratory projection pursuit (PP) (Friedman and Tukey, 1974), a methodology developed more than a decade earlier than ICA.
+15.3 Independent Component Analysis 557
+ICA and PP methodologies look at the same data in very different ways, yet they both use the same (or similar) computational tool (numerically optimizing an objective function) to achieve a common statistical goal of finding low-dimensional, non-Gaussian projections of the data. The differ- ences between ICA and PP derive from the different problems they were originally built to solve.
+For example, ICA was introduced to resolve a separation problem, start- ing with the estimation of independent components, whereas PP was de- signed to be an exploratory tool for data visualization, focusing on dimen- sionality reduction of a high-dimensional space. Furthermore, the manner in which PP and ICA extract a sequence of signals from a given collection of mixtures differs: PP extracts signals one at a time, whereas ICA can extract the entire set of signals in parallel. The PP and ICA solutions are also re- lated: PP also makes no assumptions about the data or about independent components, as does ICA; if the ICA model holds, then the optimization process produces independent components, whereas if the model does not hold, then we obtain the PP solution.
+Although much of the PP methodology has been incorporated into the ICA toolkit, there has been little cross-pollination in the other direction. Recent enhancements of the ICA model that take into account time-structure and nonlinearity of the mixing coefficients have further helped to distin- guish ICA from PP.
+15.3.4 Centering and Sphering
+Suppose we observe a random r-vector, X = (X1, · · · , Xr)τ , of correlated measurements with mean r-vector E{X} = μ and (r×r) covariance matrix cov{X} = ΣXX. Prior to carrying out PP or ICA applications, we prepro- cess X so that its r components have commensurate scales. We do this by first centering X so that its components have zero mean, and then by sphering (or whitening) the result so that its components are uncorrelated with unit variances.
+Sphering is a linear transformation that removes all traces of scale and correlation structure from X. From the spectral decomposition of the co- variance matrix, we have that ΣXX = UΛUτ , where the columns of the orthogonal matrix U are the eigenvectors of ΣXX and Λ is a diagonal matrix with diagonal elements the eigenvalues of ΣXX. The columns of U and the diagonal elements of Λ are ordered by the decreasing magnitudes of the eigenvalues of ΣXX.
+Assume that μ and ΣXX are both known. Then, we can write Σ−1/2 =
+XX UΛ−1/2Uτ , The (centered and) sphered version of X is given by
+X ← Λ−1/2Uτ (X − μ). (15.1)
+558 15. Latent Variable Models for Blind Source Separation
+This transformation is equivalent to computing the principal components of X − μ and then rescaling each of the principal components to have unit variance. If ΣXX has less than full rank, only those principal components having nonzero variance would be retained (and rescaled). A benefit of sphering X is that it is now affine invariant, with μ = 0 and ΣXX = Ir.
+In practice, μ and ΣXX will be unknown. Thus, we use n indepen- dent observations, x1, . . . , xn, on X to compute x ̄ = n−1 􏰊ni=1 xi and Σ􏰡XX =n−1􏰊ni=1(xi−x ̄)(xi−x ̄)τ =U􏰡Λ􏰡U􏰡τ,respectively.Centeringand sphering the data using xi ← Λ􏰡−1/2U􏰡τ(xi −x ̄), i = 1,2,...,n, transform an elliptically shaped symmetric cloud of points into a spherically shaped cloud. To reduce the dimensionality of the data, only the first J < r sphered variables need be retained, where J is chosen to explain a certain (high) proportion of the total variance. If outliers are present, robust versions of the sphering process can be used (see, e.g., Tukey and Tukey, 1981).
+We note that the practice of sphering is somewhat controvertial. Al- though sphering has computational and interpretational advantages (see, e.g., Friedman, 1987), arguments have been made that the act of sphering is too closely tied to underlying unimodal (and especially Gaussian) dis- tributions, an environment we wish to avoid (see, e.g., the comments of Gower, and Hastie and Tibshirani in the discussion of Jones and Sibson, 1987). However, we follow PP and ICA practice by assuming that the com- ponents of X have been preprocessed to be mutually uncorrelated, each having zero mean and unit variance.
+15.3.5 The General ICA Problem
+In its most general form, the ICA model assumes that X is generated by
+X = f(S) + e, (15.2)
+where S = (S1, · · · , Sm)τ is an (unobservable) random m-vector variate of sources whose components {Sj} are independent latent variables each having zero mean, f : Rm → Rr is an unknown mixing function, and e is a zero-mean, additive, r-vector-valued component that represents mea- surement noise and any other type of variability that cannot be directly attributed to the sources. Independence of the sources means that each individual source signal is thought to be generated by a process unrelated to any other source signal. We assume that E(S) = 0 and cov(S) = Im, but that the distribution of S is otherwise unknown.
+The BSS problem is to invert f and estimate S. As it stands, this problem is ill-posed and needs some additional constraints or regularization on S, f, and e. If we take f to be a linear function, f(S) = AS, where A is a “mixing” matrix, then (15.2) is described as a linear ICA model, whereas if f assumed to be nonlinear, then (15.2) is described as a nonlinear ICA
+15.3 Independent Component Analysis 559
+model. Most applications of ICA assume no additive noise e and that all noise in the model is to be associated with the components of the random vector S. Such a model is referred to as noiseless ICA. If e is included in (15.2), the model is described as noisy ICA.
+It turns out that the noiseless ICA model with linear mixing, X = AS, can only be solved if the vector S with independent components is not Gaussian. We can see this by assuming the contrary. Suppose that the sources, S1,...,Sm, are independent and Gaussian, each with zero mean and unit variance. Their joint density is given by qS(s) = 􏰝mj=1 qSj (sj ) =
+(2π)−m/2e−∥s∥2/2, where ∥s∥2 = 􏰊 s2. If the mixing matrix A is square jj
+(m = r) and, hence, orthogonal (Ir = ΣXX = AAτ, so that A−1 = Aτ), then one can show that the density of X = AS is given by pX(x) = (2π)−m/2e−∥Aτ x∥2/2|det(Aτ )|. But A is orthogonal, and so ∥Aτ x∥2 = ∥x∥2 and |det(Aτ)| = 1. Thus, the density of X reduces to pX(x) = (2π)−m/2e−∥x∥2/2, which is identical to the density of S, so that the or- thogonal mixing matrix A cannot be identified for independent Gaussian sources. Thus, it makes sense to require that, with the exception of at most one component, the remaining independent source components cannot be Gaussian distributed.
+There are a number of ways of estimating this type of ICA model while ensuring that the components of S are as statistically independent and non- Gaussian as possible. Usually, we are in possession of n repeated r-variate observations, xi = (xi1,···,xir)τ, i = 1,2,...,n, on X, which constitute our data set. From this, our goal is to recover the m independent sources, si = (si1,···,sim)τ, i = 1,2,...,n, which generated the data through xi = Asi, i = 1,2,...,n. Several efficient computational algorithms have been created to reach this goal.
+In most ICA applications, X is regarded as an r-vector-valued stochastic process X(t) = (X1(t), · · · , Xr(t))τ , such as audio or music signals, EEG or MEG tracings, or seismic recordings, where t is a time or index parameter. We usually assume that X(t) is an unknown non-Gaussian process with zero mean. In the linear noiseless ICA model with temporally structured sources and static mixing (i.e., A is an fixed matrix of constants, non-time- varying, without trends or delays), the model is written as X(t) = AS(t), whereS(t)=(S1(t),···,Sm(t))τ isassumedtobeanm-vectorofstationary sources, 1 ≤ t ≤ n. For example, in the cocktail-party problem, Si(t) is the tth sound spoken by the ith speaker (i = 1,2,...,m), and Xj(t) is the tth acoustic recording made by the jth microphone (j = 1, 2, . . . , r).
+In this formulation, ICA is closely related to the deconvolution of time series; see, for example, Donoho (1981), who discusses at length the single- channel (r = 1) deconvolution problem and its application to exploratory seismology. Donoho points out that the geophysicist’s technique of mini- mum entropy deconvolution is actually a PP method with kurtosis as the
+560 15. Latent Variable Models for Blind Source Separation
+projection index. See Huber (1985, Section 18). Extensions to the multi- channel (general r) case have also been studied.
+If the mixing matrix A = A(t) is allowed to depend upon the time parameter, then we refer to the model as dynamic mixing. By incorporating the temporal structure of the sources into the ICA model, there is a good chance that the separation properties of the analysis can be improved. In our description of ICA models, we omit the explicit dependence of X on t unless specifically needed in the exposition.
+15.3.6 Linear Mixing: Noiseless ICA
+The simplest form of the ICA model is the linear mixing version with no additive noise, usually called the noiseless (or classical) ICA model. In this scenario, X is modeled deterministically as
+X = AS, (15.3)
+whereS=(S1,···,Sm)τ isalatentrandomm-vectorofindependentsource components, and A is a full-rank (r×m) mixing matrix of unknown param- eters. Usually, m ≤ r. For model (15.3), where the sources have mean zero, X has mean zero and covariance matrix AAτ . Given n iid observations on X, the BSS (and ICA) problem is to estimate A and, hence, recover S.
+For a given A with full-rank, there exists a separating (or unmixing ma- trix) W such that the sources can be recovered exactly from the observed X by S = WX, where W = (AτA)−1Aτ. If the number of independent sources is equal to the number of measurements (i.e., m = r), then we refer to (15.3) as the square invertible mixing model, and, for that special case, W = A−1. As we saw above, if X has been centered and sphered, then the resulting square mixing matrix A in model (15.3) is orthogonal, and so W = Aτ .
+In practice, A is unknown and the goal is to estimate the separating matrix and the source components based solely upon the observed X. Given an estimate W􏰑 = (w􏰡1,···,w􏰡m)τ of the separating matrix W, the source component vector S is approximated by
+Y = W􏰑X, (15.4) where the elements, Y1 = w􏰡1τX,...,Ym = w􏰡mτ X, of Y are taken to be
+statistically independent and as non-Gaussian as possible.
+15.3.7 Identifiability Aspects
+Given X, the model (15.3) suffers from a certain amount of arbitrariness:
+1. The original sources are ordered arbitrarily. Let P be an (m × m) permutation matrix (a permutation of the rows and columns of the identity
+15.3 Independent Component Analysis 561
+matrix such that every row and column has exactly one 1). Then, the model (15.3) can be written as X = AP−1PS, where AP−1 is a new mixing matrix and PS permutes the elements of S. In practical terms, S and PS are indistinguishable.
+2. The elements of A (and S) have arbitrary scaling. Multiplying Sj by an arbitrary nonzero constant cj (i.e., increasing the amplitude of that particular signal) while dividing the jth column of A by the same cj, j = 1,2,...,m, will not change the product AS. In other words, we cannot recover the original scalings of the source signals in S.
+3. There is an arbitrary rotational factor in the matrix A that cannot be resolved by just observing X. Setting A∗ = AT and S∗ = Tτ S, where T is an orthogonal matrix, we see that X∗ = A∗S∗ has the same mean and covariance matrix as X = AS
+Thus, we should expect the columns of the separating matrix W to be a scaled and permuted version of the true W0. In practice, identifiabil- ity issues are not really serious; as long as we require at most one of the components of X to be Gaussian, then W is identifiable up to scaling and permutation of its rows, and we are able to extract the independent source components.
+15.3.8 Objective Functions
+The general strategy behind ICA is very similar to that of PP described in Section 7.4. Note that a projection index of PP is called an objective (or contrast) function in ICA. In practice, objective functions should be non- negative and equal to zero iff the projections are mutually independent. In the case of PP, interest is primarily in one- and two-dimensional (and, sometimes, three-dimensional) projections, while for ICA, we would be in- terested in a specified number of projections (possibly m > 3, depending upon context).
+The same projection indexes of PP (third- and fourth-order cumulants, polynomial-based indexes, and negentropy; see Section 7.4) are often used as objective functions in ICA, especially as a means of approximating the entropy H(Y ) of Y = w􏰡 τ X. The main difficulty of using such moment- based indexes arises from their well-known lack of robustness.
+Researchers working with ICA now tend to use instead objective func- tions based upon nonpolynomial approximations of the density function to maximize the entropy H(Y ) or the negentropy J (Y ) = H(Z) − H(Y ), where Z is a Gaussian random variable having the same variance as Y ; see (7.116).
+562 15. Latent Variable Models for Blind Source Separation
+15.3.9 Nonpolynomial-Based Approximations
+Suppose Gi(Y), i = 1,2,...,N, are different nonpolynomial functions
+of Y which (like Hermite polynomials) form an orthonormal system with
+respect to the standard Gaussian density φ, 􏰞
+φ(y)Gi(y)Gj(y)ds = δij, (15.5) where δij = 1 or 0 according as i = j or i ̸= j, respectively, and which are
+orthogonal to all polynomials of up to second order,
+􏰞
+The orthogonality constraints (15.5) and (15.6) can always be satisfied by using ordinary Gram–Schmidt orthonormalization. We further assume that the expectations of the first N of the Gi(Y ) are given by the following values:
+􏰞
+E{Gi(Y )} =
+Assuming also that Y has mean 0 and variance 1 yields two more con-
+straints,
+GN+1(y) = y, cN+1 = 0, (15.8) GN+2(y) = y2, cN+2 = 1. (15.9)
+If the probability density p0Y (y) satisfies the constraints (15.5)–(15.9) and also has the largest entropy among all such densities, then it can be shown
+that
+􏰘􏰏 􏰠
+aiGi(y) , (15.10)
+φ(y)Gi(y)ykdy = 0, k = 0, 1, 2. (15.6)
+Gi(y)qY (y)dy = ci, i = 1,2,...,N. (15.7)
+p0Y (y) = A exp
+i
+where A and the {ai} are constants to be determined from (15.7). If we
+further assume that pY (y) ≈ φ(y), then for (15.10) to be close to e−y2/2, the only substantial coefficient has to be aN+2 ≈ −1/2. We can rewrite (15.10) as follows:
+i=1 􏰙
+aiGi(y) , (15.11)
+where A ̄ = (2π)1/2A and where we used the approximation eε ≈ 1 + ε.
+Furthermore,
+􏰞
+􏰘 􏰏N􏰠 A exp −y2/2 + aN+1y + (aN+2 + 1/2)y2 + aiGi(y)
+p0Y (y) =
+= A φ(y) 1 + aN+1y + (aN+2 + 1/2)y +
+􏰈
+ ̄ 2􏰏N
+1 =
+p0Y (y)dy = A ̄[1 + (aN+2 + 1/2)] (15.12)
+i=1
+H(Y)≈ − = −
+≈ −
+− = H(Z) −
+􏰞
+􏰞 􏰞
+p 0Y ( y ) y d y = A ̄ a N + 1
+p0Y (y) log p0Y (y)dy
+φ(y) 1 +
+􏰞 􏰏N􏰞
+15.3 Independent Component Analysis
+563
+0 = E { Y } =
+1 = E{Y 2} = p0Y (y)y2dy = A ̄[1 + 3(aN+2 + 1/2)]
+(15.13)
+(15.14)
+p0Y (y)Gi(y)dy = A ̄ai, i = 1,2,...,N.
+ci =
+0, aN +2 = −1/2, and A ̄ = 1. Substituting these values into (15.11) yields 􏰈􏰏N 􏰙
+p0Y (y) = φ(y) 1 +
+which is referred to as the approximate maximum entropy density. Compare
+this representation with that given by (15.10).􏰟
+From (15.16), the entropy of Y , H(Y ) = − pY (y) log pY (y)dy, can be approximated by
+(15.15) These equations are easily solved to give ai = ci,i = 1,2,...,N,aN+1 =
+i=1
+i=1
+φ(y) log φ(y)dy − ci φ(y)Gi (y) log φ(y)dy
+ciGi(y) , (15.16)
+􏰞
+􏰞􏰈􏰏N 􏰙􏰬􏰈􏰏N 􏰙􏰭
+ciGi(y) log φ(y) 1 + ciGi(y) dy i=1
+􏰈i=1􏰙􏰈 􏰙 􏰞􏰏N 􏰏N
+􏰏N􏰞 􏰏N􏰞 ci φ(y)Gi(y) log φ(y)dy − ci
+φ(y) 1 + ciGi(y) log 1 + ciGi(y) i=1 i=1
+i=1
+1􏰏N􏰞 􏰏N􏰞
+􏰈 i=1 c2i φ(y)G2i (y)dy − o c2i
+􏰙
+φ(y)G2i (y)dy
+c2i +o
+where we have used the conditions (15.5) and (15.6), the expansion (1 +
+ε) log(1+ε) = ε+ε2/2+o(ε2) for ε small, and log φ(y) = −1 log(2π)−y2/2. 2
+From (15.7) and (15.17), we have that
+1 􏰏N
+− 2
+= H(Z)−0−0−2
+􏰙i=1 c2i ,
+dy φ(y)Gi(y)dy
+￼i=1
+􏰈
+1 􏰏N i=1
+􏰏N i=1
+(15.17)
+￼￼H(Z)−H(Y)=J(Y)≈JN(Y)≡ 2
+(E{Gi(Y)})2. (15.18)
+￼i=1
+564 15. Latent Variable Models for Blind Source Separation
+All that remains now is to choose the functions {Gi(Y )}.
+The simplest choice of these functions has N = 1 or N = 2. First, taking N = 2, we can make G1 an odd function (G1(−y) = −G1(y), reflecting symmetry vs. asymmetry) and G2 an even function (G2(−y) = G2(y), re- flecting sub-Gaussian (negative kurtosis) vs. super-Gaussian (positive kur- tosis) distributions). One can show that in this case, the approximation (15.18) boils down to
+J2(Y ) = β1 (E{G1(Y )})2 + β2 (E{G2(Y )} − E{G2(Z)})2 , (15.19) where β1 and β2 are positive constants. If we take N = 1, the approximation
+becomes
+J1(Y ) = β (E{G(Y )} − E{G(Z)})2 , β > 0, (15.20)
+for any nonquadratic objective function G, where Z ∼ N (0, 1). So, we see that (15.20) generalizes the objective functions (7.111), where G(Y ) = Y 4, and (7.112), where G is given by the standard Gaussian density φ.
+The approximation (15.20) to negentropy is used in the R/S-Plus and C code implementation (Marchini, Heaton, and Ripley, 2003) of the FastICA algorithm (see Section 15.3.11), where β = 1. By choosing G carefully, we can do much better than (7.111), which is sensitive to outliers. In particular, the following choices of the G function are more robust performers:
+• logcosh:G(y)= 1 logcosh(αy), 1≤α≤2(usually,α=1), α
+• exp : G(y) = −e−y2/2 = −(2π)1/2φ(y).
+The logcosh function has been found to be good for most types of ICA problems, and the exp function is probably best for highly super-Gaussian source components where robustness is a serious consideration. The logcosh function has also been used successfully as a flexible family of Bayesian prior distributions, especially for the image reconstruction of photon emission computed tomographic data (Green, 1990; Weir and Green, 1994; Weir, 1997).
+The exp function yields a version of J1(Y ) that is proportional to the objective functions I0 (Y ) and I0 (Y ) (see Section 7.4.1). An immediate
+￼H CBC
+consequence of this result is that the FastICA algorithm can be used for PP as a fast computational method for finding “interesting” one-dimensional projections of multivariate data, as well as for finding a single source com- ponent by ICA.
+15.3.10 Mutual Information
+The relative entropy or Kullback–Leibler divergence of a multivariate probability density p with respect to another multivariate probability den-
+sity q is defined as
+KL(p ∥ q) =
+=
+􏰞 p(y) p(y) log q(y) dy
+−H(Y) −
+15.3 Independent Component Analysis 565
+￼where H(Y) is the entropy of the vector Y, and −
+cross-entropy between p and q (Cover and Thomas, 1991, Chapter 2). Note that Kullback–Leibler divergence is nonnegative,
+KL(p ∥ q)
+􏰇 p(y)􏰢 = Ep log q(y)
+􏰇q(y)􏰢 ≥ −logEp p(y)
+􏰇􏰞 􏰢
+= − log q(y)dy = 0,
+􏰞
+􏰟
+p(y) log q(y) dy, (15.21)
+p(y) log q(y)dy is the
+￼￼and is zero if p = q. In (15.22), we used Jensen’s inequality E{f(x)} ≥ f(E{x}) for the convex function f(x) = −log(x), and Ep indicates expec- tation taken with respect to the density p. However, KL(p ∥ q) is not a bona fide distance measure because it is not a symmetric function of p and q; that is, KL(p ∥ q) ̸= KL(q ∥ p).
+We define the amount of mutual information (MI) between the m com- ponents, Y1, . . . , Ym, of Y by setting q in (15.22) to be the product of the marginal densities of Y, q(y) = 􏰝mj=1 pj (yj ), where pj (yj ) is the (marginal) density of Yj:
+􏰛
+MI(Y) = KL(p∥ pj) j
+⎛⎞ 􏰞 􏰛m
+= −H(Y)− p(y)log⎝ pj(yj)⎠ dy j=1
+􏰏m
+j=1
+=
+H(Yj ) − H(Y).
+(15.23)
+Thus, mutual information can be regarded as the difference between the total amount of information carried by each of the components of Y and the information carried by the components jointly. MI(Y) is always non- negative and is zero if and only if the components of Y are statistically independent (i.e., p(y) = 􏰝 pj (yj )).
+In the square-mixing case (i.e., m = r), let Y = WX be the m-vector ofrecoveredsourcecomponents,whereW=(wi,···,wm)τ minimizesthe
+j
+(15.22)
+566 15. Latent Variable Models for Blind Source Separation
+mutual information of the transformed components {Sj }. Then, the entropy of Y = (Y1,···,Ym)τ is given by
+H(Y) = log |det(W)| + H(X). (15.24)
+Assuming that each Yj = wjτX has zero mean and unit variance, j = 1,2,...,m, and that the {Yj} are uncorrelated, we have that E{YYτ} = WΣXX Wτ = I, whence, det(W) = [det(ΣXX )]−1/2, which does not de- pend upon W. If X has been centered and sphered, (15.24) reduces to H(Y) = H(X). Thus, we can write (15.23) as
+􏰏m j=1
+where c = mH(Z) − H(X) does not depend upon W and, hence, is con- stant (Z is a standard Gaussian variate). In terms of optimizing the mutual information between the m components of Y with respect to the square separating matrix W, we see that mutual information is the negative of the sum of the negentropies of each of the {Yj}. In other words, minimiz- ing the mutual information between the components of Y is equivalent to maximizing the sum of the negentropies of the independent components of Y.
+15.3.11 The FastICA Algorithm
+Let Y be a projection, Y = wτX, of X. The idea is to find that di- rection w that optimizes a given objective function. For example, if the variance of the projection, var(Y) = wτΣXXw, where ∥w∥ = 1, is taken as the objective function, then maximizing that function with respect to w yields the first principal component of X. In this case, the solution is the eigenvector corresponding to the largest eigenvalue of ΣXX. Subsequent principal components can be sequentially extracted by maximizing projec- tion variance within the orthogonal complement of the space spanned by previously derived eigenvectors. PCA is, therefore, a special case of ICA (but not vice versa), but whereas PCA obtains uncorrelated components, ICA yields independent components. Hence, sphering by PCA is typically used as a preprocessing tool in ICA algorithms.
+In this section, we describe the FastICA algorithm that is popularly used for optimizing a given objective function and thereby extracting a single component or multiple independent components from X.
+Extracting a Single Source Component
+First, consider a single (m = 1) source component Y = wτX, where the r-vector w represents a direction for a one-dimensional projection. We
+MI(Y) = c −
+J (Yj ), (15.25)
+15.3 Independent Component Analysis 567
+TABLE 15.1. Nonquadratic density functions and their first and second derivatives to be used as input to the FastICA algorithm. Note that for the logcosh density, 1 ≤ α ≤ 2.
+￼Density
+logcosh exp
+G(y)
+1 logcosh(αy) α
+−e−y2/2
+g(y) = G′(y) tanh(αy)
+ye−y2/2
+g′(y) = G′′(y) α(1−tanh2(αy))
+(1 − y2)e−y2/2
+￼￼￼wish to find that w that maximizes the approximation (15.20) to negen- tropy subject to the sphering constraint E{(wτX)2} = ∥w∥2 = 1 on the projection. In other words, w is to be that direction that makes the density of the one-dimensional projection Y = wτ X as far away from the Gaussian density as possible.
+Because the maxima of the negentropy J (wτ X) are typically obtained at certain maxima of E{G(wτ X)}, we set
+F (w) = E{G(wτ X)} − λ (∥w∥2 − 1), (15.26) 2
+where λ is the Lagrangian multiplier. To maximize (15.26), the Newton– Raphson iterative method (see, e.g., Thisted, 1988, Section 4.2.2) yields
+￼the iteration
+􏰃∂2F(w)􏰄−1 􏰃∂F(w)􏰄
+w←w− ∂w2 ∂w . (15.27)
+￼￼We, thus, need to find the first and second partial derivatives of F (w) with respect to w.
+Differentiating (15.26) with respect to w yields
+∂F (w) = E(Xg(wτ X)) − λw, (15.28)
+￼∂w
+where g = ∂G/∂w. The stationary values of the function F are found by
+equating (15.28) to zero. Premultiplying both sides of the resulting equation by wτ yields
+λ = E(wτ Xg(wτ X)). (15.29) Differentiating (15.28) with respect to w gives the approximate second
+derivative of F,
+∂2F(w) ∂w2
+= E{(XXτ g′(wτ X)} − λIr
+≈ E{(XX)τ }E{g′(wτ X)} − λIr = (E{g′(wτ X)} − λ)Ir ,
+￼(15.30)
+568 15. Latent Variable Models for Blind Source Separation
+TABLE 15.2. FastICA algorithm for determining a single source compo- nent.
+1. Center and whiten the data to give X.
+2. Choose an initial version of the r-vector w with unit norm.
+3. Choose G to be any nonquadratic density with first and second partial derivatives g and g′, respectively. If the choice is either the logcosh or exp density, g and g′ are given in the text.
+4. Let w ← E(Xg(wτ X)) − wE(g′(wτ X)). In practice, the expectations are estimated using sample averages.
+5. Let w ← w/∥w∥.
+6. Iterate between steps 4 and 5. Stop when convergence is attained.
+where we used the fact that X has been sphered. Substituting (15.28) and (15.30) into (15.27), the iteration reduces to
+w ← w − E{Xg(wτX)} − λw . (15.31) E{g′(wτ X)} − λ
+If we set E1 = E{Xg(wkτ−1X)} and E2 = E{g′(wkτ−1X)}, then (15.31) can be written as wk = wk−1 − (E1 − λwk−1)/(E2 − λ) for the kth iteration. Multiplying both sides by λ−E2 yields wk(λ−E2) = E1−wk−1E2. Because we divide w by its norm ∥w∥ at each step of the iterative procedure, the factor λ − E2 can be ignored. The iteration (15.31) is, therefore, equivalent to
+w ← E{Xg(wτ X)} − wE{g′(wτ X)}. (15.32)
+For the logcosh and exp densities, the functions g and g′ are given in Table 15.1. Substituting for g and g′ in (15.32) for either the logcosh or exp density as appropriate yields the FastICA algorithm, which is given in Table 15.2.
+The values of w can change substantially from iteration to iteration; this is because the ICA model cannot determine the sign of w, so that −w and w become equivalent and define the same direction. In light of this comment, “convergence” of the FastICA algorithm is taken to have a different meaning than usual, and is taken here to mean that successive iterative values of w (i.e., wk−1 and wk for some k) are oriented in the same direction (i.e., wkτ wk−1 is very close to 1).
+Extracting Multiple Source Components
+The FastICA package (Hurri, Ga ̈vert, Sa ̈rel ̈a, and Hyva ̈rinen, 1998) in- cludes two different ways of extracting more than one independent source
+￼￼￼
+15.3 Independent Component Analysis 569
+component. Both methods (termed “deflation” and “parallel” methods) repeatedly call the single component extraction algorithm of Table 15.2. Essentially, at each step in the algorithmic cycle:
+deflation: the single component routine finds a new component, that new component is orthogonalized using the Gram–Schmidt method with respect to all previously found components, and then the resulting new component is normalized.
+parallel: the single component routine is carried out in parallel for each independent component to be extracted, and then a symmetric or- thogonalization is carried out on all components simultaneously.
+The deflation method extracts independent components sequentially one- at-a-time, whereas the parallel method extracts all the independent com- ponents at the same time. Both algorithms are listed in Table 15.3. Note that the parallel algorithm is used for minimizing mutual information MI(Y) because the deflation algorithm is not appropriate.
+15.3.12 Example: Identifying Artifacts in MEG Recordings
+Brain signals are very weak electrical signals. Neurons located in the brain conduct electrical activity, which, in turn, produces magnetic fields. Because magnetic signals pass unchanged through brain tissue and the skull, they can be recorded outside the head and used to identify the lo- cations of brain activity. A MEG device is used for real-time mapping of changes in the magnetic field caused by brain activity. However, such recordings often contain artifacts due to external disturbances such as eye movements or blinks, or sensory malfunctions. It is, therefore, advisable to detect, identify, and remove such artifacts from the records. In this exam- ple, we discuss the issue of separating artifacts from true brain activity. The primary assumption here is that artifacts are an anatomically and physio- logically separate process from brain activity, so that, statistically, the two types of magnetic signals generated by such processes can be considered to be independent.
+In a noninvasive experiment carried out by the ICA group at the Helsinki University of Technology (Viga ́rio, Jousm ̈aki, Ha ̈m ̈al ̈ainen, Hari, and Oja, 1997), the MEG signals of a test subject were recorded in a magnetically shielded room. Measurements were taken using a whole-scalp neuromag- netometer (a helmet-shaped device; see Figure 15.3) with 122 SQUID (su- perconducting quantum interference device) sensors organized in pairs at 61 grid locations uniformly distributed around the head. The weak mag- netic fields produced by brain activity are detected by these sensors. The
+570 15. Latent Variable Models for Blind Source Separation
+TABLE 15.3. Two FastICA algorithms for extracting multiple indepen- dent source components.
+                         Deflation algorithm
+1. Center and whiten the data to give X.
+2. Decide on the number, m, of independent components to be extracted.
+3. Fork=1,2,...,m,
+• Initialize (e.g., randomly) the r-vector wk to have unit norm.
+• Let wk ← E(Xg(wkτ X)) − wkE(g′(wkτ X)) be the FastICA single- component update for wk, where g and g′ are given in Table 15.1. In practice, the expectations are estimated using sample averages.
+• Use the Gram–Schmidt process to orthogonalize wk with respect to the previously chosen w1, . . . , wk−1:
+k−1 􏰏
+j=1
+￼( w kτ w j ) w j .
+                       Parallel algorithm
+1. Center and whiten the data to give X.
+2. Decide on the number, m, of independent components to be extracted.
+3. Initialize (e.g., randomly) the r-vectors w1,...,wm, each to have unit norm. Let W = (w1,···,wm)τ.
+4. Carry out a symmetric orthogonalization of W by W ← (WWτ )−1/2W.
+5. Foreachk=1,2,...,m,letwk ←E(Xg(wkτX))−wkE(g′(wkτX))bethe FastICA single-component update for wk, where g and g′ are given in Table 15.1. In practice, the expectations are estimated using sample averages.
+6. Carry out another symmetric orthogonalization of W.
+7. If convergence has not occurred, return to step 5.
+w k ← w k −
+• Letwk ←wk/∥wk∥.
+• Iterate wk until convergence.
+4. Setk←k+1.Ifk≤m,returntostep3.
+￼￼
+15.3 Independent Component Analysis 571
+￼FIGURE 15.3. Helmet-shaped device with array of sensors uniformly distributed around the head to provide MEG measurements. Source: ltl.tkk.fi/research/brain/head.jpg
+MEG signals were deliberately contaminated by having the test subject induce the following artifacts: (1) blink his eyes; (2) make horizontal sac- cades (quick, simultaneous movements of both eyes at the same time in the same direction) to simulate typical ocular (eye) artifacts; and (3) bite his teeth for as long as 20 seconds to simulate myographic (muscle) artifacts. Two more artifacts were added: (4) a piece of metal was placed next to the navel to simulate breathing artifacts; and (5) a digital watch was placed one meter away from the helmet in the shielded room to simulate a general artifact.
+The data consist of n = 17,730 amplitudes of each of r = 122 MEG signals recorded over a period of 2 minutes.2 A sample of 12 of these signals is displayed in Figure 15.4. We first used PCA to convert the MEG data into principal components with decreasing variance; see Figure 15.5 for a scree plot of the eigenvalues. Because we used the sample correlation matrix for PCA, we retained only those PCs whose eigenvalues were greater than unity, which also corresponded to an “elbow” in Figure 15.5. This reduced the 122-dimensional data to 22 PCs, which accounted for 77.8% of total variance. Next, we extracted 22 independent components from the PCs (using the parallel FastICA algorithm). The 22 ICs are displayed in Figure 15.6.
+We see certain patterns in the ICs. Counting from the top of Figure 15.6, IC1–IC10 (purple curves) show low-fequency, bump-like, overlearning artifacts (S ̈arel ̈a and Vigario, 2003); IC11 and IC12 (light-blue curves) show
+2 The data are publicly available and can be downloaded from the website www.cis.hut.fi/projects/ica/eegmeg/MEG data.html.
+￼￼
+￼572 15. Latent Variable Models for Blind Source Separation
+FIGURE 15.4. Spontaneous MEG signals for a sample of 12 channels (lo- cations) of a 122-channel whole-scalp neuromagnetometer over the frontal, temporal, and occipital areas of a test subject’s scalp. Artifacts were intro- duced by saccades, blinking, and biting, in that order.
+horizontal eye movements, and IC13 and IC14 (green curves) show eye blinks; IC15 (red curve) represents a cardiac cycle artifact, and IC16 (dark- blue curve) shows the digital watch artifact, both signals of which are not visible in the raw data; and IC17 and IC18 (orange curves) correspond to the muscle (biting) artifact. The remaining four signals reflect noise components.
+15.3.13 Maximum-Likelihood ICA
+Another way of carrying out ICA is to specify a parametric distribu- tion, pS(s), for the latent source variables S and then apply the maximum- likelihood (ML) method to estimate the parameters of that distribution. In
+￼￼￼￼￼15
+10
+5
+0
+15.3 Independent Component Analysis 573
+￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼020406080100120 SequenceNumber
+FIGURE 15.5. Scree plot of the 122 ordered eigenvalues of the sample correlation matrix computed from the MEG data.
+this section, we describe a fixed-point algorithm (which utilizes the FastICA algorithm) for square mixing (m = r).
+Suppose the density of the m-vector S = (S1, · · · , Sm) of sources is pS(s), and suppose X = AS, where A is square and nonsingular. Let W = A−1. Then, the density of X is pX(x) = |det(W)|pS(s). Because the sources are assumed to be statistically independent, then,
+􏰛m j=1
+where pSj (sj) is the density of Sj and wjτ is the jth row of W. Given n iid
+observations, x1. . . . , xn, on X, the log-likelihood function for W is ⎧⎫
+pX(x) = |det(W)|
+pSj (wjτ x), (15.33)
+n−1 log L(W|{xi}) = log |det(W)| + n−1
+􏰏n ⎨ 􏰏m i=1 ⎩j=1
+⎬
+log pSj (wjτ xi) . ⎭
+(15.34)
+In this case, the parameters are the elements of W. To find the ML esti- mator of W, we derive a fixed-point algorithm that will maximize (15.34) numerically.
+For convenience, we write “E” in the second term on the right-hand side of (15.34) for the sample average over the n observations. The derivative
+OrderedEigenvalues
+￼574 15. Latent Variable Models for Blind Source Separation
+FIGURE 15.6. Twenty-two independent components (ICs) extracted from the MEG data. Visible in this display are the saccades (IC11, IC12; light- blue curves), blinking (IC13, IC14; green curves), digital watch (IC16; dark- blue curve), and biting (IC17, IC18; orange curves) artifacts, and also car- diac cycle (IC15; red curve) and bump-like overlearning or breathing (IC1– IC10; purple curves) artifacts. The last four ICs are noise components.
+of log L(W) with respect to W is given by the matrix gradient, ⎧⎫
+n−1
+where and
+∂logL(W) ∂W
+= (Wτ)−1+E
+⎨ ∂ 􏰏m ⎬ logpSj(wjτX)
+= =
+⎩∂W j=1 ⎭ (Wτ)−1 +E{(g1(w1τX),···,gm(wmτ X))Xτ}
+(Wτ )−1 + E{g(WX)Xτ }, g(WX)=(g1(w1τX),···,gm(wmτ X))
+gj (wjτ X) = p′Sj (wjτ X) pSj (wjτ X)
+(15.35) (15.36) (15.37)
+15.3 Independent Component Analysis 575
+is the jth score function. The update rule for the kth iterate of W is
+Wk = Wk−1 − α ∂ log L(W) |W=Wk−1 , (15.38)
+∂W
+where α is the step-size parameter of the optimization rule, depending upon n and possibly k. Setting ΔW = Wk − Wk−1 as the difference between successive iterates of W, and using (15.35), we can write (15.38) in the form
+ΔW ∝ (Wτ )−1 + E{g(WX)Xτ }. (15.39) Postmultiplying the right-hand side of (15.39) by WτW gives the fixed-
+point algorithm,
+W ← W + μ[Im + E{g(Y)Yτ }]W, (15.40)
+where Y = WX and μ is the learning rate, which may be reduced in size until convergence. This modification produces an algorithm that avoids the matrix inversions of (15.39) and speeds up convergence considerably.
+Hyva ̈rinen (1999) recognized that (15.40) is really just a special case of the FastICA algorithm. The link between the two algorithms can be seen if we write Step 5 of the parallel FastICA algorithm in Table 15.3 in matrix form as
+W ← W + Dα [Dλ − E{g(Y)Yτ }] W, (15.41)
+where Y = (Y1,···,Ym)τ, Yi = wiτX, λi = E{Yig(Yi)}, αi = 1/(E{g′(Yi)− λi}, Dα = diag{αi}, and Dλ = diag{λi}. The second term on the right- hand side of (15.41) can be rearranged to give
+W ← W + Dαλ[Im − D−1E{g(Y)Yτ }]W, (15.42) λ
+where Dαλ = diag{αiλi} and D−1 = diag{λ−1}. Thus, the FastICA algo- λi
+rithm as given in Table 15.4 can be interpreted as maximizing the likeli- hood (15.34), thereby directly obtaining the ML estimate of W. Comparing (15.42) with (15.40), we see that the scalar learning rate μ has now become a more flexible part of the iterative process. Furthermore, simulation stud- ies have demonstrated that careful choice of {αi} and {λi} can speed up convergence of the FastICA algorithm.
+15.3.14 Kernel ICA
+A radically different approach to ICA was developed by Bach and Jordan (2002). Their approach, which they call Kernel ICA, still involves build- ing an appropriate objective function and then optimizing that objective function using a numerical algorithm. The difference between the Kernel ICA approach and those of the more “traditional” approaches described in
+￼
+576 15. Latent Variable Models for Blind Source Separation
+TABLE 15.4. FastICA algorithm for obtaining the maximum likelihood estimate of a square separating matrix W.
+1. Center the data, and then sphere the result to give X.
+2. Decide on the number, m, of independent components to be extracted.
+3. Randomly initialize a separating matrix W.
+4. Compute Y = WX.
+5. Compute λi = E(Yig(Yi)), αi = 1/(E(g′(Yi)) − λi), i = 1, 2, . . . , m. The function g is usually taken to be the tanh function (see Table 15.1). Set Dα = diag{αi} and Dλ = diag{λi}.
+6. Update W by W ← W+Dα [Dλ −E(g(Y)Yτ)]W. In practice, the ex- pectation is estimated using a sample average.
+7. Carry out a symmetric orthogonalization of W by W ← (WWτ )−1/2W.
+8. If convergence has not occurred, return to step 4.
+this chapter is that the development consists of searching the functions in a reproducing kernel Hilbert space. This approach reduces to finding the eigenvalues and eigenvectors of a certain matrix, which we show is derived from a kernelized version of CVA.
+Kernel CVA
+The CVA method of Section 7.3 has been generalized to the nonlinear case using similar ideas as were developed for support vector machines. (We will see nonlinear PCA in Chapter 16.) The resulting methodology has been applied to problems as varied as that of extracting correlated gene clusters from multiple genomic data to cross-language latent semantic indexing. In many multivariate applications, the standard CVA method will not be feasible if the dimensionality of the problem is too large or if the data cannot be represented as vectors.
+The nonlinear version of CVA that we describe here assumes that we carry out a nonlinear transformation, Φ1 : Rr → H1, of one set of input data, xi ∈ Rr , i = 1, 2, . . . , n, and another nonlinear transformation, Φ2 : Rs → H2, of a second set of input data, yi ∈ Rs, j = 1,2,...,n.
+CVA in Feature Space
+We now carry out CVA between the two transformed sets of input data, {Φ1(xi),i = 1,2,...,n} and {Φ2(yi),i = 1,2,...,n}, where we assume that both sets of transformed data have been centered. We wish to find
+￼￼
+􏰏n f1 =
+􏰏n i=1
+15.3 Independent Component Analysis 577
+f1 ∈ H1 and f2 ∈ H2 such that the features f1(X) = ⟨Φ1(X),f1⟩ and f2(Y) = ⟨Φ2(Y), f2⟩ have maximal correlation.
+We search for f1 and f2 in the linear spaces, S1 and S2, respectively, which are spanned by these Φ-images. These are reproducing kernel Hilbert spaces (rkhs). For a given f1,f2, we can write
+α1iΦ1(xi) + f1⊥,
+where f1⊥ and f2⊥ are orthogonal to S1 and S2, respectively. Then, we
+We could maximize the covariance of f1(X) and f2(Y) subject to con- straints on the variances as we did previously. However, we consider in- stead the equivalent problem of maximizing the (canonical) H-correlation (H = H1 × H2) between f1(X) and f2(Y) as defined by
+α2iΦ2(yi) + f2⊥, (15.43) can write f1(X) = ⟨Φ1(X),f1⟩ = 􏰊n α1i⟨Φ1(X),Φ1(xi)⟩ and f2(Y) =
+i=1
+􏰊n i=1 ⟨Φ2(Y), f2⟩ = i=1 α2i⟨Φ2(Y), Φ2(Yi)⟩.
+ρ􏰡H(X,Y) = max c􏰤ov{f1(X),f2(Y)}
+( f 1 , f 2 ) ∈ H 1 × H 2 ( v 􏰑a r { f 1 ( X ) } ) 1 / 2 ( v 􏰑a r { f 2 ( Y ) } ) 1 / 2
+f2 =
+￼where
+c􏰤ov{f1(X), f2(Y)}
+v􏰑ar{f1(X)} v 􏰑a r { f 2 ( Y ) }
+, (15.44)
+⟨Φ1(xi), f1⟩⟨Φ2(yi), f2⟩ α1jK1(xi,xj)K2(yi,yk)α2k
+− 1 􏰏n
+= n f1(xi)f2(yi)
+= n = n
+i=1
+− 1 􏰏n
+i=1
+− 1 􏰏n 􏰏n 􏰏n
+i=1 j=1 k=1 = n−1 ατ1 K1 K2 α2
+= n−1 ατ1 K21 α1 = n−1 ατ2 K2 α2 ,
+(15.45) (15.46) (15.47)
+α1 = (α11,···,α1n)τ, α2 = (α21,···,α2n)τ, and the matrices K1 and K2 are the (n × n) Gram matrices associated with {xi,i = 1,2,...,n} and {yi, i = 1, 2, . . . , n}, respectively. See Section 11.3. The kernelized version of the CVA problem is, therefore, given by
+ρ􏰡H(K1,K2) = max ατ1K1K2α2 . (15.48) α1 ,α2 ∈Rn (ατ1 K21 α1 )1/2 (ατ2 K2 α2 )1/2
+Differentiating (15.48) with respect to α1 and α2 and then setting the results equal to zero yields the generalized eigenequation,
+Kα = λDα, (15.49)
+￼
+578 15. Latent Variable Models for Blind Source Separation
+where
+K= 12 ,D= 1 2 ,α= 1 .(15.50)
+􏰃0KK􏰄 􏰃K20􏰄 􏰃α􏰄 K2K10 0K2 α2
+The problem with this eigenequation is that D will be singular because centering renders both Gram matrices, K1 and K2, singular. It also turns out that all pairs of “kernel canonical variates” in feature space will be perfectly correlated, which will happen even if the non-centered K1 and K2 are invertible. As it stands, then, this “naive” kernel method cannot provide us with a useful estimate of the population canonical correlation, ρH(X,Y).
+Regularization
+One way out of this predicament is to apply regularization to the problem. This solution is in the same spirit as ridge regression and smoothing in functional CVA (Leurgans, Moyeed, and Silverman, 1993). In this case, penalizing the H1-norm of f1 and the H2-norm of f2 each by the same small constant value κ > 0 means replacing K21 by (K1 + κIn)2 and K2 by (K2 + κIn)2 in the definition of D in (15.50). This can be seen as follows: if θ is a regularization parameter, then,
+v􏰑ar{f1(Xi)} + θ∥f1∥2H1 = n−1ατ1K21α1 + θατ1K1α1 ≈ n−1ατ1 (K1 + κIn)2 α1
+v􏰑ar{f2(Yj )} + θ∥f2∥2H1 ≈ n−1ατ2 (K2 + κIn)2 α2, where κ = nθ/2 (Bach and Jordan, 2002).
+The regularized version of (15.48) is given by
+ρ􏰡 H ( K 1 , K 2 ) =
+m a x α τ1 K 1 K 2 α 2 .
+α1,α2∈Rn (ατ1 (K1 + κIn)2 α1)1/2(ατ2 (K2 + κIn)2 α2)1/2
+(15.51) (15.52)
+( 1 5 . 5 3 )
+￼We see in (15.53) that the covariance term in the numerator is to be com- pared with the variance and the penalty function of each term in the de- nominator. The value of κ determines the weight to be placed upon the penalty terms compared with the variance terms. As κ gets close to zero, the variance term dominates, whereas as κ gets larger, the variance term becomes more affected by the amount of roughness allowed by the penalty term. Some careful compromise is needed here when deciding upon the value of κ.
+Differentiating (15.53) with respect to α1 and α2 and then setting the results equal to zero yields two equations, which can be written in matrix form as
+Kα = λDκα, (15.54)
+where K is given by (15.50),
+􏰃 (K1 +κIn)2 0 􏰄
+Dκ = 0 (K2 +κIn)2 2n paired eigenvalues
+15.3 Independent Component Analysis 579
+, (15.55) and α is given by (15.50). This is a generalized eigenequation, which has
+{λ1, −λ1, . . . , λn, −λn}, (15.56)
+each of which lies between −1 and 1. The first eigenvalue, λ1, is the largest canonical correlation. The equation (15.54) can be written in the alternate form,
+where
+Kκα = (1 + λ)Dκα, (15.57)
+􏰃 (K + κI )2 K K 􏰄
+K= 1 n 12 , (15.58)
+κ K2K1 (K2 +κIn)2
+Dκ is given by (15.55) and α is given by (15.50). Equation (15.57) has
+paired eigenvalues {1+λ1,1−λ1,...,1+λn,1−λn}.
+Note that (15.57) can be expressed as a standard eigenproblem,
+K􏰣 κ α􏰣 = λ􏰣 α􏰣 , ( 1 5 . 5 9 ) 􏰣 −1/2 −1/2 −1/2 􏰣
+whereKκ =Dκ KκDκ ,α􏰣 =Dκ α,andλ=1+λ.Weare,therefore, interested in the eigenvalues and eigenvectors of the (2n × 2n)-matrix
+κ K κ2 K κ1 I n whereKκj =(Kj +κIn)−1Kj,j=1,2.
+􏰃I KκKκ􏰄 K􏰣=n12, (15.60)
+The kernel canonical variate scores are then given by f1(X) = K1α1 and f2(Y) = K2α2.
+Choice of Parameter Values
+It is important that the parameters in the eigenproblem be chosen care- fully. There are two “free” parameters that have to be chosen by the user:
+1. Bach and Jordan (2002) recommend that the regularization param- eterθbesettoθ=2×10−3 forn>1,000andθ=2×10−2 for n ≤ 1,000. Leurgans, Moyeed, and Silverman (1993), in a slightly different context, consider cross-validation as a method for determin- ing a good choice of θ; they found, however, that cross-validation works much better for the leading canonical variate than it does for subsequent canonical variates.
+580 15. Latent Variable Models for Blind Source Separation
+2. If a Gaussian radial basis kernel is used as the kernel in this method, Bach and Jordan recommend that the scale parameter σ be assigned the value σ = 1/2 for n > 1, 000 and σ = 1 for n ≤ 1, 000.
+Kernel ICA
+The kernel CVA results (in which m = 2) can be generalized to m > 2 by using an analogue of (15.57). In this case, the equation can be written as
+Kκα = (1 + λ)Dκα,
+⎛ (K +κI )2 K K ··· K K ⎞
+(15.61)
+(15.62)
+where
+⎜ K2K1 Kκ=⎜⎝. . .
+KmK2 ··· (Km +κIn)2
+is the (mn × mn) covariance matrix of the m vectors Y1, . . . , Ym,
+⎛ (K1 +κIn)2 ⎜ 0
+Dκ=⎜⎝. . . 0
+0 ··· (K2 +κIn)2 ···
+0 ⎞ 0 ⎟
+1n121m
+KmK1
+(K2 +κIn)2 ··· K2Km ⎟ . . ..⎟⎠
+. . .
+0
+. ⎟⎠ (15.63) ··· (Km+κIn)2
+is the (mn × mn) block-diagonal matrix of the individual covariance ma- trices, and α = (ατ1,···,ατm)τ. Note that (15.61) can be expressed as a
+standard eigenproblem,
+K􏰣κα􏰣 = λ􏰣α􏰣, (15.64) 􏰣 −1/2 −1/2 1/2 􏰣
+whereKκ =Dκ KκDκ ,α􏰣=Dκ α,andλ=1+λ.Thus,theeigen- vector α of Kκ gets transformed into the eigenvector α􏰣j = (Kj + κIn)αj of K􏰣κ, with an identical eigenvalue. We are, therefore, interested in the eigenvalues and eigenvectors of the (mn × mn)-matrix
+⎛I KκKκ···KκKκ⎞ n121m
+􏰣 ⎜ Kκ2Kκ1 K κ = ⎜⎝ . . .
+for ICA:
+• I􏰡HK (K1,...,Km) = −1 logλmin(K􏰣κ), 2
+KκmKκ2 where Kκj = (Kj +κIn)−1Kj, j = 1,2,...,m.
+KκmKκ1
+In . . .
+··· Kκ2Kκm ⎟
+. . . ⎟⎠ , ( 1 5 . 6 5 )
+· · · In
+From (15.65), Bach and Jordan suggest two possible objective functions
+￼
+15.4 Exploratory Factor Analysis 581
+• I􏰡 H K ( K 1 , . . . , K m ) = − 1 l o g d e t ( K􏰣 κ ) , 2
+where λmin(K􏰣κ) is the smallest eigenvalue of K􏰣κ, and det(K􏰣κ) is the ker- nel generalized variance associated with the eigenproblem. Both objective functions are functions of the Gram matrices K1, . . . , Km through the sepa- rating matrix W and, hence, can be optimized with respect to that matrix.
+As one would expect with such huge (mn × mn)-matrices, computa- tional issues become paramount to the success of this method. The so- lution implemented by Bach and Jordan reduces the dimensionality of the problem by using low-rank approximations to the m Gram matrices {Kκj , j = 1, 2, . . . , m}. Computations are based upon incomplete Cholesky decompositions and a deflation algorithm similar to that outlined in Table 15.3.
+Extensive simulations and comparisons with other ICA algorithms show Kernel ICA to have greater accuracy and to be more robust to outliers and insensitive to asymmetry of the source distributions. Because of its computational complexity, however, running time is somewhat slower than that of the other ICA algorithms.
+15.4 Exploratory Factor Analysis
+Tukey’s distinction between exploratory and confirmatory data analysis has since been extended to the techniques of factor analysis. What was once known as “common factor analysis” is now considered as exploratory methodology, and is referred to as exploratory factor analysis (EFA).
+The main contributors to the development of EFA as a statistical pro- cedure were Thurstone, Spearman, Harman, Lawley, Guttman, Kaiser, Joreskog, Rao, Harris, and many others. The fact that so many were in- volved in its growth perhaps reflects the many divergent opinions as to the direction it should ultimately follow. The procedure has been used exten- sively in its different guises by social and behavioral scientists (especially in education, sociology, and psychology), who have used EFA to study latent characteristics such as mental ability, intellect, personality, and individual- ity through large batteries of tests. Lately, research workers in marketing, medicine, archaeology, meteorology, and other sciences have noted its use- fulness and have applied it to many interesting problems.
+However, this is not to say that EFA has been completely accepted. In- deed, it is still regarded by many with a marked degree of skepticism. This may be due, in part, to the type of data commonly used as input to factor analysis programs; in part, to the many subjective judgments involved in using the technique of EFA; and, in part, to the very personal interpre- tations of what exactly the derived factors represent. Computer packages
+￼￼
+582 15. Latent Variable Models for Blind Source Separation
+that include a factor analysis routine now provide enough methodologi- cal options to satisfy any factor analyst. The plethora of such available methods, however, can also create a sense of confusion for the researcher. Furthermore, such extensive automation of the subject has also produced its fair share of mindless abuse.
+15.4.1 The Factor Analysis Model
+The linear mixing version of the noisy ICA model,
+X = AS + e, (15.66)
+where A = (aij ) is a full-rank (r × m) mixing matrix with unknown coef- ficients, is usually associated with exploratory factor analysis (Lawley and Maxwell, 1971; Harman, 1976). If we assume that the noise component e has zero mean and a diagonal (r × r) covariance matrix, cov(e) = Ψ, with positive diagonal entries, and that S and e are uncorrelated, E(Seτ ) = 0, then (15.66) reduces to the classical common factor analysis model (FA), where the sources are called factors. For the model (15.66), E{X} = μ = 0 and
+ΣXX = AAτ + Ψ. (15.67) The EFA (as well as the BSS and ICA) problem is to estimate A and
+recover S.
+Assume that each of the r observed input variables X1,X2,...,Xr has been standardized to have zero mean and unit variance. We can write the EFA model in (15.66) by the following system of linear equations:
+Xj =a1jS1+a2jS2+···+amjSm+ej, j=1,2,...,r, (15.68)
+where Sl, S2, . . . , Sm are m unobservable random variables (usually called latent variables or common factors), the {aij} are unknown constants (re- ferred to as factor loadings), and the el, e2, . . . , er are unobservable random variables that are called specific (or unique) factors because ej only appears in the equation involving Xj. We can also think of ej as the unobservable error in fitting the jth equation. We assume that the relationships between the observed input variables, X1 , . . . , Xr , are explained only by the under- lying common factors and not by the errors. Thus, we assume that the {Sj } are independent of the {ej}, and that the {ej} are independent. The com- mon factors, {Sj}, are called orthogonal if they are pairwise uncorrelated, while if they are correlated, they are called oblique factors.
+From (15.67), we see that the ith diagonal entry of ΣXX is given by 1 = h2 + ψii, where h2 = 􏰊 a2 is called the communality and ψii is the
+i ijij
+uniqueness given by the ith diagonal entry of Ψ.
+15.4 Exploratory Factor Analysis 583
+15.4.2 Principal Components FA
+Without making any distributional assumption (e.g., Gaussian) for the sources (factors) in (15.66), we can determine A using a least-squares ap- proach. In fact, premultiplying (15.66) by the Moore–Penrose generalized inverse, B = (Aτ A)−1Aτ , of A, and then substituting the result in terms of S back into (15.66), we can re-express the model as
+X = CX + E, (15.69)
+where C = AB has rank m, A and B are full-rank matrices each of rank m, E = (I − C)e, and X and E both have mean zero. The model (15.69) is the multivariate reduced-rank regression model corresponding to principal component analysis (see Chapters 6 and 7). The least-squares criterion,
+E{(X − ABX)τ (X − ABX)} (15.70) is, therefore, minimized by setting
+A = (v1,···,vm) = Bτ, (15.71)
+where vj is the eigenvector corresponding to the jth largest eigenvalue of ΣXX. The rows of the matrix B give the coefficients of the m principal components scores, vjτX, j = 1,2,...,m, and the eigenvalues of ΣXX, which are usually ordered from largest to smallest, measure the variance (or power) of the m sources. This approach, which essentially ignores the matrix Ψ, is usually referred to as the principal components method.
+Typically, ΣXX will be unknown and so we estimate it from the stan- dardized input data by Σ􏰡XX, the sample correlation matrix (see Section 15.3.4). Estimates of A and B are given by
+A􏰡 = ( v􏰡 1 , · · · , v􏰡 m ) = B􏰡 τ , ( 1 5 . 7 2 )
+respectively, where v􏰡j is the eigenvector corresponding to the jth largest eigenvalue of Σ􏰡XX, j = 1,2,...,m. One of the difficult problems faced
+by factor analysts is to determine the value of m, the number of common factors. Because the r eigenvalues of Σ􏰡 X X sum to r (the trace of Σ􏰡 X X ), a popular decision rule (Kaiser, 1960) is that m should be taken to be the number of those sample eigenvalues that are greater than unity.
+The m-vector of estimated factor scores corresponding to a standardized sample observation x = (x1, · · · , xr)τ is given by
+􏰡f = B􏰡 x = ( v􏰡 1τ x , · · · , v􏰡 mτ x ) τ . ( 1 5 . 7 3 )
+If we have n observations, x1, x2, . . . , xn, on X, it is common to plot the first two estimated factor scores, (v􏰡1τ xi, v􏰡2τ xi), i = 1, 2, . . . , n, on a scatterplot, where possible outliers can be identified.
+584 15. Latent Variable Models for Blind Source Separation
+Because C = (AT)(Tτ B) for any orthogonal (m × m)-matrix T, we can only determine A (and, hence, also S) up to a rotation. In factor analysis, this is generally referred to as the problem of factor indeterminancy. Al- though this leads to a problem of identifiability, it can be made to work in our favor. We would like to choose a rotation matrix T so that 􏰡f∗ = Tτ􏰡f has some desirable property. For example, can T be chosen to make A􏰡T have an interesting interpretive structure? When the elements of A􏰡 T have a particular pattern so that certain elements are zero, that matrix is said to have simple structure. The problem of choosing such a T is known as the problem of factor rotation, for which there exist many different ap- proaches. Probably the most popular rotation method is the varimax ro- tation (Kaiser, 1958), which seeks to find an orthogonal transformation T to maximize the sum, over all factors, of the variance of the squares of the scaled loadings (the estimated loadings divided by hi, the square-root of the communalities) for each factor.
+A modification of the principal components method, which takes account of the diagonal matrix Ψ, is the principal-factor method. In this method, the correlation matrix ΣXX, with ones along the main diagonal, is replaced in the eigenanalysis by the reduced correlation matrix ΣXX − Ψ, which has instead the communalities {h2j} along the diagonal. In practice, Ψ is also unknown and, hence, the communalities have to be estimated. The most common estimate of h2j is the squared multiple correlation between Xj and the remaining r − 1 input variables, which can be obtained as 􏰡h2j = 1 − (1/rjj ), where rjj is the jth diagonal element of the inverse of the
+sample correlation matrix. The matrix Σ􏰡 XX − Ψ􏰡 , with numbers less than unity in the main diagonal, will not necessarily be positive-definite, so that its eigenvalues will be both positive and negative. Because the sum of the positive eigenvalues exceeds the sum of the communalities, the number of factors, m, is usually taken to be at most the maximum number of positive eigenvalues whose sum is less than tr(Σ􏰡XX −Ψ􏰡).
+Although many analysts have abandoned the principal factor method in favor of the maximum-likelihood (ML) method because of computational issues, this method still occupies a prominent place in many factor analysis programs.
+15.4.3 Maximum-Likelihood FA
+The ML method (MLFA) assumes a fully parametric model in which the m sources in (15.66) are distributed as multivariate Gaussian, S ∼ Nm(0,Im), independent of the noise, which is also multivariate Gaussian, e ∼ Nr(0,Ψ), where Ψ is diagonal. In some formulations, Ψ = a2Ir, where a is an unknown constant. These assumptions in turn imply that X is also multivariate Gaussian, X ∼ Nr(0,ΣXX), where ΣXX is given by (15.67).
+15.4 Exploratory Factor Analysis 585
+Given n iid observations, X1, . . . , Xn (with values x1, . . . , xn, respec- tively) on X, we compute the sample covariance matrix Σ􏰡XX as before, which has a Wishart distribution: nΣ􏰡XX ∼ Wr(n,ΣXX). ML estimators of A and Ψ are obtained by maximizing the logarithm of the likelihood function,
+loge L = −n loge |AAτ + Ψ| − ntr{Σ􏰡XX(AAτ + Ψ)−1}, (15.74) 22
+where we have ignored constants and terms that do not involve Λ or Ψ.
+We apply the EM algorithm to maximize loge L with respect to A and Ψ (Rubin and Thayer, 1982). See Table 15.5. The algorithm treats the unobservable source scores {si} as if they were missing data. If the {Si} were actually observed, the complete-data likelihood would be given by the joint distribution of the {Si} and the {ei = Xi − ASi},
+￼￼Lik =
+=
+􏰛n 􏰦 1 τ − 1 (2π)r/2|Ψ|−1/2e− 2 ei Ψ
+1 τ 􏰧 ei (2π)−r/2e− 2 fi si
+(xij−Ajsi)2 ψjj
+￼￼i=1 ⎧ ⎨
+⎩(2π)r
+⎫−n/2 􏰛r ⎬
+ψjj⎭
+× {(2π)r }−n/2 e− 1 􏰊ni=1 sτ si ,
+−1 􏰊n
+e 2 i=1
+􏰊r j=1
+￼￼j=1
+￼where xij is the jth component of xi, Aj is the jth row of A, and ψjj is the jth diagonal element of the diagonal matrix Ψ. Given the observed data {xij} and the current estimated values of the parameters, the conditional expectation of (15.75), taken over the distribution of the missing data is equal to eloge L.
+The logarithm of (15.75) is
+n 􏰏r
+loge(Lik) = − 2
+j=1
+1 􏰏n 􏰏r ( x i j − A j s i ) 2
+1 􏰏n
+− 2 Aτi si.
+i=1
+loge(ψjj ) − 2
+ψ
+2i
+(15.75)
+￼￼￼￼i=1 j=1
+jj
+(15.76) The E-step of the EM algorithm entails finding the conditional expectation of (15.76), given the observed data {xi} and the current values of the parameters A and Ψ. Because the joint distribution of Xi and Si given A and Ψ, is (r + t)-variate Gaussian, the conditional distribution of Si given
+Xi = xi is where
+(Si|xi, A, Ψ) ∼ Nt(δxi, Δ),
+δ = Aτ (AAτ + Ψ)−1
+Δ = It − Aτ (AAτ + Ψ)−1A.
+(15.77)
+(15.78) (15.79)
+586 15. Latent Variable Models for Blind Source Separation
+TABLE 15.5. EM algorithm for maximum-likelihood factor analysis. 1. Let A􏰡 0 and Ψ􏰡 0 be initial guesses for the parameter matrices A􏰡 and Ψ􏰡 ,
+respectively.
+2. For k = 1, 2, . . . , iterate between the following two steps:
+￼• E-Step: Compute
+where
+􏰏n CXX=n−1 xixτi
+CXX =n−1 xixτi, CXS =n−1 i=1
+xisτi, CSS =n−1 sisτi. i=1
+i=1 C(k−1) = CXXδτ
+XS C(k−1) =
+SS
+δk−1 Δk−1
+k−1 δk−1CXX δτ
++ Δk−1
+= =
+A􏰡τk−1(A􏰡k−1A􏰡τk−1 + Ψ􏰡k−1)−1 It −δk−1A􏰡k−1.
+• M-Step: Update the parameter estimates, A􏰡 k ← C(k−1) (C(k−1) )−1
+XS SS
+Ψ􏰡k ← diag{CXX −C(k−1)(C(k−1))−1C(k−1)τ}. XS SS XS
+3. Stop when convergence has been attained.
+To find the expectation of (15.77), we need to find the expectations of the following sufficient statistics,
+k−1
+￼􏰏n 􏰏n 􏰏n
+i=1
+Given the data {Xi = xi} and parameters A and Ψ, the expectations are
+C∗XX = E(CXX|{xi},A,Ψ) C∗XS = E(CXS|{xi},A,Ψ) C∗SS = E(CSS|{xi},A,Ψ)
+= CXX
+= CXXδτ
+= δCXXδτ + Δ.
+(15.80) (15.81) (15.82)
+Equations (15.80) through (15.82) define the E-step based upon the ob- served data {xi} and the current values of the parameter estimates Λ and Ψ.
+The M-step provides the updated versions of the ML estimates by using the regression estimates,
+Λ􏰡 = C∗ C∗−1 (15.83) XS SS
+Ψ􏰡 = diag{C∗ − C∗ C∗−1C∗τ }. (15.84) XX XS SS XS
+15.4 Exploratory Factor Analysis 587
+The current estimates (15.83) and (15.84) are substituted for A and Ψ, respectively, in (15.78) and (15.79) to get updated estimates of δ and Δ, which are then used to recompute C∗XS and C∗SS, and get new values of A􏰡 and Ψ􏰡 . The method is iterated until we arrive at convergence.
+15.4.4 Example: Twenty-four Psychological Tests
+This classic data set in the factor analysis literature consists of 24 psycho- logical tests administered to 301 seventh and eighth grade students (with ages ranging from 11 to 16) in a suburb of Chicago: a group of 156 students (74 boys, 82 girls) from the Pasteur School and a group of 145 students (72 boys, 73 girls) from the Grant-White School (Holzinger and Swineford, 1939).3 The 24 psychological tests are as follows:
+(1) visual perception, (2) cubes, (3) paper form board, (4) flags, (5) general information, (6) paragraph comprehension, (7) sentence completion, (8) word classification, (9) word meaning, (10) addition, (11) code, (12) count- ing dots, (13) straight-curved capitals, (14) word recognition, (15) number recognition, (16) figure recognition, (17) object-number, (18) number-figure, (19) figure-word, (20) deduction, (21) numerical puzzles, (22) problem rea- soning, (23) series completion, (24) arithmetic problems.
+Many of these tests were multiple-choice and all of the tests were timed, ranging from 2 minutes to 24 minutes. Actually, the students from the Grant–White school took 26 tests, where the two additional tests — 25 (paper form board “b”) and 26 (flags “b”) — were attempts to develop better tests than tests 3 and 4. When analyzing only the 145 Grant-White school students, it is common practice (see, e.g., Harman, 1976, pp. 123– 124) to use variables 25 and 26 in place of variables 3 and 4. We note that the means, standard deviations, and correlation matrix of all 24 tests (1, 2, 25, 26, 5–24) obtained in this example are slightly different from those given by Harman.
+The estimated loadings, uniquenesses, and sum-of-squares of the loadings for the 5-factor MLFA solution are given in Table 15.6. We see that the first factor, S1, is a “verbal” factor because it loads heavily on tests 5–9; the second factor, S2, is a “deduction of relations” factor because it loads heavily on tests 1, 2, 25, 26, 20, and 23; the third factor, S3, is a “speed” factor because it loads heavily on tests 10–13; the fourth factor, S4, is a “memory” factor because it loads heavily on tests 14–18; and the fifth factor, S5, is another “speed” factor because it loads heavily on test 13.
+3The raw data can be downloaded from the book’s website. Source: www.psych.yorku.ca/friendly/lab/files/psy6140/data/psych24r.sas. Also available on the website are more detailed descriptions of the 24 tests.
+￼
+588 15. Latent Variable Models for Blind Source Separation
+TABLE 15.6. The Grant–White student data. Estimated loadings for the five-factor MLFA solution with varimax rotation. The ith factor is denoted by Si. The rightmost column lists the uniquenesses for each test, and the last row gives the sum-of-squares of the loadings for each factor. The largest loadings for each factor are printed in boldface.
+￼Test S1
+1 0.165
+2 0.108
+25 0.134
+26 0.230
+5 0.738
+6 0.772
+7 0.798
+8 0.571
+9 0.808
+10 0.181
+11 0.195
+12 0.030
+13 0.186
+14 0.185
+15 0.104
+16 0.070
+17 0.154
+18 0.032
+19 0.156
+20 0.373
+21 0.172
+22 0.364
+23 0.361
+24 0.368
+SS 3.639
+S2 S3 0.655 0.124 0.442 0.087 0.559 –0.048 0.533 0.089
+0.189 0.191 0.187 0.031 0.214 0.143 0.343 0.239 0.203 0.033
+–0.108 0.845 0.066 0.422 0.232 0.694 0.432 0.477 0.061 0.044 0.122 0.059 0.406 0.056 0.072 0.210 0.300 0.322 0.221 0.144
+0.462 0.127 0.398 0.431 0.423 0.114
+0.542 0.249 0.179 0.495 2.958 2.450
+S4 S5 0.181 0.208 0.095 0.003 0.111 0.094 0.081 0.014 0.149 0.056 0.248 0.125 0.088 0.051 0.127 0.044 0.219 –0.007 0.180 0.029 0.436 0.419 0.102 0.131 0.077 0.540
+0.552 0.080 0.509 –0.002 0.509 0.055 0.595 –0.026 0.458 0.006
+0.378 0.046 0.293 –0.193 0.238 0.002 0.320 –0.068 0.231 –0.113 0.321 –0.066 2.386 0.633
+Unique 0.453 0.777 0.646 0.648 0.357 0.291 0.286 0.481 0.257 0.208 0.413 0.436 0.253 0.649 0.712 0.565 0.572 0.596 0.761 0.509 0.569 0.568 0.447 0.480
+￼￼￼For comparison purposes, an MLFA (with varimax rotation) was con- ducted separately on the data collected from the Grant-White students and from the Pasteur students, where we used the first 24 variables com- mon to both sets of students. The results are very similar (with certain exceptions). A scatterplot of the first two factor scores from the rotated MLFA solution for each school is given in Figure 15.7; we see that there is little difference in the structure of the individual plots.
+15.4.5 Critiques of MLFA
+The ML method still has not been universally accepted among factor analysts, and a certain amount of controversy surrounds it. Critics have charged that:
+1. MLFA, which is based upon Gaussian assumptions, has been rou- tinely applied to non-Gaussian or discrete data. Whereas deviations
+￼￼￼￼3
+1
+-1
+-3
+15.4 Exploratory Factor Analysis 589
+￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼-3-2-10123 1stFactorScore
+FIGURE 15.7. MLFA (with varimax rotation) of the 24 psychological tests of Holzinger and Swineford. Superimposed scatterplot of the first two factor scores of the 145 students from the Grant-White school (blue points) and the 156 students from the Pasteur school (red points).
+from normality in social survey data are often short-tailed in nature (due to the discreteness of questions with finite range), we should expect heavy tails to be the more relevant consideration in biometric or geological applications.
+2. There are substantial numerical problems that have long plagued the MLFA method, such as the existence of multiple local maxima of the likelihood function. Factor analysts try to obtain a view of the likelihood surface by comparing the solutions obtained from starting the iterative process at several points.
+3. MLFA enables approximate standard errors to be obtained in a rela- tively simple manner using the second-derivative matrix evaluated at a mode; however, in instances where the likelihood function is mul- timodal, the use of such standard errors can be viewed as being of dubious value (Rubin and Thayer, 1982).
+4. Heywood cases, which occur when the sample correlation matrix is singular and some squared multiple correlations have values greater than unity, appear in too many (over half) of the MLFA applications.
+2ndFactorScore
+590 15. Latent Variable Models for Blind Source Separation
+Furthermore, in these days of high-performance computing, there should be no reason to restrict attention to linear models for FA, especially when subject-matter theory suggests nonlinear relationships between test scores and factors. Indeed, some progress has been made toward formulating non- linear latent variable models and deriving iterative algorithms for nonlinear MLFA (Yalcin and Amemiya, 2001).
+15.4.6 Confirmatory Factor Analysis
+During the past 40 years, EFA has been supplemented by the work of Karl J ̈oreskog and his colleagues, who introduced and developed confir- matory factor analysis (CFA) (J ̈oreskog, 1969). In CFA, the number of common factors is specified, certain elements of the factor loadings matrix are set to zero, and factor variances are specified; then, using Gaussian dis- tribution assumptions, the remaining unknown parameters of the restricted factor model are estimated by maximum likelihood.
+The specified factor structure is more likely to be regarded by a re- searcher as a theory-testing model, and such a restricted model can be evaluated using an appropriate (e.g., chi-squared) goodness-of-fit criterion. If the proposed model is not supported by the data, the model is rejected as a possible representation of the correlation structure of the underlying variables. It is not unusual to find more than one CFA model (i.e., different specifications of zero loadings) that fits the data.
+There are a number of additional models that Jo ̈reskog developed to pro- vide more flexiblity in carrying out a confirmatory analysis of factor struc- tures. Such models include the analysis of covariance structures (J ̈oreskog, 1970) and structural equations modeling (J ̈oreskog, 1977).
+15.5 Independent Factor Analysis
+Although MLFA is a very popular multivariate statistical technique, it cannot solve the BSS problem. For example, Figure 15.8 shows the first four factor scores obtained from an MLFA of the ECG signals recorded from a pregnant woman (see Section 15.2.3). These recovered signals do not separate the mother’s ECG signal from the fetus’s ECG signal, as did ICA.
+This inability of MLFA to solve the BSS problem is due precisely to its use of Gaussian assumptions for the probability distributions of the factors. Gaussian variables that are mutually uncorrelated are also automatically independent, and so MLFA only requires that the sources be uncorrelated. Furthermore, MLFA suffers from a similar ailment as does principal com- ponent FA: the likelihood function is rotationally invariant in factor space,
+￼
+￼15.5 Independent Factor Analysis 591
+0 500 1000 1500 2000 2500
+0 500 1000 1500 2000 2500
+0 500 1000 1500 2000 2500
+0 500 1000 1500 2000 2500
+FIGURE 15.8. The first four sets of factor scores from an EFA of the ECG signals recorded on a pregnant woman. The factor scores do not exhibit any visible separation between the mother’s ECG signal and the ECG signal of the fetus.
+and so the sources S and the mixing matrix A in the BSS problem can only be defined up to an arbitrary rotation.
+Independent factor analysis (IFA) (Attias, 1999) was proposed as an alternative to ICA to deal with the BSS problem and also as an alternative to EFA. IFA essentially adopts the MLFA model but employs arbitrary non-Gaussian densities for the factors. Specifically, the model is still given by
+X = AS + e, e ∼ Nr(0,Ψ), (15.85)
+with Ψ not necessarily diagonal, but now each unobserved source sig- nal Sj is assumed to be independently distributed according to a non- Gaussian density qSj (sj |θj ) characterized by the parameter vector θj , j = 1, 2, . . . , m. In this set-up, the collection of parameters is given by (A, Ψ, θ), where θ = (θ1,···,θm).
+In the IFA model, each source density, qSj (sj |θj ), is modeled paramet- rically by an arbitrary mixture of univariate Gaussian (MoG) densities,
+FactorScores4 FactorScores3 FactorScores2 FactorScores1 -4-202 -4-2024 -4-2024 -4-202
+592 15. Latent Variable Models for Blind Source Separation
+TABLE 15.7. Eight-channel ECG recordings of a pregnant woman: esti- mated loadings for the four independent sources IFA solution, where the ith source is denoted by Si. The rightmost column lists the uniquenesses (i.e., the diagonal entries of Ψ) for each channel.
+￼Channel 1
+2
+3
+4
+5
+6
+7
+8
+S1 0.684 -0.964 0.967 0.112 1.010 0.990 -0.965 -0.810
+Ij 􏰏
+S2 0.447 0.509 -0.150 -0.746 -0.216 -0.032 -0.093 -0.398
+S3 S4 0.384 0.067 0.176 -0.017
+-0.157 0.078 0.099 -0.133 0.054 0.012
+-0.009 -0.118 0.008 -0.111 0.008 -0.090
+Unique 0.101 0.015 0.072 0.445 0.039 0.012 0.011 0.028
+￼￼wijφ(sj|ηij), j = 1,2,...,m,
+whereφ(s|η )isN(μ ,σ2),η =(μ ,σ2),andw >0isthemix-
+qSj (sj|θj) =
+ij ij ij ij ij ij ij
+(15.86)
+i=1
+ing proportion attached to the ith component of the jth source density, i = 1,2,...,Ij, with 􏰊Ij wij = 1, j = 1,2,...,m. Note that θj =
+i=1
+{(wij,μij,σij), i = 1,2,...,Ij}. The MoG density (15.86) can mimic both
+super-Gaussian and sub-Gaussian densities by using a large enough set of component densities. The main disadvantage of working with MoG densi- ties is that the total number of parameters can grow to be very large.
+The model parameters (A,Ψ,θ) are estimated by ML using an appro- priate version of the EM algorithm in Table 15.5. Details may be found in Attias (1999). When the model source densities are Gaussian, IFA reduces to EFA. Reconstructing the sources S can be carried out by least-squares or by Bayesian MAP estimation.
+As an illustration of IFA, consider again the example of the 8-channel ECG signals recorded on a pregnant woman. We specified four independent sources, modeled each source distribution as a mixture of three Gaussians, and then used the EM algorithm to find the IFA solution. The resulting estimates are as follows: an estimate of the mixing matrix A is given in Table 15.7; the estimated distributions of the four independent sources, each a mixture of three Gaussians, with estimated weights, means, and variances, are given by
+S1 ∼ (0.199)N (0.745, 0.360) + (0.755)N (0.032, 0.024) + (0.046)N (−3.774, 3.344),
+S2 ∼ (0.376)N (−0.170, 0.067) + (0.538)N (0.031, 0.009) + (0.086)N (0.544, 10.803),
+￼15.5 Independent Factor Analysis 593
+012345
+012345
+012345
+012345
+FIGURE 15.9. Four sets of IFA scores of the ECG signals recorded on a pregnant woman. The horizontal axis is measured in seconds. The source distributions were each taken as a mixture of three Gaussians. We see traces of the mother’s ECG signal in all four sets of IFA scores, and hints of traces of the fetal ECG signal in the third and fourth IFA scores, but these plots do not exhibit any visible separation between the mother’s ECG signal and the ECG signal of the fetus.
+S3 ∼ (0.302)N (0.294, 0.286) + (0.396)N (−0.106, 0.106) + (0.150)N (0.379, 5.909),
+S4 ∼ (0.361)N (0.294, 0.286) + (0.396)N (0.004, 0.131) + (0.243)N (−0.430, 3.169);
+and an estimate of the diagonal matrix Ψ is given by the rightmost column, labeled “Unique” in Table 15.7. In Figure 15.9, we display time plots of the four sets of IFA scores. All four plots show traces of the mother’s ECG signals, and two of them show hints of the fetus’s ECG signals, but no clear separation is visible between the mother’s and the fetus’s ECG signals as we saw in the ICA solution.
+One of the main difficulties with (ML-via-EM-MoG) IFA is that it is an extremely computationally intensive procedure when there are many sources to be separated; this occurs because the MoG model is quite com-
+−8−404 −402468 −2−1012 −4−201
+594 15. Latent Variable Models for Blind Source Separation
+plex, and EM is a slow algorithm that does not necessarily converge to a global maximum of the log-likelihood. Another important aspect of the IFA procedure that has to be resolved is the determination of the number of Gaussians in the mixture for each component and whether such an MoG formulation appears justified. Furthermore, simple toy examples have indi- cated that IFA does not seem to be appropriate for all BSS situations: in particular, there appears to be identifiability aspects of the method, and it is not yet understood whether an additive noise model such as IFA gains anything over the ICA model with no additive noise component.
+15.6 Software Packages
+ICA can be carried out in S-Plus and R using the fastICA library; fas- tICA is also available in Matlab as an ICA Toolbox. The KernelICA algorithm is implemented as a Matlab program, which can be downloaded from the website cmm.ensmp.fr/~bach/kernel-ica/. KernelICA employs two parameters to be set by the user: the regularization parameter κ and the width of the Gaussian kernel σ. See Section 15.6.3 for recommended values of these parameters.
+Factor analysis programs are standard in almost every major statistical package. The general acceptance of CFA techniques, especially in the socio- metric, psychometric, and even biometric sciences is primarily due to the ready availability of good software (e.g., Lisrel, Amos, EQS, Mplus) to carry out the extensive computations. IFA models can be fitted using the EM algorithm in the R package ifa (written by Cinzia Viroli).
+Bibliographical Notes
+Although the concept of ICA was introduced in 1982 in a neurophysi- ological context, its name was coined by Herault and Jutten (1986). See Jutten (2000) for the early history. Since then, theoretical insights, compu- tational algorithms, and new applications have been developed to enhance and understand the ICA technique. Several books (Stone, 2004; Cichocki and Amari, 2003; Hyva ̈rinen, Karhunen, and Oja, 2001; Lee, 1998) and edited volumes (Roberts and Everson, 2001; Girolami, 2000; Nandi, 1999) have appeared and a huge number of articles have been published on the topic. There is also an international workshop on ICA and related top- ics held annually in different countries. The development given in Section 15.3.9 is based upon Hyva ̈rinen, Karhunen, and Oja (2001, Section 5.6).
+Latent variable models and factor analysis models are discussed in the books by Everitt (1984) and Bartholomew (1987). Factor analysis is covered
+￼￼
+in almost every textbook on multivariate analysis. More specialized books on factor analysis include Harman (1976) and Lawley and Maxwell (1971).
+Exercises
+15.1 Let a and c be constants. If X is a random variable, show that (i) H(X + c) = H(X), (ii) H(aX) = H(X) + log |a|.
+15.2 Let X be a random r-vector and let W be an (r × r)-matrix of constants. Show that H(WX) = H(X) + log |det(W)|.
+15.3 Suppose X is a random r-vector with zero mean and covariance matrix Σ. Show that H(X) ≤ (1/2)[r + log{(2π)r}|det(Σ)|].
+15.4 Suppose X ∼ Nr(0,Σ). Show that the differential entropy of X is given by H(X) = (1/2)[r + log{(2π)r}|det(Σ)|]. This shows that the multivariate Gaussian distribution maximizes differential entropy among all multivariate distributions having the same covariance matrix Σ.
+15.5 Show that the differential entropy of the Cauchy distribution, p(x) = π−1(1 + x2)−1, x ∈ R, is log(4π) ≈ 2.531.
+15.6 Show that the differential entropy of the logistic distribution, p(x) = e−x(1 + e−x)−2, x ∈ R, is 2.
+15.7 Generate n = 500 values for X1(t) = cos(t) and X2(t) = e−t −5e−t/5. Let S1(t) = 0.7X1(t) + 0.4X2(t) and S2(t) = 0.2X1(t) − 0.5X2(t), t = 1, 2, . . . , 500. Using either the FastICA algorithm or by writing a program to perform ICA, carry out an independent component analysis of the resulting data.
+15.8 Define the measure of kurtosis as κ4(X) = E{X4}−3[E{X2}]2. Show that for a Gaussian random variable, κ4 = 0.
+15.9 Let X1 and X2 be two independent random variables. Show that, if κ4(X) denotes the kurtosis of the random variable X, then κ4(X1 +X2) = κ4(X1) + κ4(X2) and, if c is a scalar, κ4(cXj ) = c4κ(Xj ), j = 1, 2.
+15.10 The joint entropy H(X,Y) of two random vectors X and Y is
+􏰟
+􏰟
+defined as H(X, Y) = −
+tropy of Y given X is H(Y|X) = −
+H(X, Y) = H(X) + H(Y|X) = H(Y) + H(X|Y),
+15.11 Use the raw data (tests 1–24) to find the MLFA (and varimax) solution to the 24 psychological tests for the combined 301 students from both schools. Give interpretations of the factors you obtain. Compare the solution with the solutions of each school separately.
+p(x, y) log p(x, y)dxdy, and the conditional en- p(x, y) log p(y|x)dxdy. Show that
+15.6 Exercises 595
+￼
+596 15. Latent Variable Models for Blind Source Separation
+15.12 Using the combined MLFA solution derived in Exercise 13.11, com- pare different factor rotation methods. There are two types of rotation methods: orthogonal and oblique rotations, and they attempt to transform the FA solution to simple structure. Read about the orthogonal quartimax method and compare it with the varimax method by trying it out on these data. Then, read about the oblique rotation methods, oblimin, promax, and quartimin, and try them out on these data. Does it make any difference which rotation method is used?
+15.13 Let X and Y be iid random variables with unit variance. Show that √
+Z=(X+Y)/ 2hasunitvariance.
+15.14 Let X and Y be iid random variables with unit variance. Let H(X)
+denote the entropy of X. Let Z be the normalized version of X + Y as in
+Exercise 15.13. Show that H(Z) = H(X + Y ) − 1 log 2. 2e
+15.15 For X and Y both iid and having unit variance, show that H(X + Y ) > max{H(X ), H(Y )}. Is this relationship still true if X + Y is nor- malized as in Exercise 15.13? Generalize your results to the sum of n iid random variables, each having unit variances.
+￼￼

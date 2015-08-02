@@ -1,0 +1,1716 @@
+References
+[1] Abbott, A. and Hrycak, A. (1990). Measuring sequence resemblance, American Journal of Sociology, 96, 144–185.
+[2] Aizerman, M., Braverman, E., and Rozoener, L. (1964). Theoretical foundations of the potential function method in pattern recognition learning, Automation and Remote Control, 25, 821–837.
+[3] Aldrin, M. (1996). Moderate projection pursuit regression for multi- variate response data, Computational Statistics & Data Analysis, 21, 501–531.
+[4] Alimoglu, F. (1995). Combining multiple classifiers for pen-based handwritten digit recognition, M.Sc. thesis, Institute of Graduate Studies in Science and Engineering, Bogazici University, Istanbul, Turkey.
+[5] Alon, U., Barkai, N., Notterman, D., Gish, K., Ybarra, S., Mack, D., and Levine, A. (1999). Broad patterns of gene expression revealed by clustering analysis of tumor and normal colon tissues probed by oligonucleotide arrays, Proceedings of the National Academy of Sci- ences, 96, 6745–6750.
+[6] Altschul, S.F., Gish, W., Miller, W., Myers, E.W., and Lipman, D.J. (1990). Basic local alignment search tool, Journal of Molecu- lar Biology, 215, 403–410.
+A.J. Izenman, Modern Multivariate Statistical Techniques, Springer Texts in Statistics, 667 DOI 10.1007/978-0-387-78189-1, © Springer Science+Business Media New York 2013
+668 References
+[7] Akaike, H. (1973). Information theory and an extension of the maxi- mum likelihood principle, In 2nd International Symposium on Infor- mation Theory (B.N. Petrov and F. Csaki, eds.), Budapest: Akademia Kiado, pp. 267–281.
+[8] Akaike, H. (1978). A Bayesian analysis of the minimum AIC proce- dure, Annals of the Institute of Statistical Mathematics, Series A, 30, 9–14.
+[9] Amit,Y. and Geman, D. (1996). Shape quantization and recognition with randomized trees. Neural Computation, 9, 1545–1588.
+[10] Anderson, J.A. (1982). Logistic discrimination, In: Handbook of Statistics, Volume 2 (P.R. Krishnaiah and L.N. Kanal, eds.), pp. 169– 191, Amsterdam: North-Holland.
+[11] Anderson, R.L. and Bancroft, T.A. (1952). Statistical Theory in Re- search, New York: McGraw-Hill.
+[12] Anderson, T.W. (1951). Estimating linear restrictions on regression coefficients for multivariate normal distributions, Annals of Mathe- matical Statistics 22: 327–351.
+[13] Anderson, T.W. (1984a). Estimating linear statistical relationships, The 1982 Wald Memorial Lectures, The Annals of Statistics, 12, 1– 45.
+[14] Anderson, T.W. (1984b). An Introduction to Multivariate Statistical Analysis, Second Edition, New York: Wiley.
+[15] Anderson, T.W. (1999). Asymptotic distribution of the reduced rank regression estimator under general conditions, The Annals of Statis- tics, 27, 1141–1154.
+[16] Andrews,D.F.andHerzberg,A.M.(1985).Data,NewYork:Springer.
+[17] Ashton, K.H., Oxnard, C.E., and Spence, T.F. (1965). Scapular shape and primate classification, Proceeding of the Zoological Society, Lon- don, 145, 125–142.
+[18] Asimov, D. (1985). The grand tour: a tool for viewing multidimen- sional data, SIAM Journal on Scientific and Statistical Computing, 6, 128–143.
+[19] Attias, H. (1999). Independent factor analysis, Neural Computation, 11, 803–852.
+[20] Bach, F.R. and Jordan, M.I. (2002). Kernel independent component analysis, Journal of Machine Learning Research, 3, 1–48.
+[21] Baker, H.V. (2003). Comment on “Statistical Challenges in Func- tional Genomics” by Sebastiani, Gussoni, Kohane, and Ramoni, Sta- tistical Science, 18, 60–64.
+[22] Baker, S.G. (2001), Analyzing a randomized cancer prevention trial with a missing binary outcome, an auxiliary variable, and all-or-none compliance. Journal of the American Statistical Association, 95, 43– 50.
+[23] Banfield, J.D. and Raftery, A.E. (1992). Ice floe identification in satellite images using mathematical morphology and clustering about principal curves, Journal of the American Statistical Association, 87, 7–16.
+[24] Barber, D. and Bishop, C.M. (1998). Ensemble learning in Bayesian neural networks, In Neural Networks and Machine Learning (C.M. Bishop, ed.), Berlin, Germany: Springer.
+[25] Barnett, V. and Lewis, T. (1994). Outliers in Statistical Data, Third Edition, New York: Wiley.
+[26] Bartholomew, D.J. (1987). Latent Variable Models and Factor Anal- ysis, London: Charles Griffin & Co. Ltd.
+[27] Basalaj, W. and Eilbeck, K. (2003). Straight-line drawings of protein interactions, In Lecture Notes in Computer Science, 1731, New York: Springer.
+[28] Belhumeur, P.N., Hespanha, J.P., and Kriegman, D.J. (1997). Eigen- faces vs. Fisherfaces: recognition using class specific linear projection, IEEE Transactions on Pattern Analysis and Machine Intelligence, 19, 711–720.
+[29] Bellman, R.E. (1961). Adaptive Control Processes, Princeton, NJ: Princeton University Press.
+[30] Bellman, R. (1970). Introduction to Matrix Analysis, Second Edition, New York: McGraw-Hill.
+[31] Belkin, M. and Niyogi, P. (2002). Laplacian eigenmaps and spectral techniques for embedding and clustering, In Advances in Neural In- formation Processing Systems 14 (T.G. Dietterich, S. Becker, and Z. Ghahramani, eds.), pp. 585–591, Cambridge, MA: MIT Press.
+[32] Belsley, D.A., Kuh, E., and Welsch, R.E. (1980). Regression Diag- nostics: Identifying Influential Data and Sources of Collinearity, New York: Wiley.
+References 669
+670 References
+[33] Berger, J.O. (1985). Statistical Decision Theory and Bayesian Anal- ysis, Second Edition. New York: Springer.
+[34] Berger, M. (2003). A Panoramic View of Riemannian Geometry, New York: Springer.
+[35] Bernardo, J.M. and Smith, A.F.M. (1994). Bayesian Theory, New York: Wiley.
+[36] Bernstein, M., de Silva, V., Langford, J.C., and Tenenbaum, J.B. (2000). Graph approximations to geodesics on embedded mani- folds. Unpublished Technical Report, Stanford University.
+[37] Besag, J., Green, P., Higdon, D., and Mengersen, K. (1995). Bayesian computation and stochastic systems (with discussion), Statistical Sci- ence, 10, 3–66.
+[38] Bickel, P.J. and Ritov, Y. (2004). The golden chain, a discussion of three articles on boosting, Annals of Statistics, 32, 91–96.
+[39] Bishop, C.M. (1995). Neural Networks for Pattern Recognition, Ox- ford, U.K.: Clarendon Press.
+[40] Bishop, C.M. (2006). Pattern Recognition and Machine Learning, New York: Springer.
+[41] Blasius, J. and Greenacre, M. (1998). Visualization of Categorical Data, New York: Academic Press.
+[42] Bolton,R.J.andKrzanowski,W.J.(1999).Acharacterizationofprin- cipal components for projection pursuit, The American Statistician, 53, 108–109.
+[43] Borg, I. and Groenen, P. (1997). Modern Multidimensional Scaling: Theory and Applications, New York: Springer.
+[44] Boser, B.E., Guyon, I.M., and Vapnik, V.N. (1992). A training al- gorithm for optimal margin classifiers, In Proceedings of the Fifth Conference on Computational Learning Theory (ed., D. Haussler), pp. 144–152, New York: Association of Computing Machinery Press.
+[45] Box, G.E.P. and Behnken, D. (1960). Some new three level designs for the study of quantitative variables, Technometrics, 2, 455–475.
+[46] Boyd, S. and Vandenberghe, L. (2004). Convex Optimization, Cam- bridge, U.K.: Cambridge University Press.
+[47] Brand, M. (2003). Charting a manifold, In: Advances in Neural In- formation Processing Systems, 15, 961–968, Cambridge, MA: MIT Press.
+[48] Breiman, L. (1992). The little bootstrap and other methods for di- mensionality selection in regression: X-fixed prediction error, Journal of the American Statistical Association, 87, 738–754.
+[49] Breiman, L. (1994). The 1991 census adjustment: Undercount or bad data, Statistical Science, 9, 458–475.
+[50] Breiman, L. (1995). Better subset regression using the nonnegative garotte, Technometrics, 37, 373–384.
+[51] Breiman, L. (1996a). Heuristics of instability and stabilization in model selection, The Annals of Statistics, 24, 2350–2383.
+[52] Breiman, L. (1996b). Bagging predictors, Machine Learning, 26, 123– 140.
+[53] Breiman, L. (1996c). Out-of-bag estimation, Technical Report, De- partment of Statistics, University of California, Berkeley.
+[54] Breiman, L. (1999). Prediction games and arcing algorithms, Neural Computation, 11, 1493–1517.
+[55] Breiman, L. (2000). Discussion of Friedman, Hastie, and Tibshirani (2000), Annals of Statistics, 26, 374–377.
+[56] Breiman, L. (2001a). Statistical modeling: The two cultures (with discussion), Statistical Science, 16, 199–231.
+[57] Breiman, L. (2001b). Random forests, Machine Learning, 45, 5–32.
+[58] Breiman, L. (2002). Machine learning. 2002 Wald Memorial Lectures.
+[59] Breiman,L.(2004).Populationtheoryforboostingensembles,Annals of Statistics, 32, 1–11.
+[60] Breiman, L. and Cutler, A. (2004). Random Forests, Short course given at the 36th Symposium of the Interface, Baltimore, MD, March 25, 2004.
+[61] Breiman, L. and Friedman, J.H. (1997). Predicting multivariate re- sponses in multiple linear regression (with discussion), Journal of the Royal Statistical Society, Series B, 59, 3–54.
+[62] Breiman, L., Friedman, J., Olshen, R., and Stone, C. (1984). Classi- fication and Regression Trees. Boca Raton, FL: Wadsworth.
+[63] Breiman, L. and Spector, P. (1992). Submodel selection and evalua- tion in regression: the X-random case, International Statistical Re- view, 60, 291–319.
+References 671
+672 References
+[64] Brillinger, D.R. (1969). The canonical analysis of stationary time series, In Multivariate Analysis II (P.R. Krishnaiah, ed.), pp. 331– 350. New York: Academic Press.
+[65] Brin, S. and Page, L. (1998). The anatomy of a large-scale hypertex- tual Web search engine, In Proceedings of the Seventh International World-Wide Web Conference, Brisbane, Australia, pp. 107–117.
+[66] Brown, L.D. (1971). Admissible estimators, recurrent diffusions, and insoluble boundary-value problems, Annals of Mathematical Statis- tics, 42, 855–903.
+[67] Brown, P.J. (1993). Measurement, Regression, and Calibration. Ox- ford: Clarendon Press.
+[68] Brown,P.J.,Firth,D.,andPayne,C.D.(1999).ForecastingonBritish election night 1997, Journal of the Royal Statistical Society, Series A, 162, 211–226.
+[69] Brown, P.J. and Zidek, J.V. (1980). Adaptive multivariate ridge re- gression, The Annals of Statistics, 8, 64–74.
+[70] Brown, P.J. and Zidek, J.V. (1982). Multivariate regression shrinkage with unknown covariance matrix, Scandanavian Journal of Statistics, 9, 209–215.
+[71] Bryan, J. (2004). Problems in gene clustering based on gene expres- sion data, Journal of Multivariate Analysis, 90, 44–66.
+[72] Buhlmann, P. and Yu, B. (2003). Boosting with the L2 loss: regression and classification, Journal of the American Statistical Association, 98, 324–339.
+[73] Buja, A. and Swayne, D.F. (2002). Visualization methodology for multidimensional scaling, Journal of Classification, 19, 7–43.
+[74] Buja, A., Swayne, D.F., Littman, M.L., Dean, N., Hofmann, H., and Chen, L. (2008). Data visualization with multidimensional scaling, Journal of Computational and Graphical Statistics, 17, 444–472.
+[75] Buntine, W.L. and Weigend, A.S. (1991). Bayesian back-propagation, Complex Systems, 5, 603–643.
+[76] Burges, C.J.C. (1998). A tutorial on support vector machines for pattern recognition, Data Mining and Knowledge Discovery, 2, 121– 167.
+[77] Burt, C. (1950). The factorial analysis of qualitative data, British Journal of Psychology, Statistics Section 3, 166-185.
+[78] Buta, R. (1987). The structure and dynamics of ringed galaxies III: surface photometry and kinematics of the ringed nonbarred spiral NGC7531, The Astrophysical Journal, 64, 1–37.
+[79] Butler, N.A. and Denham, M.C. (2000). The peculiar shrinkage prop- erties of partial least squares regression, Journal of the Royal Statis- tical Society, Series B, 62, 585–593.
+[80] Cacoullos, T. (1966). Estimation of a multivariate density, Annals of the Institute of Statistical Mathematics, 18, 179–189.
+[81] Calvin, W.H. and Ojemann, G.A. (1994). Conversations with Neil’s Brain: The Neural Nature of Thought and Language, Reading, MA: Addison-Wesley.
+[82] Candes, E. and Tao, T. (2007). The Dantzig selector: statistical esti- mation when p is much larger than n (with discussion), The Annals of Statistics, 35, 2313–2404.
+[83] Cardoso, J.-F. (1998). Blind signal separation: statistical principles, Proceedings of the IEEE, 86, 2009–2025.
+[84] Carlin, B.P. and Louis, T.A. (2000). Bayes and Empirical Bayes Methods for Data Analysis, Second Edition, New York: Chapman & Hall/CRC.
+[85] Cartan, E. (1946). Le ̧cons sur la geo ́metrie des espaces de Riemann, 2e  ́edition, revue et augment ́ee, Paris: Gauthier-Villars. (This was re- printed in 1988 by E ́ ditions Jacques Gabay, Sceaux. An English trans- lation by J. Glazebrook is Geometry of Riemannian Spaces, Brook- line, MA: Math Sci Press, 1983.)
+[86] Casella, G. and Berger, R.L. (1990). Statistical Inference, Belmont, CA: Wadsworth & Brooks/Cole.
+[87] Cattell, R.B. (1966). The scree test for the number of factors, Multi- variate Behavioral Research, 1, 245–276.
+[88] Chang, W.C. (1983). On using principal components before sepa- rating a mixture of two multivariate normal distributions, Applied Statistics, 32, 267–275.
+[89] Charnomordic, B. and Holmes, S. (2001). Correspondence analysis with R, Statistical Computing & Statistical Graphics Newsletter, 12, 19–25.
+[90] Chen, C., Liaw, A., and Breiman, L. (2004). Using random forest to learn imbalanced data, unpublished technical report.
+References 673
+674 References
+[91] Cheng, B. and Titterington, D.M. (1994). Neural networks: a review from a statistical perspective (with discussion), Statistical Science, 9, 2–54.
+[92] Cheng, Y. and Church, G.M. (2000). Biclustering of expression data, In Proceedings of the Eighth International Conference on Intelligent Systems for Molecular Biology, pp. 93–103.
+[93] Chernick, M.R. (1999). Bootstrap Methods: A Practioner’s Guide, New York: Wiley.
+[94] Cherry, E.C. (1953). Some experiments in the recognition of speech, with one and two ears, Journal of the Acoustical Society of America, 25, 975–979.
+[95] Chipman, H., Hastie, T.J., and Tibshirani, R. (2003). Clustering mi- croarray data, In Statistical Analysis of Gene Expression Microarray Data (T. Speed, ed.), pp. 159–200, New York: Chapman & Hall/CRC.
+[96] Chipman, J.S. (1964). On least squares with insufficient observations, Journal of the American Statistical Association, 59, 1078–1111.
+[97] Cichocki, A. and Amari, S. (2003). Adaptive Blind Signal and Image Processing. New York: Wiley.
+[98] Clark, L.A. and Pregibon, D. (1992). Tree-based models, In Statistical Models in S (J.M. Chambers and T.J. Hastie, eds.), pp. 377–420, Boca Raton, FL: Wadsworth.
+[99] Cleveland, W.S. and Sun, D.X. (2000). Internet traffic data, Journal of the American Statistical Association, 95, 979–985.
+[100] Codd, E.F. (1970). A relational model of data for large shared data banks, Communications of the ACM, 13. Reprinted in Milestones of Research – Selected Papers 1958–1982, Communications of the CACM, 26 (1983).
+[101] Connolly, T.M. and Begg, C.E. (2002). Database Systems, Third Edi- tion, New York: Addison Wesley.
+[102] Constantine, A.G. (1963). Some noncentral distribution problems in multivariate analysis, The Annals of Mathematical Statistics, 34, 1270–1285.
+[103] Constantine, A.G. and Gower, J.C. (1978). Graphical representation of asymmetric matrices, Applied Statistics, 27, 297–304.
+[104] Cook, D., Buja, A., and Cabrera, J. (1993). Projection pursuit in- dexes based on orthogonal function expansions, Journal of Compu- tational and Graphical Statistics, 2, 225–250.
+[105] Cook, D., Buja, A., Cabrera, J., and Hurley, H. (1995). Grand tour and projection pursuit, Journal of Computational and Graphical Statistics, 2, 225–250.
+[106] Cortes, C. and Vapnik, V.N. (1995). Support vector networks, Ma- chine Learning, 20, 273–297.
+[107] Cover, T. and Thomas, J. (1991). Elements of Information Theory, Volume 1. New York: Wiley.
+[108] Cowles, M.K. and Carlin, B.P. (1996). Markov chain Monte Carlo convergence diagnostics: a comparative review, Journal of the Amer- ican Statistical Association, 91, 883–904.
+[109] Cox, T.F. and Cox, M.A.A. (2001). Multidimensional Scaling, Second Edition, London: Chapman and Hall.
+[110] Cram ́er, H. (1946). Mathematical Methods of Statistics, Princeton, NJ: Princeton University Press.
+[111] Craven, P. and Wahba, G. (1979). Smoothing noisy data with spline functions: estimating the correct degree of smoothing by the method of generalized cross-validation, Numerische Mathematik, 31, 377–403.
+[112] Crippen, G.M. and Havel, T.F. (1988). Distance Geometry and Molecular Conformation, New York: Wiley.
+[113] Cristianini, N. and Shawe-Taylor, J. (2000). Support Vector Ma- chines, And Other Kernel-Based Learning Methods, Cambridge, U.K.: Cambridge University Press.
+[114] Culp, M., Johnson, K., and Michailidis, G. (2006). ada: an R package for stochastic boosting, Journal of Statistical Software, 17, 2.
+[115] Cybenko, G. (1989). Approximation by superpositions of a sigmoidal function, Mathematical Control Signal & Systems, 2, 303–314.
+[116] Date, C.J. (2000). An Introduction to Database Systems, Seventh Edi- tion, Reading, MA: Addison Wesley.
+[117] Davis, R. and Anderson, J. (1989). Exponential survival trees, Statis- tics in Medicine, 8, 947–962.
+[118] Davis, J.B. and McKean, J.W. (1993). Rank-based methods for mul- tivariate linear models, Journal of the American Statistical Associa- tion, 88, 245–251.
+[119] DeCoste, D. (2001). Visualizing Mercer kernel feature spaces via ker- nelized locally linear embeddings, In Proceedings of the Eighth In- ternational Conference on Neural Information Processing, Shanghai, China.
+References 675
+676 References
+[120] de Duve, C. (1984). A Guided Tour of the Living Cell, Volumes 1 and 2, New York: Scientific American Library.
+[121] de Jong, S. (1993). SIMPLS: an alternative approach to partial least squares regression, Chemometrics and Intelligent Laboratory Sys- tems, 18, 251–263.
+[122] de Jong, S. (1995). PLS shrinks, Journal of Chemometrics, 9, 323– 326.
+[123] de Lathauwer, L., de Moor, B., Vandewalle, J. (2000). Fetal elec- trocardiogram extraction by blind source subspace separation, IEEE Transactions on Biomedical Engineering, 47, 567–573. Proceedings of the IEEE SP/Athos Workshop on Higher-Order Statistics, Girona, Spain, pp. 134–138.
+[124] Delicado, P. (2001). Another look at principal curves and surfaces, Journal of Multivariate Analysis, 77, 84–116.
+[125] Dempster, A.P., Laird, N.M., and Rubin, D.B. (1977). Maximum like- lihood from incomplete data via the EM algorithm (with discussion), Journal of the Royal Statistical Society, B, 39, 1–38.
+[126] de Montricher, G.M., Tapia, R.A., and Thompson, J.R. (1975). Non- parametric maximum likelihood estimation of probability densities by penalty function methods, The Annals of Statistics, 3, 1329–1348.
+[127] Deonier, R.C., Tavar ́e, S., and Waterman, M.S. (2005). Computa- tional Genome Analysis, New York: Springer.
+[128] de Silva, V. and Tenenbaum, J.B. (2003). Unsupervised learning of curved manifolds, In Nonlinear Estimation and Classification (D.D Denison, M.H. Hansen, C.C. Holmes, B. Mallick, B. Yu, eds.), Lecture Notes in Statistics, 171, pp. 453–466, New York: Springer.
+[129] Devroye, L. (1983). The equivalence of weak, strong, and complete convergence in L1 for kernel density estimates, The Annals of Statis- tics, 11, 896–904.
+[130] Devroye, L. and Gyorfi, L. (1985). Nonparametric Density Estima- tion: The L1 View, New York: Wiley.
+[131] Devroye, L. and Penrod, C.S. (1984). The consistency of automatic kernel density estimates, The Annals of Statistics, 12, 1231–1249.
+[132] Diaconis, P. and Efron, B. (1985). Testing for independence in a two- way table: new interpretations of the chi-square statistics (with dis- cussion), The Annals of Statistics, 13, 845–913.
+[133] Diaconis, P. and Freedman, D. (1984). Asymptotics of graphical pro- jection pursuit, Annals of Statistics, 12, 793–815.
+[134] Diaconis, P. and Shahshahani, M. (1984). On nonlinear functions of linear combinations, SIAM Journal of Scientific and Statistical Computing, 5, 175–191.
+[135] Di Battista, G., Eades, P., Tamassia, R., and Tollis, I. (1994). Al- gorithms for drawing graphs: An annotated bibliography, Computa- tional Geometry, 4, 235–282.
+[136] Dietterich, T.G. (2000). An experimental comparison of three meth- ods for constructing ensembles of decision trees: bagging, boosting, and randomization, Machine Learning, 40, 139–158.
+[137] Dijkstra, E.W. (1959). A note on two problems in connection with graphs, Numerische Mathematik, 1, 269–271.
+[138] Do, K.-A,, Broom, B., and Wen, S. (2003). GeneClust, In The Analysis of Gene Expression Data: Methods and Software (G. Parmi- giani, E.S. Garrett, R.A. Irizarry, and S.L. Zeger, eds.), Chapter 15, pp. 342–361, New York: Springer.
+[139] Donnell, D.J., Buja, A., and Stuetzle, W. (1994). Analysis of additive dependencies and concurvities using smallest additive principal com- ponents (with discussion), The Annals of Statistics, 22, 1635–1673.
+[140] Donoho, D. (1981). On minimum entropy deconvolution, In Applied Time Series Analysis II, D.A. Finley (ed.), New York: Academic Press, pp. 565–608.
+[141] Donoho, D. and Grimes, C. (2003). Hessian eigenmaps: locally linear embedding techniques for high-dimensional data, Proceedings of the National Academy of Sciences, 100, 5591–5596.
+[142] Draper, N. and Smith, H. (1981). Applied Regression Analysis, Second Edition. New York: Wiley.
+[143] Dra ̆ghici, S. (2003). Data Analysis Tools for DNA Microarrays, Boca Raton, FL: Chapman & Hall/CRC.
+[144] Duane, S., Kennedy, A.D., Pendleton, B.J., and Roweth, D. (1987). Hybrid Monte Carlo, Physics Letters B, 195, 216–222.
+[145] Duchamp, T. and Stuetzle, W. (1996). Extremal properties of prin- cipal curves in the plane, The Annals of Statistics, 24, 1511–1520.
+[146] Duda, R.O., Hart, P.E., and Stork, D.G. (2001). Pattern Classifica- tion, Second Edition, New York: Wiley.
+References 677
+678 References
+[147] Dudoit, S., Fridlyand, J., and Speed, T.P. (2002). Comparison of discrimination methods for the classification of tumors using gene expression data, Journal of the American Statistical Association, 97, 77–87.
+[148] Durbin, R., Eddy, S., Krogh, A., and Mitchison, G. (1998). Biologi- cal Sequence Analysis: Probabilistic Models of Proteins and Nucleic Acids, Cambridge, U.K.: Cambridge University Press.
+[149] Eckart, C. and Young, G. (1936). Approximation of one matrix by another of lower rank, Psychometrika, 1, 211–218.
+[150] Efron, B. (1979). Bootstrap methods: another look at the jackknife, Annals of Statistics, 7, 1–26.
+[151] Efron, B. (1982). The Jackknife, the Bootstrap, and Other Resampling Plans. Philadelphia: Society for Industrial and Applied Mathematics.
+[152] Efron, B. (1983). Estimating the error rate of a prediction rule: some improvements on cross-validation, Journal of the American Statistical Association, 78, 316–331.
+[153] Efron, B. (1986). How biased is the apparent error rate of a prediction rule? Journal of the American Statistical Association, 81, 461–470.
+[154] Efron, B. and Morris, C. (1973). Stein’s empirical rule and its com- petitors — an empirical Bayes approach, Journal of the American Statistical Association, 68, 117–130.
+[155] Efron, B. and Morris, C. (1975). Data analysis using Stein’s estimator and its generalizations, Journal of the American Statistical Associa- tion, 70, 311–319.
+[156] Efron, B. and Morris, C. (1977). Stein’s paradox in statistics, Scien- tific American, 236(5), 119–127.
+[157] Efron, B. and Tibshirani, R.J. (1993). An Introduction to the Boot- strap. London: Chapman and Hall.
+[158] Efron, B. Tibshirani, R. (1997). Improvements on cross-validation: The .632+ bootstrap method, Journal of the American Statistical Association, 92, 548–560.
+[159] Efron, B., Hastie, T., Johnstone, I., and Tibshirani, R. (2004). Least angle regression (with discussion), The Annals of Statistics, 32, 407– 499.
+[160] Ekman, G. (1954). Dimensions of color vision, Journal of Psychology, 38, 467–474.
+[161] Epanechnikov, V.K. (1969). Nonparametric estimation of a multivari- ate probability density, Theory of Probability and its Applications, 14, 153–158.
+[162] Everitt, B.S. (1984). An Introduction to Latent Variable Models, Lon- don, U.K.: Chapman and Hall.
+[163] Everitt, B.S. and Hand, D.J. (1981). Finite Mixture Distributions. London: Chapman and Hall.
+[164] Fairley, W.B., Izenman, A.J., and Crunk, S.M. (2001). Combining incomplete information from independent assessment surveys for es- timating masonry deterioration, Journal of the American Statistical Association, 96, 488–499.
+[165] Farid, H. (2001). Detecting steganographic messages in digital im- ages, Department of Computer Science, Technical Report 412, Dart- mouth College, Hanover, NH.
+[166] Fayyad, U.M., Piatetsky-Shapiro, G., Smyth, P., and Uthurusamy, R. (1996). Advances in Knowledge Discovery and Data Mining, Menlo Park, CA: AAAI Press/MIT Press.
+[167] Findley, D.F. and Parzen, E. (1995). A conversation with Hirotugu Akaike, Statistical Science, 10, 104–117.
+[168] Fine, T.L. (1999). Feedforward Neural Network Methodology, New York: Springer.
+[169] Fisher, R.A. (1915). Frequency distribution of the values of the cor- relation coefficient in samples from an indefinitely large population, Biometrika, 10, 507–521.
+[170] Fisher, R.A. (1922). On the mathematical foundations of theoretical statistics, Philosophical Transactions, A, 222, 309–368.
+[171] Fisher, R.A. (1936). The use of multiple measurements in taxonomic problems, Annals of Eugenics, 7, 179–188.
+[172] Fisher, R.A. (1940). The precision of discriminant functions, Annals of Eugenics, 10, 422–429.
+[173] Fisherkeller, M.A., Friedman, J.H., and Tukey, J.W. (1974). PRIM– 9, an interactive multidimensional data display and analysis system, In: Proceedings of the Pacific ACM Regional Conference. [Also in the Collected Works of John W. Tukey, V (1988), 307–327].
+[174] Floyd, R.W. (1962). Algorithm 97, Communications of the ACM, 5, 345.
+References 679
+680 References
+[175] Fraley, C. and Raftery, A.E. (1998). Mclust: Software for model- based cluster analysis, Technical Report No. 342, Department of Statistics, University of Washington.
+[176] Fraley, C. and Raftery, A.E. (2002). Model-based clustering, discrim- inant analysis, and density estimation, Journal of the American Sta- tistical Association, 97, 611–631.
+[177] Frank, I.E. and Friedman, J.H. (1993). A statistical view of some chemometrics regression tools (with discussion), Technometrics, 35, 109–148.
+[178] Freedman,D.A.(1981).Bootstrappingregressionmodels,TheAnnals of Statistics, 9, 1218–1228.
+[179] Freund, Y. (1995). Boosting a weak learning algorithm by majority, Information and Computation, 121, 256–285.
+[180] Freund, Y. and Schapire, R.E. (1997). A decision-theoretic general- ization of on-line learning and an application to boosting, Journal of Computer and Systems Sciences, 55, 119–139.
+[181] Freund, Y. and Schapire, R.E. (1998). Discussion of Breiman, 1998, Annals of Statistics, 26, 824–832.
+[182] Friedman, J.H. (1984). SMART User’s Guide, Technical Report LCM001, Department of Statistics, Stanford University.
+[183] Friedman, J. (1987). Exploratory projection pursuit, Journal of the American Statistical Association, 82, 249–266.
+[184] Friedman, J.H. (1989). Regularized discriminant analysis, Journal of the American Statistical Association, 84, 165–175.
+[185] Friedman, J.H. (1991). Multivariate adaptive regression splines (with discussion), The Annals of Statistics, 19, 1–141.
+[186] Friedman, J.H. (2001). Greedy function approximation: A gradient boosting machine, The Annals of Statistics, 29, 1189–1232.
+[187] Friedman, J.H. and Stuetzle, W. (1981). Projection pursuit regres- sion, Journal of the American Statistical Association, 76, 817–823.
+[188] Friedman, J.H. and Stuetzle, W. (1982). Projection pursuit meth- ods for data analysis, In Modern Data Analysis (R.L. Launer and A.F. Siegel, eds.), pp. 123–147, New York: Academic Press.
+[189] Friedman, J.H. and Stuetzle, W. (2002). John Tukey’s work on inter- active graphics, The Annals of Statistics, 30, 1629–1639.
+[190] Friedman, J. and Tukey, J. (1974). A projection pursuit algorithm for exploratory data analysis, IEEE Transactions on Computers, Series C, 23, 881–889.
+[191] Friedman, J., Hastie, T., and Tibshirani, R. (2000). Additive logis- tic regression: a statistical view of boosting (with discussion), The Annals of Statistics, 28, 337–407.
+[192] Friedman, J.H., Stuetzle, W., and Schroeder, A. (1984). Projection pursuit density estimation, Journal of the American Statistical Asso- ciation, 79, 599–608.
+[193] Funahashi, K. (1989). On the approximate realization of continuous mappings by neural networks, Neural Networks, 2, 183–192.
+[194] Furnival, G. and Wilson, R. (1974). Regression by leaps and bounds, Technometrics, 16, 499–511. Reprinted in Technometrics, 42 (2000), 69–79.
+[195] Geisser, S. (1974). A predictive approach to the random effects model, Biometrika, 61, 101–107.
+[196] Geisser, S. (1975). The predictive sample reuse method with applica- tions, Journal of the American Statistical Association, 70, 320–328.
+[197] Gelfand, A.E. and Smith, A.F.M. (1990). Sampling-based approaches to calculating marginal densities, Journal of the American Statistical Association, 85, 398–409.
+[198] Gelman, A., Carlin, J.B., Stern, H.S., and Rubin, D.B. (1995). Bayesian Data Analysis, London: Chapman & Hall.
+[199] Geman, S. and Geman, D. (1984). Stochastic relaxation, Gibbs distri- butions, and the Bayesian restoration of images, IEEE Transactions on Pattern Analysis and Machine Intelligence, 6, 721–741.
+[200] Gilks, W.R., Richardson, S., and Spiegelhalter, D.J. (1996). Markov Chain Monte Carlo in Practice, New York: Chapman & Hall.
+[201] Girolami, M. (ed.) (2000). Advances in Independent Component Anal- ysis. New York: Springer-Verlag.
+[202] Glunt, W., Hayden, T.L., and Raydan, M. (1993). Molecular con- formations from distance matrices, Journal of Computational Chem- istry, 14, 114–120.
+[203] Gnanadesikan, R. (1977). Methods for Statistical Data Analysis of Multivariate Observations, New York: Wiley.
+References 681
+682 References
+[204] Gnanadesikan, R. and Kettenring, J.R. (1972). Robust estimates, residuals, and outlier detection with multiresponse data, Biometrics, 28, 81–124.
+[205] Gnanadesikan, R. and Wilk, M.B. (1969). Data analytic methods in multivariate statistical analysis, In Multivariate Analysis II (P.R. Kr- ishnaiah, ed.), New York: Academic Press.
+[206] Goldstein, M. and Smith, A.F.M. (1974). Ridge-type estimators for regression analysis, Journal of the Royal Statistical Society, Series B, 36, 284–319.
+[207] Golub, T.R., Slonim, D.K., Tamayo, P., Huard, M., Gaasenbeek, J.P,, Mesirov, J.P., Coller, H., Loh, M.L., Downing, J.R., Caligiuri, M.A., Bloomfield, C.D., and Lander, E.S. (1999). Molecular classification of cancer: class discovery and class prediction by gene expression monitoring, Science, 286, 531–537.
+[208] Good,I.J.andGaskins,R.A.(1971).Nonparametricroughnesspenal- ties for probability densities, Biometrika, 58, 255–277.
+[209] Good, I.J. and Gaskins, R.A. (1980). Density estimation and bump- hunting by the penalized likelihood method exemplified by scattering and meteorite data (with discussion), Journal of the American Sta- tistical Association, 75, 42–73.
+[210] Gordon, L. and Olshen, R.A, (1985). Tree-structured survival analy- sis, Cancer Treatment Reports, 69, 1065–1069.
+[211] Goutis, C. (1996). Partial least squares algorithm yields shrinkage estimators, The Annals of Statistics, 24, 816–824.
+[212] Gower,J.C.(1966).Somedistancepropertiesoflatentrootandvector methods used in multivariate analysis, Biometrika, 53, 325–338.
+[213] Gower, J.C. (1977). The analysis of asymmetry and orthogonality, In Recent Developments in Statistics (J. Barra et al, eds.), Amsterdam: North-Holland.
+[214] Gower, J.C. and Digby, P.G.N. (1981). Expressing complex relation- ships in two dimensions, In Interpreting Multivariate Data (V. Bar- nett, ed.), 83–118. New York: Wiley.
+[215] Green, P.J. (1984). Iteratively reweighted least squares for maxi- mum likelihood estimation, and some robust and resistant alterna- tives (with discussion), Journal of the Royal Statistical Society, Series B, 46, 149–192.
+[216] Green, P.J. (1990). Bayesian reconstructions from emission tomog- raphy data using a modified EM algorithm, IEEE Transactions on Medical Imaging, 16, 516–526.
+[217] Greenacre, M.J. (1981). Practical correspondence analysis, In Inter- preting Multivariate Data (V. Barnett, ed.), pp. 119–146, New York: Wiley.
+[218] Greenacre, M.J. (1984). Theory and Applications of Correspondence Analysis, New York: Academic Press.
+[219] Greenacre, M.J. (1988). Correspondence analysis of multivariate cat- egorical data by weighted least-squares, Biometrika, 75, 457–467.
+[220] Greenacre, M. (2000). Correspondence analysis of square asymmetric matrices, Applied Statistics, 49, 297–310.
+[221] Greenacre, M. (2007). Correspondence Analysis in Practice, Second Edition, New York: Chapman & Hall/CRC.
+[222] Greenacre, M. and Hastie, T. (1987). The geometric interpretation of correspondence analysis, Journal of the American Statistical As- sociation, 82, 437–447.
+[223] Hadi, A.S. and Ling, R.F. (1998). Some cautionary notes on the use oif principal components regression, The American Statistician, 52, 15–19.
+[224] Haitovsky, Y. (1987). On multivariate ridge regression, Biometrika, 74, 563–570.
+[225] Hall, P. (1989). On polynomial-based projection indices for ex- ploratory projection pursuit, Annals of Statistics, 17, 589–605.
+[226] Hall, P. (1992). The Bootstrap and Edgeworth Expansion. New York: Springer.
+[227] Hall, P. and Marron, J.S. (1987). Extent to which least-squares cross- validation minimises integrated square error in nonparametric density estimation, Probability Theory and Related Fields, 74, 567–581.
+[228] Hall, P. and Wand, M.P. (1988). Minimizing L1 distance in non- parametric density estimation, Journal of Multivariate Analysis, 26, 59–88.
+[229] Ham, J., Lee, D.D., Mika, S., and Scho ̈lkopf, B. (2003). A kernel view of the dimensionality reduction of manifolds, Technical Report TR-110, Max Planck Institut fur biologische Kybernetik, Germany.
+References 683
+684 References
+[230] Hampel, F. (2002). Some thoughts about classification, Research Report No. 102, Seminar fu ̈r Statistik, Eidegeno ̈ssische Technische Hochschule, CH–8092 Zu ̈rich, Switzerland.
+[231] Hand, D.J. (1982). Kernel Discriminant Analysis, Chichester, U.K.: Research Studies Press.
+[232] Hand, D., Mannila, H., and Smyth, P. (2001). Principles of Data Mining, Cambridge, MA: MIT Press.
+[233] Harman, H.H. (1976). Modern Factor Analysis, Third Edition Re- vised. Chicago: The University of Chicago Press.
+[234] Hartigan, J.A. (1972). Direct clustering of a data matrix,
+[235] Hartigan, J.A. (1974). Block voting in the United Nations, In:
+Exploring Data Analysis: The Computer Revolution in Statistics
+(W.J. Dixon and W.L. Nicholson, eds.), Berkeley and Los Angeles, CA: University of California Press, Chapter 2, pp. 79–112.
+[236] Hartigan, J.A. (1975). Clustering Algorithms, New York: Wiley.
+[237] Hartigan, J.A. and Hartigan, P.M. (1985). The dip test of unimodal-
+ity, The Annals of Statistics, 13, 70–84.
+[238] Hassibi, B., Stork, D.G., Wolff, G., and Wanatabe, T. (1994). Optimal brain surgery: expensions and performance comparisons, Advances in Neural Information Processing Systems, 6, 263–270.
+[239] Hastie, T. (1984). Principal curves and surfaces, Technical Report, Department of Statistics, Stanford University.
+[240] Hastie, T. and Stuetzle, W. (1989). Principal curves, Journal of the American Statistical Association, 84, 502–516.
+[241] Hastie, T., Taylor, J., Tibshirani, R., and Walther, G. (2007). For- ward stagewise regression and the monotone lasso, Electronic Journal of Statistics, 1, 1–29.
+[242] Hastie, T. and Tibshirani, R. (1986). Generalized additive models, Statistical Science, 1, 295–318.
+[243] Hastie, T. and Tibshirani, R. (1990). Generalized Additive Models, London: Chapman and Hall.
+[244] Hastie, T. and Tibshirani, R. (2000). Bayesian backfitting (with dis- cussion), Statistical Science, 15, 196–223.
+[245] Hastie. T., Tibshirani, R., Eisen, M.B., Alzadeh, A., Levy, R., Staudt, L., Chan, W.C., Botstein, D., and Brown, P.O. (2000). ‘Gene shaving’ as a method for identifying distinct sets of genes with similar expression patterns, Genome Biology, 1(2), research0003.1– research0003.21.
+[246] Hastie, T., Tibshirani, R., and Friedman, J. (2001). The Elements of Statistical Learning: Data Mining, Inference, and Prediction, New York: Springer-Verlag.
+[247] Havel, T.F. (1991). An evaluation of computational strategies for use in the determination of protein structure from distance constraints obtained by nuclear magnetic resonance, Progress in Biophysics and Molecular Biology, 56, 43–78.
+[248] Havel, T.M., Kuntz, I.D., and Crippen, G.M. (1983). The combi- natorial distance geometry approach to the calculation of molecular conformation. I. A new approach to an old problem, Journal of Theo- retical Biology, 104, 359–381; II. Sample problems and computational statistics, Journal of Theoretical Biology, 104, 383–400.
+[249] Haykin, S. (1999). Neural Networks: A Comprehensive Foundation, Second Edition, New York: Macmillan.
+[250] Hebb, D.O. (1949). The Organization of Behavior: A Neuropsycho- logical Theory, New York: Wiley.
+[251] Helland, I.S. (1988). On the structure of partial least squares regres- sion, Communications in Statistics: Simulation and Computation, 17, 581–607.
+[252] Helland, I.S. (2000). Some theoretical aspects of partial least squares regression, Chemometrics and Intelligent Laboratory Systems (to ap- pear).
+[253] Henikoff, J.G. and Henikoff, S. (1996). Using substitution probabili- ties to improve position-specific scoring matrices, Computer Applica- tions in the Biosciences, 12, 135–143.
+[254] Herault, J. and Jutten, C. (1986). Space or time processing by neural network models, In Proceedings of the AIP Conference: Neural Net- works for Computing (ed.: J.S. Denker), 151, New York: American Institute for Physics.
+[255] Hersh, W., Buckley, C., Leone, T.J., and Hickam, D. (1994). OS- HUMED: an interactive retrieval evaluation and new large test col- lection for research, In Proceedings of the 17th Annual International ACM SIGIR Conference on Research and Development in Informa- tion Retrieval, pp. 192–201.
+References 685
+686 References
+[256] Hinton, G.E. (1987). Connectionist learning procedures, In Machine Learning: Paradigms and Methods (J. Carbonell, ed.), pp. 185–234, Cambridge, MA: MIT Press.
+[257] Hinton, G.E., Plaut, D.C., and Shallice, T. (1993). Simulating brain damage, Scientific American, 76–82.
+[258] Ho, T.K. (1998). The random subspace method for constructing de- cision forests, IEEE Transactions on Pattern Analysis and Machine Intelligence. 20, 832–844.
+[259] Hoerl, A.E. and Kennard, R. (1970a). Ridge regression: Biased es- timation for non-orthogonal problems, Technometrics 12: 55–67. Reprinted in Technometrics, 42 (2000), 80–86.
+[260] Hoerl, A.E. and Kennard, R. (1970b). Ridge regression: applications to non-orthogonal problems, Technometrics, 12, 69–82 [correction, 12, 733].
+[261] Hoeting, J.A., Madigan, D., Raftery, A.E., and Volinsky, C.T. (1999). Bayesian model averaging, Statistical Science, 14, 382–417.
+[262] Hoffman, A.J. and Wielandt, H.W. (1953). The variation of the spec- trum of a normal matrix, Duke Mathematical Journal, 20, 37–39.
+[263] Holm, L. and Sander, C. (1996). Mapping the protein universe, Sci- ence, 273, 595–603.
+[264] Holzinger, K. and Swineford, F. (1939). A study in factor analysis: the stability of a bifactor solution, Supplementary Educational Mono- graph, 48, Chicago, IL: University of Chicago Press.
+[265] Hornick, K., Stinchcombe, M., and White, H. (1989). Multilayer feed- forward network are universal approximators, Neural Networks, 2, 359–366.
+[266] Horton, I.F., Russell, J.S., and Moore, A.W. (1968). Multivariate- covariance and canonical analysis: a method for selecting the most effective discriminators in a multivariate situation, Biometrics, 24, 845–858.
+[267] Hotelling, H. (1933). Analysis of a complex of statistical variables into principal components, Journal of Educational Psychology, 24, 417–441, 498–520.
+[268] Hotelling, H. (1936). Relations between two sets of variates, Biometrika, 28, 321–377.
+[269] Hou, J., Sims, G.E., Zhang, C., and Kim, S.-H. (2003). A global representation of the protein fold space, Proceedings of the National Academy of Sciences, 100, 2386–2390.
+[270] Huang, X. and Miller, W. (1991). A time-efficient, linear-space local similarity algorithm, Advances in Applied Mathematics, 12, 337–357.
+[271] Huber, P.J. (1964). Robust estimation of a location parameter, The Annals of Mathematical Statistics, 53, 73–101.
+[272] Huber, P.J. (1985). Projection pursuit, The Annals of Statistics, 53, 73–101.
+[273] Hurri, Ga ̈vert, Sa ̈rel ̈a, and Hyva ̈rinen, A. (1998). The FastICA pack- age for MATLAB, isp.imm.dtu.dk/toolbox/
+[274] Hwang, J.-N., Li, H., Maechler, M., Martin, D., and Schimert, J. (1992). A comparison of projection pursuit and neural network regression modeling, NIPS, 4, 1159–1166.
+[275] Hwang, J.T.G. and Ding, A.A. (1997). Prediction intervals for artifi- cial neural networks, Journal of the American Statistical Association, 92, 748–757.
+[276] Hwang, J.T.G. and Nettleton, D. (2003). Principal components re- gression with data-chosen components and related methods, Techno- metrics, 45, 70–79.
+[277] Hyv ̈arinen, A. (1999). The fixed-point algorithm and maximum like- lihood estimation for independent component analysis, Neural Pro- cessing Letters, 10, 1–5.
+[278] Hyv ̈arinen, A., Karhunen, J. and Oja, E. (2001). Independent Com- ponent Analysis. New York: Wiley.
+[279] Intrator, O. and Kooperberg, C. (1995). Trees and splines in survival analysis, Statistical Methods in Medical Research, 4, 237–261.
+[280] Izenman, A.J. (1972). Reduced-Rank Regression for the Multivariate Linear Model, Its Relationship to Certain Multivariate Techniques, and Its Application to the Analysis of Multivariate Data, Ph.D. dis- sertation, University of California, Berkeley.
+[281] Izenman, A.J. (1975). Reduced-rank regression for the multivariate linear model, Journal of Multivariate Analysis, 5, 248–264.
+[282] Izenman, A.J. (1980). Assessing dimensionality in multivariate re- gression, in Krishnaiah (ed), Handbook of Statistics 1, Amsterdam: North-Holland, pp. 571–591.
+References 687
+688 References
+[283] Izenman, A.J. (1991). Recent developments in nonparametric density estimation, Journal of the American Statistical Association, 86, 205– 224.
+[284] Izenman, A.J. and Sommer, C.J. (1988). Philatelic mixtures and mul- timodal densities, Journal of the American Statistical Association, 83, 941–953.
+[285] Jackson, J.E. (2003). A User’s Guide to Principal Components, New York: Wiley.
+[286] James, A.T. (1960). Distribution of the latent roots of the covariance matrix, Annals of Mathematical Statistics, 31, 151–158.
+[287] James, A.T. (1964). Distribution of matrix variates and latent roots derived from normal samples, The Annals of Mathematical Statistics, 35, 475–501.
+[288] James, W. and Stein, C. (1961). Estimation with quadratic loss, In Proceedings of the Fourth Berkeley Symposium on Mathematical Statistics and Probability, 1, pp. 361–380. Berkeley, CA: University of California Press.
+[289] Jee, J.R. (1987). Exploratory projection pursuit using nonparamet- ric density estimation, In Proceedings of the Statistical Computing Section of the American Statistical Association, pp. 335–339.
+[290] Jiang, W. (2004). Process consistency for AdaBoost, Annals of Statis- tics, 32, 13–29.
+[291] Joachims, T. (2002). Learning to Classify Text Using Support Vec- tor Machines: Methods, Theory, and Algorithms, New York: Kluwer Academic Publishers.
+[292] Johnson, R.A. and Wichern, D.W. (1998). Applied Multivariate Sta- tistical Analysis, Fourth Edition, Upper Saddle River, NJ: Prentice Hall.
+[293] Johnstone, I.M. (2001). On the distribution of the largest eigenvalue in principal components analysis, The Annals of Statistics, 29, 295– 327.
+[294] Johnstone, I.M. (2006). High-dimensional statistical inference and random matrices, Proceedings of the International Congress of Math- ematicians. eprint arXiv: math/0611589.
+[295] Johnstone, I.M. and Silverman, B.W. (1990). Speed of estimation in positron emission tomography and related inverse problems, The Annals of Statistics, 18, 251–280.
+[296] Jolliffe, I.T. (1982). A note on the use of principal components in regression, Applied Statistics, 31, 300–303.
+[297] Jolliffe, I.T. (1986). Principal Component Analysis. New York: Springer.
+[298] Jones, M.C. and Sibson, R. (1987). What is projection pursuit? Jour- nal of the Royal Statistical Society, Series A, 150, 1–36.
+[299] Jones, M.C., Marron, J.S., and Sheather, S.J. (1996). A brief survey of bandwidth selection for density estimation, Journal of the American Statistical Association, 91, 401–407.
+[300] J ̈oreskog, K.G. (1969). A general approach to confirmatory maximum likelihood factor analysis, Psychometrika, 34, 183–202.
+[301] J ̈oreskog, K.G. (1970). A general method for analysis of covariance structures, Biometrika, 57, 239–251.
+[302] J ̈oreskog, K.G. (1977). Structural equation models in the social sci- ences: specification, estimation, and testing, in: Applications of Statis- tics (P.R. Krishnaiah, ed.), pp. 265–287, Amsterdam: North-Holland.
+[303] Jusczyk, P.W. and Klein, R.M. (1980). The Nature of Thought: Es- says in Honor of D.O. Hebb, Hillsdale, NJ: Lawrence Erlbaum Asso- ciates.
+[304] Jutten, C. (2000). Source separation: from dusk till dawn, In Pro- ceedings of the 2nd International Workshop on Independent Compo- nent Analysis and Blind Source Separation (ICA 2000), pp. 15–26, Helsinki, Finland.
+[305] Kahn, D. (1996). The history of steganography, Proceedings of Infor- mation Hiding, First International Workshop, Cambridge, U.K.
+[306] Kaiser, H.F. (1958). The varimax criterion for analytic rotation in factor analysis, Psychometrika, 23, 187–200.
+[307] Kaiser, H.F. (1960). The application of electronic computers to factor analysis, Educational and Psychological Measurement, 20, 141–151.
+[308] Karlin, S. and Altschul, S.F. (1990). Methods for assessing the sta- tistical significance of molecular sequence features by using general scoring schemes, Proceedings of the National Academy of Sciences, USA, 87, 2264–2268.
+[309] Kass, G.V. (1980). An exploratory technique for investigating large quantities of categorical data, Applied Statistics, 29, 119–127.
+References 689
+690 References
+[310] Kass, R.E. and Raftery, A.E. (1995). Bayes factors, Journal of the American Statistical Association, 90, 773–795.
+[311] Kass, R.E., Tierney, L., and Kadane, J.B. (1988). Approximate methods for assessing influence and sensitivity in Bayesian analysis, Biometrika, 76, 663–674.
+[312] Kasser, I.S. and Bruce, R.A. (1969). Comparative effects of aging and coronary heart disease on submaximal and maximal exercise, Circulation, 39, 759–774.
+[313] Kaufman, L. and Rousseeuw, P.J. (1990). Finding Groups in Data: An Introduction to Cluster Analysis, New York: Wiley.
+[314] Kendall, M.G. and Stuart, A. (1969). The Advanced Theory of Statis- tics, 1, Distribution Theory, London, U.K.: Charles Griffin & Co. Ltd.
+[315] Kernighan, B.W. and Pike, R. (1984). The Unix Programming Envi- ronment. Englewood Cliffs, NJ: Prentice-Hall.
+[316] Khan, J., Wei, J.S., Ringner, M., Saal, L.H., Ladanyi, M., Wester- mann, F., Berthold, F., Schwab, M., Antonescu, C.R., Peterson, C., and Meltzer, P.S. (2001). Classification and diagnostic prediction of cancers using gene expression profiling and artificial neural networks, Nature Medicine, 7, 673–679.
+[317] Khattree, R. and Naik, D.N. (1999). Applied Multivariate Statistics With SAS Software, Second Edition, Cary, NC: SAS Institute, Inc.
+[318] Kimeldorf, G. and Wahba, G. (1971). Some results on Tchebycheffian spline functions, Journal of Mathematical Analysis and its Applica- tions, 33, 82–95.
+[319] Kirkendall, N. (1997). Massive data sets: a view from the Federal Sta- tistical System, In Proceedings of the Statistical Computing Section of the American Statistical Association, pp. 14–17.
+[320] Kohonen, T. (1982). Self-organized formation of topologically-correct feature maps, Biological Cybernetics, 43, 59–69.
+[321] Kohonen, T. (2001). Self-Organizing Maps, Third Edition, New York: Springer.
+[322] Kolmogorov, A.N. (1957). On the representation of continuous func- tions by superposition of continuous functions of one variable and addition, Doklady Akademiia Nauk SSSR, 114, 953–956.
+[323] Korf, I., Yandell, M., and Bedell, J. (2003). BLAST: An Essential Guide to the Basic Local Alignment Search Tool. Sebastopol, CA: O’Reilly & Associates, Inc.
+[324] Kramer, M.A. (1991). Nonlinear principal component analysis using autoassociative neural networks, AIChE Journal, 37, 233–243.
+[325] Krieger, A., Long, C., and Wyner, A. (2001). Boosting noisy data, In
+Proceedings of the Eighteenth International Conference on Machine Learning, pp. 274–281, San Francisco: Morgan Kauffmann Publishers, Inc.
+[326] Kruskal, J.B. (1964a). Multidimensional scaling by optimizing good- ness of fit to a nonmetric hypothesis, Psychometrika, 29, 1–27.
+[327] Kruskal, J.B. (1964b). Nonmetric multidimensional scaling: A numer- ical method, Psychometrika, 29, 115–129.
+[328] Kruskal, J.B. (1969). Toward a practical method which helps uncover the structure of a set of multivariate observations by finding the linear transformation which optimizes a new ‘index of condensation’, In Statistical Computation (R.C. Milton and J.A. Nelder, eds.), pp. 427– 440, New York: Academic Press.
+[329] Kruskal, J.B. (1972). Linear transformation of multivariate data to reveal clustering, In Multidimensional Scaling: Theory and Ap- plications in the Behavioural Sciences, Volume 1 (R.N. Shepard, A.K. Romney, and S.B. Nerlove, eds.), pp. 179–191, London: Seminar Press.
+[330] Kruskal, J.B. and Seery, J.B. (1980). Designing network diagrams, In Proceedings of the First General Conference on Social Graphics, pp. 22–50, Washington, D.C.: U.S. Bureau of the Census.
+[331] Lampinen, J. and Vehtari, A. (2001). Bayesian approach for neural networks – review and case studies, Neural Networks, 14, 257–274.
+[332] Lander, E.S. and Waterman, M.S. (1995). Calculating the Secrets of Life, Washington, D.C.: National Academy Press.
+[333] Laplace, P.S. (1774/1986). Memoire sur la probabilite des causes par les evenements, Memoirs Academie Science Paris, 6, 621–656. Mem- oir on the probability of the causes of events (English translation by S.M. Stigler), Statistical Science, 1, 364–378.
+[334] Lattin, J., Carroll, J.D., and Green, P.E. (2003). Analyzing Multi- variate Data, Pacific Grove, CA: Thomson-Brooks/Cole.
+[335] Lawley, D.N. and Maxwell, A.E. (1971). Factor Analysis as a Statis- tical Method, London: Butterworth.
+[336] Lazzeroni, L. and Owen, A. (2002). Plaid models for gene expression data, Statistica Sinica, 12, 61–86.
+References 691
+692 References
+[337] LeBlanc, M. and Tibshirani, R. (1994). Adaptive principal surfaces, Journal of the American Statistical Association, 89, 53–64.
+[338] LeCun, Y. (1985). Une procedure d’apprentissage pour reseau a seuil assymetrique, In In Cognitiva 85: A la Frontiere de l’Intelligence Ar- tificielle des Sciences de la Connaissance des Neurosciences, pp. 599– 604, CESTA, Paris.
+[339] Lee, T.-W. (1998). Independent Component Analysis – Theory and Applications. Boston: Kluwer.
+[340] Lee, Y., Lin, Y., and Wahba, G. (2004). Multicategory support vector machines: theory and application to the classification of microarray data and satellite radiance data, Journal of the American Statistical Association, 99, 67–81.
+[341] Lehmann, E.L. (1983). Theory of Estimation, New York: Wiley.
+[342] Lesteven, S., Poin ̧cot, P., and Murtagh, F. (2001). Visual exploration of astronomical documents, In Astronomical Data Analysis Software and Systems X (F.R. Harnden Jr., F.A. Primini, and H.E. Payne, eds.), 78, ASP Conference Series, 238, San Francisco, CA: American Society of the Pacific.
+[343] Leurgans, S.E., Moyeed, R.A., and Silverman, B.W. (1993). Canon- ical correlation when the data are curves, Journal of the Royal Sta- tistical Society, Series B, 55, 725–740.
+[344] Lewis, D.D., Yang, Y., Rose, T.G., and Li, F. (2004). RCV1: a new benchmark collection for text categorization research, The Journal of Machine Learning Research, 5, 361–397.
+[345] Lin, Y. (2002). Support vector machines and the Bayes rule in clas- sification, Data Mining and Knowledge Discovery, 6, 259–275.
+[346] Lindley, D.V. and Smith, A.F.M. (1972). Bayes estimates for the lin- ear model (with discussion), Journal of the Royal Statistical Society, Series B, 34, 1–41.
+[347] Lingjaerde, O.C. and Christophersen, N. (2000). Shrinkage structure of partial least squares, Scandanavian Journal of Statistics, 27, 459– 473.
+[348] Little, R.J.A. and Rubin, D.B. (1987). Statistical Analysis With Miss- ing Data, New York: Wiley.
+[349] Lloyd, C.J. (1999). Statistical Analysis of Categorical Data, New York: Wiley.
+[350] Loader, C.R. (1999). Bandwidth selection: classical or plug-in? The Annals of Statistics, 27, 415–438.
+[351] Lodhi, H., Saunders, C., Shawe-Taylor, J., Cristianini, N., and Watkins, C. (2002). Text classification using string kernels, Journal of Machine Learning Research, 2, 419–444.
+[352] Lugosi, G. and Vayatis, N. (2004). On the Bayes-risk consistency of regularized boosting methods, The Annals of Statistics, 32, 30–55.
+[353] Macrae, E.C. (1974). Matrix derivatives with an application to an adaptive linear decision problem, The Annals of Statistics, 2, 337– 346.
+[354] MacKay, D.J.C. (1991). Bayesian Methods for Adaptive Models, doc- toral dissertation, California Institute of Technology.
+[355] MacKay, D.J.C. (1992a). A practical Bayesian framework for back- propagation networks, Neural Computation, 4, 448–472.
+[356] MacKay, D.J.C. (1992b). The evidence framework applied to classi- fication networks, Neural Computation, 4, 720–736.
+[357] MacKay, D.J.C. (1994). Hyperparameters: optimize or integrate out? In Maximum Entropy and Bayesian Methods, Santa Barbara, Dor- drecht: Kluwer.
+[358] MacKay, D.J.C. (2003). Information Theory, Inference, and Learn- ing Algorithms, Cambridge, U.K.: Cambridge University Press.
+[359] MacNaughton-Smith, P., Williams, W.T., Dale, N.B., and Mockett, L.G. (1964). Dissimilarity analysis: a new technique of hierarchical subdivision, Nature, 202, 1034–1035.
+[360] MacQueen, J.B. (1967). Some methods for classification and analy- sis of multivariate observations, In Proceedings of the Fifth Berkeley Symposium on Mathematical Statistics and Probability (L. LeCam and J. Neyman, eds.), 1, pp. 281–297, Berkeley, CA: University of California Press.
+[361] Madsen, M. (1976). Statistical analysis of multiple contingency ta- bles, Scandanavian Journal of Statistics, 3, 97–106.
+[362] Mallows, C.L. (1973). Some comments on Cp, Technometrics, 15, 661–667. Reprinted in Technometrics, 42 (2000), 87–94.
+[363] Mallows, C.L. (1995). More comments on Cp, Technometrics, 37, 362–372.
+References 693
+694 References
+[364] Malthouse, E.C. (1998). Limitations of nonlinear PCA as performed with generic neural networks, IEEE Transactions on Neural Net- works, 9, 165–173.
+[365] Mangasarian, O.L., Street, W.N., and Wolberg, W.H. (1995). Breast cancer diagnosis and prognosis via linear programming, Operations Research, 43, 570–577.
+[366] Mar ̆cenko, V.A. and Pastur, L.A. (1967). Distributions of eigenvalues of some sets of random matrices, Math. USSR-Sb., 1, 507–536.
+[367] Marchini, J.L., Heaton, C., and Ripley, B.D. (2003). The fastICA package, http://www.stats.ox.ac.uk/∼marchini/software.html
+[368] Mardia, K.V. (1978). Some properties of classical multidimensional scaling, Communications in Statistical Theory and Methods, Series A, 7, 1233–1241.
+[369] Mardia, K., Kent, J., and Bibby, J. (1979). Multivariate Analysis, New York: Academic Press.
+[370] Marquardt, D.W. (1970). Generalized inverses, ridge regression, bi- ased linear estimation, and nonlinear estimation, Technometrics, 12, 591–612.
+[371] Martens, H. and Naes, T. (1989). Multivariate Calibration, New York: Wiley.
+[372] Martinez, W.L. and Martinez, A.R. (2005). Exploratory Data Anal- ysis with MATLAB, Boca Raton, FL: Chapman & Hall/CRC.
+[373] Massy, W.F. (1965). Principal component regression in exploratory statistical research, Journal of the American Statistical Association, 60, 234–256.
+[374] McCullagh, P. and Nelder, J.A. (1989). Generalized Linear Models, New York: Chapman and Hall.
+[375] McCullogh, W.S. and Pitts, W. (1943). A logical calculus of the ideas immanent in the nervous activity, Bulletin of Mathematical Bio- physics, 5, 115–133.
+[376] McLachlan, G.J. and Basford, K.E. (1988). Mixture Models: Inference and Applications to Clustering. New York: Dekker.
+[377] McLachlan, G.J. and Krishnan, T. (1996). The EM Algorithm and Extensions. New York: Wiley.
+[378] McLachlan, G.J., Peel, D., Basford, K.E., and Abrams, P. (1999). The Emmix software for the fitting of mixtures of normal or t-components, Journal of Statistical Software, 4.
+[379] McLachlan, G.J. and Krishnan, T. (1997). The EM Algorithm and Extensions, New York: Wiley.
+[380] Mease, A. and Wyner, A.J. (2007). Evidence contrary to the statisti- cal view of boosting (with discussion), Journal of Machine Learning Research, 9, 131–201.
+[381] Mease, D., Wyner, A.J., and Buja, A. (2007). Boosted classification trees and class probability/quantile estimation, Journal of Machine Learning Research, 8, 409–439.
+[382] Mercer, J. (1909). Functions of positive and negative type and their connection with the theory of integral equations, Philosophical Trans- actions of the Royal Society, London, Series A, 209, 415–446.
+[383] Metropolis, N., Rosenbluth, A.W., Rosenbluth, M.N., Teller, A.H., and Teller, E. (1953). Equations of state calculations by fast comput- ing machines, Journal of Chemical Physics, 21, 1087–1091.
+[384] Miller, A.J. (2002). Subset Selection in Regression, Second Edition. London: Chapman and Hall.
+[385] Milner, P.M. (1957). The cell assembly: Mk. II. Psychological Review, 64, 242–252.
+[386] Minsky, M.L. and Papert, S.A. (1969). Perceptrons, Cambridge, MA: MIT Press.
+[387] Moguerza, J.M. and Munoz, A. (2006). Support vector machines with applications (with discussion), Statistical Science, 21, 322–336.
+[388] Monk, H. (2000). An Intel Solution for: The U.S. Census Bureau. DM Review, April 2000, p. 34.
+[389] Morgan, J.N. and Sondquist, J.A. (1963). Problems in the analysis of survey data, and a proposal, Journal of the American Statistical Association, 58, 415–434.
+[390] Mosteller, F. and Tukey, J.W. (1977). Data Analysis and Regression. Reading, MA: Addison-Wesley.
+[391] Nandi, A.K. (ed.) (1999). Blind Estimation Using Higher-Order Statistics. Boston: Kluwer.
+[392] Nash, J. (1965). The embedding problem for Riemannian manifolds, Annals of Mathematics, 63, 20–63.
+References 695
+696 References
+[393] Neal, R.M. (1996). Bayesian Learning for Neural Networks, Lecture Notes in Statistics, 118, New York: Springer.
+[394] Needleman, S.B. and Wunsch, C.D. (1970). A general method appli- cable to the search for similarities in the amino-acid sequence of two proteins, Journal of Molecular Biology, 48, 443–453.
+[395] Nerbonne,J.,Heeringa,W.,andKleiweg,P.(1999).Editdistanceand dialect proximity, In Time Warps, String Edits, and Macromolecules: The Theory and Practice of Sequence Comparison, 2nd edition (D. Sankoff and J. Kruskal, eds.), pp. v–xv, Stanford, CA: CSLI.
+[396] Oh, M.-S. and Raftery, A.E. (2001). Bayesian multidimensional scal- ing and choice of dimension, Journal of the American Statistical As- sociation, 96, 1031–1044.
+[397] Oja, E. and Kaski, S. (2003). Kohonen Maps, Amsterdam: Elsevier.
+[398] Ojelund, H., Brown, P.J., Madsen, H., and Thyregod, P. (2002). Pre-
+diction based on mean subset, Technometrics, 44, 369–378.
+[399] O’Sullivan, F. (1986). A statistical perspective on ill-posed inverse
+problems, Statistical Science, 1, 502–527.
+[400] Owen, A.B. (2000). Plaid Users Guide, Stanford, CA: Stanford Uni-
+versity.
+[401] Pack,P.andJolliffe,I.T.(1992).Influenceincorrespondenceanalysis.
+Applied Statistics, 41, 365–380.
+[402] Parker, D.B. (1985). Learning logic, Technical Report TR–47, Center for Computational Research in Economics and Management Sciences, MIT.
+[403] Parmigiani, G., Garrett, E.S., Irizarry, R.A., and Zeger, S.L. (2003). The Analysis of Gene Expression Data, New York: Springer.
+[404] Parzen, E. (1962). On estimation of a probability density function and mode, The Annals of Mathematical Statistics, 33, 1065–1076.
+[405] Pearson, K. (1904). On the theory of contingency and its relation to association and normal correlation, Draper’s Company Research Memoirs, Biometric Series 1. Reprinted in 1948 in Karl Pearson’s Early Papers. Cambridge, U.K.: Cambridge University Press.
+[406] Pearson, W.R. and Lipman, D.J. (1988). Improved tools for biological sequence comparison, Proceedings of the National Academy of Science USA, 85, 2444–2448.
+[407] Pechura, M. and Martin, J.B. (1991) (eds.). Mapping the Brain and Its Functions: Integrating Enabling Technologies into Neuroscience Research, Washington, D.C.: National Academy Press.
+[408] Pen ̃a, D. and Prieto, F.J. (2001), Multivariate outlier detection and robust covariance matrix estimation (with discussion), Technomet- rics, 43, 286–310.
+[409] Petitcolas, F.A.P., Anderson, R., and Kuhn, M.G. (1999). Informa- tion hiding: a survey. Proceedings of the IEEE, 87, 1062–1078.
+[410] Phatak, A. and de Hoog, F. (2002). Exploiting the connection betwen PLSR, Lanczos, and conjugate gradients: alternative proofs of some properties of PLSR, Journal of Chemometrics, 16, 371–367.
+[411] Pinsker, S. and Prince, A. (1988). On language and connectionism: analysis of a parallel distributed processing model of language acqui- sition, Cognition, 23, 73–193.
+[412] Platt, J. (1999). Fast training of support vector machines using se- quential minimal optimization, In B. Scho ̈lkopf, C.J.C. Burges, and A.J. Smola, eds., Advances in Kernel Methods – Support Vector Learning, pp. 185–208, Cambridge, MA: MIT Press.
+[413] Pregibon, D. (1991). Incorporating statistical expertise into data analysis software, In The Future of Statistical Software: Proceedings of a Forum, pp. 51–62, National Research Council, Washington, D.C.: National Academies Press.
+[414] Pregibon, D. and Gale, W. (1984). Rex: an expert system for re- gression analysis, In Proceedings of COMPSTAT 84 (T. Havranek, Z. Sidak, and M. Novak, eds.), pp. 242–248, Heidelberg, Germany: Physica-Verlag.
+[415] Press, S.J. (1989). Bayesian Statistics: Principles, Models, and Ap- plications, New York: Wiley.
+[416] Quinlan, J.R. (1993). C4.5: Programs for Machine Learning, San Ma- teo, CA: Morgan Kaufmann.
+[417] Ramsay, J.O. (1982). Some statistical approaches to multidimen- sional scaling (with discussion), Journal of the Royal Statistical So- ciety, Series A, 145, 285–312.
+[418] Ramsay, J.O. (1988). Monotone regression splines (with discussion), Statistical Science, 3, 425–461.
+[419] Ramsay, J.O. and Silverman, B.W. (1997). Functional Data Analysis, New York: Springer.
+References 697
+698 References
+[420] Rao, C.R. (1965). The use and interpretation of principal components in applied research, Sankhya (A), 26, 329–358.
+[421] Rao, C.R. (1965). Linear Statistical Inference and Its Applications, New York: Wiley.
+[422] Rao, C.R. (1979). Separation theorems for singular values of matrices and their applications in multivariate analysis, Journal of Multivari- ate Analysis, 9, 362–377.
+[423] R ̈atsch, G. and Warmuth, M.K. (2005). Efficient margin maximizing with boosting, Journal of Machine Learning Research, 6, 2131–2152.
+[424] Redner, R.A, and Walker, H.F. (1984). Mixture densities, maximum likelihood, and the EM algorithm, SIAM Review, 26, 195–239.
+[425] Reinsel, G.C. and Velu, R.P. (1998). Multivariate Reduced-Rank Re- gression, Lecture Notes in Statistics, 136, New York: Springer.
+[426] Rencher, A.C. (2002). Methods of Multivariate Analysis, Second Edi- tion, New York: Wiley.
+[427] Ripley, B.D. (1994a). Neural networks and related methods for clas- sification (with discussion), Journal of the Royal Statistical Society, Series B, 56, 409–456.
+[428] Ripley, B.D. (1994b). Flexible non-linear approaches to classification, In From Statistics to Neural Networks, (V. Cherkassky, J.H. Fried- man, and H. Wechsler, eds.), pp. 105–126, New York: Springer.
+[429] Ripley, B.D. (1996). Pattern Recognition and Neural Networks, Cam- bridge, U.K.: Cambridge University Press.
+[430] Robert, C.P. and Casella, G. (1999). Monte Carlo Statistical Methods. New York: Springer.
+[431] Roberts, S. and Everson, R. (eds.) (2001). Independent Component Analysis: Principles and Practice, Cambridge, U.K.: Cambridge Uni- versity Press.
+[432] Rojas, R. (1996). Neural Networks – A Systematic Introduction, New York: Springer.
+[433] Roosen, C.B. and Hastie, T.J. (1994). Automatic smoothing spline projection pursuit, Journal of Computational and Graphical Statis- tics, 3, 235–248.
+[434] Rosenblatt, F. (1958). The perceptron: a probabilistic model for infor- mation storage and organization in the brain, Psychological Review, 65, 386–408.
+[435] Rosenblatt, F. (1962). Principles of Neurodynamics: Perceptrons and the Theory of Brain Mechanisms, Washington, D.C.: Spartan Books.
+[436] Rosenblatt, M. (1956). Remarks on some nonparametric estimates of a density function, The Annals of Mathematical Statistics, 27, 832– 837.
+[437] Rothkopf, E.Z. (1957). A measure of stimulus similarity and errors in some paired-associate learning, Journal of Experimental Psychology, 53, 94–101.
+[438] Rousseeuw, P.J. (1987). Silhouettes: a graphical aid to the interpre- tation and validation of cluster analysis, Journal of Computational and Applied Mathematics, 20, 53–65.
+[439] Rousseeuw, P.J. and Leroy, A.M. (1987). Robust Regression and Out- lier Detection, New York: Wiley.
+[440] Roweis, S.T. and Saul, L.K. (2000). Nonlinear dimensionality reduc- tion by locally linear embedding, Science, 290, 2323–2326.
+[441] Rubin, D.B. (1987). Multiple Imputation for Nonresponse in Surveys, New York: Wiley.
+[442] Rubin, D.B. and Thayer, D.T. (1982). EM algorithms for ML factor analysis, Psychometrika, 47, 69–76.
+[443] Rudin, C., Daubechies, I., and Schapire, R.E. (2004). The dynamics of AdaBoost: Cyclic behavior and convergence of margins, Journal of Machine Learning Research, 5, 1557–1295.
+[444] Rudin, C., Schapire, R.E., and Daubechies, I. (2007). Analysis of boosting algorithms using the smooth margin function, The Annals of Statistics, 35, 2723–2768.
+[445] Rumelhart, D.E. and McClelland, J. (1986a). Parallel Distributed Processing: Explorations in the Microstructure of Cognition, 1, Cam- bridge, MA: MIT Press.
+[446] Rumelhart, D. and McClelland, J. (1986b). On learning the past tenses of English verbs, In Parallel Distributed Processing, 1 (D. Rumelhart, J. McClelland, and the PDP Research Group, eds.), Chapter 18, Cambridge, MA: MIT Press.
+[447] Salinelli, E. (1998). Nonlinear principal components I: Absolutely continuous random variables With positive bounded densities, The Annals of Statistics, 26, 596–616.
+[448] Sammon, J.W. (1969). A non-linear mapping for data structure anal- ysis, IEEE Transactions on Computers, C–18, 401–409.
+References 699
+700 References
+[449] Saul, L.K. and Roweis, S.T. (2003). Think globally, fit locally: unsu- pervised learning of low dimensional manifolds, Journal of Machine Learning Research, 4, 119–155.
+[450] Schafer, J.L. (1997). Analysis of Incomplete Multivariate Data, Lon- don, U.K.: Chapman and Hall/CRC Press.
+[451] Schapire, R.E. (1990). The strength of weak learnability, Machine Learning, 5, 197–227.
+[452] Schapire, R.E., Freund, Y., Bartlett, P., and Lee, W.S. (1998). Boost- ing the margin: a new explanation for the effectiveness of voting meth- ods, The Annals of Statistics, 26, 1651–1686.
+[453] Schapire, R.E. and Singer, Y. (1999). Improved boosting algorithms using confidence-rated predictions, The Eleventh Annual Conference on Computational Learning Theory, Machine Learning, 37, 297–336.
+[454] Scho ̈lkopf, B. and Smola, A.J. (2002). Learning With Kernels, Cam- bridge, MA: MIT Press.
+[455] Scho ̈lkopf, B. and Smola, A.J. (2003). A short introduction to learning with kernels, In Advanced Lectures on Machine Learning (S. Mendelson and A.J. Smola, eds.), pp. 41–64, New York: Springer.
+[456] Scho ̈lkopf, B., Smola, A.J., and Muller, K.-R. (1998). Nonlinear com- ponent analysis as a kernel eigenvalue problem, Neural Computation, 10, 1299–1319.
+[457] Schwarz, G. (1978). Estimating the dimension of a model, The Annals of Statistics, 6, 461–464.
+[458] Scott, D.W. (1985a). Average shifted histograms: effective nonpara- metric density estimators in several dimensions, The Annals of Statis- tics, 13, 1024–1040.
+[459] Scott, D.W. (1985b). Frequency polygons, Journal of the American Statistical Association, 80, 348–354.
+[460] Scott, D.W. (1992). Multivariate Density Estimation: Theory, Prac- tice, and Visualization, New York: Wiley.
+[461] Scott, D.W. and Terrell, G.R. (1987). Biased and unbiased cross- validation in density estimation, Journal of the American Statistical Association, 82, 1131–1146.
+[462] Scott, D.W., Tapia, R.A., and Thompson, J.R. (1980). Nonpara- metric probability density function by discrete maximum penalized- likelihood criteria, The Annals of Statistics, 8, 820–832.
+[463] Sebastiani, P., Gussoni, E., Kohane, I.S., and Ramoni, M.F. (2003). Statistical challenges in functional genomics, Statistical Science, 18, 33–70.
+[464] Seber, G.A.F. (1984). Multivariate Observations, New York: Wiley.
+[465] Segal, M.R. (1988). Regression trees for censored data, Biometrics,
+44, 35–48.
+[466] Sejnowski, T. and Rosenberg, C. (1987). Parallel networks that learn
+to pronounce English text, Complex Systems, 1, 145–168.
+[467] Shawe-Taylor, J. and Cristianini, N. (2004). Kernel Methods for Pat-
+tern Analysis, Cambridge, U.K.: Cambridge University Press.
+[468] Sheather, S.J. and Jones, M.C. (1991). A reliable data-based band- width selection method for kernel density estimation, Journal of the Royal Statistical Society, Series B, 53, 683–690.
+[469] Shepard, R.N. (1962). The analysis of proximities: multidimensional scaling with an unknown distance function I. Psychometrika, 27, 125– 140; II Psychometrika, 27, 219–246.
+[470] Shepard, R.N. (1963). Analysis of proximities as a technique for the study of information processing in man, Human Factors, 5, 33–48.
+[471] Shiffrin, R.M. and B ̈orner, K. (2004). Mapping knowledge domains, Proceeding of the National Academy of Sciences of the USA, 101 (Supplement 1), 5183–5185.
+[472] Silverman, B.W. (1981). Using kernel density estimates to investigate multimodality, Journal of the Royal Statistical Society, Series B, 43, 97–99.
+[473] Silverman, B.W. (1983). Some properties of a test for multimodal- ity based on kernel density estimates, In Probability, Statistics, and Analysis (J.F.C. Kingman and G.E.H. Reuter, eds.), pp. 248–259, Cambridge, U.K.: Cambridge University Press.
+[474] Silverman, B.W. (1986). Density Estimation for Statistics and Data Analysis, New York: Chapman and Hall.
+[475] Simon, R.M., Korn, E.L., McShane, L.M., Radmacher, M.D., Wright, G.W., and Zhao, Y. (2004). Design and Analysis of DNA Microarray Investigations, New York: Springer.
+[476] Simonoff, J. (1996). Smoothing Methods in Statistics, New York: Springer.
+References 701
+702 References
+[477] Smith, T.F. and Waterman, M.S. (1981). Identification of common molecular subsequences, Journal of Molecular Biology, 147, 195–197.
+[478] Speed, T. (ed.) (2003). Statistical Analysis of Gene Expression Data, Boca Raton, FL: Chapman & Hall/CRC.
+[479] Spence, I. and Graef, J. (1974). The determination of the underly- ing dimensionality of an empirically obtained matrix of proximities, Multivariate Behavioral Research, 9, 331–341.
+[480] Sprecher, D.A. (1965). On the structure of continuous functions of several variables, Transactions of the American Mathematical Soci- ety, 115, 340–355.
+[481] Stein, C. (1955). Inadmissibility of the usual estimator for the mean of a multivariate normal distribution, In Proceedings of the Third Berkeley Symposium on Mathematical Statistics and Probability, 1 (J. Neyman and E.L. Scott, eds.), pp. 197–206. Berkeley, CA: Uni- versity of California Press.
+[482] Stern, H.S. (1996). Neural networks in applied statistics (with dis- cussion), Technometrics, 38, 205–220.
+[483] Stone, M. (1974). Cross-validatory choice and assessment of statis- tical predictions (with discussion), Journal of the Royal Statistical Society, Series B, 36, 111–147.
+[484] Stone, J.V. (2004). Independent Component Analysis: A Tutorial In- troduction, Cambridge, MA: MIT Press.
+[485] Stovel, K., Savage, M., and Bearman, P. (1996). Ascription into achievement: models of career systems at Lloyds Bank, 1890–1970. American Journal of Sociology, 102, 358–399.
+[486] Street, W.N., Wolberg, W.H., and Mangasarian, O.L. (1993). Nu- clear feature extraction for breast tumor diagnosis, IS&T/SPIE In- ternational Symposium on Electronic Imaging: Science and Technol- ogy (San Jose, CA), 1905, 861–870.
+[487] Stuart, A. (1953). The estimation and comparison of strengths of association in contingency tables. Biometrika, 40, 105–110.
+[488] Swayne, D.F., Cook, D., and Buja, A. (1998). XGobi: interactive dy- namic data visualization in the X-window system, Journal of Com- putational and Graphical Statistics, 7, 113–130.
+[489] Swierenga, H., de Weijer, A.P., van Wijk, R.J., and Buydens, L.M.C. (1999). Stategy for constructing robust multivariate calibra- tion models, Chemometrics and Intelligent Laboratory Systems, 49, 1–17.
+[490] Takane, Y., Young, F.W., and de Leeuw, J. (1977). Nonmetric in- dividual differences multidimensional scaling: An alternating least- squares method with optimal scaling features, Psychometrika, 42, 7–67.
+[491] Tarpey, T. and Flury, B. (1996). Self-consistency: a fundamental con- cept in statistics, Statistical Science, 11, 229–243.
+[492] Tenenbaum, J.B., de Silva, V., and Langford, J.C. (2000). A global geometric framework for nonlinear dimensionality reduction, Science, 290, 2319–2323.
+[493] Terrell,G.R.andScott,D.W.(1980).Onimprovingconvergencerates for nonnegative kernel density estimators, The Annals of Statistics, 8, 1160–1163.
+[494] Therneau, T.M. and Atkinson, E.J. (1997). An introduction to re- cursive partitioning using the RPART routine, Technical Report 61, Section of Statistics, Mayo Foundation.
+[495] Theus, M. and Schonlau, M. (1998). Intrusion detection based on structural zeroes, Statistical Computing & Graphics Newsletter, 9, 12–17.
+[496] Thisted, R.A. (1976). Ridge regression, minimax estimation, and em- pirical Bayes methods, Technical Report No. 28, Division of Biostatis- tics, Stanford University, Stanford, CA.
+[497] Thisted, R.A. (1980). Comment on “A critique of some ridge regres- sion methods” by G. Smith and F. Campbell, Journal of the Ameri- can Statistical Association, 75, 81–86.
+[498] Thisted, R.A. (1988). Elements of Statistical Computing: Numerical Computations, New York: Chapman and Hall.
+[499] Thorpe, J.A. (1994). Elementary Topics in Differential Geometry, New York: Springer.
+[500] Tibshirani, R. (1996b). Regression shrinkage and selection via the lasso, Journal of the Royal Statistical Society, Series B, 58, 267–288.
+[501] Tibshirani, R., Walther, G., and Hastie, T. (2001). Estimating the number of clusters in a data set via the gap statistic, Journal of the Royal Statistical Society, Series B, 63, 411–423.
+[502] Tierney, L. and Kadane, J.B. (1986). Accurate approximations for posterior moments and marginal densities, Journal of the American Statistical Association, 81, 82–86.
+References 703
+704 References
+[503] Titterington, D.M. (2004). Bayesian methods for neural networks and related models, Statistical Science, 19, 128–139.
+[504] Titterington, D.M., Smith, A.F.M., and Makov, U.E. (1985). Statis- tical Analysis of Finite Mixture Distributions. New York: Wiley.
+[505] Tomayo, P., Slonim, D., Mesirov, J., Zhu, Q., Kitareewan, S., Dmitro- vsky, E., Lander, E.S., and Golub, T.R. (1999). Interpreting patterns of gene expression with self-organizing maps, Proceedings of the Na- tional Academy of Sciences USA, 96, 2907–2912.
+[506] Torgerson, W.S. (1952). Multidimensional scaling: I. Theory and method, Psychometrika, 17, 401–419.
+[507] Torgerson, W.S. (1958). Theory and Methods of Scaling, New York: Wiley.
+[508] Trosset, M.W. (1998). Applications of multidimensional scaling to molecular conformation, Computing Science and Statistics, 29, 148– 152.
+[509] Tukey, J.W. (1960). A survey of sampling from contaminated dis- tributions, In Contributions to Probability and Statistics: Essays in Honor of Harold Hotelling, (I. Olkin, S.G. Ghurye, W. Hoeffding, W.G. Madow, and H.B. Mann, eds.), pp. 448–485, Stanford, CA: Stanford University Press.
+[510] Tukey, J.W. (1977). Exploratory Data Analysis, Reading, MA: Addison-Wesley.
+[511] Tukey, P.A. and Tukey, J.W. (1981). Graphical display of data sets in 3 or more dimensions, In Interpreting Multivariate Data (V. Barnett, ed.), pp. 187–275, New York: Wiley.
+[512] Turk, M.A. and Pentland, A.P. (1991). Face recognition using eigen- faces, In Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition, Maui, Hawaii, pp. 586–591.
+[513] Uitdenbogerd, A. and Zobel, J. (1999). Melodic matching techniques for large music databases, ACM Multimedia, 1, 57–66.
+[514] Ultsch, A. and Siemon, H.P. (1990). Kohonen’s self-organizing fea- ture maps for exploratory data analysis, In Proceedings of the In- ternational Neural Network Conference, pp. 305–308, Dortrecht, The Netherlands: Kluwer.
+[515] Valdivia-Granda, W.A. and Dwan, C. (2006). Microarray data man- agement, an enterprise information approach: implementation and challenges, Chapter 6, Orion Integrated Biosciences Inc., New York. arXiv e-print, q-bio.GN/0605005.
+[516] Valiant, L.G. (1984). A theory of the learnable, In Proceedings of the 16th Annual ACM Symposium on Theory of Computing, pp. 436–445, New York: ACM Press.
+[517] van der Heijden, P.G.M., de Falguerolles, A., and de Leeuw, J. (1989). A combined approach to contingency table analysis using correspon- dence analysis and log-linear analysis, Applied Statistics, 38, 249–292.
+[518] van der Leeden, R. (1990). Reduced-Rank Regression With Structured Residuals, Leiden: DSWO Press.
+[519] Vapnik, V.N. (1998). Statistical Learning Theory, New York: Wiley.
+[520] Vapnik, V.N. (2000). The Nature of Statistical Learning Theory, Sec-
+ond Edition, New York: Springer.
+[521] Vapnik, V. and Chervonenkis, A. (1971). On the uniform conver- gence of relative frequencies of events to their probabilities, Theory of Probability and its Applications, 16, 264–280.
+[522] Venables, W.N. and Ripley, B.D. (2002). Modern Applied Statistics with S, Fourth Edition, New York: Springer-Verlag.
+[523] Viga ́rio, R,, Jousm ̈aki, V., Ha ̈ma ̈l ̈ainen, M., Hari, R., and Oja, E. (1998). Independent component analysis for identification of arti- facts in magnetoencephalographic recordings, In Advances in Neural Information Processing Systems, 10, pp. 229–235, Cambridge, MA: MIT Press.
+[524] Vinod, H. (1969). Integer programming and the theory of grouping, Journal of the American Statistical Association, 64, 506–517.
+[525] Wald, A. (1944). On cumulative sums of random variables, The An- nals of Mathematical Statistics, 15, 283–296.
+[526] Walker, A.M. (1969). On the asymptotic behaviour of posterior dis- tributions, Journal of the Royal Statistical Society, B, 31, 80–88.
+[527] Wanatabe, M. and Yamaguchi, K. (eds.) (2004). The EM Algorithm and Related Statistical Models, New York: Marcel Dekker.
+[528] Watnik, M.R. (1998). Pay for play: are baseball salaries based on performance? Journal of Statistics Education, 6(2).
+[529] Weigend, A.S., Rumelhart, D.E., and Huberman, B.A. (1991). Gen- eralization by weight-elimination with application to forecasting, In Advances in Neural Information Processing Systems, 3 (R.P. Lipp- mann, J.E. Moody, and D.S. Touretzky, eds.), pp. 875–882, San Ma- teo, CA: Morgan Kaufmann.
+References 705
+706 References
+[530] Weir, I.S. (1997). Fully Bayesian SPECT reconstructions, Journal of the American Statistical Association, 92, 49–60.
+[531] Weir, I.S. and Green, P.J. (1994). Modelling Data From Single Photon Emission Computed Tomography, In K.V. Mardia (ed.), Statistics and Images, 2, 313–338. Abingdon: Carfax.
+[532] Weisberg, S. (1985). Applied Linear Regression, Second Edition, New York: Wiley.
+[533] Wenk, C. (1999). Applying an edit distance to the matching of tree ring sequences in dendrochronology, Technical Report B 99–01, In- stitute fur Informatik, Freie Universitat, Berlin.
+[534] Werbos, P.J. (1974). Beyond regression: new tools for prediction and analysis in the behavioral sciences, Ph.D. dissertation, Harvard Uni- versity.
+[535] Wilkinson, L. (2005). The Grammar of Graphics, New York: Springer.
+[536] Williams, C.K.I. (2001). On a connection between kernel PCA and metric multidimensional scaling, In Advances in Neural Information Processing Systems 13 (T.K. Leen, T.G. Dietterich, V. Tresp, eds.), Cambridge, MA: MIT Press.
+[537] Wishart, J. (1928). The generalized product moment distribution in samples from a normal population, Biometrika, 20A, 32–52.
+[538] Witten, I.H. and Frank, E. (2005). Data Mining: Practical Machine Learning Tools and Techniques, 2nd Edition, San Francisco, CA: Mor- gan Kaufmann.
+[539] Wold, H. (1975). Soft modelling by latent variables: The nonlinear iterative partial least squares (NIPALS) approach, In Perspectives in Probability and Statistics: Papers in Honor of M.S. Bartlett (J. Gani, ed.), pp. 117–144, London, U.K.: Academic Press.
+[540] Wold, S. (1978). Cross-validatory estimation of the number of com- ponents in factor and principal component models, Technometrics, 20, 397–405.
+[541] Wold, S., Martens, H., and Wold, H. (1983). The multivariate cal- ibration method in chemistry solved by the PLS method, In: Pro- ceedings of a Conference on Matrix Pensils, Pitea, Sweden (A. Ruhe and B. Kagstrom, eds.), Lecture Notes in Mathematics, pp. 286–293, Heidelberg: Springer.
+[542] Wolfe, J.H. (1970). Pattern clustering by multivariate mixture anal- ysis, Multivariate Behavioral Research, 5, 329–350.
+[543] Wolf. C., Meisenheimer, M., Kleinheinrich, M., Borch, A., Dye, S., Gray, M., Wisotski, L., Bell, E.F., Rix, H.-W., Cimatti, A., Hasinger, G., and Szokoly, G. (2004). A catalogue of the Chan- dra Deep Field South with multi-colour classification and pho- tometric redshifts from COMBO-17, Astronomy & Astrophysics, arXiv:astro-ph/0403666v1.
+[544] Wolpert, D.H. (1993). On the use of evidence in neural networks, Advances in Neural Information Processing Systems, 5 (S.J. Hanson, J.D. Cowan, and C.L. Giles, eds.), pp. 539–546, San Mateo, CA: Morgan Kauffman.
+[545] Woodroofe, M. (1970). On choosing a delta-sequence, The Annals of Mathematical Statistics, 41, 1665–1671.
+[546] Wu, C.F.J. (1983). On the convergence properties of the EM algo- rithm, The Annals of Statistics, 11, 95–103.
+[547] Wu, C.F.J. (1986). Jacknife, bootstrap and other resampling methods in regression analysis, The Annals of Statistics, 14, 1261–1350.
+[548] Yalcin, I. and Amemiya, Y. (2001). Nonlinear factor analysis as a statistical method, Statistical Science, 16, 275–294.
+[549] Yianilos, P.N. (1998). Excluded middle vantage point forests for nearest neighbor search, Technical Report, NEC Research Institute, Princeton, NJ.
+[550] Young, G. and Householder, A.S. (1938). Discussion of a set of points in terms of their mutual distances, Psychometrika, 3, 19–22.
+[551] Zhang, H. (1998). Classification trees for multiple binary responses, Journal of the American Statistical Association, 93, 180–193.
+[552] Zhang, H. and Singer, B. (1999). Recursive Partitioning in the Health Sciences, New York: Springer.
+[553] Zhang, Z. and Zha, H. (2004). Principal manifolds and nonlinear dimension reduction via local tangent space alignment, SIAM Journal of Scientific Computing, 26, 313–338.
+[554] Zou, H. and Hastie, T. (2005). Regularization and variable selection via the elastic net, Journal of the Royal Statistical Society, Series B, 67, 301–320.
+References 707
+Index of Examples
+airline distances, 464–467, 481, 482, 484
+aqueous solubility in drug discov- ery, 514, 515
+bodyfat, 116, 125–128, 146, 148, 153, 154
+Boston housing, 158
+British towns, 504
+BUPA liver disorders, 258, 260,
+348, 387, 508
+chemical composition of tobacco, 183, 187
+Cleveland heart-disease, 284, 286, 287, 289–291, 314, 368
+colon cancer, 19, 20, 443, 444, 446 COMBO-17 galaxy photometric catalogue, 216–219, 235 confusion of Morse-code signals,
+469, 470, 503, 504 coronary heart disease, 76, 77, 86
+covertype, 279
+cutaneous potential recordings of a pregnant woman, 554–
+556, 592
+diabetes, 272, 278, 348, 391
+e-coli, 273, 279, 348, 391 employee careers at Lloyds Bank,
+477, 478, 489
+face recognition, 22–24, 209 family size and income, 665 forensic glass, 273, 348, 391, 508,
+550
+four childhood tumors, 541–545,
+550
+gilgaied soil, 271, 278, 367
+hair color and eye color, 638, 639, 644–649, 651
+Hidalgo postage stamps, 93–96, 98
+identifying artifacts in MEG recordings, 569
+A.J. Izenman, Modern Multivariate Statistical Techniques, Springer Texts in Statistics, 709 DOI 10.1007/978-0-387-78189-1, © Springer Science+Business Media New York 2013
+710 INDEX OF EXAMPLES
+insurance company benchmark, 158, 278
+ionosphere, 258, 260, 348, 387 iris, 235, 274, 278, 348, 391
+Landsat satellite image, 428–431, 436–438, 461
+laundry detergent, 157
+letter recognition, 274, 348, 391 leukemia (ALL/AML), 451–453,
+461
+Major League Baseball salaries, 307
+Major League baseball salaries, 308, 309, 368
+mapping the protein universe, 484–486
+mixtures of polyaromatic hydro- carbons, 19–22, 188
+National Cancer Institute, 461 Norwegian paper quality, 166,
+167, 190, 193, 194 nutritional value of food, 196– 198, 206, 208, 462, 612,
+613, 631
+occupational mobility in Eng- land, 653–658
+Old Faithful Geyser, 99, 100, 409, 410
+pen-based handwritten digit recognition, 211, 234,
+274, 348, 391, 631 perceptions of color, 468, 469, 503 PET yarns, 130, 133, 134, 136,
+137, 142, 144, 157
+Pima Indians diabetes, 292–294, 296, 298, 299, 301, 302,
+314, 368, 549
+primate scapulae, 274, 279, 280,
+348, 391, 420, 421, 461 psychological tests, 587, 588, 595
+right and left eye grades, 664 root-stocks of apple trees, 193
+satisfaction with housing condi- tions, 660–662 shoplifting in The Netherlands,
+646, 647
+shoplifting in the Netherlands,
+634, 635 shuttle, 274, 348, 391
+sonar, 259, 260, 348, 387 spambase, 259, 260, 278, 348, 385,
+387, 512, 549
+spiral galaxy NGC7531, 81, 106
+steganography, 344, 345
+Swiss bank notes, 235
+Swiss roll, 598, 617, 619, 620, 622,
+623
+turtle carapaces, 234
+U.S. highways, 106
+vehicle, 274, 302–304, 348, 391
+wine, 275, 278, 348, 391 Wisconsin diagnostic breast can-
+cer, 239, 241, 246, 247, 249, 251, 255, 256, 260, 279, 348, 387, 462, 508, 550
+yeast, 275, 279, 348, 391, 508
+Author Index
+Abbott, A., 477, 667 Abrams, P., 460, 695 Aizerman, M., 404, 667 Akaike, H., 147, 668 Alan, U., 667
+Aldrin, M., 166, 667
+Alimoglu, F., 211, 667
+Alon, U., 19
+Altschul, S.F., 473, 475, 667, 689 Alzadeh, A., 440, 443, 685 Amari, S., 594, 674
+Amemiya, Y., 590, 707
+Amit, Y., 549, 668
+Anderson, J., 310, 675 Anderson, J.A., 245, 668 Anderson, R., 345, 697 Anderson, R.L., 183, 668 Anderson, T.W., 64, 72, 175, 183,
+189, 205, 233, 249, 277,
+668
+Andrews, D.F., 193, 272, 668
+Antonescu, C.R., 541, 690 Ashton, K.H., 420, 668 Asimov, D., 232, 668
+Atkinson, E.J., 313, 703 Attias, H., 591, 592, 668
+B ̈orner, K., 28, 701
+Bach, F.R., 575, 578–580, 668 Baker, H.V., 18, 669
+Baker, S.G., 33, 669
+Bancroft, T.A., 183, 668 Banfield, J.D., 605, 609, 669 Barber, D., 365, 669
+Barkai, N., 19, 667
+Barnett, V., 43, 669 Bartholomew, D.J., 594, 669 Bartlett, P., 518–520, 700 Basalaj, W., 502, 669
+Basford, K.E., 460, 461, 694, 695 Bearman, P., 477, 478, 702 Bedell, J., 503, 690
+Begg, C.E., 42, 674
+Behnken, D., 166, 670
+Belkin, M., 625, 669
+Bell, E.F., 707
+Bellman, R., 669
+Bellman, R.E., 41, 53, 669
+A.J. Izenman, Modern Multivariate Statistical Techniques, Springer Texts in Statistics, 711 DOI 10.1007/978-0-387-78189-1, © Springer Science+Business Media New York 2013
+712 AUTHOR INDEX
+Belsley, D.A., 155, 669 Berger, J.O., 72, 359, 670 Berger, M., 631, 670
+Berger, R.L., 72, 357, 673 Bernardo, J.M., 365, 491, 670 Bernstein, M., 618, 670 Berthold, F., 541, 690
+Besag, J., 362, 365, 670 Bibby, J., 72, 694 Bickel, P.J., 517, 670 Bishop, C., 670
+Bishop, C.M., 16, 104, 277, 365, 669, 670
+Blasius, J., 663, 670
+Bloomfield, C.D., 451, 682 Bolton, R.J., 229, 670
+Borch, A., 707
+Borg, I., 502, 670
+Boser, B.E., 369, 404, 670 Botstein, D., 440, 443, 685
+Box, G.E.P., 166, 670
+Boyd, S., 404, 670
+Brand, M., 628, 670
+Braverman, E., 404, 667 Breiman, L., 37, 117, 119, 143,
+150, 153–155, 168, 281, 292, 295, 296, 298, 300, 301, 312, 313, 506, 516, 517, 523, 536, 538, 546– 549, 671, 673
+Brereton, R.G., 19
+Brillinger, D.R., 177, 189, 672 Brin, S., 476, 672
+Broom, B., 460, 677
+Brown, L.D., 71, 672
+Brown, P.J., 136, 154, 168, 672,
+696
+Brown, P.O., 440, 443, 685
+Bruce, R.A., 76, 690
+Bryan, J., 460, 672
+Buckley, C., 28, 685
+Buhlmann, P., 532, 672
+Buja, A., 231, 232, 470, 527, 529,
+631, 672, 674, 675, 677, 695, 702
+Buntine, W.L., 354, 356, 359, 672 Burges, C.J.C., 403, 672
+Burt, C., 638, 672
+Buta, R., 81, 673
+Butler, N.A., 136, 673 Buydens, L.M.C., 129, 702
+Cabrera, J., 231, 232, 674, 675 Cacoullos, T., 92, 104, 673 Caligiuri, M.A., 451, 682 Calvin, W.H., 364, 673 Candes, E., 149, 673
+Cardoso, J.-F., 552, 673
+Carlin, B.P., 358, 365, 673, 675 Carlin, J.B., 681
+Carroll, J.D., 233, 460, 691 Cartan, E., 615, 673
+Casella, G., 72, 357, 361, 365,
+673, 698 Cattell, R.B., 205, 673
+Chan, W.C., 440, 443, 685 Chang, W.C., 459, 673 Charnomardic, B., 673 Chen, C., 547, 548, 673 Chen, L., 470, 672
+Cheng, B., 365, 674
+Cheng, Y., 447, 674 Chernick, M.R., 155, 674 Cheronenkis, A., 519 Cherry, E.C., 552, 674 Chervonenkis, A., 705 Chipman, H., 460, 674 Chipman, J.S., 155, 674 Christophersen, N., 136, 692 Church, G.M., 447, 674 Cichocki, A., 594, 674 Cimatti, A., 707
+Clark, L.A., 312, 313
+Cleveland, W.S., 3, 674
+Codd, E.F., 42, 674
+Coller, H., 451, 682
+Connolly, T.M., 42, 674 Constantine, A.G., 227, 652, 674 Cook, D., 231, 232, 674, 675, 702 Cortes, C., 379, 675
+Cover, T., 675
+Cover, T.M., 565
+Cowles, M.K., 365, 675
+Cox, M.A.A., 488, 500, 502, 675 Cox, T.F., 488, 500, 502, 675 Cram ́er, H., 665, 675
+Craven, P., 312, 675
+Crippen, G.M., 484, 502, 675, 685 Cristianini, N., 382, 403, 404, 675,
+693, 701 Crunk, S.M., 44, 679
+Culp, M., 515, 675
+Cutler, A., 546, 671 Cybenko, G., 365, 608, 675
+Dale, N.B., 420, 693
+Date, C.J., 42, 675
+Daubechies, I., 520, 522, 523, 549,
+699
+Davis, J.B., 191, 675
+Davis, R., 310, 675
+de Duve, C., 477, 676
+de Falguerolles, A., 634, 651, 652,
+663, 705
+de Hoog, F., 136, 697
+de Jong, S., 134, 136, 676
+de Lathauwer, L., 554, 676
+de Leeuw, J., 498, 634, 651, 652,
+663, 703, 705
+de Montricher, G.M., 87, 88, 676
+de Moor, B., 554, 676
+de Silva, V., 616, 618, 620, 626,
+670, 703
+de Weijer, A.P., 129, 702
+Dean, N., 470, 672
+DeCoste, D., 629, 675
+Delicado, P., 676
+Dempster, A.P., 40, 457, 461, 676 Denham, M.C., 136, 673 Deonier, R.C., 503, 676
+Devroye, L., 79, 92, 676
+Di Battista, G., 502, 677 Diaconis, P., 228, 349, 665, 676,
+677
+Dietterich, T.G., 535, 536, 677
+Digby, P.G.N., 663, 682 Dijkstra, E.W., 621, 677
+Ding, A.A., 341, 687 Dmitrovsky, E., 439, 704
+Do, K.-A,, 460, 677
+Donnell, D.J., 631, 677 Donoho, D., 559, 617, 626, 677 Downing, J.R., 451, 682 Dra ̆ghici, S., 42, 677
+Draper, N., 155, 677 Duane, S., 364, 677 Duchamp, T., 603, 677 Duda, R.O., 104, 364, 677 Dudoid, S., 452
+Dudoit, S., 442, 678 Durbin, R., 503, 678 Dwan, C., 43, 704 Dye, S., 707
+Eades, P., 502, 677
+Eckart, C., 52, 502, 678
+Eddy, S., 503, 678
+Efron, B., 11, 12, 71, 122, 125,
+126, 149, 155, 256, 665,
+676, 678 Eilbeck, K., 502, 669
+Eisen, M.B., 440, 443, 685 Ekman, G., 468, 678 Epanechnikov, V.K., 104, 679 Everitt, B.S., 461, 594, 679 Everson, R., 594, 698
+Fairley, W.B., 44, 679
+Farid, H., 346, 679
+Fayyad, U.M., 8, 16, 679 Findley, D.F., 156, 679
+Fine, T.L., 364, 365, 679
+Firth, D., 168, 672
+Fisher, R.A., 72, 242, 249, 277,
+638, 679
+Fisherkeller, M.A., 232, 234, 679
+Floyd, R.W., 618, 679 Flury, B., 631, 703 Fraley, C., 459–461, 680 Frank, E., 364, 706
+AUTHOR INDEX 713
+714 AUTHOR INDEX
+Frank, I.E., 134, 136, 151, 155, 680
+Freedman, D., 677
+Freedman, D.A., 127, 155, 228,
+680
+Freund, Y., 506, 511, 512, 518–
+520, 680, 700 Fridlyand, J., 442, 452, 678
+Friedman, J., 685
+Friedman, J.H., 16, 100–102, 134,
+136, 142, 150, 151, 155, 168, 228, 230, 232–234, 277, 281, 292, 295, 296, 298, 300, 301, 311–313, 349–351, 364, 403, 461, 516, 523, 525, 527–534, 548, 556, 558, 671, 679, 680
+Funahashi, K., 365, 681 Furnival, G., 146, 681
+Ga ̈vert, H., 568, 687 Gaasenbeek, J.P,, 451 Gaasenbeek, J.P., 682
+Gale, W., 330, 697
+Garrett, E.S., 42, 696
+Gaskins, R.A., 87, 88,
+Geisser, S., 155, 681
+Gelfand, A.E., 366, 681
+Gelman, A., 365, 681
+Geman, D., 362, 366, 549, 668,
+681
+Geman, S., 362, 366, 681
+Gilks, W.R., 361, 365, 681 Girolami, M., 594, 681 Gish, K., 19, 667
+Gish, W., 473, 667
+Glunt, W., 502, 681 Gnanadesikan, R., 230, 233, 598,
+600, 681 Goldstein, M., 155, 682
+Golub, T.R., 439, 451, 682, 704 Good, I.J., 87, 88, 103, 682 Gordon, L., 310, 682
+Goutis, C., 136, 682
+Gower, J.C., 502, 652, 663, 674, 682
+Graef, J., 501, 702
+Gray, M., 707
+Green, P., 362, 365, 670
+Green, P.E., 233, 460, 691 Green, P.J., 564, 682, 706 Greenacre, M., 634, 652, 660, 662,
+663, 665, 670 Greenacre, M.J., 683
+Grimes, C., 617, 626, 677 Groenen, P., 502, 670 Gussoni, E., 42, 460, 701 Guyon, I.M., 369, 404, 670 Gyorfi, L., 79, 676
+H ̈am ̈al ̈ainen, M., 569, 705
+Hadi, A.S., 132, 683
+Haitovsky, Y., 168, 683
+Hall, P., 92, 97, 102, 155, 231, 683 Ham, J., 628, 683
+Hampel, F., 38, 684
+Hand, D.J., 16, 80, 277, 461, 679,
+684 Hari, R., 569, 705
+Harman, H.H., 587, 595, 684 Hart, P.E., 104, 364, 677 Hartigan, J.A., 103, 408, 444,
+460, 684 Hartigan, P.M., 103, 684
+Hasinger, G., 707
+Hassibi, B., 343, 684
+Hastie, T., 16, 142, 149, 153, 277,
+313, 351, 364, 365, 403, 440, 442, 443, 461, 516, 523, 525, 527–529, 532, 548, 601, 606, 634, 663, 678, 681, 683, 684, 698, 703, 707
+Hastie, T.J., 350, 460, 674 Havel, T.F., 502, 675, 685 Havel, T.M., 484
+Hayden, T.L., 502, 681 Haykin, S., 364, 685 Heaton, C., 564, 694
+103, 682
+Hebb, D.O., 320, 321, 364, 685 Heeringa, W., 476, 696 Helland, I.S., viii, 136, 685 Henikoff, J.G., 474, 685 Henikoff, S., 474, 685
+Herault, J., 594, 685
+Hersh, W., 28, 685
+Herzberg, A.M., 193, 272, 668 Hickam, D., 28, 685
+Higdon, D., 362, 365, 670 Hinton, G.E., 316, 344, 365, 686 Ho, T.K., 536, 686
+Hoe, J., 687
+Hoerl, A.E., 136, 141, 155, 686 Hoeting, J.A., 14, 686
+Hoffman, A.J., 53, 686
+Hofmann, H., 470, 672
+Holm, L., 484, 686
+Holmes, S., 673
+Holzinger, K., 587, 686
+Hornick, K., 365, 686
+Horton, I.F., 271, 686
+Hotelling, H., 195, 196, 202, 210,
+215, 686 Hou, J., 484, 486, 502
+Householder, A.S., 502, 707 Hrycak, A., 477, 667 Huang, X., 475, 687
+Huard, M., 451, 682
+Huber, P.J., 101, 229, 231, 365, 533, 560, 687
+Huberman, B.A., 344, 705 Hurley, H., 231, 232, 675
+Hurri, J., 568, 687
+Hwang, J.-N., 350, 687
+Hwang, J.T.G., 131, 341, 687 Hyva ̈rinen, A., 568, 575, 594, 687
+Intrator, O., 310, 687
+Irizarry, R.A., 42, 696
+Izenman, A.J., 44, 64, 87, 93, 103,
+106, 160, 176, 178, 186, 191, 208, 227, 233, 459, 679, 687
+J ̈oreskog, K.G., 590, 689 Jackson, J.E., 233, 688 James, A.T., 205, 227, 688 James, W., 69, 688
+Jee, J.R., 101, 688
+Jiang, W., 517, 688
+Joachims, T., 404, 688
+Johnson, K., 515, 675
+Johnson, R.A., 72, 277, 460, 688 Johnstone, I., 678
+Johnstone, I.M., 76, 149, 205, 227, 688
+Jolliffe, I.T., 132, 233, 663, 689, 696
+Jones, M.C., 98, 101, 102, 104, 230, 232, 558, 689, 701 Jordan, M.I., 575, 578–580, 668
+Jousm ̈aki, V., 569, 705 Jusczyk, P.W., 364, 689 Jutten, C., 594, 685, 689
+Kadane, J.B., 365, 690, 703 Kahn, D., 344, 689
+Kaiser, H.F., 132, 208, 584, 689 Karhunen, J., 594, 687
+Karlin, S., 475, 689
+Kaski, S., 460, 696
+Kass, G.V., 313, 689
+Kass, R.E., 365, 459, 690
+Kasser, I.S., 76, 690
+Kaufman, L., 424, 425, 427, 460,
+690
+Kendall, M.G., 229, 690
+Kennard, R., 136, 141, 155, 686 Kennedy, A.D., 364, 677
+Kent, J., 72, 694
+Kernighan, B.W., 476, 690 Kettenring, J.R., 230, 682 Khan, J., 541, 690
+Khattree, R., 189, 690
+Kim, S.-H., 484, 486, 502, 687 Kimeldorf, G., 389, 690 Kirkendall, N., 4, 690 Kitareewan, S., 439, 704 Klein, R.M., 364, 689
+AUTHOR INDEX 715
+716 AUTHOR INDEX
+Kleinheinrich, M., 707
+Kleiweg, P., 476, 696
+Kohane, I.S., 42, 460, 701 Kohonen, T., 431, 434, 460, 690 Kolmogorov, A.N., 365, 690 Koltchinskii, V., 519 Kooperberg, C., 310, 687
+Korf, I., 503, 690
+Korn, E.L., 42, 442, 701
+Kramer, M.A., 607, 691
+Krieger, A., 535, 691
+Krishnan, T., 43, 461, 694, 695 Krogh, A., 503, 678
+Kruskal, J.B., 233, 493, 498–500,
+502, 503, 691 Krzanowski, W.J., 229, 670
+Kuh, E., 155, 669 Kuhn, M.G., 345, 697 Kuntz, I.D., 484, 685
+Ladanyi, M., 541, 690
+Laird, N.M., 40, 457, 461, 676 Lampinen, J., 365, 691 Lander, E.S., 42, 439,
+691, 704
+Langford, J.C., 616, 618, 626,
+670, 703 Laplace, P.S., 355, 691
+Lattin, D.N., 233, 460, 691 Lawley, D.N., 595, 691 Lazzeroni, L., 449, 451, 691 LeBlanc, M., 606, 607, 692 LeCun, Y., 365, 692
+Lee, D.D., 628, 683
+Lee, T.-W., 594, 692
+Lee, W.S., 518–520, 700
+Lee, Y., 391, 397, 692 Lehmann, E.L., 72, 692 Leone, T.J., 28, 685
+Leroy, A.M., 43, 699 Lesteven, S., 437, 692 Leurgans, S.E., 578, 579, 692 Levine, A., 19, 667
+Levy, R., 440, 443, 685 Lewis, D.D., 28, 260, 692
+Lewis, T., 43, 669
+Li, F., 28, 260, 692
+Li, H., 350, 687
+Liaw, A., 547, 548, 673
+Lin, Y., 388, 391, 397, 692 Lindley, D.V., 155, 692
+Ling, R.F., 132, 683 Lingjaerde, O.C., 136, 692 Lipman, D.J., 473, 667, 696 Little, R.J.A., 40, 43, 461, 692 Littman, M.L., 470, 672 Lloyd, C.J., 692
+Loader, C.R., 99, 693 Lodhi, H., 382, 404, 693 Loh, M.L., 451, 682
+Long, C., 535, 691
+Louis, T.A., 358, 365, 673 Lugosi, G., 514, 693
+Mack, D., 19, 667
+MacKay, D.J.C., 16, 353, 356,
+358–361, 364, 365, 693 MacNaughton-Smith, P., 420,
+693
+MacQueen, J.B., 423, 693
+Macrae, E.C., 64, 693
+Madigan, D., 14, 686
+Madsen, H., 154, 696
+Madsen, M., 660, 693
+Maechler, M., 350, 687
+Makov, U.E., 461, 704
+Mallows, C.L., 147, 155, 157, 693 Malthouse, E.C., 607, 609, 694 Mangasarian, O.L., 239, 694, 702 Mannila, H., 16, 684
+Mar ̆cenko, V.A., 205, 694 Marchini, J.L., 564, 694
+Mardia, K., 694
+Mardia, K.V., 72, 480, 694 Marquardt, D.W., 131, 157, 694 Marron, J.S., 97, 104, 683, 689 Martens, H., 131, 134, 135, 694,
+706 Martin, D., 350, 687
+Martin, J.B., 697
+451, 682,
+Martinez, A.R., 630, 694 Martinez, W.L., 630, 694
+Massy, W.F., 131, 694
+Maxwell, A.E., 595, 691 McClelland, J., 316, 699 McClelland, J.L., 365 McCullagh, P., 255, 351, 694 McCullogh, W.S., 318, 325, 694 McKean, J.W., 191, 675 McLachlan, G.J., 43, 460, 461,
+694
+McShane, L.M., 42, 442, 701
+Mease, A., 518, 695
+Mease, D., 529, 695 Meisenheimer, M., 707 Meltzer, P.S., 541, 690 Mengersen, K., 362, 365, 670 Mercer, J., 695
+Mesirov, J., 439, 704 Mesirov, J.P., 451, 682 Metropolis, N., 362, 695 Michailidis, G., 515, 675 Mika, S., 628, 683
+Miller, A.J., 150, 695
+Miller, W., 473, 475, 667, 687 Milner, P.M., 321, 364, 695 Minsky, M.L., 328, 330, 695 Mitchison, G., 503, 678 Mockett, L.G., 420, 693 Moguerza, J.M., 404, 695 Monk, H., 34, 695
+Moore, A.W., 271, 686
+Morgan, J.N., 313, 695
+Morris, C., 71, 678
+Mosteller, F., 11, 695
+Moyeed, R.A., 578, 579, 692 Muller, K.-R., 609, 612, 631, 700 Munoz, A., 404, 695
+Murtagh, F., 437, 692 Myers, E.W., 473, 667
+Naes, T., 131, 694 Naik, D.M., 189, 690 Nandi, A.K., 594, 695 Nash, J., 616, 695
+Neal, R.M., 353, 355, 361, 364, 365, 696
+Needleman, S.B., 473, 696 Nelder, J.A., 255, 351, 694 Nerbonne, J., 476, 696 Nettleton, D., 131, 687 Niyogi, P., 625, 669 Notterman, D., 19, 667
+O’Sullivan, F., 87, 696
+Oh, M.-S., 478, 489, 492, 502, 696 Oja, E., 460, 569, 594, 687, 696,
+705 Ojelund, H., 154, 696
+Ojemann, G.A., 364, 673
+Olshen, R., 671
+Olshen, R.A., 150, 281, 292, 295,
+296, 298, 300, 301, 310,
+312, 313, 682 Owen, A., 449, 451, 460, 691
+Owen, A.B., 696 Oxnard, C.E., 420, 668
+Pack, P., 663, 696
+Page, L., 476, 672
+Panchenko, D., 519
+Papert, S.A., 328, 330, 695 Parker, D.B., 365, 696 Parmigiani, G., 42, 696
+Parzen, E., 76, 92, 156, 679, 696 Pastur, L.A., 205, 694
+Payne, C.D., 168, 672 Pen ̃a, D., 230, 697 Pearson, K., 653, 654, 696 Pearson, W.R., 473, 696 Pechura, M., 697
+Peel, D., 460, 461, 695 Pendleton, B.J., 364, 677 Penrod, C.S., 92, 676
+Pentland, A.P., 22, 704 Peterson, C., 541, 690 Petitcolas, F.A.P., 345, 697 Phatak, A., 136, 697 Piatetsky-Shapiro, G., 8, 16, 679 Pike, R., 476, 690
+AUTHOR INDEX 717
+718 AUTHOR INDEX
+Pinsker, S., 316, 697
+Pitts, W., 318, 325, 694
+Platt, J., 402, 697
+Plaut, D.C., 316, 686
+Poin ̧cot, P., 437, 692
+Pregibon, D., 312, 313, 330, 697 Press, S.J., 277, 697
+Prieto, F.J., 230, 697
+Prince, A., 316, 697
+Quinlan, J.R., 281, 697
+R ̈atsch, G., 520, 523, 549, 698 Radmacher, M.D., 42, 442, 701 Raftery, A.E., 14, 459–461, 478,
+489, 492, 502, 605, 609,
+669, 680, 686, 690, 696 Ramoni, M.F., 42, 460, 701
+Ramsay, J.O., 212, 471, 492, 495, 503, 697
+Rao, C.R., 72, 189, 231, 643, 698 Raydan, M., 502, 681
+Redner, R.A., 458, 698
+Reinsel, G.C., 191, 698
+Rencher, A.C., 277, 460, 698 Richardson, S., 361, 365, 681 Ringner, M., 541, 690
+Ripley, B.D., 16, 104, 233, 277,
+313, 344, 354, 359, 364, 365, 403, 460, 461, 489, 501, 502, 564, 694, 698, 705
+Ritov, Y., 517, 670
+Rix, H.-W., 707
+Robert, C.P., 361, 365, 698 Roberts, S., 594, 698
+Rojas, R., 364, 365, 698 Roosen, C.B., 350, 698
+Rose, T.G., 28, 260, 692 Rosenberg, C., 316, 701 Rosenblatt, F., 322, 325, 698 Rosenblatt, M., 77, 699 Rosenbluth, A.W., 362, 695 Rosenbluth, M.N., 362, 695 Rothkopf, E.Z., 469, 699
+Rousseeuw, P.J., 43, 424–427, 460, 690, 699
+Roweis, S.T., 621, 626, 699, 700 Roweth, D., 364, 677
+Rozoener, L., 404, 667
+Rubin, D.B., 40, 43, 365, 457,
+461, 589, 676, 681, 692,
+699
+Rudin, C., 520, 522, 523, 549, 699
+Rumelhart, D., 316
+Rumelhart, D.E., 344, 365, 699,
+705
+Russell, J.S., 271, 686
+S ̈arel ̈a, J., 568, 571, 687
+Saal, L.H., 541, 690
+Salinelli, E., 699
+Sammon, J.W., 488, 498, 699 Sander, C., 484, 686
+Saul, L.K., 621, 626, 699, 700 Saunders, C., 382, 404, 693 Savage, M., 477, 478, 702 Scho ̈lkopf, B., 403, 404, 683, 700 Schafer, J.L., 43, 461, 700 Schapire, R.E., 506, 511, 512,
+518–520, 522–524, 549,
+680, 699, 700 Schimert, J., 350, 687
+Scholkopf, B., 609, 612, 628, 631 Schonlau, M., 502, 703 Schroeder, A., 100, 101, 681 Schwab, M., 541, 690
+Schwarz, G., 147, 700
+Scott, D.W., 80, 85, 86, 88, 89, 93,
+97, 103, 104, 700, 703 Sebastiani, P., 42, 460, 701
+Seber, G.A.F., 72, 233, 277, 460, 701
+Seery, J.B., 502, 691
+Segal, M.R., 310, 701
+Sejnowski, T., 316, 701 Shahshahani, M., 349, 677 Shallice, T., 316, 686 Shawe-Taylor, J., 382, 403, 404,
+675, 693, 701
+Sheather, S.J., 98, 104, 689, 701 Shepard, R.N., 469, 701
+Shiffrin, R.M., 28, 701
+Sibson, R., 101, 102, 230, 232,
+558, 689 Siemon, H.P., 435, 704
+Silverman, B.W., 76, 96, 103, 106, 212, 459, 578, 579, 688,
+692, 697, 701 Simon, R.M., 42, 442, 701
+Simonoff, J., 103, 701
+Sims, G.E., 484, 486, 502, 687 Singer, B., 312, 313, 707
+Singer, Y., 524, 700
+Slonim, D., 439, 704
+Slonim, D.K., 451, 682
+Smith, A.F.M., 155, 365, 366,
+461, 491, 670, 681, 682,
+692, 704 Smith, H., 155, 677
+Smith, T.F., 473, 702
+Smola, A.J., 403, 404, 609, 612,
+631, 700
+Smyth, P., 8, 16, 679, 684
+Sommer, C.J., 93, 103, 106, 459, 688
+Sondquist, J.A., 695
+Sonquist, J.A., 313
+Spector, P., 155, 671
+Speed, T., 42, 702
+Speed, T.P., 452, 678
+Spence, I., 501, 702
+Spence, T.F., 420, 668 Spiegelhalter, D.J., 361, 365, 681 Sprecher, D.A., 365, 702
+Staudt, L., 440, 443, 685
+Stein, C., 68, 69, 702
+Stern, H.S., 365, 681, 702 Stinchcombe, M., 365, 686 Stone, C., 12, 150, 671
+Stone, C.J., 281, 292, 295, 296,
+298, 300, 301, 312, 313 Stone, J.V., 594, 702
+Stone, M., 121, 155, 702
+Stork, D.G., 104, 343, 364, 677, 684
+Stovel, K., 477, 478, 702
+Street, W.N., 239, 694, 702 Stuart, A., 229, 663, 664, 690, 702 Stuetzle, W., 100, 101, 234, 349–
+351, 601, 603, 631, 677,
+680, 684 Sun, D.X., 3, 674
+Swayne, D.F., 232, 470, 672, 702 Swierenga, H., 129, 702 Swineford, F., 587, 686
+Szokoly, G., 707
+Takane, Y., 498, 703 Tamassia, R., 502, 677 Tamayo, P., 451, 682
+Tao, T., 149, 673
+Tapia, R.A., 87, 88, 676, 700 Tarpey, T., 631, 703
+Tavar ́e, S., 503, 676
+Taylor, J., 684
+Teller, A.H., 362
+Teller, E., 362
+Tenenbaum, J.B., 616, 618, 620,
+626, 670, 703
+Terrell, G.R., 80, 85, 97, 700, 703
+Thayer, D.T., 589, 699 Therneau, T.M., 313, 703
+Theus, M., 502, 703
+Thisted, R.A., 142, 155, 567, 703 Thomas, J., 675
+Thomas, J.A., 565
+Thompson, J.R., 87, 88, 676, 700 Thorpe, J.A., 631, 703 Thyregod, P., 154, 696 Tibshirani, R., 16, 125, 126, 142,
+149, 152, 154, 155, 277, 313, 351, 364, 365, 403, 440, 442, 443, 460, 461, 516, 523, 525, 527–529, 532, 548, 606, 607, 674, 678, 681, 684, 692, 703
+Tierney, L., 365, 690, 703
+AUTHOR INDEX 719
+720 AUTHOR INDEX
+Titterington, D.M., 365, 461, 674, 704
+Tollis, I., 502, 677
+Tomayo, P., 439, 704
+Torgerson, W.S., 480, 502, 704 Trosset, M.W., 492, 502, 704 Tukey, J., 681
+Tukey, J.W., 3, 11, 228, 232–234,
+461, 556, 558, 679, 695,
+704
+Tukey, P.A., 558, 704
+Turk, M.A., 22, 704
+Uitdenbogerd, A., 476, 704 Ultsch, A., 435, 704 Uthurusamy, R., 16, 679
+Valdivia-Granda, W.A., 43, 704 Valiant, L.G., 511, 705
+van der Heijden, P.G.M., 634,
+651, 652, 663, 705 van der Leeden, R., 191, 705
+van Wijk, R.J., 129, 702 Vandenberghe, L., 404, 670 Vandewalle, J., 554, 676
+Vapnik, V.N., 9, 364, 369, 379,
+403, 404, 519, 670, 675,
+705 Vayatis, N., 514, 693
+Vehtari, A., 365, 691
+Velu, R.P., 191, 698
+Venables, W.N., 233, 313, 364,
+403, 460, 501, 502, 705 Vig ́ario, R., 569, 571, 705
+Vinod, H., 424, 705 Volinsky, C.T., 14, 686
+Wahba, G., 312, 389, 391, 397, 675, 690, 692
+Wald, A., 246, 705 Walker, A.M., 355, 705 Walker, H.F., 458, 698 Walther, G., 442, 684, 703 Wanatabe, M., 461, 705 Wanatabe, T., 343, 684
+Wand, M.P., 92, 683
+Warmuth, M.K., 520, 523, 549,
+698
+Waterman, M.S., 42, 473, 503,
+676, 691, 702 Watkins, C., 382, 404, 693
+Watnik, M.R., 307, 705
+Wei, J.S., 541, 690
+Weigend, A.S., 344, 354, 356, 359,
+672, 705 Weir, I.S., 564, 706
+Weisberg, S., 99, 155, 409, 706 Welsch, R.E., 155, 669
+Wen, S., 460, 677
+Wenk, C., 476, 706
+Werbos, P.J., 336, 365, 706 Westermann, F., 541, 690
+White, H., 365, 686
+Wichern, D.W., 72, 277, 460, 688 Wielandt, H.W., 53, 686
+Wilk, M.B., 598, 600, 682 Wilkinson, L., 36, 706 Williams, C.K.I., 613, 629, 706 Williams, R.J., 365
+Williams, W.T., 420, 693 Wilson, R., 146, 681 Wishart, J., 72, 706 Wisotski, L., 707
+Witten, I.H., 364, 706 Wolberg, W.H., 239, 694, 702 Wold, H., 134–136, 706 Wold, S., 132, 134, 135, 706 Wolf. C., 707
+Wolfe, J.H., 459, 706 Wolff, G., 343, 684 Wolpert, D.H., 356, 707 Woodroofe, M., 98, 707 Wright, G.W., 42, 442, 701 Wu, C.F.J., 126, 456, 707 Wunsch, C.D., 473, 696 Wyner, A., 691
+Wyner, A.J., 518, 529, 535, 695
+Yalcin, I., 590, 707 Yamaguchi, K., 461, 705
+Yandell, M., 503, 690
+Yang, Y., 28, 260, 692 Ybarra, S., 19, 667
+Yianilos, P.N., 629
+Young, F.W., 498, 703 Young, G., 52, 502, 678, 707 Yu, B., 532, 672
+Zeger, S.L., 42, 696
+Zha, H., 628, 707
+Zhang, C., 484, 486, 502, 687 Zhang, H., 309, 312, 313, 707 Zhang, Z., 628, 707
+Zhao, Y., 42, 442, 701
+Zhu, Q., 439, 704
+Zidek, J.V., 168, 672
+Zobel, J., 476, 704
+Zou, H., 149, 153, 707
+AUTHOR INDEX 721
+Subject Index
+activation function, 325, 332 nonlinear, 334
+sigmoidal, 333
+AdaBoost, 512–535
+additive model, 350, 525 admissible, 69
+agglomerative hierarchical clus-
+tering
+average linkage, 414, 418–
+420
+complete linkage, 414, 416–
+418
+single linkage, 414–416
+Akaike Information Criterion, 147
+algorithm
+K-means clustering, 424 K-medoids clustering, 426 AdaBoost, 513 agglomerative hierarchical
+clustering, 415 backfitting, 351
+backpropagation, 336–341, 365
+block clustering, 447 classical scaling, 481 coordinate-descent, 526 EM, 455
+EM for MLFA, 586 FastICA, 568
+FastICA deflation, 570 FastICA MLE, 576
+FastICA parallel, 570 forwards-stagewise, 148 Gibbs sampler, 362, 363, 366 gradient boosting, 532 Hessian locally-linear em-
+bedding, 628 isomap, 618, 619
+iteratively reweighted least- squares, 254, 351
+Laplacian eigenmaps, 625, 626
+LAR, 149
+locally-linear embedding,
+622–624 Metropolis, 362, 363
+A.J. Izenman, Modern Multivariate Statistical Techniques, Springer Texts in Statistics, 723 DOI 10.1007/978-0-387-78189-1, © Springer Science+Business Media New York 2013
+724
+SUBJECT INDEX
+nonmetric distance-scaling, 499
+partial least-squares regres- sion, 134, 135
+partitioning-around-medoids clustering, 426
+blind source separation, 551 block clustering, 444 BLOSUM62 matrix, 474, 475 boosting, 511–535
+bootstrap, 13 conditional, 126
+box constraint, 378 Box–Behnken design, 166 bridge regression, 155 British general election, 168 bump-hunting, 103
+Burt matrix, 638, 659
+Cajal, Santiago Ram ́on, 320 canonical correlation
+coefficient, 222, 223 canonical correlation analysis,
+180, 195, 215–228 canonical variate analysis, 180,
+189, 195, 215–228, 645 canonical variate scores, 226
+CART — see classification and regression trees, 281
+Cartan, E ́lie, 615
+class prediction, 238
+classical scaling, 480 classification and regression trees,
+281–314 classification margin, 518–523
+classification regions, 262 classification rule, 237 classification tree
+binary split, 282 nonterminal node, 282 root node, 282
+stump, 282
+terminal node, 282
+classifier
+base, 506, 511
+boosted, 511
+combined, 506 claw density, 106
+cluster analysis, 407–462 clustering method
+K-means, 423
+pro jection pursuit estimation, 101
+density
+projection-expectation, 604– 606
+random forest, 537
+rank trace, 186 self-organizing map, 432
+amino acids, 473
+analysis of variance, 115 Anderson, Edgar, 274
+apparent error rate, 121
+artificial intelligence, 329 artificial intelligence (AI), 9 artificial neural networks, 180,
+315–367
+asymptotic covariance matrix,
+183
+asymptotic integrated variance,
+83
+average log-intensity, 19
+average optimism, 124
+average shifted histogram, 101,
+104
+bagging, 506–509, 511
+Bayes estimator, 139
+Bayes risk, 109
+Bayes rule, 109
+Bayes’s rule classifier, 242, 262 Bayesian Information Criterion,
+147
+Bayesian MDS, 489, 491, 492
+Bayesian networks classification, 359
+regression, 353
+bias-variance decomposition, 140 BIC — see Bayesian Information
+Criterion, 147 bin width, 84
+K-medoids, 426
+fuzzy, 425
+nonhierarchical, 422 partitioning around
+medoids, 424 clustering variables, 439
+cocktail-party problem, 552, 559 cognitive science, 315 collinearity indices, 128 common factors, 582 communality, 582
+complete-case analysis, 40 complexity parameter, 295, 300,
+306
+complexity term, 147, 344
+condition number, 52, 128 confidence interval, 165 confirmatory factor analysis, 590 confusion table, 246, 247, 430,
+431 connection weight, 323
+convex optimization, 373, 378 correlation coefficient, 58 correlation matrix, 58 correspondence analysis, 180,
+633–666 correspondence maps, 650
+cost-complexity pruning mea- sure, 295
+covariance, 58
+covariance matrix, 57, 58, 63 cross-entropy, 102, 565 cross-validation, 96
+V -fold, 12, 300, 307
+biased, 85
+generalized approximate,
+397
+leave-one-out, 85, 96, 397 leave-one-out rule, 246 unbiased, 85, 96
+curse of dimensionality, 41–42, 379, 458
+curves and curvature, 601–603 Daniel, Cuthbert, 156
+data augmentation, 157 data compression, 215 data integration, 32, 33 data mining, 3
+data storage
+data warehouse, 33–35 trends, 26, 27
+data types, 25–26
+database management systems,
+29, 30 databases
+general, 24
+Internet, 27
+microarray, 28 natural-language text, 27–29
+DBMS — see database manage- ment systems, 29
+de N ́o, Lorente, 321 decision support system, 35 decision tree, 281 decomposition
+singular value, 647
+spectral, 131 deconvolution problem, 559 dendrogram, 411
+directed acyclic graph, 322 discriminant coordinates, 271 disparities, 493
+dissimilarity, 471
+1-correlation, 413 Euclidean, 413
+Manhattan city-block, 413 Minkowski, 413
+distance
+chi-squared metric, 642 edit, 476
+Euclidean, 479
+Hellinger, 79
+Levenshtein, 476 Mahalanobis, 60 Manhattan city-block, 479 Minkowski, 479
+distance scaling, 486 metric, 487
+metric least-squares, 488
+SUBJECT INDEX 725
+726 SUBJECT INDEX
+nonmetric, 492 distribution
+bivariate Gaussian, 61 chi-squared, 74
+Gaussian, 59 inverse-gamma, 491 multivariate Gaussian, 59–
+62 Normal, 59
+Student’s t, 165 sub-Gaussian, 564 super-Gaussian, 564 Wishart, 63, 74, 165, 585
+divisive hierarchical clustering, 420
+DSS — see decision support sys- tem, 35
+dual
+functional, 374, 377, 396 variables, 373
+dynamic graphics, 232 correlation tour, 233 grand tour, 232 PRIM-9, 232, 234 XGobi/GGobi, 232, 234
+Edgeworth, Francis Ysidro, 107 effective degrees of freedom, 142 effective dimensionality, 178, 185 eigenfaces, 22, 210
+elastic net, 153 EM algorithm
+convergence properties, 456 general, 40, 453–456 mixture models, 103, 456–
+459
+empirical orthogonal functions,
+196
+entropy function, 231, 288
+error covariance matrix, 161, 165, 175
+error sum of squares, 111 error-complexity measure, 306 exploratory data analysis (EDA),
+3
+exploratory factor analysis, 180, 582–588
+expression level, 18
+factor indeterminancy, 584 factor loadings, 582 feasible region, 378
+feature extraction, 195 feature map, 379
+feature space, 379
+feedforward network, 323, 325 finite mixture of Gaussians, 591 Fisher, Ronald Aylmer, 180 Floyd’s algorithm, 618
+forwards stagewise, 525 frequency polygon, 104
+full-rank regression, 177
+full-rank regression coefficient
+matrix, 179, 181 functional CVA, 578 functional data, 212
+functional PCA, 212, 214
+Galton, Francis, 107
+gap statistic, 442
+garotte, 153, 154
+gene clustering, 440–443
+gene shaving, 440–443 generalization, 11
+generalization error, 13, 117, 505,
+508, 515, 537, 538 generalized additive models, 348,
+351, 364
+generalized inverse, 50, 131, 164
+Moore–Penrose, 51, 131, 222, 583
+reflexive, 51
+generalized least-squares, 158,
+162, 255 generalized-inverse
+regression, 156 generalized-inverse regression,
+131
+Gini index, 288, 289, 543
+goodness of split, 289
+gradient boosting, 530 gradient-descent algorithm, 326
+hat matrix, 113, 164 heatmap, 19, 20
+Hebbian learning theory, 320 hemoglobin
+alpha chain, 475
+beta chain, 475
+Hessian eigenmaps, 626, 627 high-leverage points, 113 Hilbert space, 379, 380 histogram, 80–86
+origins, 104
+Hotelling’s T2 statistic, 248 Hotelling, Harold, 180, 222, 223 Human Genome Project, 18
+ICA model noiseless, 560
+noisy, 582 ill-conditioned data, 128, 129 image analysis, 196
+impurity function, 284, 288 imputation
+multiple, 40
+single, 40
+IMSE — see integrated
+mean-squared error, 78 inadmissible, 68
+independent component analy- sis (ICA), 553–569, 571–
+573, 575–581 independent factor analysis, 590–
+594
+independent test set, 299, 306
+inequality
+Cauchy–Schwarz, 327, 380 Chebychev, 539
+Jensen, 565
+Inmon, W.H., 33
+instability, 505
+integrated absolute error, 79 integrated mean-squared error,
+78
+intensity log-ratio, 19 interquartile range, 84
+isomap, 616–621
+isotonic (monotonic) regression,
+493 istribution
+multivariate Gaussian, 59
+Jacobi family of orthogonal poly- nomials, 227
+Jacobian, 227
+James–Stein estimator, 69–72
+Kaiser’s rule, 132, 208, 209, 430 Karhunen–Lo`eve
+expansion, 214
+SUBJECT INDEX 727
+transform, 196, 201 Karush–Kuhn–Tucker
+condi- tions, 373, 378, 384, 396,
+400, 404 kernel
+Bartlett–Epanechnikov, 90 biweight, 90
+cosine, 90
+Dirichlet, 405
+Gaussian, 90 Gaussian radial basis
+function, 381 Laplacian, 381
+Mercer, 380
+polynomial, 90, 380, 381 product, 91
+rectangular, 90
+sigmoid, 381
+string, 382
+thin-plate spline, 381 triangular, 90
+triweight, 90
+kernel kernel
+kernel kernel kernel
+CVA, 576, 578–580 density estimates, 240,
+241, 261
+density estimation, 88–100 function, 89, 379 generalized variance, 581
+728 SUBJECT INDEX
+kernel ICA, 575, 577, 578, 580, 581
+kernel methods, 370, 609 kernel PCA, 609–613 kernel trick, 379, 611, 613 knowledge discovery, 8 Kronecker product, 47, 162 Kryder’s Law, 26 Kullback–Leibler
+deviance, 336 divergence, 564 relative entropy, 79
+kurtosis, 595
+Laplace’s method, 353, 355, 365 Laplace, Pierre Simon, 107 Laplace–Beltrami operator, 625 lasso, 152, 154
+latent variable models, 551 latent variables, 133, 551 learning set, 11 learning-rate parameter, 326 least-angle regression, 149 least-squares
+origins, 107
+leave-one-out rule, 122
+Legendre, Adrien Marie, 107 leverage, 113
+likelihood function, 65 likelihood-ratio test, 192
+linear activation function, 323 linear constraints, 168
+linear discriminant analysis, 180,
+238, 251 Gaussian, 243
+linear discriminant function, 240, 241, 243, 247, 261
+LLE — see locally-linear embed- ding, 621
+locally-linear embedding, 621, 622, 624
+logistic discrimination, 256, 265 logistic regression, 250, 525 logistic sigmoid activation func-
+tion, 250, 266
+loss function, 109 absolute-error, 533 binomial, 533 exponential, 516 hinge, 388
+Huber, 533
+linear epsilon-insensitive,
+398, 399 logistic, 532
+quadratic epsilon-insensitive, 398, 399
+squared-error, 68, 532 lossy data compression, 196
+machine learning, 9 Macsyma, 330
+ma jority-vote rule, 508 Mallows CP , 147 manifold
+differentiable, 616 Riemannian, 616 S-shaped, 614, 615 Swiss Roll, 617 topological, 615
+MANOVA
+between-class covariance
+matrix, 264
+general linear hypothesis,
+174
+Hotelling–Lawley trace
+statistic, 174 identity, 264
+pooled within-class covari- ance matrix, 264
+Roy’s largest root statistic, 174
+Wilk’s lambda, 174 MANOVA — see multivariate
+analysis of variance, 173 MANOVA table, 174
+MAP estimation, 352, 353
+MAR — see missing at random,
+40 margin, 372
+margin function, 538
+Markov chain Monte Carlo meth- ods, 353, 361, 365, 491
+MARS — see multivariate adap- tive regression splines,
+311 matrix
+commutation, 64 Gram, 380, 384, 581 Hessian, 55, 254 ill-conditioned, 52 Jacobian, 54 permuted-identity, 64
+matrix decomposition Cholesky, 46, 66
+LR, 46
+QR, 46
+singular-value (SVD), 50
+maximal margin classifier, 371 maximal margin solution, 373 maximum likelihood, 81 maximum likelihood (ML), 65 maximum penalized likelihood,
+87, 88 maximum-likelihood factor anal-
+ysis, 584–588
+MCAR — see missing completely
+at random, 40 McCulloch–Pitts neuron, 318,
+319, 322, 366
+MDS — see multidimensional
+scaling, 463
+mean integrated absolute error,
+79
+mean integrated squared error, 78
+metaparameter, 132
+metric stress function, 488 MIAE — see mean integrated ab-
+solute error, 79 microarray
+cDNA, 18
+oligonucleotide, 18 microarray experiments, 541 minimizing subtree, 295, 296 misclassification rate, 294, 300,
+508
+MISE — see mean integrated squared error, 78
+missing at random, 40
+missing completely at random, 40 missing data, 39, 40, 312
+mixing function, 558
+mixing matrix, 558
+mixing proportions, 592
+model error, 119, 120
+monotone spline, 493, 495–497 Moore’s Law, 27
+Moore, Gordon E., 27
+multiclass classification
+one-versus-one, 390
+one-versus-rest, 390 multidimensional scaling, 463–
+465, 467–482, 484–489,
+491–501 multimodality, 103
+multiple correspondence analysis, 658–662
+multiple multiple
+linear regression model, 108
+logistic discrimination, 266
+SUBJECT INDEX 729
+multiple logistic model, 266 multiple regression, 247 multivariate adaptive regression
+splines, 311 multivariate analysis of variance,
+173 multivariate inverse
+calibration, 21 multivariate kernel density esti-
+mator, 89 multivariate linear regression
+model, 177
+multivariate outliers, 230, 545,
+547
+multivariate reduced-rank regres-
+sion, 160, 176–178, 180, 184, 188–190, 192, 195, 200, 222, 228, 233, 335, 583
+multivariate regression, 159
+730 SUBJECT INDEX
+multivariate ridge regression, 168 mutual information, 565
+negentropy, 231
+network complexity, 334, 341 network pruning, 343
+neural network
+Bayesian learning, 352 fully connected, 332 multilayer
+autoassociative, 607–
+609
+partially connected, 332 skip-level connection, 333
+NIPALS algorithm, 136 node impurity function, 287 noisy class labels, 535 nonlinear dimensionality
+reduction, 597–613 nonlinear manifold learning, 613,
+615–631
+nonparametric density estimate,
+246
+nonparametric density estima-
+tion, 75–103
+norm
+matrix, 51
+spectral, 52
+objective function, 561 Ockham’s razor, 13, 343
+OLAP — see on-line analytical
+processing, 36
+OLTP — see on-line transaction processing, 32
+on-line analytical processing, 35,
+36
+on-line learning, 326
+on-line transaction processing, 32 one-SE rule, 301
+optimal brain surgery, 343 optimal separating hyperplane,
+371, 372, 375
+optimal sequence alignment, 472
+optimism, bootstrap estimator, 125
+out-of-bag (OOB), 507, 509 out-of-bootstrap, 125 outliers, 38, 39, 219, 230, 256 outliers in PCA, 215 overfitting, 13, 143, 343
+PAC — see probably approxi- mately correct
+learning, 511
+partial least-squares regression,
+133
+pattern recognition, 196
+Pearson residual, 647 Pearson’s chi-squared, 643 Pearson, Karl, 108
+penalized least-squares, 150 penalty coefficient, 146 penalty function, 150–152, 344
+lasso, 151, 152
+ridge regression, 151 perceptron
+convergence theorem, 326– 328
+learning rule, 326 limitations, 328 multilayer, 330, 331 single layer, 322, 324
+phylogenetic tree, 477
+PLSR — see partial least-squares
+regression, 133 plug-in classifier, 265
+plurality rule, 292
+polyaromatic hydrocarbon
+(PAH) compounds, 21 polynomial PCA, 598–600
+posterior probability, 242, 262 prediction, 117
+prediction error, 10, 12, 15, 117,
+119–121, 228 0.632 bootstrap
+estimator, 125
+apparent error rate, 121, 123,
+147, 285
+leave-one-out bootstrap esti- mator, 125
+resubstitution error rate, 121, 147, 285
+simple bootstrap estimator, 123
+predictive sample-reuse method, 155
+predictor base, 506
+combined, 506 primal
+functional, 373, 376, 395 variables, 373, 374
+proximity matrix, 413, 424, 425, 471, 477, 478, 480, 491,
+504 pruning, 295
+quadratic discriminant analysis, 257, 265
+quadratic discriminant function, 257
+Quarter-Circle Law, 205
+Raman near-infrared spec- troscopy, 130
+Raman NIR spectra, 130 random forests, 536–548 random input selection, 536 random matrix theory, 205 random split selection, 536 rank trace, 186–190, 207, 235
+CV, 228
+PC, 208
+recursive partitioning, 281–283,
+291
+reduced-rank regression coeffi-
+cient matrix, 179, 181,
+200, 204, 223
+regression coefficient matrix, 175,
+186
+regression function, 109, 111, 119,
+147 regression tree, 304
+regularization, 87, 344, 533, 578 regularization parameter, 150,
+360, 376 relational DBMS, 29
+reproducing kernel, 380 reproducing kernel Hilbert
+space, 380, 387, 392,
+576, 577
+reproducing property, 380, 389
+resampling method
+bootstrap, 121, 122 bootstrap, unconditional,
+122
+cross-validation, 121, 122
+principal
+principal principal
+principal principal
+component analysis, 180, 195–215
+components, 132, 431 components regression,
+131
+coordinates, 482, 649
+curves and surfaces, 600–610
+principal
+principal-factor method, 584 prior probabilities, 241, 262 probably approximately correct
+learning, 511 profile analysis, 169, 172
+projection index, 102, 229, 561 Friedman–Tukey, 102 moment-based, 230 polynomial-based, 230 Shannon negentropy, 229,
+231
+third and fourth moments,
+102, 229 two-dimensional, 231 variance, 229
+projection pursuit (PP), 228 density estimation, 100–102 exploratory, 556, 557 origins, 233
+regression, 348–350, 364 protein sequences, 472 proximity, 412, 463, 471, 545, 546
+inertias, 646
+SUBJECT INDEX 731
+732 SUBJECT INDEX
+residual covariance matrix, 165, 186
+residual matrix, 164 residual sum of squares, 113 residual sum-of-squares
+matrix, 165 residual variance, 114
+residuals, 114
+resubstitution error rate, 294, 302 ridge regression, 151, 154, 167
+estimator, 136, 155
+ridge matrix, 168
+ridge parameter, 129, 138,
+142, 168
+ridge trace, 141, 144
+Riemann, Georg Friedrich Bern- hard, 615
+rotation matrix, 584
+roughness, 83
+roughness penalty functional, 87 RRR — see multivariate reduced-
+rank regression, 176 rule-based expert system, 329
+Dendral, 329 Emycin, 329 Mycin, 329 Rex, 330
+Sammon mapping, 488
+sample covariance matrix, 67 sampling, 245
+scalability, 5
+scatterplot smoothers, 350 Scott’s rule, 84
+scree plot, 205, 206, 208, 235, 501,
+573
+self-organizing map (SOM), 431–
+439
+separate ridge regression, 167
+separating function, 370 separating hyperplane, 371, 372 sequence alignment
+alignment score, 473 gap score, 474 global, 473
+local, 473
+substitution score, 474 Shannon, Claude E., 231 Shepard diagram, 493, 495 shrinkage estimator, 134, 138, 139
+lasso, 152
+shrinkage factor, 71, 129 sigmoidal functions, 324 silhouette plot, 426–428, 430 similarity, 471
+simple correspondence
+analysis, 635–658 SIMPLS algorithm, 136
+single-layer network, 323
+slack variable, 376
+smallest minimizing subtree, 297,
+298 softcomputing, 366
+softmax, 266
+softmax function, 336
+specific factors, 582
+spherical Gaussian density, 60 SQL — see Structured Query
+Language, 32
+square asymmetric contingency
+tables, 651–658
+squared correlation coefficient,
+223
+squared multiple correlation coef-
+ficient, 115, 128, 223 Star Trek, 345
+Stein effect, 71
+Stein’s Lemma, 70, 74
+Stein’s paradox, 71
+Stein, Charles, 68
+stress function, 497, 498
+string matching, 476
+Structural Classification System
+of Proteins (SCOP), 472 Structured Query Language, 30–
+32
+supervised learning, 10, 237
+support vector machines, 369– 406
+linear, 370–378
+multiclass, 390–397
+nonlinear, 378–389 support vector machines, linear
+linearly nonseparable case, 376–378
+linearly separable case, 371– 375
+support vector regression, 397– 401
+support vectors, 371, 372, 374, 375, 397, 400
+surrogate splits, 312
+survival trees, 310
+SVM — see support vector ma-
+chines, 369 Swiss-Protein database, 475
+test set, 11
+text categorization, 260, 382 theorem
+Courant–Fischer Min-Max, 52, 202
+Eckart–Young, 52, 178, 665 Fubini, 78
+Gauss–Markov, 112, 156, 162 generalized mean value, 82 Hoffman–Wielandt, 53, 72 Poincar ́e Separation, 53, 179,
+220 representer, 389
+spectral, 49
+spectral decomposition, 199 universal approximation,
+333, 334, 365
+threshold activation function, 324
+threshold logic unit, 319
+total inertia, 646
+total misclassification probabil-
+ity, 244 Tukey, John, W., 232
+two-way clustering biclustering, 447
+plaid models, 449
+two-way contingency tables, 635–
+658
+unified-distance matrix, 435 uniqueness, 582
+unmixing matrix, 560 unsupervised learning, 10, 407
+validation set, 11
+Vandermonde determinant, 205,
+227 variable selection
+all possible subsets, 146 backwards elimination, 144,
+255
+criticisms, 146, 150 forwards selection, 145 hybrid stepwise, 145
+variable-importance plots, 544 variance inflation factor, 128 varimax rotation, 584
+VC dimension, 519
+weight-decay regularizer, 360 window width, 89
+Wishart matrix, 206, 236 witchcraft, 155
+World Wildlife Fund–UK, 19 Yule, George Udny, 108
+SUBJECT INDEX 733

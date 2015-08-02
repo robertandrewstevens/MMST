@@ -1,0 +1,835 @@
+3
+Random Vectors and Matrices
+3.1 Introduction
+This chapter builds the foundation for the statistical analysis of multivari- ate data. We first give the notation we use in this book, followed by a quick review of the rules for manipulating vectors and matrices. Then, we learn about random vectors and matrices, which are the fundamental building blocks for multivariate analysis. We then describe the properties of a va- riety of estimators of an unknown mean vector and unknown covariance matrix of a multivariate Gaussian distribution.
+3.2 Vectors and Matrices
+In this section, we briefly review the notation, terminology, and basic operations and results for vectors and matrices.
+3.2.1 Notation
+Vectors having J elements will be represented as column vectors (i.e., as (J ×1)-matrices, which we will refer to as J -vectors for convenience) and will
+A.J. Izenman, Modern Multivariate Statistical Techniques, Springer Texts in Statistics, 45 DOI 10.1007/978-0-387-78189-1_3, © Springer Science+Business Media New York 2013
+￼￼
+46 3. Random Vectors and Matrices
+be represented by boldface letters, either uppercase (e.g., X) or lowercase (e.g., x, α) depending upon the context. Two J-vectors, x = (x1,···,xJ)τ and y = (y1,···,yJ)τ, are orthogonal if xτy = 􏰊Jj=1 xjyj = 0.
+We denote matrices by uppercase boldface letters (e.g., A, Σ) or by capital script letters (e.g., X,Y,Z). Thus, the (J × K) matrix A = (Ajk) has J rows and K columns and jkth entry Ajk. If J = K, then A is said to be square. The (J ×J) identity matrix IJ has Ijj = 1 and Ijk = 0,j ̸= k, The null matrix 0 has all entries equal to zero.
+3.2.2 Basic Matrix Operations
+If A = (Ajk) is a (J ×K)-matrix, then the transpose of A is the (K ×J)- matrix denoted by Aτ = (Akj ). If A = Aτ , then A is said to be symmetric.
+The sum of two (J ×K) matrices A and B is A+B = (Ajk +Bjk), and its transpose is (A + B)τ = Aτ + Bτ = (Akj + Bkj ). The inequality A+B≥AholdsifB≥0(i.e.,Bjk ≥0,alljandk).
+The product of a (J×K)-matrix A and a (K×L)-matrix B is the (J×L)- matrix (Cjl) = C = AB = (􏰊Kk=1 AjkBkl). Note that (AB)τ = Bτ Aτ . Multiplication of a (J × K)-matrix A by a scalar a is the (J × K)-matrix aA = (aAjk).
+A(J×J)-matrixAisorthogonalifAAτ =AτA=IJ andisidempotent if A2 = A. A square matrix P is a projection matrix (or a projector) iff P is idempotent. If P is both idempotent and orthogonal, then P is called an orthogonal projector. If P is idempotent, then so is Q = I–P; Q is called the complementary projector to P. 􏰊J
+The trace of a square (J ×J) matrix A is denoted by tr(A) = j=1 Ajj. Note that for square matrices A and B, tr(A + B) = tr(A) + tr(B), and for (J × K)-matrix A and (K × J)-matrix B, tr(AB) = tr(BA).
+The determinant of a (J × J )-matrix A = (Aij ) is denoted by either |A| or det(A). The minor Mij of element Aij is the (J − 1 × J − 1)-matrix formed by removing the ith row and jth column from A. The cofactor of Aij is Cij = (−1)i+j|Mij|. One way of defining the determinant of A is by using Laplace’s formula: |A| = 􏰊Jj=1 Aij Cij , where we expand along the ith row. Note that |Aτ| = |A|. If a is a scalar and A is (J ×J), then |aA| = aJ |A|. A is singular if |A| = 0, and nonsingular otherwise.
+Matrix decompositions include the LR decomposition (A = LR, where L is lower-triangular and R is upper-triangular), the Cholesky decomposi- tion (A = LLτ , where L is lower-triangular and A is symmetric positive- definite), and the QR decomposition (A = QR, where Q is orthogo- nal and R is upper-triangular). These matrix decompositions are used as efficient methods of computing |A| by applying the following results: |AB| = |A| · |B| if both A and B are (J × J); the determinant of a trian-
+gular matrix is the product of its diagonal entries; and for orthogonal Q, |det(Q)| = 1.
+Let
+􏰃􏰄
+Σ= A B (3.1) CD
+be a partitioned matrix, where A and D are both square and nonsingular. Then, the determinant of Σ can be expressed in two ways:
+|Σ| = |A|·|D−CA−1B| = |D|·|A−BD−1C|. (3.2)
+The rank of A, denoted r(A), is the size of the largest submatrix of A that has a nonzero determinant; it is also the number of linearly indepen- dent rows or columns of A. Note that r(AB) = r(A) if |B| ̸= 0, and, in general, r(AB) ≤ min(r(A), r(B)).
+If A is square, (J × J ), and nonsingular, then a unique (J × J ) inverse matrix A−1 exists such that AA−1 = IJ . If A is orthogonal, then A−1 = Aτ. Note that (AB)−1 = B−1A−1, and |A−1| = |A|−1. A useful result involving inverses is
+(A + BD−1C)−1 = A−1 − A−1B(D + CA−1B)−1CA−1, (3.3)
+where A and D are (J × J ) and (K × K ) nonsingular matrices, respectively. If A is (J ×J) and u and v are J-vectors, then, a special case of this result
+is
+whichreducestheproblemofinvertingA+uvτ tooneofjustinvertingA.
+3.2 Vectors and Matrices 47
+(A + uvτ )−1 = A−1 − (A−1u)(vτ A−1) , (3.4) 1 + vτ A−1u
+￼If A and D are symmetric matrices and A is nonsingular, then, 􏰃 A B 􏰄−1 􏰃 A−1 + FE−1Fτ −FE−1 􏰄
+Bτ D = −E−1Fτ E−1 , (3.5)
+where E = D − Bτ A−1B is nonsingular and F = A−1B.
+If A is a (J × J)-matrix and x is a J-vector, then a quadratic form is
+xτ Ax = 􏰊J 􏰊J Ajk xj xk . A (J × J )-matrix A is positive-definite if, j=1 k=1
+for any J -vector x ̸= 0, the quadratic form xτ Ax > 0, and is nonnegative- definite (or positive-semidefinite) if the same quadratic form is nonnegative.
+3.2.3 Vectoring and Kronecker Products
+The vectoring operation vec(A) denotes the (JK × 1)-column vector formed by placing the columns of a (J × K)-matrix A under one another successively.
+If a (J × K)-matrix A is such that the jkth element Ajk is itself a submatrix, then A is termed a block matrix. The Kronecker product of a
+48 3. Random Vectors and Matrices
+(J × K)-matrix A and an (L × M)-matrix B is the (JL × KM) block
+matrix
+Strictly speaking, the definition (3.6) is commonly known as the left Kro- necker product. There is also the right Kronecker product in the literature, A ⊗ B = (AijB), which, in our notation, is given by B ⊗ A.
+The following operations hold for Kronecker products as defined by (3.6):
+⎛AB ···AB ⎞
+A ⊗ B = ( A B j k ) = ⎜⎝ . . .
+ABL1 ··· ABLM
+(A⊗B)⊗C = (A⊗B)(C⊗D) = (A+B)⊗C = (A⊗B)τ = tr(A ⊗ B) = r(A⊗B) =
+A⊗(B⊗C) (AC)⊗(BD) (A⊗C)+(B⊗C) Aτ⊗Bτ (tr(A))(tr(B)) r(A) · r(B)
+(3.7) (3.8) (3.9)
+(3.10) (3.11) (3.12)
+(3.13)
+(3.14)
+(3.15)
+If A is (J × J) and B is (K × K), then,
+|A ⊗ B| = |A|K |B|J
+If A is (J × K) and B is (L × M), then,
+A⊗B = (A⊗IL)(IK ⊗B)
+If A and B are square and nonsingular, then, (A⊗B)−1 =A−1 ⊗B−1
+One of the most useful results that combines vectoring with Kronecker products is that
+vec(ABC) = (A ⊗ Cτ )vec(B). (3.16) 3.2.4 Eigenanalysis for Square Matrices
+If A is a (J ×J)-matrix, then |A−λIJ| is a polynomial of order J in λ. The equation
+|A − λIJ | = 0
+will have J (possibly complex-valued) roots denoted by λj = λj(A), j = 1,2,...,J. The root λj is called the eigenvalue (characteristic root, latent root) of A, and the set {λj} is called the spectrum of A. Associated with λj, there is a J-vector vj = vj(A) (not all of whose entries of zero) such that
+(A−λjIJ)vj =0.
+11 1M
+. . . ⎟⎠ . ( 3 . 6 )
+The vector vj is called the eigenvector (characteristic vector, latent vector) associated with λj . Eigenvalues of positive-definite matrices are all positive, and eigenvalues of nonnegative-definite matrices are all nonnegative.
+The following results for a real and symmetric (J × J )-matrix A are not difficult to prove. All the eigenvalues of A are real and the eigenvectors can be chosen to be real and normalized (i.e., have norm one). Eigenvectors vj and vk associated with distinct eigenvalues (λj ̸= λk) are orthogonal. If V = (v1,v2,...,vJ), then
+AV = VΛ, (3.17) where Λ = diag{λ1, λ2, . . . , λJ } is a matrix with the eigenvalues along the
+diagonal and zeroes elsewhere, and Vτ V = IJ .
+The “outer product” of a J-vector v with itself is the (J × J)-matrix vvτ , which has rank 1. The spectral theorem expresses the (J × J )-matrix A as a weighted average of rank-1 matrices,
+􏰏J
+j=1
+where IJ = 􏰊Jj=1 vjvjτ, and where the weights, λ1,...,λJ, are the eigen- values of A. The rank of A is the number of nonzero eigenvalues, the trace
+is
+and the determinant is
+􏰏J j=1
+􏰛J
+j=1 3.2.5 Functions of Matrices
+A=VΛVτ =
+λjvjvjτ, (3.18)
+tr(A) =
+λj(A),
+(3.19)
+(3.20)
+|A| =
+λj (A).
+If A is a symmetric (J × J)-matrix and φ : RJ → RJ is a function, then
+􏰏J j=1
+φ(λj )vj vjτ , (3.21) vector, respectively, of A. Examples include the following:
+(3.22)
+(3.23)
+φ(A) =
+where λj and vj are the jth eigenvalue and corresponding normalized eigen-
+A−1 = VΛ−1Vτ =
+A1/2 = VΛ1/2Vτ =
+􏰏J
+j
+j=1
+3.2 Vectors and Matrices 49
+λ−1vjvjτ, if A is nonsingular
+􏰏J
+j
+j=1
+λ1/2vjvjτ
+50 3. Random Vectors and Matrices
+􏰏J j=1
+(log(λj ))vj vjτ , if λj ̸= 0, all j Hence, λj (φ(A)) = φ(λj (A)) and vj (φ(A)) = vj (A). Note
+called the square-root of A.
+3.2.6 Singular-Value Decomposition
+If A is a (J × K)-matrix with J ≤ K, then
+λj(AτA) = λj(AAτ), j = 1,2,...,J,
+and zero for j > J . Furthermore, for λj (AAτ ) ̸= 0,
+vj (Aτ A) = (λj (AAτ ))1/2 Aτ vj (AAτ )
+vj (AAτ ) = (λj (AAτ ))−1/2 Avj (Aτ A) The singular-value decomposition (SVD) of A is given by
+(3.24) A1/2 is
+(3.25)
+(3.26) (3.27)
+(3.28)
+log(A) =
+A=UΨVτ =
+λ1/2ujvjτ,
+where U = (u1,...,uJ) is a (J×J)-matrix, uj = vj(AAτ), j = 1,2,...,J, V = (v1,...,vK) is a (K × K)-matrix, vk = vk(AτA), k = 1,2,...,K, λj =λj(AAτ),j=1,2,...,J,
+􏰃.􏰄
+Ψ= Ψσ.0 (3.29)
+is a (J × K)-matrix, and Ψσ is an (J × J) diagonal matrix with the non-
+negative singular values, σ1 ≥ σ2 ≥ . . . ≥ σJ ≥ 0, of A along the diagonal,
+where σj = λ1/2 is the square-root of the jth largest eigenvalue of the j
+(J ×J)-matrix AAτ, j = 1,2,...,J.
+A corollary of the SVD is that if r(A) = t, then there exists a (J × t)-
+matrix B and a (t × K)-matrix C, both of rank t, such that A = BC. To
+see this, take B = (λ1/2u ,...,λ1/2u ) and C = (vτ,...,vτ)τ. 11tt1t
+3.2.7 Generalized Inverses
+If A is either singular or nonsymmetric (or even not square), we can define a generalized inverse of A. First, we need the following definition: a g-inverse of a (J × K)-matrix A is any (K × J)-matrix A− such that, for any J-vector y for which Ax=y is a consistent equation, x = A−y is a solution. It can be shown that A− exists iff
+AA−A = A; (3.30)
+􏰏J
+j
+j=1
+that
+we call such an A− a reflexive g-inverse. Note that although A− is not nec- essarily unique, it has some interesting properties. For example, a general solution of the consistent equation Ax=y is given by
+x = A−y + (A−A − IK)z, (3.31)
+where z is an arbitrary K-vector. Furthermore, setting z=0 shows that the x with minimum norm (i.e., ∥ x ∥2= xτ x) that solves Ax=y is given by x = A−y.
+A unique g-inverse can be defined for the (J × K)-matrix A. From the SVD, A = UΨVτ, we set
+A+ =VΨ+Uτ, (3.32)
+where Ψ+ is a diagonal matrix whose diagonal elements are the reciprocals of the nonzero elements of Ψ = Λ1/2, and zeroes otherwise. The (K × J)-matrix A+ is the unique Moore–Penrose generalized inverse of A. It satisfies the following four conditions:
+AA+A = A, A+AA+ = A+, (AA+)τ = AA+, (A+A)τ = A+A. (3.33)
+There are less restrictive (nonunique) types of generalized inverses than A+, such as the reflexive g-inverse above, involving one or two of the above four conditions.
+3.2.8 Matrix Norms
+Let A = (Ajk) be a (J×K)-matrix. It would be useful to have a measure of the size of A, especially for comparing different matrices. The usual measure of size of a matrix A is the norm, ∥ A ∥, of that matrix. There are many definitions of a matrix norm, all of which satisfy the following conditions:
+1. ∥ A ∥ ≥ 0
+2. ∥A∥=0iffA=0.
+3. ∥A+B∥≤∥A∥+∥B∥ 4. ∥αA∥=|α|·∥A∥
+where B is a (J × K)-matrix and α is a scalar. Examples of matrix norms include:
+1. 2.
+􏰊K
+􏰐 􏰁􏰊
+􏰊
+K k=1
+􏰂1/2
+􏰁􏰊 􏰂1/2 J λj (AAτ )
+􏰁􏰊J
+j=1 k=1 |Ajk|p
+􏰂1/p
+(p-norm)
+tr(AAτ ) = J j=1
+A2 jk
+=
+j=1
+(Frobe-
+3.2 Vectors and Matrices 51
+￼nius norm)
+52 3. Random Vectors and Matrices
+3. 􏰐λ1(AAτ ) (spectral norm, J = K) 􏰁􏰊J0 τ 􏰂1/2
+4. j=1 λj(AA ) , for some J0 < J. 3.2.9 Condition Numbers for Matrices
+The condition number of a square (K × K)-matrix A is given by κ(A) = ||A|| · ||A−1|| = σ1 ,
+σK
+(3.34)
+￼￼which is the ratio of the largest to the smallest nonzero singular value. In (3.34), || · || is the spectral norm and σi is the square-root of the ith largest eigenvalue of the (K ×K)-matrix AτA, i = 1,2,...,K. Thus, κ ≥ 1. If A is an orthogonal matrix, all singular values are unity, and so κ = 1. A is said to be ill-conditioned if its singular values are widely spread out, so that κ(A) is large, whereas A is said to be well-conditioned if κ(A) is small.
+3.2.10 Eigenvalue Inequalities
+We shall find it useful to have the following eigenvalue inequalities.
+The Eckart–Young Theorem If A and B are both (J × K)-matrices, and we plan on using B with reduced rank r(B) = b to approximate A with full rank r(A) = min(J,K), then the Eckart–Young (1936) Theorem states that
+with equality if
+λj ((A − B)(A − B)τ ) ≥ λj+b(AAτ ), (3.35)
+( 3 . 3 6 )
+A:
+λj(A) = inf sup xτ Ax, x ̸= 0, (3.37) L x:Lx=0 xτx
+B =
+λ 1 / 2 u i v iτ ,
+􏰏b
+i
+i=1
+where λi = λi(AAτ ), ui = vi(AAτ ), and vi =
+above choice of B provides a simultaneous minimization for all eigenvalues λj, it follows that the minimum is achieved for different functions of those eigenvalues, say, the trace or the determinant of (A − B)(A − B)τ .
+The Courant–Fischer Min-Max Theorem A very useful result is the follow- ing expression for the jth largest eigenvalue of a (J ×J) symmetric matrix
+vi(Aτ A). Because the
+￼where inf is an infimum over a ((j − 1) × J)-matrix L with rank at most j−1, and sup is a supremum over a nonzero J-vector x that satisfies Lx=0.
+Equality in (3.37) is reached if L = (v1,···,vj−1)τ and x = vj = vj(A), the eigenvector associated with the jth largest eigenvalue of A. A corollary of this result is that the jth smallest eigenvalue of A can be written as
+λJ−j+1(A) = sup inf xτ Ax, x ̸= 0. (3.38) L Lx=0 xτx
+For a proof, see, e.g., Bellman (1970, pp. 115–117). These two results enable
+us to write
+λJ(A) ≤ xτAx ≤ λ1(A), x ̸= 0, (3.39) xτx
+∂y ∂x
+􏰃∂y ∂x1
+∂y ∂x1
+∂y ∂y 􏰄τ
+1 ,···, J . (3.43)
+=
+1,···,
+J,···,
+∂xK ∂xK
+3.2 Vectors and Matrices 53
+￼￼where λ1(A) is the largest eigenvalue and λJ(A) is the smallest eigenvalue of A.
+The Hoffman–Wielandt Theorem Suppose A and B are symmetric (J × J)-matrices. Suppose A and B have eigenvalues {λj(A)} and {λj(B)}, respectively. Hoffman and Wielandt (1953) showed that
+􏰏J
+(λj(A)−λj(B))2 ≤tr{(A−B)(A−B)τ}. (3.40)
+j=1
+This result is useful for studying the bias in sample eigenvalues. For a
+simple proof, see Exercise 3.3.
+Poincar ́e Separation Theorem Let A be a (J × J)-matrix and let U be a
+(J × k)-matrix, k ≤ J, such that Uτ U = Ik. Then,
+λj (Uτ AU) ≤ λj (A), (3.41)
+with equality if the columns of U are the first k eigenvectors of A. This inequality can be proved using (3.37) from the Courant–Fischer Min-Max Theorem.
+3.2.11 Matrix Calculus
+Let x = (x1,···,xK)τ be a K-vector and let
+y = (y1,···,yJ)τ = (f1(x),···,fJ(x))τ = f(x) (3.42)
+be a J-vector, where f : RK → RJ. Then, the partial derivative of y wrt x is the JK-vector,
+￼￼￼￼￼
+54 3. Random Vectors and Matrices
+A more convenient form is the partial derivative of y wrt xτ , which yields the (J × K) Jacobian matrix,
+(3.44)
+⎛∂y1 ∂y1 ···∂y1⎞ ∂x1 ∂x2 ∂xK ⎜∂y2 ∂y2 ···∂y2⎟
+￼￼￼J y= ∂y =⎜ ∂x1 ∂x2 ∂xK ⎟. x∂xτ⎜⎝.. .⎟⎠
+￼￼￼￼J = |Jxy|.
+If y = f(x) is a scalar, then the gradient vector is
+∂y􏰃∂y∂y ∂y􏰄τ􏰃∂y􏰄τ ∇xy= ∂x = ∂x ,∂x ,···,∂x = ∂xτ
+12K while if x is a scalar, then,
+=(Jxy)τ,
+(3.45)
+(3.46)
+(3.47)
+∂yJ ∂yJ ··· ∂yJ ∂x1 ∂x2 ∂xK
+￼￼￼The Jacobian matrix can be interpreted as the first derivative of f(x) wrt x. It, therefore, provides a method for linearly approximating a multivariate vector-valued function: f (x) ≈ f (c) + [Jx f (c)](x − c), where c ∈ RK . The Jacobian of the transformation y = f(x) is
+￼￼￼￼￼∂y􏰃∂y∂y ∂y􏰄τ =1,2,···,J.
+￼￼￼￼∂x ∂x ∂x
+For example, if A is a (J × K)-matrix, then:
+∂(Ax) ∂xτ
+∂(xτx) ∂xτ
+∂x
+￼￼∂(xτAx) ∂xτ
+=A
+= 2x
+= xτ (A + Aτ )
+(3.48) (3.49) (3.50)
+(J = K).
+The derivative of a (J × K)-matrix A wrt an r-vector x is the (Jr × K)-
+￼matrix of derivatives of A wrt each element of x:
+It follows that:
+􏰃∂Aτ ∂Aτ 􏰄τ ∂x = ∂x ,···, ∂x .
+1r
+∂(αA) = α∂A (α a constant) ∂x ∂x
+∂(A+B) = ∂A + ∂B ∂x ∂x∂x
+∂A
+(3.51)
+(3.52) (3.53)
+￼￼￼￼￼￼￼￼
+∂(AB) 􏰃∂A􏰄 􏰃∂B􏰄 ∂x = ∂x B+A ∂x
+(3.54) (3.55) (3.56)
+= ∂x ⊗B + A⊗ ∂x
+If y = f(A) is a scalar function of the (J ×K)-matrix A = (Aij), define the following gradient matrix:
+(3.57)
+(3.58)
+(3.59)
+3.2 Vectors and Matrices
+55
+￼￼￼∂(A⊗B) 􏰃∂A 􏰄 􏰃 ∂B􏰄
+￼￼￼∂x ∂(A−1)
+∂x
+􏰃∂A􏰄 ∂x
+= −A−1
+where A and B are conformable matrices. Note that in (3.54) and (3.56),
+x is a scalar.
+⎛ ⎜
+∂y ∂y ··· ∂y ⎞ ∂A11 ∂A12 ∂A1K
+A−1,
+￼￼￼￼￼∂y =⎜ ∂A⎜⎝
+∂y ∂y ··· ∂y ⎟ ∂A21 ∂A22 ∂A2K ⎟.
+￼￼￼.. .⎟⎠ ∂y ∂y ··· ∂y
+￼￼￼￼∂AJ1 ∂AJ2 ∂AJK For example, if A is a (J × J)-matrix, then,
+∂ (tr(A)) ∂A
+∂ (|A|) ∂A
+= IJ
+= |A| · (Aτ )−1.
+￼￼Next, we define the Hessian matrix as a square matrix whose elements are the second-order partial derivatives of a function. Let y = f(x) be a scalar function of x ∈ RK . The (K × K )-matrix,
+⎛∂2y ∂2y···∂2y⎞ ∂x2 ∂x1∂x2 ∂x1∂xK
+￼￼￼⎜2122⎟ 􏰃􏰄τ 2 ⎜∂y ∂y···∂y⎟
+Hxy=∂ ∂y = ∂y =⎜∂x2∂x1 ∂x2 ∂x2∂xK ⎟, ∂ x ∂ x ∂ x ∂ x τ ⎜⎝ . . . . . . . . . . . . ⎟⎠
+∂2y ∂2y ··· ∂2y ∂xK ∂x1 ∂xK ∂x2 ∂x2K
+(3.60) is called the Hessian of y wrt x. Note that Hxy = ∇2xy = ∇x∇xy, so that the Hessian is the Jacobian of the gradient of f. If the second-order partial derivatives are continuous, the Hessian is a symmetric matrix. The Hessian enables a quadratic term to be included in the Taylor-series approximation
+to a real-valued function:
+f(x)≈f(c)+[Jf(c)](x−c)+1(x−c)τ[Hf(c)](x−c), c∈RK. (3.61) 2
+￼￼￼￼￼￼￼￼￼￼
+56 3. Random Vectors and Matrices
+3.3 Random Vectors
+If we have r random variables, X1,X2,...,Xr, each defined on the real line, we can write them as the r-dimensional column vector,
+X = (X1,···,Xr)τ. (3.62) which we, henceforth, call a “random r-vector.” The joint distribution func-
+￼tion FX of the random vector X is given by
+FX(x) = FX(x1,...,xr)
+= P{X1 ≤ x1,...,Xr ≤ xr}
+= P{X ≤ x},
+(3.63) (3.64) (3.65)
+foranyvectorx=(x1,x2,···,xr)τ ofrealnumbers,whereP(A)represents the probability that the event A will occur. If FX is absolutely continuous, then the joint density function fX of X, where
+fX(x) = fX(x1,...,xr) = ∂rFX(x1,...,xr), (3.66) ∂x1 ···∂xr
+will exist almost everywhere. The distribution function FX can be recovered from fX using the relationship
+···
+The marginal distribution function of that component subset is given by
+FX(x1,...,xk) = FX(x1,...,xk,∞,...,∞)
+= P{X1 ≤ x1,...,Xk ≤ xk,Xk+1 ≤ ∞,...,Xr ≤ ∞},
+(3.68)
+and the marginal density of that subset is
+􏰞∞ 􏰞∞
+··· fX(u1,...,ur) duk+1 ··· dur. (3.69)
+￼􏰞 xr FX(x) =
+􏰞 x1 −∞
+fX(u1,...,ur) du1 ··· dur. (3.67) Consider a subset, X1, X2, . . . , Xk (k < r), say, of the components of X.
+−∞
+−∞
+−∞
+For example, if r = 2, the bivariate joint density of X1 and X2 is given by fX1,X2(x1,x2), and its marginal densities are
+􏰞􏰞
+fX1(x1) = fX1,X2(x1,x2)dx2, fX2(x2) = fX1,X2(x1,x2)dx1. (3.70) RR
+The components of a random r-vector X are said to be mutually statisti- cally independent if the joint distribution can be factored into the product of its r marginals,
+􏰛r i=1
+where Fi(xi) is the marginal distribution of Xi, i = 1,2,...,r. This im- plies that a similar factorization of the joint density function holds under
+independence,
+fX(x) =
+for any set of r real numbers x1,...,xr.
+3.3.1 Multivariate Moments
+Let X be a continuous real-valued random variable with probability den-
+FX(x) =
+Fi(xi), (3.71)
+r-vector
+μX = E(X) = (E(X1),···,E(Xr))τ = (μ1,···,μr)τ, and the (r × r) covariance matrix of X is given by
+cov(X, X)
+= E{(X−μX)(X−μX)τ}
+= E{(X1 −μ1,···,Xr −μr)(X1 −μ1,···,Xr −μr)τ}
+⎛σ12 σ12 ··· σ1r⎞
+(3.75)
+(3.76) (3.77) (3.78)
+(3.79)
+(3.80)
+(3.81)
+where
+ΣXX =
+⎜σ21 = ⎝ .
+σ r 1
+σ2 .
+···
+...
+σ2r ⎟ . ⎠,
+σ r2
+􏰛r i=1
+fi(xi), (3.72)
+sity function fX; that is, fX(x) ≥ 0, for all x ∈ R, and The expected value of X is defined as
+􏰞
+and its variance is
+σX2 =var(X)=E{(X−μX)2}.
+If X is a random r-vector with values in Rr, then its expected value is the
+μX = E(X) =
+xfX(x)dx,
+· · ·
+σi2 = var(Xi) = E{(Xi − μi)2}
+σ r 2
+is the variance of Xi, i = 1,2,...,r, and
+σij =cov(Xi,Xj)=E{(Xi−μi)(Xj−μj)}
+3.3 Random Vectors 57
+􏰟
+R fX(x)dx = 1. (3.73)
+(3.74)
+58 3. Random Vectors and Matrices
+is the covariance between Xi and Xj, i,j = 1,2,...,r (i ̸= j). It is not difficult to show that
+ΣXX =E(XXτ)−μXμτX. (3.82)
+The correlation matrix of X is obtained from the covariance matrix ΣXX by dividing the ith row by σi and dividing the jth column by σj. It is given by the (r × r)-matrix,
+where
+􏰇 σij ρij = ρji = σiσj
+1
+ifi̸=j otherwise
+where
+(pairwise)
+correlation coefficient
+of Xi with
+Xj ,
+i, j
+=
+1, 2, . . . , r.
+⎛1 ρ12 ···ρ1r⎞
+⎜ρ21 1 ··· ρ2r ⎟ PXX =⎝ . . ... . ⎠,
+ρr1 ρr2 ··· 1
+(3.83)
+(3.84)
+￼is the
+The correlation coefficient ρij lies between −1 and +1 and is a measure of association between Xi and Xj. When ρij = 0, we say that Xi and Xj are uncorrelated; when ρij > 0, we say that Xi and Xj are positively correlated; and when ρij < 0, we say that Xi and Xj are negatively correlated.
+Now, suppose we have two random vectors, X and Y, where X has r components and Y has s components. Let Z be the random (r + s)-vector,
+􏰃􏰄
+Z = YX .
+Then, the expected value of Z is the (r + s)-vector, 􏰃􏰄􏰃􏰄
+μZ =E(Z)= E(X) = μX , E(Y) μY
+( 3 . 8 5 )
+(3.86) and the covariance matrix of Z is the partitioned ((r + s) × (r + s))-matrix,
+ΣZZ = E{(Z−μZ)(Z−μZ)τ} 􏰃􏰄
+= cov(X, X) cov(X, Y)
+cov(Y, X) cov(Y, Y) 􏰃􏰄
+= ΣXX ΣXY , ΣY X ΣY Y
+(3.87) (3.88)
+(3.89)
+(3.90)
+ΣXY =cov(X,Y)=E{(X−μX)(Y−μY)τ}=ΣτYX is an (r × s)-matrix.
+If Y is linearly related to X in the sense that Y = AX + b,
+(3.91) where A is a fixed (s × r)-matrix and b is a fixed s-vector, then the mean
+vector and covariance matrix of Y are given by
+μY =AμX+b, (3.92)
+ΣYY =AΣXXAτ, (3.93)
+respectively.
+3.3.2 Multivariate Gaussian Distribution
+The multivariate Gaussian distribution is a generalization to two or more dimensions of the univariate Gaussian (or Normal) distribution, which is often characterized by its resemblance to the shape of a bell. In fact, in either of its univariate or multivariate incarnations, it is popularly referred to as the “bell curve.”
+The Gaussian distribution is used extensively in both theoretical and applied statistics research. The Gaussian distribution often represents the stochastic part of the mechanism that generates observed data. This as- sumption is helpful in simplifying the mathematics that allows researchers to prove asymptotic results. Although it is well-known that real data rarely obey the dictates of the Gaussian distribution, this deception does provide us with a useful approximation to reality.
+If the real-valued univariate random variable X is said to have the Gaus- sian (or Normal) distribution with mean μ and variance σ2 (written as X ∼ N (μ, σ2 )), then its density function is given by the curve
+f(x|μ,σ)=
+where −∞ < μ < ∞ and σ > 0. The constant multiplier term c = (2πσ2)−1/2 is there to ensure that the exponential function in the formula integrates to unity over the whole real line.
+The random r-vector X is said to have the r-variate Gaussian (or Nor- mal) distribution with mean r-vector μ and positive-definite, symmetric (r × r) covariance matrix Σ if its density function is given by the curve
+2
+f(x|μ,Σ) = (2π)−r/2|Σ|−1/2e−1 (x−μ)τΣ−1(x−μ), x ∈ Rr. (3.95)
+The square-root, Δ, of the quadratic form,
+Δ2 = (x − μ)τ Σ−1(x − μ), (3.96)
+1 − 1 (x−μ)2
+3.3 Random Vectors 59
+￼￼(2πσ2 )1/2
+e 2σ2 , x∈R, (3.94)
+￼
+60 3. Random Vectors and Matrices
+is referred to as the Mahalanobis distance from x to μ. The multivariate Gaussian density is unimodal, always positive, and integrates to unity. We, henceforth, write
+X ∼ Nr (μ, Σ), (3.97)
+when we mean that X has the above r-variate Gaussian (or Normal) dis- tribution. If Σ is singular, then, almost surely, X lives on some reduced- dimensionality hyperplane so that its density function does not exist; in that case, we say that X has a singular Gaussian (or singular Normal) distribution.
+An important result, due to Cramer and Wold, states that the dis- tribution of a random r-vector X is completely determined by its one- dimensional linear projections, ατ X, for any given r-vector α. This result allows us to make a more useful definition of the multivariate Gaussian dis- tribution: The random r-vector X has the multivariate Gaussian distribu- tion iff every linear function of X has the univariate Gaussian distribution.
+Special Cases
+If Σ = σ2Ir, then the multivariate Gaussian density function reduces to
+where
+−r/2 −r − 1 (x−μ)τ (x−μ) f(x|μ,σ)=(2π) σ e 2σ2
+, (3.98)
+￼and this is termed a spherical Gaussian density because (x−μ)τ (x−μ) = a2 is the equation of an r-dimensional sphere centered at μ. In general, the equation (x − μ)τ Σ−1(x − μ) = a2 is an ellipsoid centered at μ, with Σ determining its orientation and shape, and the multivariate Gaussian density function is constant along these ellipsoids.
+When r = 2, the multivariate Gaussian density can be written out ex- plicitly. Suppose
+X=(X1,X2)τ ∼N2(μ,Σ),
+(3.99)
+(3.100)
+(3.101)
+(3.102)
+􏰃σσ􏰄􏰃σ2 ρσσ􏰄 μ=(μ,μ)τ, Σ= 11 12 = 1 1 2 ,
+1 2 σ21 σ22 ρσ1σ2 σ2 σ12 is the variance of X1, σ2 is the variance of X2, and
+ρ = 􏰐 cov(X1,X2) = σ12 var(X1) · var(X2) σ1σ2
+is the correlation between X1 and X2. It follows that |Σ| = (1 − ρ2)σ12σ2,
+￼￼￼
+and
+􏰈1 −ρ􏰙
+Σ−1= 1 σ12 σ1σ2 . (3.103)
+2 −ρ 1 1−ρ σ1σ2 σ2
+3.3 Random Vectors 61
+￼￼￼￼￼The bivariate Gaussian density function of X is, therefore, given by 1 −1Q
+f(x|μ,Σ)= 􏰐 e2 , (3.104) 2πσ1σ2 1 − ρ2
+￼￼￼where
+Q = 1 x1 − μ1 − 2ρ x1 − μ1 x2 − μ2 + x2 − μ2 .
+􏰘􏰃 􏰄2 􏰃 􏰄􏰃 􏰄􏰃 􏰄2􏰠 1−ρ2 σ1 σ1 σ2 σ2
+￼￼￼￼￼(3.105) If X1 and X2 are uncorrelated, ρ = 0, and the middle term in the exponent (3.105) drops out. In that case, the bivariate Gaussian density function
+reduces to the product of two univariate Gaussian densities,
+− 1 (x1−μ1)2 − 1 (x2−μ2)2 f(x|μ1,μ2,σ12,σ2) = (2πσ1σ2)−1e 2σ12 e 2σ2
+￼￼= f(x1|μ1,σ12)f(x2|μ2,σ2), implying that X1 and X2 are independent. (see (3.72)).
+3.3.3 Conditional Gaussian Distributions
+(3.106)
+Consider the random (r + s)-vector Z in (3.85) with mean vector μZ in (3.86) and partitioned covariance matrix ΣZZ in (3.89). Assume that Z has the multivariate Gaussian distribution. Then, the exponent in (3.95) is the quadratic form,
+−1(z−μ )τΣ−1 (z−μ ). 2 Z ZZ Z
+(3.107)
+(3.108)
+￼From (3.5),
+where
+Σ−1 = ZZ
+􏰃􏰄
+A11 A12 A21 A22
+A11 =Σ−1 +Σ−1 ΣXYΣ−1 XX XX Y Y ·X
+,
+ΣYXΣ−1 XX
+A12 = −Σ−1 ΣXY Σ−1 = Aτ21 XX Y Y ·X
+A22 = Σ−1
+Y Y ·X
+,
+and ΣYY·X = ΣYY −ΣYXΣ−1 ΣXY . As a result, we can write Σ−1 as
+follows:
+􏰃 I −Σ−1 Σ 􏰄􏰃 Σ−1 0 r XXXY XX −1
+0 Is 0 ΣY Y ·X
+􏰄􏰃 Ir
+−ΣY XΣXX Is
+XX
+ZZ
+0 􏰄
+−1 . (3.109)
+62 3. Random Vectors and Matrices
+Consider the following nonsingular transformation of the random (r + s)-
+vector Z:
+U= U1 = Ir 0 X . (3.110)
+􏰃􏰄􏰃 􏰄􏰃􏰄
+U2 −ΣY X Σ−1 Is Y XX
+The random vector U has a multivariate Gaussian distribution with mean, 􏰃􏰄􏰃􏰄
+μ= Ir 0 μX U −ΣY X Σ−1 Is μY
+(3.111)
+and covariance matrix,
+ΣUU = ΣXX 0 .
+XX
+􏰃􏰄
+(3.112) Hence, the marginal distribution of U1 = X is Nr (μX , ΣX X ), the marginal
+0 ΣY Y ·X
+distributionofU2 =Y−ΣYXΣ−1 XisNs(μY −ΣYXΣ−1 μX,ΣYY·X),
+XX XX
+and U1 and U2 are independent.
+Now, given X = x, μ +Σ Σ−1 (x−μ ) is a constant. So, because of
+Y YXXX X
+independence, the conditional distribution of (Y−μ )−Σ Σ−1 (x−μ ) Y YXXX X
+is identical to the unconditional distribution of (Y − μ ) − Σ Σ−1 Y YXXX
+(X − μ ), which is N (0,Σ ). Hence, (Y−μ )−Σ Σ−1 (x−μ ) ∼
+X sYY·X YYXXXX Ns(0,ΣYY·X). The resulting conditional distribution of Y given X=x is an s-variate Gaussian with mean vector and covariance matrix given by
+μ = μ +Σ Σ−1 (x−μ ) (3.113) Y|X Y YXXX X
+Σ = Σ −Σ Σ−1 Σ , (3.114) Y|X YY YX XX XY
+respectively. Note that the mean vector is a linear function of x, whereas the covariance matrix does not depend upon x at all.
+3.4 Random Matrices
+￼The (r × s)-matrix
+⎛Z11 ··· Z1s⎞ Z = ⎝ . . ⎠
+Zr1 ··· Zrs
+(3.115)
+with r rows and s columns is a matrix-valued random variable (henceforth “random (r × s)-matrix”) if each component Zij is a random variable, i = 1,2,...,r,j = 1,2,...,s. That is, if the joint distribution,
+FZ(z) = = =
+FZ(zij,i = 1,2,...,r,j = 1,2,...,s) P{Zij ≤ zij,i = 1,2,...,r,j = 1,2,...,s} P{Z ≤ z},
+(3.116) (3.117) (3.118)
+is defined for all z = (zij ).
+The expected value of the random (r × s)-matrix Z is given by
+⎛E(Z ) ··· E(Z )⎞ ⎛μ ··· μ ⎞ 11 1s 11 1s
+μZ =E(Z)=⎜⎝ . . ⎟⎠=⎜⎝ . . ⎟⎠. (3.119) E(Zr1) ··· E(Zrs) μr1 ··· μrs
+The covariance matrix of Z is the matrix of all covariances of pairs of ele- ments of Z and has rs rows and rs columns. It is, therefore, the covariance matrix of vec(Z),
+ΣZZ =cov{vec(Z)}=E{(vec(Z−μZ))(vec(Z−μZ))τ}. (3.120)
+If we form a new matrix-valued random variable W by setting
+W = AZBτ + C, (3.121)
+where A, B, and C are matrices of constants, then the mean matrix of W is
+μW =AμZBτ +C,
+and, because
+vec(W − μW ) = vec(A(Z − μZ)Bτ ) = (A ⊗ B)vec(Z − μZ),
+the covariance matrix of vec(W) is
+ΣW W = E{(vec(W − μW ))(vec(W − μW ))τ }
+= (A⊗B)ΣZZ(A⊗B)τ.
+3.4.1 Wishart Distribution
+Given n independently distributed random r-vectors, Xi ∼ Nr(μi,Σ), i = 1,2,...,n (n ≥ r),
+(3.122)
+(3.123)
+(3.124)
+(3.125) we say that the random positive-definite and symmetric (r × r)-matrix,
+􏰏n i=1
+has the Wishart distribution with n degrees of freedom and associated ma- trix Σ. If μi = 0 for all i, the Wishart distribution of W is termed central; otherwise, it is noncentral.
+W =
+X i X τi , ( 3 . 1 2 6 )
+3.4 Random Matrices 63
+64 3. Random Vectors and Matrices
+It can be shown that the joint density function of the r(r + 1)/2 distinct elements of W is given by
+w (W|n,Σ) = c |Σ|−n/2|W|1 (n−r−1)e−1 tr(WΣ−1), (3.127) r r,n 2 2
+￼￼where
+1 nr/2 r(r−1)/4􏰛r 􏰃n+1−i􏰄
+c=2π Γ2. (3.128)
+r,n i=1
+￼￼If W is singular, the density is 0, in which case W is said to have the singu- lar Wishart distribution. If W has a Wishart density, we find it convenient to write
+W ∼ Wr (n, Σ). (3.129)
+Many derivations of (3.127) have appeared in the statistical literature. See Anderson (1984) for references. When r = 1, W1(n,σ2) is identical to the σ2χ2n distribution.
+The first two moments of W are given by (Izenman, 1972, 1975) E(W) = nΣ.
+cov{vec(W)} = E{(vec(W − nΣ))(vec(W − nΣ))τ } = n(Ir2 + I(r,r))(Σ ⊗ Σ),
+(3.130)
+(3.131) (3.132)
+where I(p,q) is a permuted-identity matrix (Macrae, 1974), which is a (pq × pq)-matrix partitioned into (p×q)-submatrices such that the ijth submatrix has a 1 in its jith position and zeroes elsewhere. For example, when p = q = 2, the permuted-identity matrix is given by
+⎛1000⎞
+I(2,2) =⎜⎝0 0 1 0⎟⎠. (3.133)
+The permuted identity matrix I(r,r) can be expressed as the sum of r2 Kronecker products,
+􏰏r 􏰏r
+(Hij ⊗Hτij), (3.134) where Hij is an (r × r)-matrix with ijth element equal to 1 and zero
+otherwise. Another property of the permuted identity matrix is that I(r,r)vec(A) = vec(Aτ ), (3.135)
+which led to it also being called a commutation matrix.
+I(r,r) =
+i=1 j=1
+0100 0001
+3.5 ML Estimation for the Gaussian Distribution 65
+Properties of the Wishart Distribution
+Because of the following properties of the Wishart distribution, it is not necessary to apply the density form (3.127) to obtain explicit distributional results.
+1. Let Wj ∼ Wr(nj,Σ), j = 1,2,...,m, be independently distributed (central or not). Then, 􏰊mj=1 Wj ∼ Wr (􏰊rj=1 nj , Σ).
+2. Suppose W ∼ Wr(n, Σ), and let A be a (p × r)-matrix of fixed constants with rank p. Then, AWAτ ∼ Wp(n, AΣAτ ).
+3. SupposeW∼Wr(n,Σ),andletabeafixedr-vector.Then,aτWa∼ σa2χ2n, where σa2 = aτ Σa. The chi-squared distribution is central if the Wishart distribution is central.
+4. Let X = (X1,···,Xn)τ, where Xi ∼ Nr(0,Σ), i = 1,2,...,n, are independently and identically distributed. Let A be a symmetric (n× n)-matrix with ν = rank(A), and let a be a fixed r-vector. Let y = Xa. Then, XτAX ∼ Wr(ν,Σ) iff yτAy ∼ σa2χ2ν, where σa2 = aτΣa.
+3.5 ML Estimation for the Gaussian Distribution
+Assume that we have a random r-vector X distributed according to a multivariate Gaussian vector,
+X ∼ Nr (μ, Σ), (3.136)
+where the parameters, μ and Σ, of this distribution are both unknown. To estimate μ and Σ, we use the method of maximum likelihood (ML). ML was formalized by Fisher (1922) and others who have shown that it possesses very good statistical properties.
+Assume that we have n independently and identically distributed (iid) observations, X1, . . . , Xn. on X. By independence, the joint density of the {Xi,i = 1,2,...,n} is the product of their individual densities; that is, 􏰝ni=1 fXi (xi|μ, Σ). Consider the observations to be fixed at the values {xi}. If we now consider this joint density as a function of the parameters, μ and Σ, then we have the likelihood function of the parameters given the observed data {xi},
+￼L(μ, Σ|{xi}) = (2π)−nr/2|Σ|−n/2exp
+− 1 2
+􏰘􏰏n 􏰠
+(xi − μ)τ Σ−1(xi − μ) .
+￼(3.137) Taking logarithms of this expression, we have that the log-likelihood func-
+tion is
+l(μ, Σ) = log L(μ, Σ|{xi })
+i=1
+66 3. Random Vectors and Matrices
+nr n 1􏰏n
+(xi −μ)τΣ−1(xi −μ). (3.138)
+= − 2 log(2π)− 2 log|Σ|− 2
+It will be convenient to reexpress the summation term in (3.138) as follows:
+￼￼￼􏰏n
+(xi − μ)τ Σ−1(xi − μ) (3.139)
+i=1􏰘􏰏n 􏰠
+i=1
+(xi − x ̄)(xi − x ̄)τ + n(x ̄ − μ)τ Σ−1(x ̄ − μ), (3.140)
+= tr Σ−1
+where x ̄ = n−1 􏰊ni=1 xi is the sample mean.
+i=1
+The ML method estimates the parameters μ and Σ by maximizing the log-likelihood with respect to (wrt) those parameters, given the data values, {xi,i = 1,2,...,n}. First, we maximize l wrt μ:
+∂l(μ, Σ) = nΣ−1(x ̄ − μ). (3.141) ∂μ
+Setting this derivative equal to zero, the ML estimate of μ is the r-vector, μ􏰡 = x ̄. In general, for a random sample X1, . . . , Xn on X, the ML estimator
+￼of μ is
+which we call the sample mean vector.
+μ􏰡 = X ̄ , ( 3 . 1 4 2 ) Deriving the ML estimate for Σ needs a little more work. If we define
+S = 􏰊ni=1(xi − x ̄)(xi − x ̄)τ , then (3.138) can be written as
+l(μ,Σ) = −nr log(2π)−n log|Σ|−1tr(Σ−1S)−n(x ̄−μ)τΣ−1(x ̄−μ).
+￼￼￼￼2222
+(3.143) The first term on the rhs of (3.143) is a constant and, at the maximum of l, the last term is zero. So, we need to find Σ to maximize −n log |Σ| −
+tr(Σ−1 S).
+SetS=EEτ andEτΣ−1E=H.Then,Σ=EH−1Eτ and|Σ|= |S|/|H|, whence, log |Σ| = log |S| − log |H|. Also, using properties of the trace, tr(Σ−1S) = tr(Σ−1EEτ ) = tr(Eτ Σ−1E) = tr(H). Putting these results together, we now need to find H to maximize −n log |S| + n log |H| − tr(H).
+By the Cholesky decomposition of H, there is a unique lower-triangular matrixT=(tij) with positive diagonal elements suchthat H = TTτ.
+3.5 ML Estimation for the Gaussian Distribution 67
+Hence, we need to find a lower-triangular T to maximize −n log |S| + 􏰊r (nlogt2 −t2 )−􏰊 t2 , where we used the facts that |T|2 = 􏰝r t2
+i=1 iiii i>jij i=1ii andtr(TTτ)=􏰊r t2 +􏰊 t2.Thesolutionistotaket2 =nand
+i=1 ii i>j ij ii tij =0fori̸=j;thatis,T=√nIr.Thus,wesetH=nIr.
+￼So, the ML estimate of Σ is given by the (r × r)-matrix Σ􏰡 = n−1EEτ = n−1S. That is, Σ􏰡 = 1 􏰊n (xi − x ̄)(xi − x ̄)τ . In general, for a random
+￼n i=1
+sample X1,...,Xn on X, the ML estimator of Σ is
+1 􏰏n
+Σ􏰡 = n
+which we call the sample covariance matrix.
+3.5.1 Joint Distribution of Sample Mean and Sample Covariance Matrix
+(Xi −X ̄)(Xi −X ̄)τ = n−1S,
+(3.144)
+￼i=1
+The ML estimator X ̄ is an unbiased estimator of the population mean
+vector μ; that is,
+On the other hand, because
+E{X ̄ } = μ. (3.145) E { Σ􏰡 } = n − 1 Σ , ( 3 . 1 4 6 )
+n
+￼the ML estimator Σ􏰡 in (3.144) is a biased estimator of the population covariance matrix Σ. To remove the bias from the covariance estimator (3.144), it suffices to divide S by n − 1 instead of by n.
+Because X ̄ is a linear combination of the X1,...,Xn, each of which are iid as Nr (μ, Σ), then, the ML estimator, X ̄ , of μ has the distribution
+X ̄ ∼ Nr(μ,n−1Σ). (3.147)
+To derive the distribution of Σ􏰡, we suppose for the moment that μ = 0.
+Let a be a fixed r-vector and consider Yi = aτXi, i = 1,2,...,n. Then,
+Yi ∼ N1(0,σa2), where σa2 = aτΣa, and Y = (Y1,···,Yn)τ ∼ Nn(0,σa2In).
+Let b = n−11n, whence, bτb = n−1, and let A = In −n−1Jn, where Jn =
+1n1τn is a matrix every element of which is unity. Note that A is idempotent
+with rank n − 1. From univariate theory, bτ Y = Y ̄ ∼ N1(0, σa2/n) and,
+Yτ AY = 􏰊 (Yi − Y ̄ )2 ∼ σa2 χ2n−1 are independently distributed for any a. i
+Now, let X = (X1,···,Xn)τ. Then, Xτb ∼ Nr(0,n−1Σ) and, from Property 4 of the Wishart distribution,
+XτAX ∼Wr(n−1,Σ). (3.148)
+68 3. Random Vectors and Matrices
+Because Y ∼ Nn(0, σa2In), it follows that bτ Y ∼ N1(0, σa2bτ b) and
+Yτ bbτ Y/bτ b ∼ σa2χ21. (3.149)
+Furthermore, Abbτ = 0; postmultiplying by b yields Ab = 0, so that the columns of A = (a1,···,an) and b are mutually orthogonal. Thus, Xτai = Xi −X ̄, i = 1,2,...,n, and Xτb are statistically independent of each other. Thus, Xτb = X ̄ and XτAX = (XτA)(XτA)τ = S are independently distributed.
+The case of μ ̸= 0 is dealt with by replacing Xi by Xi−μ, i = 1,2,...,n. This does not change S, and X ̄ is replaced by X ̄ −μ. Thus, S is independent of X ̄ −μ (and, hence, of X ̄), and
+Σ􏰡 ∼n−1Wr(n−1,Σ). (3.150)
+3.5.2 Admissibility
+In 1955, Charles Stein rocked the statistical world by showing that the ML estimator, X ̄ , of the unknown mean vector, μ, of a multivariate Gaus- sian distribution was “admissible” in one or two dimensions but was “in- admissible” in three or higher dimensions (Stein, 1955).
+The idea of inadmissibility of an estimator θ􏰡 of an unknown vector-valued
+parameter θ ∈ Θ is part of the framework of statistical decision theory and
+relates to the quality of that estimator in terms of a given loss function
+L(θ, θ􏰡). A loss function gives a quantitative description of the loss incurred
+if θ is estimated by θ􏰡. For example, the most popular type of loss function
+for assessing an estimator, θ􏰡 = (θ􏰡 , · · · , θ􏰡 )τ , of the unknown parameter 1r
+vector θ = (θ1 , · · · , θr )τ is the “squared-error” loss function,
+j=1
+It is usual to compare estimators through their risk functions, which are the expected values of the respective loss functions; that is,
+R(θ, θ􏰡) = Eθ{L(θ, θ􏰡)}. (3.152)
+Two different estimators, θ􏰡a and θ􏰡b, of θ can be compared by viewing the graphs of R(θ,θ􏰡a) and R(θ,θ􏰡b) over a suitable range of values of some function of θ, say, ∥ θ ∥. An estimator θ􏰡a is inadmissible if there exists another estimator θ􏰡b for which
+R(θ, θ􏰡b) ≤ R(θ, θ􏰡a) for all θ ∈ Θ (3.153)
+(θ􏰡 −θ )2.
+Different types of loss functions have been proposed in different situations,
+L(θ,θ􏰡) = (θ􏰡−θ)τ(θ􏰡−θ) =
+and we will meet several of these throughout this book.
+(3.151)
+􏰏r
+jj
+and
+R(θ, θ􏰡b) < R(θ, θ􏰡a) for some θ ∈ Θ; (3.154)
+δ(Y):
+R(μ, δ(Y)) = Eμ
+⎧⎫
+3.5 ML Estimation for the Gaussian Distribution 69
+the estimator θ􏰡a is admissible if no such estimator θ􏰡b exists. In other words, an estimator is inadmissible if we can find a better estimator that has a smaller risk function, whereas an estimator that cannot be improved upon in this way is called admissible.
+3.5.3 James–Stein Estimator of the Mean Vector
+Suppose Xi,i = 1,2,...,n, are independently drawn from an r-variate
+Gaussian distribution with unknown mean vector μ = (μ1,···,μr)τ, such
+that the ML estimator Y = X ̄ = n−1 􏰊 Xi has the Nr (μ, Ir ) distribution. i
+Thus, the components of the unknown mean vector, μ, are different, and the components of Y are mutually independent with unit variances. The following development can be easily modified if the covariance matrix of Y were σ2Ir, where σ2 > 0 is known (Exercise 3.17), or a more general known covariance matrix V (Exercise 3.18).
+The risk function of the estimator Y = (Y1, · · · , Yr)τ is given by
+R(μ, Y) = Eμ{(Y − μ)τ (Y − μ)} = tr{Ir} = r. (3.155)
+Stein’s result that the sample mean vector is inadmissible for r ≥ 3 in the case of squared-error loss was later supplemented by James and Stein (1961), who exhibited a “better” estimator of the multivariate Gaussian mean vector μ than the sample mean X ̄. Let θ = (θ1,···,θr)τ be an arbitrary fixed vector, which is chosen before we look at the data. Typically, θ is thought to be near μ.
+The James–Stein estimator, δ(Y) = (δ1(Y),···,δr(Y))τ, is given by
+􏰃 r − 2􏰄 δ(Y)=θ+ 1− S (Y−θ),
+(3.156)
+(3.157)
+￼where
+􏰏r
+S=∥Y−θ∥2=
+(Yj −θj)2
+j=1
+is the sum of the squared deviations of each individual mean Yj from the
+constant θj , and r ≥ 3. Thus, the James–Stein estimator shrinks Y toward θ by a factor c = 1 − (r − 2)/S. Note that for fixed θ, the shrinkage factor c is the same for all components of Y.
+The estimator δ(Y) has a smaller risk than that of Y for every μ, inde- pendent of whichever vector θ is chosen. To see this, consider the risk of
+⎨􏰏r ⎩j=1
+(δj (Y) − μj )2
+⎬ ⎭
+= Eμ{∥ δ(Y) − μ ∥2}. (3.158)
+70
+3. Random Vectors and Matrices
+Now,
+∥δ(Y)−μ∥2 = ∥θ+ 1− S (Y−θ)−μ∥2
+􏰃 r − 2􏰄
+􏰏r􏰇 r−2 􏰢2
+= (Yj −μj)− S (Yj −θj) . (3.159) j=1
+Expand the summand to get
+2 2(r − 2) (r − 2)2 2
+￼￼(Yj −μj) − S (Yj −μj)(Yj −θj)+ S2 (Yj −θj) . (3.160) Substituting this expression back into (3.159), rearranging terms, and then
+￼￼taking expectations, the risk of δ(Y) is R(μ, δ(Y)) =
+⎧􏰃􏰄⎫ ⎨ 􏰏r Yj−θj (r−2)2⎬
+r−Eμ⎩2(r−2)
+S (Yj −μj)− S ⎭.
+(3.161)
+￼￼j=1
+The first term inside the expectation is evaluated using Stein’s Lemma, which says that if Y ∼ N (θ, 1) and g is a differentiable function such that Eθ{|g′(Y )|} < ∞, then,
+Let
+whence,
+Eθ{g(Y )(Y − θ)} = Eθ{g′(Y )}. g(Yj)= Yj −θj,
+(3.162)
+(3.163)
+(3.164)
+(3.165)
+(3.166)
+￼g (Yj) = S − S2 Substituting the last result into (3.162) yields
+.
+R(μ, δ(Y)) =
+S
+′ 1 2(Yj −θj)2
+￼￼⎧􏰇􏰢⎫
+￼￼￼that is,
+⎨ 􏰏r 1 2(Yj−θj)2 (r−2)2⎬ r−Eμ⎩2(r−2) S− S2 − S ⎭;
+j=1
+􏰇1􏰢 R(μ,δ(Y))=r−Eμ S <r=R(μ,Y).
+￼This result holds as long as the expectation exists. For r = 1 and r = 2, the expectation is infinite. For r ≥ 3, the expectation is finite. The expectation
+3.5 ML Estimation for the Gaussian Distribution 71
+in (3.166), which represents the difference between the two risk functions, R(μ, Y) − R(μ, δ(Y)), is sometimes called the Stein effect.
+Thus, instead of using just the jth component, Yj, of Y to estimate the jth component, μj, of μ, the James–Stein estimator, δ(Y), combines all the mutually independent components of Y in estimating μj. This esti- mator appears to be intuitively unappealing: why should the estimator of μj depend upon the estimators of μk,k ̸= j? The reason why the James– Stein estimator dominates the usual mean estimator is because we used the squared-error loss function. This surprising result is commonly referred to as Stein’s paradox (Efron and Morris, 1977).
+The James–Stein estimator (3.156) also happens to be inadmissible for μ. This follows because, for small values of S, the shrinkage factor c becomes negative, which, in turn, drags the estimator away from θ. We can avoid such anomolies by replacing the shrinkage factor c by zero if it is negative (Efron and Morris, 1973):
+􏰃 r − 2􏰄
+δ+(Y)=θ+ 1− S
+where (x)+ = max{x, 0}. Unfortunately, this so-called positive-part James–
+(Y−θ), (3.167) Stein estimator is still not admissible (Brown, 1971).
+￼The James–Stein estimator of μ shrinks Y toward some chosen point θ. Shrinking to different points will produce different estimates of μ. De- ciding which one is best then becomes a subjective decision. If one has no information about the location of μ, then what should we take for θ? One possibility is to use θ = 0, so that the James–Stein estimator shrinks Y toward the origin. Another possibility is to shrink each component of Y toward the overall mean Y ̄ = r−1 􏰊rj=1 Yj. Let Y ̄ = (Y ̄,···,Y ̄)τ be an r-vector whose every entry is Y ̄ . The resulting James–Stein estimator is
+􏰃 r − 3􏰄 δ′(Y)=Y ̄ + 1− S′ (Y−Y ̄),
+(3.168)
+(3.169)
++
+￼where
+􏰏r
+S′ =∥Y−Y ̄ ∥2=
+(Yk −Y ̄)2
+k=1
+is the sum of the squared deviations of each individual mean Yk from the
+overall mean Y ̄ . Note that the constant r − 2 is replaced by r − 3 because the parameter θ is estimated by Y ̄ . This estimator dominates Y if r ≥ 4. Thus, μj is estimated by Y ̄ +c(Yj −Y ̄), j = 1,2,...,r, where the shrinkage factor is
+c=1−􏰊 r−3 (3.170) rk = 1 ( Y k − Y ̄ ) 2
+￼which can be motivated using an empirical Bayes approach (Efron and Morris, 1975).
+72 3. Random Vectors and Matrices
+It is worth emphasizing that the idea of using shrinkage principles to de- rive a biased estimator with improved statistical properties is not restricted only to estimating the multivariate Gaussian mean. Throughout this book, we will see that the general idea of shrinking an estimator proves to be very beneficial, particularly when we are faced with statistical problems in high dimensions.
+Bibliographical Notes
+There are many books and chapters and sections of books on matrix theory. All textbooks on multivariate analysis (e.g., Anderson, 1984; John- son and Wichern, 1998; Mardia, Kent, and Bibby, 1980; Rao, 1965; Seber, 1984) have chapters or sections on the multivariate normal distribution and the Wishart distribution and their properties.
+The chi-squared distribution (the distribution of the sample variance s2 in the univariate case) was extended to the bivariate case by Fisher (1915) and then generalized further to the multivariate case by Wishart (1928).
+Excellent discussions of decision theory, including admissibility, can be found in Lehmann (1983), Casella and Berger (1990), Berger (1985), and Anderson (1984).
+Exercises
+3.1 Let x = (x1,···,xp)τ and y = (y1,···,yp)τ be any two p-vectors on Rp. Show that (xτ y)2 ≤ (xτ x)(yτ y), where the equality is achieved only if ax + by = 0 for a, b ∈ R. (Hint: Consider (ax + by)τ (ax + by), which is nonnegative.)
+3.2 Let f and g be any real functions defined in some set A, and suppose f2 and g2 are integrable (wrt some measure). Show that
+􏰃􏰞 􏰄2 􏰃􏰞 􏰄􏰃􏰞 􏰄 f(x)g(x)dx ≤ [f(x)]2dx [g(x)]2dx .
+AAA
+Hence, or otherwise, show that if X and Y are random variables, then, [cov(X, Y )]2 ≤ (var(X ))(var(Y )). (Hint: Consider the nonnegative integral of (af + bg)2.)
+￼￼3.3 Prove the Hoffman–Wielandt Theorem. (Hint: Use the spectral de- composition theorem on A and on B; express tr{(A − B)(A − B)τ } in terms of the decomposition matrices of A and B, and simplify; then, show
+that the result is minimized by 􏰊 (λj −μj)2.) j
+Σ −X X .
+XX
+3.5 ML Estimation for the Gaussian Distribution 73
+3.4 If X ∼ Nr(μ,Σ), show that the marginal distribution of any subset of r∗ elements of X is r∗-variate Gaussian.
+3.5 Show that X ∼ Nr(μ,Σ) if and only if ατX ∼ N(ατμ,ατΣα), where α is a given r-vector.
+3.6 If X ∼ Nr(μ,Σ), and if A is a fixed (s×r)-matrix and b is a fixed s-vector, show that the random s-vector Y = AX + b ∼ Ns(Aμ + b, AΣAτ ).
+3.7 Suppose X ∼ Nr(μ,Σ), where Σ = diag{σi2} is a diagonal matrix. Show that the elements, X1,X2,...,Xr, of X are independent and each Xj followsaunivariateGaussiandistribution,j=1,2,...,r.
+3.8 If Z in (3.85) is distributed as an (r + s)-variate Gaussian with mean (3.86) and partitioned covariance matrix (3.89), show that X and Y are independently distributed if and only if ΣXY = 0.
+3.9 If Z in (3.85) is distributed as an (r + s)-variate Gaussian with mean
+(3.86) and partitioned covariance matrix (3.89), and if ΣXX is nonsingu-
+lar,showthatY−ΣYXΣ−1 X∼Ns(μY −ΣYXΣ−1 μX,ΣYY·X),where XX XX
+ΣY Y ·X = ΣY Y − ΣY X Σ−1 ΣXY . The conditional distribution of Y given XX
+X is Ns(μY +ΣY XΣ−1 (X−μX),ΣY Y ·X). If ΣXX is singular, show that XX
+the above results hold, but with Σ−1 replaced by the reflexive g-inverse
+3.10 The conditional distribution of Y given X=x can be expressed as the ratio of the joint distribution of (X,Y) to the marginal distribution of X: f (y|x) = fX,Y (x, y)/fX (x). Using the definition of the multivariate Gaussian distribution, find the joint and marginal distributions and com- pute their ratio to find the conditional distribution of Y given X=x. Find the conditional distribution for the special case of the bivariate Gaussian distribution. (Hint: The joint distribution of (U1,U2) is given by the prod- uct of their marginals; transform the variables to X and Y by substituting x for u1 and y − ΣY X Σ−1 x for u2 in that joint distribution.)
+3.11 If Xj ∼ Nr(μj,Σj), j = 1,2,...,n, are mutually independent and c1,c2,...,cn arerealnumbers,showthat
+XX
+⎛⎞ 􏰏n 􏰏n 􏰏n
+j=1
+j=1
+c j X j ∼ N r ⎝
+c j μ j , c 2j Σ j ⎠ . j=1
+3.12 If the s columns of the random matrix Z in (3.115) are independent random r-vectors with common covariance matrix Σ, show that ΣZZ = Σ⊗Is.
+74 3. Random Vectors and Matrices
+3.13 Let Wj ∼ Wr (nj , Σ), j = 1, 2, . . . , m, be independently distributed. Show that 􏰊mj=1 Wj ∼ Wr(􏰊mj=1 nj,Σ). Show that this result holds re- gardless of whether the distributions are central or noncentral.
+3.14 If W ∼ Wr (n, Σ) and A is a (p × r)-matrix of fixed constants with rank p, show that AWAτ ∼ Wp(n, AΣAτ ).
+3.15 Let W ∼ Wr(n, Σ) and let a be a fixed r-vector. Show that aτ Wa ∼ σa2 χ2n , where σa2 = aτ Σa. The chi-squared distribution is central if the Wishart distribution is central.
+3.16 (Stein’s Lemma) Let X ∼ N (θ, σ2 ) and let g be a differentiable func- tion such that E{|g′(X)|} < ∞. Show that E{g(X)(X−θ)} = σ2E{g′(X)}. (Hint: Use integration by parts with u = g(X) and dv = (X−θ)exp{−(X− θ)2/2σ2}.)
+3.17 Show that if Y = X ̄ ∼ Nr(μ,σ2Ir), r ≥ 3, then Y is inadmissible forthelossfunctionL(θ,Y)=∥θ−Y∥/σ2,whereσ2 >0isknown.
+3.18 Show that if Y = X ̄ ∼ Nr(μ,V), where V is a known (r×r) covariance matrix, r ≥ 3, then Y is inadmissible for the loss function L(θ,Y) = (Y−θ)τV−1(Y−θ), where p ≥ 3. (Hint: set S = (Y− θ)τ V−1(Y − θ).)
+3.19 Assume that X is a random r-vector with mean μ and covariance ma- trix Σ. Let A be an (r×r)-matrix of constants. Show that (a) E{Xτ AX} = tr(AΣ) + μτ Aμ. Assume now that A is symmetric, and let X ∼ Nr (μ, Σ). Show that (b) var{Xτ AX} = 2tr(AΣAΣ)+4μτ AΣAμ. If B is also a sym- metric (r × r)-matrix, show that (c) cov{Xτ AX, Xτ BX} = 2tr(AΣBΣ) + 4μτ AΣBμ.
+3.20 By expressing a correlation matrix R with equal correlations ρ as R = (1 − ρ)I + ρJ, where J is a matrix of ones, find the determinant and inverse of R.
+3.21 Instead of using the Cholesky decomposition to find the ML estimator of Σ on pp. 65–66, differentiate n log |H| − tr(H) wrt H, and show that H = nIr yields a maximum. (Hint: Use (3.58) and (3.59).)

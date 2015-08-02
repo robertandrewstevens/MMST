@@ -1,0 +1,816 @@
+
+17
+Correspondence Analysis
+17.1 Introduction
+Correspondence analysis is an exploratory multivariate technique for si- multaneously displaying scores representing the row categories and column categories of a two-way contingency table as the coordinates of points in a low-dimensional (two- or possibly three-dimensional) vector space. The objective is to clarify the relationship between the row and column vari- ates of the table and to discover a low-dimensional explanation for possible deviations from independence of those variates. The methodology has its own nomenclature, and its approach is decidedly geometric, especially for interpreting the resulting graphical displays.
+For two-way contingency tables, correspondence analysis is known as simple correspondence analysis. For three-way and higher contingency ta- bles, it is known as multiple correspondence analysis. Variants of correspon- dence analysis are dual (or optimal) scaling, reciprocal averaging, perceptual mapping, and social space analysis. In general, correspondence analysis is applicable when the variates are discrete with many categories and, hence, is well-suited for analyzing large contingency tables. It can also be used for continuous variates, such as age, which can be segmented into a finite
+A.J. Izenman, Modern Multivariate Statistical Techniques, Springer Texts in Statistics, 633 DOI 10.1007/978-0-387-78189-1_17, © Springer Science+Business Media New York 2013
+￼
+634 17. Correspondence Analysis
+number of ranges, but discretization of a continuous variate usually entails some loss of information.
+17.1.1 Example: Shoplifting in The Netherlands
+These data1 were taken from van der Heijden, de Falguerolles, and de Leeuw (1989). It is a three-way contingency table of 33,101 individuals, classified by gender and age, who were suspected of stealing specific goods in The Netherlands in 1978 and 1979. The data were obtained from a survey of about 350 Dutch stores and big retail shops. Cases in which shoplifting consisted of more than a single type of good, or in which more than one person was suspected, were omitted from the study. Age was divided into nine nonoverlapping categories, and shoplifted items were classified into 13 types of goods.
+For this example, we arranged the original 2 × 9 × 13 three-way contin- gency table into a (2 × 9) × 13 two-way contingency table in which gender has been introduced as separate sets of nine male and nine female rows of ages. The ages were coded by groups: < 12 (1 for boys and 10 for girls), 12–14 (2 and 11), 15–17 (3 and 12), 18–20 (4 and 13), 21–29 (5 and 14), 30–39 (6 and 15), 40–49 (7 and 16), 50–64 (8 and 17), and 65+ (9 and 18). The graphical display from the resulting correspondence analysis is given in Figure 17.1.
+We can make the following observations from Figure 17.1. First, points representing males and females are well-separated at each age group, sug- gesting that their shoplifting profiles are quite different. Second, for both males and females, the age category points are clearly ordered from younger than 12 years old on the left-hand side to older than 65 on the right-hand side, with both sets of points doubling back toward the left after 30 years of age. Third, while there are larger distances between males at the younger age groups than those at older age groups, suggesting that shoplifting be- havior changes substantially more for younger than for older males, the distances between female age groups are largest at both the younger and older ages (and, hence, more rapidly changing shoplifting behavior), with smaller distances appearing in the middle age groups (18–49).
+The configuration of points in Figure 17.1 also tempts us to identify col- umn points (which types of goods are shoplifted more than average) with nearby row points (age groups), possibly leading to the identification of sig- nificant age × goods interactions. Although interrow distances and inter- column distances can be compared, row-to-column distances are undefined and, therefore, are essentially meaningless (see, e.g., Greenacre and Hastie,
+1The contingency table can be downloaded from the book’s website.
+￼
+17.2 Simple Correspondence Analysis 635
+-1.0 -0.5 0.0 0.5 1.0
+￼￼￼￼￼￼￼￼￼￼tools records
+98
+7
+6
+￼3
+bo othoekrs
+to b a gc co oo d s
+5 18
+4
+accessories
+￼￼￼￼2
+writing to1ys sweets
+17
+c lo th in1 g6 13 1145
+￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼10
+11
+jewelry
+perfum e
+12
+￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼-1.0 -0.5 0.0 0.5 dim ension 1
+FIGURE 17.1. Correspondence map for the shoplifting example. The red words are the items shoplifted, the points joined by a solid line represent the progression in male ages (1–9), and the points joined by a dotted line represent the progression in female ages (10–18).
+1987). In other words, row points should not be associated with neighbor- ing column points (and vice versa). Using row percentages obtained from the contingency table, we summarize in Table 17.1 the types of goods most often shoplifted by males and by females at each of the different age groups. In the light of the above comments, it is perhaps instructive for the reader to compare Figure 17.1 with Table 17.1.
+17.2 Simple Correspondence Analysis
+17.2.1 Two-Way Contingency Tables
+Categorical data are count data that are collected in a contingency table N. A two-way (r×s) contingency table with r rows (labelled A1,A2,...,Ar) and s columns (labelled B1, B2, . . . , Bs) has rs cells. The ijth cell has entry
+￼dim ension 2
+-1.0 -0.5 0.0 0.5
+-1.0 -0.5 0.0 0.5 1.0
+636 17. Correspondence Analysis
+TABLE 17.1. Types of goods most often shoplifted by males and by females at each age group, as derived from the two-way contingency table of the example. Superscripts show the percentages of that type of good stolen for that age group and gender. Also listed in parentheses for each age group and gender are those goods that are stolen more than 20% of the time.
+￼Age
+< 12 12–14 15–17 18–20 21–29 30–39 40–49 50–64 65+
+Males
+Toys 26.2 (writing materials
+Writing materials 25.1 Writing materials 14.8 Clothing 22.8
+Clothing 27.3
+Clothing 25.9
+Clothing 21.7
+Hobbies, tools 22.6 Provisions, tobacco 27.3 (hobbies, tools 20.9)
+23.5 )
+Females
+Writing materials 23.8
+Jewelry 26.5
+Clothing 32.3 (jewelry 20.5) Clothing 45.4
+Clothing 55.8
+Clothing 57.2
+Clothing 51.7
+Clothing 39.4
+Provisions, tobacco 30.1 (clothing 24.2)
+￼￼nij, representing the observed frequency in row category Ai and column
+category Bj, i = 1,2,...,r, j = 1,2,...,s. The ith marginal row total
+is ni+ = 􏰊sj=1 nij, i = 1,2,...,r, and the jth marginal column total is
+n+j = 􏰊r nij, j = 1,2,...,s. If n = 􏰊r 􏰊s nij individuals are i=1 i=1 j=1
+classified by row and column categories, then Table 17.2, which is also called a correspondence table, shows the cell frequencies, marginal totals, and total sample size. For interpretation purposes, it is important to distinguish when the n individuals are randomly selected from some very large population or when they actually constitute the entire population of interest.
+We denote by πij the probability that an individual has the properties Ai
+and Bj, i = 1,2,...,r, j = 1,2,...,s. In the event that the row variable A
+is independent of the column variable B, we have that πij = πi+π+j, where
+πi+ = 􏰊 πij and π+j = 􏰊 πij, for all i = 1,2,...,r and j = 1,2,...,s. ji
+We are generally interested in assessing whether A and B are indeed inde- pendent variables. Such a question can alternatively be posed in terms of homogeneity of the row or column probability distributions; that is, whether all the rows have the same probability distributions across columns, or, equivalently, whether all the columns have the same probability distribu- tions across rows.
+17.2.2 Row and Column Dummy Variables
+For a two-way (r × s) contingency table, we are interested in the rela- tionship between the row categories and the column categories. We define two sets of dummy variates, an r-vector Xi = (Xi1 , · · · , Xir )τ to indi-
+17.2 Simple Correspondence Analysis 637
+TABLE 17.2. Two-way contingency table, showing observed cell frequen- cies, row and column marginal totals, and total sample size.
+￼Row Variable
+A1 A2
+.
+Ai .
+Ar Column total
+Column Variable
+B1 B2 ··· Bj ··· n11 n12 ··· n1j ··· n21 n22 ··· n2j ···
+. . .
+ni1 ni2 ··· nij ··· . . .
+nr1 nr2 ··· nrj ··· n+1 n+2 ··· n+j ···
+Bs Row Total n1s n1+ n2s n2+
+. .
+nis ni+ . .
+nrs nr+ n+s n
+￼￼￼cate which of the n observations fall into the ith row, and an s-vector Yj = (Y1j , · · · , Ysj )τ to indicate which of the n observations fall into the jth column; that is,
+􏰇
+Xij = 􏰇
+Yij =
+i = 1,2,...,r, j = 1,2,...,s. These indicator vectors can be collected into two matrices, an (r × n)-matrix X = (xij ) and an (s × n)-matrix Y = (yij ). Note that even though both X and Y are defined by the specific distribution of cell frequencies in the contingency table, it turns out that the summary information will be the same as if we assume, for convenience, that X and Y are given by
+1, if the jth individual belongs to Ai 0, otherwise
+1, if the ith individual belongs to Bj 0, otherwise
+⎛1···10···0···0···0⎞ r×n ⎜0 ··· 0 1 ··· 1 ··· 0 ··· 0⎟
+X =⎝. . . . . .⎠, 0···00···0···1···1
+⎛1···10···0···0···0⎞ s×n ⎜0 ··· 0 1 ··· 1 ··· 0 ··· 0⎟
+Y =⎝. . . . . .⎠, 0···00···0···1···1
+respectively.
+(17.1)
+(17.2)
+Matrices derived from X and Y reproduce the observed cell frequencies and their marginal totals. The (r×s)-matrix XYτ reproduces the observed
+638 17. Correspondence Analysis
+cell frequencies of the contingency table,
+⎛n11 n12 ... n1s⎞ τ ⎜n21 n22 ... n2s⎟
+XY =⎝ . . ... . ⎠ = N. nr1 nr2 ... nrs
+(17.3)
+The (r × r) matrix XXτ and the (s × s) matrix YYτ are both diagonal, XXτ having as diagonal entries the r marginal row totals and YYτ having as diagonal entries the s marginal column totals,
+XXτ = diag{n1+,···,nr+}, (17.4) YYτ =diag{n+1,···,n+s}. (17.5)
+Collecting (17.3), (17.4), and (17.5) together, we can form the (r+s)×(r+s)
+block matrix,
+where
+􏰃X􏰄􏰃X􏰄τ 􏰃nDr N􏰄 Y Y = Nτ nD ,
+Dr =n−1XX =diag{n1+/n,...,nr+/n},
+Dc =n−1YYτ =diag{n+1/n,...,n+s/n}.
+(17.6)
+(17.7) (17.8)
+The matrix (17.6) is known as a Burt matrix (Burt, 1950) for a two-way con-
+tingency table. It is nonnegative definite and symmetric and is the analogue in the discrete case (after dividing through by n) of the sample covariance matrix of two sets of continuous variates.
+17.2.3 Example: Hair Color and Eye Color
+This classic two-way contingency table N with r = 4 and s = 5 (see Table 17.3) was analyzed by R.A. Fisher (1940) and others. It relates to data on hair color and eye color of a sample of 5,387 schoolchildren from Caithness, Scotland. It is given as a (4 × 5)-matrix by:
+⎛326 38 241 110 3⎞ N=XYτ =⎜⎝ 688 116 584 188 4 ⎟⎠.
+343 84 909 412 26 98 48 403 681 85
+The matrices X X τ and YYτ are given by:
+⎛718 0 0 0⎞ XXτ=⎜⎝01580 0 0⎟⎠
+0 0 1774 0 0 0 0 1315
+c
+17.2 Simple Correspondence Analysis 639
+TABLE 17.3. Relationship of Hair Color to Eye Color of Scottish Schoolchildren.
+￼Eye Color Blue Light Medium Dark Totals
+Fair Red 326 38 688 116 343 84
+98 48 1,455 286
+Hair Color
+Medium Dark Black
+241 110 3 584 188 4 909 412 26 403 681 85
+2,137 1,391 118
+Totals 718 1,580 1,774 1,315 5,387
+￼￼￼⎛⎞
+1455 0 0 0 0
+τ ⎜ 0286 0 0 0⎟
+Y Y = ⎜⎝ 0 0 2 1 3 7 0 0 ⎟⎠ , 0 0 0 1391 0
+0 0 0 0 118
+respectively. The matrices Dr and Dc are obtained by dividing both XXτ andYYτ byn=5,387:
+17.2.4
+Profiles, Masses, and Centroids
+The (r × s)-matrix
+⎛ 0.1333
+D r = ⎜⎝ 0 0 . 2 9 3 3 0
+0 ⎞
+0 ⎟⎠
+0 0 0 0 0.3293
+0 0 0 0 0.2441
+⎛⎞
+0.2701 0 0 0 0
+0 ⎟ 0 ⎟⎠ .
+⎜ 0 0.0531 0 0 D c = ⎜⎝ 0 0 0 . 3 9 6 7 0 0 0 0 0.2582
+0 0 0 0 0 0.0219
+P = n−1N
+(17.9)
+converts the contingency table N into a correspondence matrix. See Table 17.4. If the n individuals constitute a random sample, the entry, pij = nij/n, in the ith row and jth column of P can be characterized as either the uniformly minimum variance unbiased (UMVU) estimator or the maximum likelihood (ML) estimator of πij . For the hair-color/eye-color example,
+⎛ 0.0605 0.0071 0.0447 0.0204 0.0006 ⎞ P = ⎜⎝ 0.1277 0.0215 0.1084 0.0349 0.0007 ⎟⎠ .
+0.0637 0.0156 0.1687 0.0765 0.0048 0.0182 0.0089 0.0748 0.1264 0.0158
+640 17. Correspondence Analysis
+TABLE 17.4. Correspondence matrix, showing observed cell relative fre- quencies P (pij = nij /n), row marginal totals r (pi+ = ni+ /n), and column marginal totals cτ (p+j = n+j /n)
+￼Row Variable
+A1 A2
+.
+B1 B2 p11 p12 p21 p22
+. .
+··· Bj ··· p1j ··· p2j
+.
+··· pij .
+··· prj ··· p+j
+··· Bs Row Total ··· p1s p1+
+··· p2s p2+
+. .
+··· pis pi+ . .
+··· prs pr+ ··· p+s 1
+Column Variable
+￼Ai
+. . .
+Ar Column total
+pi1 pi2 pr1 pr2
+p+1 p+2
+￼￼The row totals and column totals of P are given by the diagonal elements of Dr and Dc, respectively.
+The (r × s)-matrix Pr of row profiles of N (or P) consists of the rows of N divided by their appropriate row totals (e.g., nij/ni+, which, under random sampling, can be characterized as either the UMVU or ML estima- tor of πij/πi+, the conditional probability that an individual has property Bj given that he or she has property Ai), and can be computed as the regression coefficient matrix of Y on X; that is,
+where
+􏰃nn􏰄 a τi = i 1 , · · · , i s ni+ ni+
+⎛aτ ⎞ 1
+P = (XXτ)−1XYτ = D−1P = ⎜⎝ . ⎟⎠, rr
+aτr
+(17.10)
+( 1 7 . 1 1 ) is the ith row profile, i = 1, 2, . . . , r. For the hair-color/eye-color example,
+￼￼⎛ 0.4540 0.0529 0.3357 0.1532 0.0042 ⎞ Pr = ⎜⎝ 0.4354 0.0734 0.3696 0.1190 0.0025 ⎟⎠ .
+0.1933 0.0474 0.5124 0.2322 0.0147 0.0745 0.0365 0.3065 0.5179 0.0646
+Similarly, the (s × r)-matrix Pc of column profiles of N (or P) consists of the columns of N divided by their appropriate column totals (e.g., nij /n+j , which, under random sampling, can be characterized as the UMVU or ML estimator of πij/π+j, the conditional probability that an individual has property Ai given that he or she has property Bj), and computed as the
+regression coefficient matrix of X on Y; that is,
+⎛bτ ⎞
+where
+􏰃nn􏰄 b τj = 1 j , · · · , r j n+j n+j
+17.2 Simple Correspondence Analysis
+641
+1 Pc =(YYτ)−1YXτ =D−1Pτ =⎝ .
+⎠,
+(17.12)
+( 1 7 . 1 3 )
+c
+bτs
+￼￼is the jth column profile, j = 1,2,...,s. For the hair-color/eye-color ex- ample,
+⎛ 0.2241
+⎜ 0.1329 P c = ⎜⎝ 0.1128
+0.4729 0.2357 0.4056 0.2937 0.2733 0.4254
+0.0674 ⎞ 0.1678 ⎟ 0.1886 ⎟⎠ . 0.4896 0.7203
+0.0791 0.1352 0.2962 0.0254 0.0339 0.2203
+The row means of the contingency table N are the row sums of P, ⎛ ̄⎞⎛⎞⎛⎞
+X1 n1+/n p1+
+P1s =⎝ . ⎠=⎜⎝ . ⎟⎠=⎜⎝ . ⎟⎠=r, (17.14)
+X ̄ r n r + / n p r +
+and the column means of N are the column sums of P (or row sums of
+Pτ ),
+⎛ ̄⎞⎛⎞⎛⎞
+Y1
+Pτ1r =⎝ . ⎠=⎜⎝
+Y ̄ s
+n+1/n .
+n + s / n
+p+1
+⎟⎠=⎜⎝ . ⎟⎠=c, (17.15)
+p + s
+where 1a denotes an a-vector each of whose entries is 1. The vectors r and c can be formed from the diagonal elements of Dr and Dc, respectively; that is, Dr = diag{r} and Dc = diag{c}. For the hair-color/eye-color example,
+0.2701 ⎞ 0.0531 ⎟ 0.3967 ⎟⎠. 0.2582 0.0219
+2
+The ith element, pi+ = ni+/n, of the r-vector r is called the ith row
+mass and, under random sampling, is an estimate of the unconditional
+⎛ 0.1333 ⎞ ⎛ ⎜ 0.2933 ⎟ ⎜
+r=⎝ 0.3293 ⎠, c=⎜⎝ 0.2441
+Powers of these diagonal matrices are given by Dαr = diag{rα} and Dαc = diag{cα}, where rα and cα are the column vectors (17.14) and (17.15), respectively, with each entry raised to the αth power. In this chapter, we will be interested in situations where α = −1 or −1.
+￼
+642 17. Correspondence Analysis
+probability, πi+, of belonging to Ai. Similarly, the jth element, p+j = n+j/n, of the s-vector c is called the jth column mass and is an estimate of the unconditional probability, π+j , of belonging to Bj . In correspondence analysis, r is called the average column profile and c is called the average row profile of the contingency table. The vector c is also referred to as the row centroid because it can be expressed as the weighted average of the row profiles, namely,
+􏰏r i=1
+where the weights are the row masses. Similarly, the vector r is referred to as the column centroid because it can be expressed as the weighted average of the column profiles, namely,
+relationship between r and c is given by r = Pτ D−1c and c = Pτ D−1r. cr
+17.2.5 Chi-squared Distances
+In correspondence analysis, it is important to be able to visualize dis- tances between different row profiles (i.e., rows of Pr) or between different column profiles (i.e., rows of Pc). To do this, we use the chi-squared metric as a measure of distance.
+Row Distances
+Consider the ith and i′th row profiles, ai and ai′ , respectively. We will need the fact that ai − ai′ is an s-vector whose jth entry is nij/ni+ − ni′j/ni′+. The squared distance between ai and ai′ is defined as the quadratic form,
+(17.18) (17.19)
+c =
+pi+ai, (17.16)
+􏰏s j=1
+p+jbj, (17.17) where the weights are the column masses. It is not difficult to show that the
+r =
+d2(a ,a′) ≡ (a −a′)τD−1(a −a′) ii iicii
+􏰏s 􏰃 􏰄2 = n nij − ni′j .
+￼￼￼j=1 n+j ni+ ni′+
+We see from (17.19) that the jth column mass, n+j/n, enters the squared distance between row profiles ai and ai′ as an inverse element of the jth term in the sum. It follows that those categories having fewer observations contribute more to the inter-row profile distances.
+Recall that c is the row centroid. The (r × s)-matrix of centered row
+profiles P −1 cτ, where P = D−1P, has ith row (a −c)τ, with jth rrrri
+i+ j=1 i+ +j Summing (17.20) over all row profiles yields
+􏰏r n
+􏰏r 􏰏s 􏰁 n i + n + j 􏰂 2
+􏰁 n i + n + j 􏰂 n ,
+pi+d2(ai,c) =
+which is the Pearson’s chi-squared statistic,
+17.2 Simple Correspondence Analysis 643
+entry n−1(nij − ni+n+j/n), i = 1,2,...,r, j = 1,2,...,s. The squared i+
+χ2-distance between ai and c is, therefore,
+d2(a ,c) = (a −c)τD−1(a −c)
+iici
+1􏰏s n􏰁 ni+n+j􏰂2
+=n nnnij−n . (17.20)
+￼￼￼nij − n / 2 􏰏􏰏(Oij −Eij)2
+(17.21)
+￼￼i=1
+i=1 j=1
+X= E, (17.22) ij ij
+￼where the observed cell frequency Oij and the expected cell frequency Eij (assuming independence of row and column variates) are given by
+Oij = nij, Eij = ni+n+j , (17.23) n
+respectively, i = 1,2,...,r, j = 1,2,...,s. Under random sampling, X2 has approximately (large n) the χ2 distribution with (r − 1)(s − 1) degrees of freedom (see, e.g., Rao, 1965, Section 6d.2).
+Column Distances
+In a similar manner, we define the squared χ2-distance between the jth and j′th column profiles, bj and bj′ , respectively, as the quadratic form,
+d2(b ,b ′) ≡ (b −b ′)τD−1(b −b ′) (17.24) jj jjrjj
+￼􏰏r 􏰃 􏰄2
+= n nij − nij′ . (17.25)
+￼￼￼i=1 ni+ n+j n+j′
+The squared χ2-distance between the jth column profile and the column
+centroid is, therefore, given by
+d2(b ,r) = (b −r)τD−1(b −r)
+jjrj
+1􏰏r n􏰁 ni+n+j􏰂2
+= n n n nij− n . (17.26)
++j i=1 i+ +j Summing (17.26) over all column profiles yields
+􏰏s j=1
+￼￼￼n
+p+jd2(bj,r) = X2, (17.27)
+644 17. Correspondence Analysis
+where X2 is given by (17.22).
+Thus, the weighted average of the squared χ2-distances of all row profiles to the row centroid (or of all column profiles to the column centroid), where the weights are the row masses (column masses), is the quantity X2/n. If the row and column variates are independent, then X2/n will be small, in which case every component of X2/n — either the {pi+d2(ai,c)} or the {p+jd2(bj,r)} — will be small. On the other hand, if X2/n is large, that means that at least one of the {pi+d2(ai,c)} or at least one of the {p+jd2(bj,r)} will be large. This type of information will be important in determining where independence in the table fails.
+For the hair-color/eye-color example, the matrix E = (Eij ) of expected cell frequencies is given by:
+⎛ 193.93 38.12 284.83 185.40 E = ⎜⎝ 426.75 83.88 626.78 407.98 479.15 94.18 703.74 458.07 355.17 69.81 521.65 339.55
+15.73 ⎞ 34.61 ⎟⎠. 38.86 28.80
+Compare this matrix with N = (Oij ) above. The matrix of values of (Oij − Eij )2/Eij is given by:
+⎛ 89.95 ⎜⎝ 159.93 38.69 186.22
+0.00 6.74 30.66 10.30 ⎞ 12.30 2.92 118.61 27.07 ⎟⎠.
+1.10 59.87 4.63 4.26 6.82 26.99 343.36 109.63
+The sum of all these values is X2 = 1240.05, which should be compared with 21.03, the tabulated 95th-percentile of the χ212 distribution. Clearly, independence of row and column variates fails for these data.
+17.2.6 Total Inertia and Its Decomposition
+We see that using dummy variables for representing a two-way contin- gency table enables us to view the problem as a special case of canonical variate analysis. The situation is, however, different in that instead of ex- tracting the correlation structure between two sets of stochastic data vec- tors, we are dealing with the correlation structure of two sets of dummy variables.
+Let x = (xij), where xij = Xij − X ̄i is either 1 − (ni+/n) or −ni+/n. Similarly, let y = (yij ), where yij = Yij − Y ̄j is either 1 − (n+j /n) or −n+j/n. Then, the covariance matrices are
+n−1xxτ = n−1X (In − n−1Jn)X τ = Dr − rrτ , (17.28) n−1yyτ = n−1Y(In − n−1Jn)Yτ = Dc − ccτ , (17.29)
+−1 −1 −1/2 −1/2 row and j′th column of R0 is given by
+17.2 Simple Correspondence Analysis 645
+where Ja = 1a1τa is an (a×a)-matrix of 1s. The matrices xxτ (of rank r−1) and yyτ (of rank s − 1) are both singular and, hence, their inverses do not exist. We could sidestep this problem by deleting one of the row dummy variables and one of the column dummy variables (see Exercise 17.2), but this would reduce the dimensionality and we would not be able to recover the points from the missing dimensions.
+The standard assumption of contingency table analysis is that the row and column totals are considered fixed and the cell frequencies in N are al- lowed to vary within those constraints. Accordingly, we center the elements of N at the values we expect them to have under independence (instead of centering the data N at the mean). Thus, (17.9) becomes the relative frequency matrix,
+n−1X(In − n−1Jn)Yτ = P − rcτ = P􏰣. (17.30) For the hair-color/eye-color example,
+⎛ 0.0245 −0.0000 −0.0081 −0.0140 −0.0024 ⎞ P􏰣 = ⎜⎝ 0.0485 0.0060 −0.0079 −0.0408 −0.0057 ⎟⎠ .
+−0.0253 −0.0019 0.0381 −0.0086 −0.0024 −0.0477 −0.0040 −0.0220 0.0634 0.0104
+The matrix N􏰣 = nP􏰣 is often called the matrix of residuals because its ijth entry, n􏰣ij = Oij − Eij , shows the difference between the observed cell frequency (Oij) and its expected cell frequency (Eij), assuming inde- pendence between row and column variates, i = 1,2,...,r, j = 1,2,...,s (see (17.23)). Note that because N􏰣 1s = (N − nrcτ )1s = N1s − nrcτ 1s = nr−nr=0,therankofN􏰣 (and,hence,ofP􏰣)isatmosts−1.
+The (s × s)-matrix R in (8.76) plays a central role in canonical variate analysis, and it has an obvious analogue in this development. The corre- spondences between (8.76) and (17.6) are given by
+ΣXX ↔Dr, ΣYY ↔Dc, ΣXY ↔P􏰣. (17.31) Accordingly, we use (17.7), (17.8), and (17.30) to compute the (s × s)-
+matrix,
+where Dr = diag{r } and Dc = diag{c }. The entry in the jth
+R = D−1/2P􏰣τD−1P􏰣D−1/2, (17.32) 0crc
+−1/2􏰏r 1 􏰁 ni+n+j􏰂􏰁 ni+n+j′􏰂
+n nij − n nij′ − n i=1 i+
+(17.33)
+(17.34)
+(n+jn+j′)
+and the jth diagonal entry of R0 is obtained by setting j = j′,
+￼￼￼1􏰏r 1􏰁 ni+n+j􏰂2
+n n nij− n . +j i=1 i+
+￼￼￼
+646 17. Correspondence Analysis
+For the hair-color/eye-color example,
+⎛ 0.0881
+⎜ 0.0160 R0 = ⎜⎝ −0.0044 −0.0798 −0.0420
+0.0160 −0.0044 −0.0798
+0.0038 −0.0001 −0.0156 −0.0001 0.0179 −0.0148 −0.0156 −0.0148 0.0923 −0.0080 −0.0099 0.0507
+−0.0420 ⎞ −0.0080 ⎟ −0.0099 ⎟⎠ .
+0.0507 0.0281
+The trace of R0, which is also the sum of the eigenvalues of R0, is
+􏰏r 􏰏s 1 􏰁 n i + n + j 􏰂 2 X 2
+n n n i j − n = n , ( 1 7 . 3 5 )
+􏰏s j=1
+λ 2j = t r { R 0 } =
+where X2 is given by (17.22).
+￼￼￼i=1j=1 i+ +j
+If the value of X2 is very large, as it is in the shoplifting example where X 2 = 19, 949.97 on 17 × 12 = 204 degrees of freedom, the hypothesis of independence of the row and column variates in the contingency table has to be rejected. It then becomes of interest to determine where the deviations from independence occur. Understanding which characteristics of the data are important may be useful for further study.
+The quantity X2/n is referred to as the amount of total inertia in the contingency table. The eigenvalues (or principal inertias) of R0 form a decomposition of the total inertia. The accumulated contribution of the first t principal inertias is given by
+λ 21 + · · · + λ 2t
+􏰊s λ2 , (17.36)
+j=1 j
+which is an analogue of the percentage of total variance explained by the
+first t principal components, where we usually take t to be 2 or 3.
+For the hair-color/eye-color example, the eigenvalues of R0 (and their individual percentages of the total, tr(R0) = 0.2302) are 0.1992 (86.6%), 0.0301 (13.1%), 0.0009 (0.4%), 0, and 0. Clearly, the first two eigenvalues account for almost all of the total inertia.
+Table 17.5 lists the 12 principal inertias (eigenvalues of R0) for the shoplifting example. The total inertia is X2/n = 19,949.97/33,101 = 0.6027. We see that the first three eigenvalues account for about 90% of the total inertia, which suggests that almost all of the deviations from indepen- dence can be attributed to the first three dimensions. The two-dimensional plot (see Figure 17.1) accounts for about 78% of the total inertia.
+17.2.7 Principal Coordinates for Row and Column Profiles
+The matrix R0 in (17.32) can be expressed as
+R0 = Mτ M, (17.37)
+￼
+where the (r × s)-matrix
+Axis Inertia Percentage 1 0.3504 58.13 2 0.1192 19.78 3 0.0700 11.61 4 0.0382 6.35 5 0.0112 1.86 6 0.0086 1.43 7 0.0031 0.51 8 0.0009 0.15 9 0.0006 0.10
+10 0.0003 0.06 11 0.0001 0.02 12 0.0001 0.01
+Total 0.6027
+Cumulative 58.13 77.91 89.52 95.86 97.72 99.14 99.66 99.81 99.91 99.97 99.99 100.00
+17.2 Simple Correspondence Analysis 647
+TABLE 17.5. Shoplifting example: Principal inertias (eigenvalues λ2j), total inertia, the proportions of total inertia explained by each eigenvalue, and the cumulative proportions.
+￼￼￼￼M = D−1/2P􏰣D−1/2 rc
+(17.38)
+(17.39)
+has ijth entry given by the Pearson residual,
+−1/2 􏰁 ni+n+j 􏰂
+mij = (ni+n+j) nij − n ,
+i = 1,2,...,r, j = 1,2,...,s. For the hair-color/eye-color example,
+⎛ 0.1292 −0.0003 −0.0354 −0.0754 −0.0437 ⎞ M = ⎜⎝ 0.1723 0.0478 −0.0233 −0.1484 −0.0709 ⎟⎠ .
+−0.0847 −0.0143 0.1054 −0.0293 −0.02811 −0.1859 −0.0356 −0.0708 0.2525 0.1427
+￼Thus, from (17.35), the sum of squares of all rs Pearson residuals in the contingency table is the total inertia. Note that because rank(P􏰣 ) ≤ s − 1, it follows that M in (17.38) also has rank at most s − 1. The singular value decomposition of M is, therefore, given by
+M = UDλVτ , (17.40)
+where U is an (r × s)-matrix, Uτ U = Is, whose columns are the eigenvec- tors, {uj }, corresponding to the s − 1 nonzero eigenvalues of the (r × r)-
+matrix
+MMτ = D−1/2P􏰣D−1P􏰣τ D−1/2 = R , (17.41) rcr1
+648 17. Correspondence Analysis
+V is an (s × s)-matrix, Vτ V = Is, whose columns are the eigenvectors, {vj}, corresponding to the eigenvalues of the (s×s)-matrix MτM = R0, and Dλ = diag{λ1, · · · , λs} is an (s × s) diagonal matrix with its principal diagonal having entries the singular values (the positive square-roots of the nonzero eigenvalues of either R0 or R1).
+Combining (17.38) and (17.40), we can write
+P􏰣 = (D1/2U)D (Vτ D1/2) = AD Bτ ,
+(17.42) (17.43)
+where
+For the hair-color/eye-color example,
+⎛ −0.1195 0.1271 −0.2917 A = ⎜⎝ −0.2896 0.1496 0.3179 0.0248 −0.4651 −0.0624 0.3843 0.1885 0.0362
+rλcλ
+A = D1/2U, B = D1/2V. rc
+⎛ −0.3292
+⎜ −0.0277 B = ⎜⎝ −0.0373 0.3406 0.0537
+composition of P􏰣 in the metrics D−1 and D−1. The columns of A and B rc
+0.2707
+0.0148 −0.4764 0.1547 0.0362
+−0.1154 0.2741 0 0.2138 0.0421 −0.0680 −0.0438 0.4071 0.0259 −0.0891 0.2186 −0.2501 0.0345 0.0433 0.1210
+⎞ ⎟
+Note that
+The expression (17.42) (and (17.44)) is the generalized singular value de-
+AτD−1A = I , BτD−1B = I . rscs
+are called the principal axes of the row and column profiles.
+The squared χ2-distance (in the metric D−1) between the (r×s)-matrices
+c
+of centered row profiles Pr − 1rcτ and B is given by
+Gτ = (P−1cτ)D−1B Prrc
+= ( D − 1 P􏰣 D − 1 ) B rc
+= D−1(AD Bτ )D−1B rλc
+rr
+can show that the squared χ2-distance (in the metric D−1) between the r
+(s × r)-matrices of centered column profiles Pc − 1crτ and A is given by
+Hτ = (P−1rτ)D−1B
+= D−1AD , rλ
+(17.45) where we have used (17.10), 1 = D−1r, (17.41), and (17.43). Similarly, we
+Pccr
+−0.1333 0 ⎞ −0.29330⎟⎠. −0.3293 0 −0.2441 0
+= D−1BD . (17.46) cλ
+⎟⎠ .
+(17.44)
+17.2 Simple Correspondence Analysis 649
+Substituting (17.42) for the A and B in (17.44) and (17.45), respectively, we have that
+Gτ = D−1/2UD , Hτ = D−1/2VD . PrλPcλ
+(17.47)
+For the hair-color/eye-color example,
+⎛ −0.4003 GτP = ⎜⎝ −0.4407 0.0336 0.7027
+⎛ −0.5440 τ ⎜ −0.0233 HP = ⎜⎝ −0.0420 0.5887 1.0944
+0.1654
+0.0885 −0.2450 0.1339
+0.1738
+0.0483 −0.2083 0.1040 0.2864
+−0.0642 0 ⎞
+The columns of GτP and HτP are called the principal coordinates of the row and column profiles, respectively (hence the subscript P). The matrices GτP and HτP are related to each other. It can be shown (see Exercise 17.5) that
+Gτ = D−1PHτ D−1, Hτ = D−1Pτ Gτ D−1. (17.48) PrPλPcPλ
+Similar results can also be obtained directly from the canonical variate analysis developed in Chapter 7 and the correspondences given in (17.31). From (7.61) and (7.62) we compute the (s × r)-matrix GS and the (s × s)- matrix HS, where
+G = Uτ D−1/2, H = Vτ D−1/2. (17.49) SrSc
+Note that GSDrGτS = Ir and HSDcHτS = Is. The columns of GτS and HτS in (17.49) are known as the standard coordinates of the row and column profiles, respectively (hence the subscript S). Instead of defining the row and column coordinates as (17.49), however, they are generally scaled as in (17.47).
+17.2.8 Graphical Displays
+In correspondence analysis, one has the choice between analyzing only the row profiles, or analyzing only the column profiles, or analyzing both the row and column profiles together. The graphical displays formed from plotting the row and column coordinates in Table 17.6 are scatterplots that can be of two types:
+Symmetric map: Both row and column coordinates are expressed as principal coordinates.
+⎟⎠ , −0.0125 0 ⎞
+0.0318 0 −0.0056 0 0.0043 0
+0.1181 0 ⎟
+−0.0032 0 −0.0101 0 0.0461 0
+⎟⎠ .
+650 17. Correspondence Analysis
+TABLE 17.6. The t-dimensional formulas for row and column coordinates are the columns of the first t rows of the following matrices, where t is two or three.
+￼Problem
+Row Profiles Column Profiles Both Profiles
+Row Coordinates Column Coordinates
+τ −1/2 τ −1/2 GP=DλUDr HS=VDc
+τ −1/2 τ −1/2 GS=UDr HP=DλVDc
+τ −1/2 τ −1/2 GP =DλU Dr HP =DλV Dc
+￼￼Asymmetric map: The row (or column) coordinates are expressed as principal coordinates while the other is expressed as standard coor- dinates.
+Most users of correspondence analysis prefer to view a symmetric map of both the row and column principal coordinates (17.47) in a two- (or three-) dimensional scatterplot. First, we make a scatterplot of each of the r rows of the first two (or three) columns of GτP . Then, on the same scatterplot, we overlay a plot of each of the s rows of the first two (or three) columns of HτP . In Figure 17.2, we have drawn the symmetric correspondence map for the eye-color/hair-color example. If the three-dimensional points are plotted on a dynamic scatterplot, then the display can be rotated in all three dimensions for better viewing. These merged displays provide interpretable views of different features in the data.
+There will be r + s points in these scatterplots, which are called cor- respondence maps. For clearer interpretation, different symbols should be used for the row points and column points. It is also useful (unless the plot would look overly cluttered) to identify each point in the plot by a tag showing its corresponding category name. If the row (or column) cat- egories are ordered in some way, such as time-order by year or successive age ranges (as in the shoplifting example), then it is visually helpful to connect those category points in the plot with each other to indicate such order-dependence.
+In general, points in the scatterplot that appear “close” to each other tend to correspond to categories that are closely related. More specifically,
+• if row points are close, then those rows have similar conditional dis- tributions across columns;
+• if column points are close, then those columns have similar conditional distributions across rows;
+0.3
+0.2
+0.1
+0.0
+-0.1
+-0.2
+-0.3
+17.3 Square Asymmetric Contingency Tables 651
+￼￼￼￼fairhair
+blackhair
+darkeyes
+darkhair
+blueeyes
+￼￼￼lighteyes
+m edium -colorhair
+￼￼redhair
+￼￼medium-coloreyes
+￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼-0.6 -0.1 0.4 0.9
+FIGURE 17.2. Correspondence map for the hair-color/eye-color ex- ample. The points exhibit a U-shaped plot with the first principal coor- dinate (horizontal axis) displaying gradations along the fair-red-medium- dark-black hair scale and the light-blue-medium-dark eyes scale, and the second principal coordinate (vertical axis) displaying a difference between medium-color hair and eyes and the other hair and eye colors.
+• if a row point is close to a column point, then that configuration suggests a particular deviation from independence.
+In general, we should not try to compare the positions of row points with the positions of column points and say, for example, that if a particular row point is very close to a particular column point then the corresponding row and column categories are related to each other. (A dissenting view that supports identifying row points with neighboring column points is given by van der Heijden et al, 1989.)
+17.3 Square Asymmetric Contingency Tables
+An important special case of two-way contingency tables consists of square tables, where r = s and the rows have the same categories as the columns. Examples of square tables include:
+• Individuals who are naturally paired, such as husbands and wives or fathers and sons, are classified by occupational or social status.
+￼
+652
+17. Correspondence Analysis
+• • • •
+Experiments conducted on naturally paired items, such as vision grades of left eye and right eye.
+Two investigators or event judges independently rate each subject in a study using the same Likert-type scale.
+Individuals in a sample are categorized by region of residence at two distinct points in time.
+To study accuracy of a classification rule, the rows give the classes to which the data were assigned by the rule, the columns define the true classes (possibly determined from reference data), the cell entries show how much the classified data and the reference data agree, and the diagonal cells show the numbers of correct classifications.
+If a square table N is symmetric with respect to the r2 cell frequen- cies (i.e., Nτ = N), then the correspondence map will display coincident pairs of row and column points. In each of the examples listed above, how- ever, the square tables are asymmetric in the sense that Nτ ̸= N. Unlike rectangular contingency tables, analyzing asymmetric square tables using correspondence analysis has not been very successful. The reason is similar to that for models that try to analyze square tables for symmetry: the data along the principal diagonal tend to have too great an influence on the results.
+An innovative way of analyzing square asymmetric tables was proposed by Gower (1977) and Constantine and Gower (1978). Consider a square asymmetric contingency table N that yields the correspondence table P, also square and asymmetric. Gower showed that P can be decomposed, prior to analysis, into two orthogonal component tables,
+where
+P = M + Q, (17.50) M = 1(P+Pτ), Q = 1(P−Pτ). (17.51)
+￼￼22
+In (17.51), M is a symmetric table (Mτ = M) and Q is a skew-symmetric
+table (Qτ = −Q). Because of the orthogonality of the decomposition (see Exercise 17.4), separate analyses of M and Q can be carried out. See van der Heijden et al. (1989). If r is even, the singular vectors of Q occur in pairs corresponding to pairs of equal singular values (principal inertias). If r is odd, the last singular value of Q equals zero.
+Greenacre (2000) used the decomposition (17.50) to obtain separate cor- respondence maps of M and Q. Greenacre showed that these maps could be obtained from a single application of simple correspondence analysis to the (2r × 2r) block matrix,
+􏰃N Nτ􏰄
+N∗ = Nτ N , (17.52)
+17.3 Square Asymmetric Contingency Tables 653
+with correspondence matrix,
+∗ 1􏰃PPτ􏰄
+P=4Pτ P, (17.53) and row and column totals,
+∗ 1􏰃w􏰄
+w=2w, (17.54)
+where w = (r + c)/2. Whereas the usual correspondence analysis is to analyze P􏰣 = P − rcτ in the metrics D−1 and D−1 , in this case, we analyze
+￼￼P−wwτ in the metrics D−1 and D−1. Thus, (17.50) becomes P−wwτ = ww
+M − wwτ + Q. We should expect the total inertia attributed to P − wwτ to be larger than the usual total inertia (e.g., (17.35)) because wwτ is not the rank-1 matrix closest to P. The extent of the difference will depend upon how different are r and c from each other.
+The dimensionality of N∗ is 2r − 1, of which r − 1 dimensions belong to M and the remaining r dimensions to Q. The correspondence map of M displays pairs of coincident row and column points (so that it suffices to plot only one set of points). We can, therefore, detect deviations of N from symmetry by concentrating on the correspondence map of Q.
+Thus, there will be two separate correspondence maps for N, one map for the symmetric component M and the other map for the skew-symmetric component Q. Each map consists of a single set of points. Greenacre rec- ommends that both correspondence maps be scaled equally for comparing the relative sizes of the principal inertias.
+17.3.1 Example: Occupational Mobility in England
+This 14 × 14 contingency table (see Table 17.7) of the occupations of a sample of 775 males and their fathers in England was originally studied by Pearson (1904). Figure 17.3 shows the two-dimensional correspondence map of Table 17.7. The total inertia of the contingency table is 1.2974, of which 50.97% is accounted for by the map.
+The above decomposition of P into a symmetric component M and a skew-symmetric component Q is accomplished by using (17.52). The re- sulting total inertia increases by 0.3016 to 1.5990 due to the different type of centering involved. The total symmetric inertia is 1.1484, and the total skew-symmetric inertia is 0.4506. In Table 17.8, we list the 27 principal inertias, of which 13 correspond to the symmetric correspondence analysis and 14 (= 7 pairs) to the skew-symmetric correspondence analysis. Also listed in Table 17.8 are the percentages of the two sets of principal inertias relative to the total symmetric and skew-symmetric inertias. The first pair
+rc
+654 17. Correspondence Analysis
+TABLE 17.7. Occupations of fathers and their sons in England (Pearson, 1904). The occupational categories are A army; B art; C teaching, clerical work, civil service; D crafts; E divinity; F agriculture; G landownership; H law; I literature; J commerce; K medicine; L navy; M politics and court; N scholarship and science. Uppercase letters represent occupations of the father and lowercase letters represent occupations of the son. The Pearson chi-squared test for independence gives X2 = 874.9 on 169 degrees of freedom, so that an hypothesis of independence is rejected.
+￼Sons
+e f g h i j k l m n Totals 0013303152 50 2001200011 62
+Fathersabcd A 28 040
+B 25111
+C 65709136421127 54
+D 01206 50017120010 44
+E 5 5215400694123113 115
+F 02303001414215 26
+G 17 1401406114133177 88 H 3 560 602181311185 69
+￼I 01104001402114 19 J 12 16 4 1 15 0 0 5 13 11 6 1 7 15 106 K 0 420 10003020056 41 L 13100010111621 18 M 5 020 30181223231 51 N 53026013100119 32 Totals 841083711122 11564692457237486 775
+of symmetric principal inertias (1 and 2) accounts for 33.85% + 20.20% = 54.05% of the total symmetric inertia, suggesting that higher dimensions contain additional significant information. The first pair of skew-symmetric principal inertias (3 and 4) accounts for 35.15% + 35.15% = 70.30% of the total skew-symmetric inertia (compared with only 9.90% + 9.90% = 19.80% of the total inertia). The symmetric dimensions are, therefore, 1, 2, 5–9, 12, 13, 16, 21, 24, and 27, and the remainder, which occur in pairs, are the skew-symmetric dimensions.
+Figure 17.4 shows the correspondence maps of dimensions 1 and 2, and 3 and 4, respectively. The top panel of Figure 17.4 shows the symmetric portion of the table. The points representing the arts (B) and crafts (D) occupations are clearly separated from the other points, but these two points are also not close to each other. One can also argue that these two points account for much of the difference in inertias between the symmetric and skew-symmetric analyses because the variation in points is not that different without points B and D. Points that are close together in this map reflect the fact that there is a lot of movement from father to son
+￼￼
+0.5
+0.0
+-0.5
+-1.0
+17.3 Square Asymmetric Contingency Tables 655
+￼￼￼￼￼M
+m
+A
+a
+g
+G
+h
+lc
+f
+j
+F I
+e k
+B
+￼￼￼￼L
+H
+b
+￼￼￼￼￼￼￼￼C
+N
+J
+i
+￼￼￼￼￼n
+K E
+D
+d
+￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼-0.6 -0.1 0.4 0.9 1.4 1.9
+FIGURE 17.3. Correspondence map for the occupational mobility exam- ple. The horizontal axis represents the first principal coordinate and the vertical axis the second principal coordinate. On the left of the map, there is a steady progression in occupations from A to E (and from a to k). The two occupations of B and D (and b and d), representing arts and crafts, stand out from the rest.
+between those occupations, whereas points that are far apart from each other indicate relatively little movement. If we ignore points B and D, there appears to be a progression in the occupations, from the topmost points down through several clusters of points, such as
+• army (A), and politics and court (M)
+• teaching, clerical work, civil service (C), landownership (G), law (H),
+and navy (L)
+• agriculture (F), literature (I), commerce (J), and scholarship and
+science (N)
+• divinity (E) and medicine (K)
+These clusters suggest that occupational mobility from father to son is typically confined to movements within the various clusters only and not between clusters.
+656 17. Correspondence Analysis
+TABLE 17.8. Occupational mobility example: Principal inertias (eigen- values λ2j ), total inertia, the percentages and cumulative percentages of total inertia explained by each eigenvalue, and the percentages corresponding to the symmetric (S) and skew-symmetric (SS) correspondence analyses. The total symmetric inertia is 1.1484, and the total skew-symmetric inertia is 0.4506.
+￼Principal Principal %
+Axis Inertia Inertia Cumulative
+%-S %-SS 33.85
+20.20
+35.15
+35.15 12.53
+10.78 7.12 6.16 4.34
+9.28 1.99
+1.92
+2.86
+2.86 0.91
+1.69 1.69 0.69 0.69
+0.15
+0.24
+0.24 0.00
+0.00
+0.00 0.00
+￼1 0.3887
+2 0.2320
+3 0.1584
+4 0.1584
+5 0.1439
+6 0.1238
+7 0.0818
+8 0.0707
+9 0.0498
+10 0.0418
+11 0.0418
+12 0.0229
+13 0.0220
+14 0.0129
+15 0.0129
+16 0.0104
+17 0.0076
+18 0.0076
+19 0.0031
+20 0.0031
+21 0.0017
+22 0.0011
+23 0.0011
+24 0.0006
+25 0.0004
+26 0.0004
+27 0.0001
+Total 1.5990
+24.31 24.31 14.51 38.82 9.90 48.72 9.90 58.62 9.00 67.62 7.74 75.36 5.12 80.48 4.42 84.91 3.12 88.02 2.62 90.64 2.62 93.25 1.43 94.68 1.38 96.06 0.81 96.87 0.81 97.67 0.65 98.32 0.47 98.80 0.47 99.27 0.19 99.46 0.19 99.66 0.10 99.76 0.07 99.83 0.07 99.90 0.04 99.94 0.02 99.97 0.02 99.99 0.01 100.00
+9.28
+￼￼
+0.5
+0.0
+-0.5
+-1.0
+-0.1
+-0.3
+-0.5
+-0.7
+-0.9
+-1.1
+-0.6 -0.1 0.4 0.9 1.4 Dimension1
+17.3 Square Asymmetric Contingency Tables 657
+￼￼￼A MB
+GL H
+K E
+￼￼￼￼￼￼C
+J
+ID N
+F
+￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼I
+NB
+A
+K
+E
+H
+￼￼￼M
+L
+￼￼￼￼￼C
+￼￼￼J D
+G
+F
+￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼-0.9 -0.7 -0.5 -0.3 -0.1 0.1 0.3 Dimension3
+FIGURE 17.4. Correspondence analysis of the symmetric component (top panel) and skew-symmetric component (bottom panel) for the occupational mobility example.
+Dimension4 Dimension2
+658 17. Correspondence Analysis
+The bottom panel of Figure 17.4 shows the deviations from symme- try. Asymmetry between any two points can be envisioned by a triangle constructed with vertices at those two points and the origin; the greater the area of that triangle, the greater the degree of asymmetry between the points. Points that yield triangles with no area (i.e., points on a line through the origin) have no asymmetric relationship. Points that are close to the origin indicate small asymmetries. In this map, there are no points clustered around the origin, suggesting some asymmetry between all occu- pations. Indeed, all the points in this map lie on one side of a line drawn through the origin, indicating that circular triads are absent in the data. The more drastic asymmetries are those points furthest from the origin, lit- erature (I) and scholarship and science (N) at one extreme and agriculture (F ) at the other. The greatest deviation from symmetry is from a father’s occupation of literature (I) to a son’s occupation in agriculture (F).
+17.4 Multiple Correspondence Analysis
+Multiple correspondence analysis is intended to be a generalization of simple correspondence analysis, in the sense that it is designed to deal with the graphical representation of contingency tables that have more than two categorical variables. The fact that as currently conceived it is not a true generalization (in the sense that simple correspondence analysis is not a special case) has not, however, detracted from its usefulness. Accordingly, there is much research currently taking place on this topic.
+17.4.1 The Multivariate Indicator Matrix
+As we did in Section 17.2.2, we can define a dummy (or indicator) variable for each of the Q categorical variables that make up the table. Suppose that the qth variable has Jq categories and that J = 􏰊Qq=1 Jq is the total number of categories over all variables. Suppose further that there are n individuals in the study (who may be some part — a sample — or all of a population). Let Z = (Zij ) be a (J × n)-matrix, where
+􏰇
+￼Zij =
+1, if the jth individual belongs to the ith category (17.55) 0, otherwise,
+i = 1,2,...,J, j = 1,2,...,n. We assume that there is no row of Z that contains all 0s. Each column of Z sums to Q and all Jn entries sum to nQ. The matrix Z is often called a multivariate indicator matrix. One interpretation of the concept of multiple correspondence analysis is that of
+17.4 Multiple Correspondence Analysis 659
+carrying out a simple correspondence analysis of the multivariate indicator matrix Z.
+We can partition the J rows of Z into blocks by variable so that
+⎛ Z1 ⎞
+Z=⎝ . ⎠, (17.56)
+ZQ
+where Zq is a (Jq × n)-matrix corresponding to the qth categorical variable having Jq categories, q = 1, 2, . . . , Q. The following properties of Z are given in Greenacre (1984). In Zq, there are 1τJq Zq1n = n 1s, q = 1,2,...,Q. Following (17.15), the row masses of Zq are defined by the Jq-vector,
+cZq ≡ (nQ)−1Zq1n. (17.57)
+Because the row masses of Zq sum to 1τJq cZq = (nQ)−1n = Q−1, each of the Q categorical variables has the same total mass. As a result, the row masses over all Q variables sum to 1. The row centroid is a weighted average of the Jq rows of Zq, where the weights are the row masses,
+(cZq )τ Zq = (nQ)−11τnZτq Zq = n−11τn, (17.58) (cZq )τ1Jq Q−1
+because Zτq Zq = In. Thus, the qth block of Jq row profiles has a row centroid
+(17.58) that does not depend upon q. Those Jq row profiles are dispersed
+￼￼within a subspace having at most Jq − 1 dimensions. All J row profiles are,
+therefore, dispersed within a subspace having at most 􏰊 (Jq − 1) = J − Q q
+dimensions.
+17.4.2 The Burt Matrix
+A second interpretation of the idea of multiple correspondence analysis is based upon analyzing the (J × J )-matrix
+B = Z Z
+τ
+⎛ZZτ ZZτ ···ZZ⎞ 11121Q
+⎜ ⎜ Z 2 Z τ1 Z 2 Z τ2 · · · Z 2 Z τQ ⎟ ⎟
+= ⎜⎝ . . . . . . ⎟⎠ , ( 1 7 . 5 9 )
+...
+ZQZτ1 ZQZτ2 · · · ZQZτQ
+which is called a Burt matrix. See (17.6) for a Burt matrix with Q = 2. B is a symmetric matrix with block structure. The qth diagonal block submatrix, ZqZτq = nDq, say, is a diagonal matrix of the row totals of Zq (q = 1, 2, . . . , Q), where Dq is the diagonal matrix of row or column masses for the qth variable. The off-diagonal (u,v)-block submatrix, ZuZτv = Nuv, say, (u ̸= v), is a two-way contingency table between the uth variable and
+660 17. Correspondence Analysis
+the vth variable (u, v = 1, 2, . . . , Q). Because the total of all entries in each submatrix ZiZτj in B is n, the total of all entries of B is b = nQ2. The Burt matrix (17.59) is the analogue in the discrete case of the covariance matrix of Q continuous variables.
+17.4.3 Equivalence and an Implication
+The two primary approaches to multiple correspondence analysis turn out to be equivalent to one another (Greenacre, 1984). From the symmetry of B, a simple correspondence analysis of B produces the same sets of row and column coordinates, so that one of the two sets can be ignored. Furthermore, the standard coordinates of the rows of B are identical to the standard coordinates of the rows of Z, and the principal coordinates obtained by analyzing B are directly related to those obtained by analyzing Z because the principal inertias of B are the squares of those of Z.
+This equivalence between the two approaches has the following implica- tion. Although the multivariate indicator matrix Z incorporates informa- tion from all Q categorical variables, its multiple correspondence analysis provides no more information than an analysis of all pairs of categorical variables. In other words, multiple correspondence analysis of either Z or B offers no insight into three- or higher-way interactions that may be present in the contingency table.
+17.4.4 Example: Satisfaction with Housing Conditions
+This data set was studied by Madsen (1976) in a study of housing condi- tions in selected areas of Copenhagen, Denmark. A total of n = 1, 681 res- idents living in rented homes built during 1960–1968 were surveyed about their satisfaction (categorized as low (ls), medium (ms), high (hs)), the amount of contact with other residents (low (lc), high (hc)), and their feeling of influence on apartment management (low (li), medium (mi), high (hi)). The rental units were categorized as tower blocks (tb), apart- ments (ap), atrium houses (ah), and terraced houses (th). The purpose of the study was to assess whether there was any association between degrees of contact, influence, and satisfaction and the type of housing.
+The Burt table is given in Table 17.9. The χ2-statistics for the off- diagonal two-way contingency tables are X122 = 16.660, X123 = 39.121, X124 = 60.286, X23 = 17.586, X24 = 106.175, and X324 = 5.140, where “1” = Housing, “2” = Influence, “3” = Contact, and “4” = Satisfaction. As- suming these two-way tables are independent of each other, we conclude that both housing and influence appear not to be related to either contact or satisfaction. The sum of these χ2-values is X2 = 244.968.
+17.4 Multiple Correspondence Analysis 661
+TABLE 17.9. Burt table of data on satisfaction with housing conditions in Copenhagen, Denmark (Madsen, 1976). The variables are type of hous- ing (tower blocks: tb; apartments: ap; atrium houses: ah; terraced houses: th), influence on apartment management (low: li; medium: mi; high: hi), contact with other residents (low: lc; high: hc), and satisfaction (low: ls;
+medium:ms;high:hs).Forthistable,Q=4,J1 J = 12, and n = 1681.
+=4,J2 =3,J3 =2,J4 =3,
+￼Housing
+tb ap ah th
+400 0 0 0 0 765 0 0 0 0 239 0 0 0 0 227
+Influence
+li mi hi
+140 172 88 268 297 200 95 84 60 124 106 47 627 0 0 0 659 0 00395 234 279 200 393 380 195 282 206 79 170 189 87 175 264 229
+Contact
+lc hc
+219 181 317 448 82 157 95 182 234 393 279 380 200195 713 0 0 968 262 305 178 268 273 395
+Satisfaction
+ls ms hs
+99 101 200 271 192 302 64 79 96 133 74 70 282 170 175 206 189 264 7987229 262 178 273 305 268 395 567 0 0 0 446 0 0 0668
+￼￼￼￼￼tb
+ap
+ah
+th
+li
+mi hi882006047
+140 268 95 124 172 297 84 106
+lc 219 317 hc 181 448 ls 99 271 ms 101 192 hs 200 302
+ 82  95
+157 182
+ 64 133
+ 79  74
+ 96  70
+￼The two-dimensional multiple correspondence map is given in Figure 17.5. The first axis orders from right to left the low, medium, and high categories of the influence and satisfaction variables, whereas the reverse ordering occurs for the contact variable. The second axis separates the high levels from the low levels of influence, contact, and satisfaction, and also separates th and tb from ah, and ap is positioned at the center of the map.
+Certain points are close to each other and indicate associations. Thus, high influence on management is related to residents being highly satisfied, whereas high contact with other residents produces medium satisfaction. Residents of atrium houses tend to have high contact with other residents and enjoy medium satisfaction, apartment residents have medium influence on management, residents of tower blocks tend to have low contact with other residents, and residents of terraced housing appear to have both low influence and low satisfaction.
+17.4.5 A Weighted Least-Squares Approach
+There are Q(Q − 1)/2 distinct two-way contingency tables above the diagonal of B; the tables below the diagonal are transposes of those above. Although we could carry out a simple correspondence analysis for every one of those Q(Q − 1)/2 tables, such extensive and exhaustive analyses
+662
+17. Correspondence Analysis
+￼￼￼lc
+ls tb
+￼￼￼th
+￼li
+￼apmi
+hc
+ms
+ah
+hs hi
+￼￼￼￼￼￼￼￼0.4
+0.0
+-0.4
+-0.8
+￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼-0.85 -0.60 -0.35 -0.10 0.15 0.40 0.65 Dimension1
+FIGURE 17.5. Correspondence map for the housing conditions example. The factors in the study were: type of housing (tower blocks, tb; apartments, ap; atrium houses, ah; terraced houses, th), influence on apartment man- agement (low, li; medium, mi; high, hi), contact with other residents (low, lc; high, hc), and satisfaction (low, ls; medium, ms; high, hs).
+would violate the principles of parsimony, efficiency, and dimensionality reduction.
+With this in mind, we mention an alternative approach by Greenacre (1988), who proposed a matrix approximation method that (a) simultane- ously fits all the Q(Q − 1)/2 tables in the upper-triangle of B, and (b) reduces to simple correspondence analysis of N = N12 when Q = 2. The idea is to approximate B by another matrix B􏰡, say, having reduced rank that minimized the weighted least-squares criterion
+n−1tr{D−1/2(B − Bˆ )D−1(B − Bˆ )τ D−1/2}, (17.60)
+where D = QDr is Q times the diagonal matrix, Dr, of row (or column) masses of B and is defined so that all its elements sum to 1 (cf. Exercise 17.3). Greenacre suggested the use of an alternating least-squares algorithm as a means of obtaining Bˆ but could not guarantee that the minimum of (17.60) would be achieved by that procedure.
+Dimension2
+17.5 Software Packages
+Many of the popular statistical software packages contain simple and multiple correspondence analysis routines. R has the ca package; see Charn- omordic and Holmes (2001) and the details in Greenacre (2007, Appendix C). Minitab has a correspondence analysis routine that appears to be matched to the output in Greenacre (1984). There is also a program CodonW, written by John Peden and available at codonw.sourceforge.net, which provides correspondence analysis of codon and amino acid usage.
+Bibliographical Notes
+Correspondence analysis was developed by many individuals. Initial work showing the correlation structure of a two-way contingency table appeared during the mid-1930s by H.O. Hirschfield (later Hartley), P. Horst, and oth- ers. At the start of the 1940s, R.A. Fisher and L. Guttman constructed scal- ing theories for contingency tables for biometric and psychometric contexts, respectively. The methodology found its champion, J.-P. Benzecri, in the early 1960s when Benzecri and a group of French statisticians constructed a theory of associations between rows and columns of a two-way contin- gency table. This was called analyse des correspondances in French, which was later loosely translated as “correspondence analysis.” Others who have had major impacts on the subject include M.O. Hill, M.J. Greenacre, and L.A. Goodman.
+Much of this chapter has benefitted from the treatment of the topic in books and articles by Greenacre; specifically, Greenacre (1981, 1984, 1988, 2000, 2007) and Greenacre and Hastie (1987). An interesting collection of articles on applications of correspondence analysis (and other related topics) is the book edited by Blasius and Greenacre (1998). See also the articles by Gower and Digby (1981) (who provide a general tour of tech- niques for graphically representing multivariate data), van der Heijden, de Falguerolles, and de Leeuw (1989) (who studied the correspondence analy- sis of residuals from fitting a log-linear model to a contingency table), and Pack and Jolliffe (1992) (who proposed measures for detecting influential observations in correspondence analysis).
+Exercises
+17.1 The 4 × 4 contingency table in Table 17.10 was originally analyzed by Stuart (1953) and has since been studied by many statisticians. It con- tains frequency data on eye tests, specifically, the right-eye grade and the corresponding left-eye grade in unaided distance vision for 7,477 women,
+17.5 Software Packages 663
+￼￼￼
+664 17. Correspondence Analysis
+TABLE 17.10. Right-eye grade and left-eye grade of 7,477 women with respect to unaided distance vision (Stuart, 1953). The Pearson chi-squared test for independence gives X2 = 8,096.877 on 9 degrees of freedom, so that an hypothesis of independence is rejected.
+￼Right-Eye Grade Best Best 1,520 Second 234 Third 117 Worst 36 Totals 1,907
+Left-Eye Grade
+Second Third Worst
+266 124 66 1,512 432 78 362 1,772 205 82 179 492 2,222 2,507 841
+Totals 1,976 2,256 2,456
+789 7,477
+￼￼￼aged 30–39, employed in Royal Ordinance factories in Britain, where each eye was graded in one of four categories from best to worst. Carry out a correspondence analysis for this square contingency table and interpret the results.
+17.2 Suppose we omit the last row of X and last row of Y, so that X has r−1 rows and n columns and Y has s−1 rows and n columns. Suppose we center X and Y at their means.
+(a) Show that
+(X Xτ)−1 = diag􏰪n−1,n−1,...,n−1 􏰫+n−1J ,
+c c 1+ 2+ r−1,+ r+ r−1 (Y Yτ)−1 =diag􏰪n−1,n−1,...,n−1 􏰫+n−1J .
+c c +1 +2 +,s−1 +s s−1
+(b) Show that the entry in the jth row and ith column of the full-rank
+regression coefficient matrix, Θˆ = YcXcτ (XcXcτ )−1, is
+θji = nij − nrj , i=1,2,...,r−1, j=1,2,...,s−1,
+ni+ nr+
+which is just the difference between the ith and rth row proportions for the jth column of the contingency table. Similarly, show that the entry in the ith row and jth column of XcYcτ (YcYcτ )−1 is
+nij − nis , i=1,2,...,r−1, j=1,2,...,s−1. n+j n+s
+(c) From these two matrices, show that the trace of Rˆ is given by
+￼￼￼￼􏰏r 􏰏s 1 􏰃 n n 􏰄 􏰃 n n 􏰄 nij− i+ rj nij− is +j ,
+￼￼￼i=1 j=1 ni+n+j nr+ n+s
+and, under independence of A and B, that tr{Rˆ} reduces to X2 in (17.22).
+TABLE 17.11. Number of children in a family versus yearly income (in units of 1,000 Kroner) for n = 25263 Swedish families (Cram ́er, 1946). The Pearson chi-squared test for independence gives X2 = 568.57 on 12 degrees of freedom, so that an independence hypothesis is rejected.
+17.5 Exercises 665
+￼Number of Children 0 1 2 3 ≥4 Total
+Yearly Income (1000s Kroner)
+0–1 2,161 2,755 936 225 39 6,116
+1–2 2–3 3+ 3,577 2,184 1,636 5,081 2,222 1,052 1,753 640 306
+419 96 38 98 31 14 10,928 5,173 3,046
+Total
+9,558 11,110 3,635 778 182 25,263
+￼￼￼(d) Show that the s − 1 eigenvalues of Rˆ are identical to the nonzero eigenvalues of R0 (or R1).
+17.3 (Greenacre, 2000). Another way of deriving the results of simple correspondence analysis is to find an (r × s)-matrix Pˆ having reduced-rank t < min(r, s) that approximates P by minimizing the weighted least-squares criterion,
+tr{D−1/2 (P − Pˆ )D−1 (P − Pˆ )τ D−1/2 }. rcr
+Using the Eckart–Young Theorem, find the matrix Pˆ that yields the best reduced-rank approximation of P in the above sense. Show that the best “rank-1” approximation to P is the trivial solution Pˆ = rcτ .
+17.4 LetM=[mij]andQ=[qij]bedefinedasin(17.51)andletN= M + Q. Consider tr{(vec N)(vec N)τ }. Show that the cross-product term tr{(vec M)(vec Q)τ } = 0, whence, we have the identity,
+􏰏􏰏􏰏􏰏􏰏􏰏
+n2 = m2 + q2. ij ij ij
+ijijij
+17.5 Show that GτP and HτP are related to each other by proving that Gτ = D−1PHτ D−1 and Hτ = D−1Pτ Gτ D−1.
+PrPλPcPλ
+17.6 The 5 × 4 contingency table in Table 17.11 is due to Cram ́er (1946, p. 444); see also Diaconis and Efron (1985). It contains a sample of fre- quency data from a Swedish census of March 1936 in which 25,263 married couples residing in country districts, who had been married for at most five years, each listed the number of children in their family and their yearly income (in units of 1,000 Kroner). Carry out a correspondence analysis for this table and interpret the results.
+666 17. Correspondence Analysis
+17.7 Construct four different contingency tables, each with five rows and three columns, with the restriction that each of the column totals in each table equals 50. Compute the weights in the chi-squared statistic for each table. Compute the inertia for each table and arrange the four tables by in- creasing inertia. Plot the row profiles for each table as points in a triangular scatterplot. What is the relationship between inertia and these plots?

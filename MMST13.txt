@@ -1,0 +1,779 @@
+13
+Multidimensional Scaling and Distance Geometry
+13.1 Introduction
+Imagine you have a map of a particular geographical region, which includes a number of cities and towns. Usually, such a map will be accompanied by a two-way table displaying how close a selected number of those towns and cities are to each other. Each cell of that table will show the degree of “closeness” (or proximity) of the row city to the column city that identifies that cell. The notion of proximity between two geographical locations is easy to understand, even though it could have different meanings: for ex- ample, proximity could be defined as straight-line distance or as shortest traveling distance.
+In more general situations, proximity could be a more complicated con- cept. We can talk about the proximity of any two entities to each other, where by “entity” we might mean an object, a brand-name product, a na- tion, a stimulus, etc. The proximity of a pair of such entities could be a measure of association (e.g., the absolute value of a correlation coefficient), a confusion frequency (i.e., to what extent one entity is confused with an- other in an identification exercise), or some other measure of how alike (or how different) one perceives the entities. If we are studying a set of linked Internet webpages, we may be interested in visualizing a hypermedia net-
+A.J. Izenman, Modern Multivariate Statistical Techniques, Springer Texts in Statistics, 463 DOI 10.1007/978-0-387-78189-1_13, © Springer Science+Business Media New York 2013
+￼
+464 13. Multidimensional Scaling and Distance Geometry
+work in which proximity would be based upon a notion of network distance (i.e., the number of hyperlinks needed to jump from one node to another).
+The general problem of multidimensional scaling (MDS) essentially re- verses that relationship: given only a two-way table of proximities, we wish to reconstruct the original map as closely as possible. A further wrinkle in the problem is that we also do not know the number of dimensions in which the given entities are located. So, determining the number of dimensions is another major problem to be solved.
+MDS is not a single procedure but a family of different algorithms, each designed to arrive at an optimal low-dimensional configuration for a partic- ular type of proximity data. MDS is primarily a data visualization method for identifying “clusters” of points, where points in a particular cluster are viewed as being “closer” to the other points in that cluster than to points in other clusters.
+In this chapter, we describe a number of MDS methods. Specifically, we describe and illustrate classical scaling (also called “distance geometry” by those in bioinformatics) and distance scaling (divided according to whether the distances are of metric or nonmetric type). Distance scaling is also re- ferred to as metric and nonmetric MDS. The standard treatment of classical scaling yields an eigendecomposition problem and as such is the same as PCA if the goal is dimensionality reduction. The distance scaling methods, on the other hand, use iterative procedures to arrive at a solution.
+In Table 13.1, we list some of the application areas of MDS. We shall see that the essential ideas behind MDS also play prominent roles in evaluating random forests (Chapter 14) and revealing nonlinear manifolds (Chapter 16).
+13.1.1 Example: Airline Distances
+As a simple example of the MDS problem, consider Table 13.2, which is taken from p. 131 of the Revised 6th Edition (1995) of the National Geographic Atlas of the World. The table lists the airline distances (in kms) between n = 18 cities: Beijing, Cape Town, Hong Kong, Honolulu, London, Melbourne, Mexico, Montreal, Moscow, New Delhi, New York, Paris, Rio de Janeiro, Rome, San Francisco, Singapore, Stockholm, and Tokyo. For this application of MDS, the problem is to re-create the map that yielded the table of airline distances. Because the cities are scattered around the surface of a sphere, we should expect to recover a solution in three dimensions. Furthermore, because airplanes do not fly through the earth but over its surface, airline distances between cities do not always obey the triangle inequality and so may not be Euclidean.
+We used the classical scaling method to obtain 2D and 3D maps of the MDS reconstruction, where each map has 18 points, one for each city. We
+TABLE 13.1. Some application areas and research topics in MDS.
+Psychology: Study the underlying structure of perceptions of different classes of psychological stimuli (e.g., personality traits, gender roles) or physical stimuli (e.g., human faces, everyday sounds, fragrances, colors) and create a “perceptual map” of those stimuli. Understand the psychological dimen- sions hidden in the data so that we can describe how proximity judgments are generated.
+Marketing: Derive “product maps” of consumer choice and product preference (e.g., automobiles, beer) so that relationships between products can be dis- cerned. Use these maps to position new products appropriately, to modify an existing product image to emphasize brand differentiation, or to design future experiments to determine what type of consumer can best discrim- inate between similar products and on which dimensions.
+Ecology: Provide “environmental impact maps” of pollution (e.g., oil spills, sewage pollution, drilling-mud dispersal) on local communities of animals, marine species, and insects. Use such maps to develop a biological taxon- omy to classify populations using morphometric or genetic data or from evolutionary theory.
+Molecular Biology: Reconstruct the spatial structures of molecules (e.g., amino acids) using biomolecular conformation (3D structure). Interpret their interrelations, similarities, and differences. Construct a 3D “protein map” as a global view of the protein structure universe.
+Computational Chemistry: Use a measure of molecular similarity (e.g., in- teratomic distance) to characterize the behavior and function of molecules derived from large collections of compounds.
+Social Networks: Develop “telephone-call graphs,” where the vertices are tele- phone numbers and the edges correspond to calls between them. Recognize instances of credit card fraud and network intrusion detection. Identify clusters in large scientific collaboration networks.
+Graph Layout: Design a diagram to describe a network and the system it repre- sents using a graph-theoretic distance (e.g., minimum-path length) between pairs of nodes or vertices. Examples include communications networks, electrical circuit diagrams, wiring diagrams, and protein-protein interac- tion graphs. Create graphic visualizations of digital image libraries, with images as vertices and proximities (e.g., perceptual differences) between pairs of images as edge weights.
+Music: Use a measure of musical sound quality (e.g., a set of spectral compo- nents with high resolution at low frequencies to mimic the human auditory system) as input to a nonlinear distance measure to assess the similarities and differences between a variety of songs.
+13.1 Introduction 465
+￼￼
+466 13. Multidimensional Scaling and Distance Geometry
+TABLE 13.2. Airline distances (km) between 18 cities. Source: Atlas of the World, Revised 6th Edition, National Geographic Society, 1995, p. 131.
+￼Beijing Cape Town Cape Town 12947
+Hong Kong
+8945 9646 7392
+14155 12462 7158 3770 12984 9650 17710 9300 11121 2575 8243 2893
+Moscow
+4349 7530 2492
+11529 2378 9469 8426 1231 7502
+S.F.
+13598 8644 8284
+Honolulu
+11653 8862 6098 7915
+11342 11930 7996 11988 13343 12936 3857 10824 11059 6208
+New Delhi
+11779 6601 14080 5929 12380 4142 5579 5857
+Singapore
+9646 5317
+London
+16902 8947 5240 2506 6724 5586
+341 9254 1434 8640
+10860 1436 9585
+New York
+5851 7729 6907 4140
+15349 6336 10870
+Stockholm
+8193
+Melbourne
+13557 16730 14418 10192 16671 16793 13227 15987 12644
+6050 15593 8159
+Paris
+9146 1108 8975
+10743 1546 9738
+￼Hong Kong Honolulu London Melbourne Mexico Montreal Moscow New Delhi New York Paris Rio de Janeiro Rome San Francisco Singapore Stockholm Tokyo
+1972 11867 8171 18562 8160 9635 9093 10338
+12478 13703 10490 12744 5809 10101 3788 9284 11012 12551 8236 9307 17325 6075 8144 8417 9524 16487 4465 9671 6725 10334 2104 14737
+￼Mexico Montreal Montreal 3728
+￼Moscow New Delhi New York Paris Rio Rome S.F. Singapore Stockholm Tokyo
+10740 7077 14679 11286 3362 533 9213 5522 7669 8175 10260 6601 3038 4092 16623 14816 9603 5900 11319 10409
+￼S.F. Singapore Stockholm Tokyo
+10647 10071 15740 10030 10682 1977 18557 9881
+Rio Rome Rome 9181
+￼￼
+13.1 Introduction 467
+￼CapeTown
+Rome
+NewDelhi
+￼RiodeJaneiro
+N eMwonYtorerkal
+Mexico
+SanFrancisco
+LoPnadroisn M oscow Stockholm
+Singapore
+Honolulu
+HongKong Beijing
+M elbourne
+Tokyo
+￼￼￼￼￼￼￼￼￼-10000 -5000 0 5000 10000 1stprincipalcoordinate
+FIGURE 13.1. Two-dimensional map of 18 world cities using the classi- cal scaling algorithm on airline distances between those cities. The colors reflect the different continents: Asia (purple), North America (red), South America (orange), Europe (blue), Africa (brown), and Australasia (green).
+expect cities with low airline mileage between them to correspond to points in the display that are close together and cities with high airline mileage to correspond to points far apart from each other. In Figure 13.1, we display a scatterplot of the 2D solution.
+The 3D solution is given in Figure 13.2. Different colors are used to label the different continents. A dynamic “brush and spin” of the 3D solution shows that the points appear to be scattered around the surface of a sphere; we also see three outliers: Melbourne, Rio de Janeiro, and Cape Town. We expect to see (and we do see) geographically related clusters of points.
+Note that the points are not in their customary locations on a globe, and it may be necessary to carry out a rotation and reflection to get them into their usual positions. The computational details needed to produce Figures 13.1 and 13.2 can be found in Section 13.6.3.
+2nd principalcoordinate
+-5000 0 5000
+468 13. Multidimensional Scaling and Distance Geometry
+￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼FIGURE 13.2. Three-dimensional map of 18 world cities using the clas- sical scaling algorithm on airline distances between those cities. The colors reflect the different continents: Asia (purple), North America (red), South America (yellow), Europe (blue), Africa (brown), and Australasia (green).
+13.2 Two Golden Oldies
+The primary goal of MDS is to rearrange the entities in some optimal manner so that distances between different entities in the resulting spatial configuration correspond closely to the given proximities. The rearrange- ment of entities takes place in a space of specified low dimension (usually, 1, 2, or 3 dimensions), where MDS ensures that the given proximities between the entities are well-reproduced by the new configuration.
+Before we get into details about the different MDS methods, we first look at a couple of classic examples that were instrumental in paving the way to a greater understanding of the power of MDS for researchers in various fields. These classic examples are the pairwise comparison of color stimuli and of Morse-code signals, where the similarity or dissimilarity of the members of each pair is evaluated by a number of subjects.
+13.2.1 Example: Perceptions of Color in Human Vision
+In an experiment designed to study the perceptions of color in human vision (Ekman, 1954), 14 colors differing only in their hue (i.e., wavelengths from 434 μm to 674 μm) were projected two at a time onto a screen in an all-pairs design (see Section 13.3 for definition) to 31 subjects, who rated
+￼3rd principalcoordinate
+1stprincipalcoordinate
+2nd principalcoordinate
+13.2 Two Golden Oldies 469
+￼￼￼￼￼434445
+￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼465 472
+490
+-1.5 -1.0 -0.5 0.0 0.5 1.0 1.5
+FIGURE 13.3. Two-dimensional nonmetric MDS representation of color dissimilarities showing the “color circle.” The colors correspond to the following wavelengths: 434=indigo, 445=blue, 472=blue-green, 504=green, 555=yellow-green, 600=yellow, 628=orange-yellow, 651=orange, 674=red.
+each of the possible m = 91 pairs on a five-point scale from 0 (“no similarity at all”) to 4 (“identical”). The rating for each pair of colors was averaged over all subjects and the result divided by 4 to bring the similarity ratings into the interval [0,1]. These mean similarity ratings were then collected into a (14×14) table (see Exercise 13.1), which was treated as a correlation matrix. A visual inspection of the similarities shows that the higher values cluster on the diagonal closest to the main diagonal.
+A nonmetric MDS solution for the the color experiment (Shepard, 1962) essentially reproduces the well-known two-dimensional “color circle.” Fig- ure 13.3 shows a two-dimensional circular configuration of points represent- ing the 14 colors arranged in order of their wavelengths. A one-dimensional solution would not work because a projection onto the x-axis would make points 434 and 555 lie very close to each other, whereas the dissimilarity between those two colors was one of the largest.
+13.2.2 Example: Confusion of Morse-Code Signals
+Morse code consists of 36 short signals of dots and dashes (26 letters of the alphabet and the digits 0–9). In a study of the extent of confusion over these different codes (Rothkopf, 1957), the 36 Morse-code signals were acoustically presented by machine in pairs to 598 subjects who had no knowledge of Morse code; each pair of signals was presented twice (e.g.,
+￼￼￼￼￼￼￼674
+651 628
+610
+600
+￼￼￼￼￼￼￼584 504
+537 555
+￼￼￼￼￼-1.0 -0.5 0.0 0.5 1.0
+470 13. Multidimensional Scaling and Distance Geometry
+￼5 4
+H VS
+￼3
+6
+X
+F B
+U LD
+7R CAI
+YK 2ZPW
+8QN J
+1G
+O
+M
+E T
+9
+0
+￼￼11111 11112
+1111
+1112 111
+￼112 2112 1211 211
+1121 2111
+1112221111
+22111 121
+2 2 2 2 22 2 2 2 1
+222
+22
+1 2
+2121 1211 2122 212
+1 1 2 2 2 1 1 21 22 2 1 22211 2212
+1222
+12222 221
+1 2 2
+21
+￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼-1012 -1012
+FIGURE 13.4. Two-dimensional nonmetric MDS representation of Morse-code dissimilarities. The left panel shows the configuration of letters and numbers, and the right panel shows the corresponding Morse code. A “beep” is a dot or a dash. A dot (short beep) is coded as a “1” and a dash (long beep) is coded as a “2.” Colors are used to distinguish between code lengths: one beep (purple), two beeps (brown), three beeps (green), four beeps (red), and five beeps (blue).
+A then B, and B then A), and the subjects had to determine whether the members of each pair were the same or different. The results of this experiment yielded 1,260 proximities (instead of the usual m = 630) due to asymmetric results from the repeated and inverted presentation of each paired signal. The proximities are given in Exercise 13.2.
+A two-dimensional nonmetric MDS solution (Shepard, 1963) is displayed in Figure 13.4. For ease in visualization, dots and dashes are coded by using a “1” for a dot and a “2” for a dash. The graph shows the complexity of the signals. We see that the horizontal axis accounts for code length (i.e., the total number of dots and dashes in the Morse-code symbol) and the vertical axis accounts for the fraction of dots (i.e., ratio of number of dots to code length).
+A reanalysis of the MDS solution to the Morse-code data (Buja and Swayne, 2002; Buja, Swayne, Littman, Dean, Hofmann, and Chen, 2008) using XGvis, an interactive data visualization system for MDS calculations based upon the XGobi package, found evidence that code length and frac- tion of dots are slightly confounded: long codes that have many dots are more often confused with shorter codes that have many dashes, and vice versa, thereby suggesting a confusion effect due to the physical duration of the code. Furthermore, two additional dimensions were suggested by the graphical analysis: a dummy dimension for the codes of length one and a
+-2-101
+-2-101
+dummy dimension for initial exposure position (i.e., a dot or dash in the starting position) for the long codes.
+13.3 Proximity Matrices
+The focus on pairwise comparisons of entities is fundamental to MDS. The “closeness” of two entities is measured by a proximity measure, which can be defined in a number of different ways. On the one hand, a proximity can be a continuous measure of how physically close one entity is to another (i.e., a bona fide distance measure, as in the airline distances example) or it could be a subjective judgment recorded on an ordinal scale, but where the scale is sufficiently well-calibrated as to be considered continuous.
+In other cases, especially in studies of perception, a proximity will not be quantitative but will be a subjective rating of similarity (or dissimilarity) recorded on a pair of entities. A similarity rating is designed to indicate how “close” a pair of entities are to each other, whereas a dissimilarity rating shows the opposite, how unalike are the pair.
+In many types of experiments, proximity data are obtained from a group
+of subjects, each of whom make similarity (or dissimilarity) judgments on
+all possible m = 􏰉n􏰀 = 1 n(n − 1) unordered pairs of n entities. This 22
+13.3 Proximity Matrices 471
+￼￼type of experiment is said to have an all-pairs design (Ramsay, 1982). For example, the color stimuli and Morse-code experiments both followed all- pairs designs. It is unusual for such an experiment to be repeated with the same group of subjects (due to boredom, fatigue, or memory of previous responses), although designs have been constructed to present fewer than all possible pairs to each subject.
+It is irrelevant whether we use similarities or dissimilarities as our mea- sure of proximity between two entities. In other words, “closeness” of one entity to another could be measured by a small or large value. The only thing that matters when carrying out MDS is that there should be a mono- tonic relationship (either increasing or decreasing) between the “closeness” of two entities and the corresponding similarity or dissimilarity value. Any- way, we usually convert similarities into dissimilarities through a monoton- ically decreasing transformation.
+Consider a particular collection of n entities. Let δij represent the dissim- ilarity of the ith entity to the jth entity. We arrange the m dissimilarities, {δij }, into an (m × m) square matrix,
+Δ = (δij ), (13.1)
+called a proximity matrix. The proximity matrix is usually displayed as a lower-triangular array of nonnegative entries, with the understanding that the diagonal entries are all zeroes and that the upper-triangular array is a
+472 13. Multidimensional Scaling and Distance Geometry
+mirror image of the given lower-triangle (i.e., the matrix is symmetric). In other words, for all i,j = 1,2,...,n,
+δij ≥0, δii =0, δji =δij. (13.2) In order for a dissimilarity measure to be regarded as a metric distance, we
+also require that δij satisfy the triangle inequality,
+δij≤δik+δkj, forallk. (13.3)
+In some applications (such as the Morse-code example described above),
+we should not expect symmetry; in such cases, adjustments (e.g., setting
+δij ← 1 (δij + δji) to form a symmetrized version of Δ) can be made. 2
+￼13.4
+Comparing Protein Sequences
+￼There are about 100,000 different proteins in the human body, and they provide the internal structure of cells and tissues. Proteins are macro- molecules and carry out important bodily functions, including supporting cell structure (skin, tendons, hair, nails, bone), protecting against infection from bacteria and viruses (antibodies, immune system), aiding movement (muscles), transporting materials (hemoglobin for oxygen), and regulating control (enzymes, hormones, metabolism, insulin) of the body. Nearly all of these proteins have a similar chemical structure and, in some instances, even share a common evolutionary origin.
+Of major interest in the study of molecular biology is the notion of a spatial “protein map,” which would show how existing protein families re- late to one another, structurally and functionally. One would hope that such a map would yield important insight into the evolutionary origins of existing protein structures. In this way, researchers might be able to predict the functions of newly discovered proteins from their spatial locations and proximities to other proteins in the map, where we would expect neighbor- ing proteins to have very similar biochemical properties. This also raises the issue of whether a protein map can help justify classifications of proteins into empirically determined classes, such as the four primary classes (α, β, α/β, and α + β) of proteins as defined by the Structural Classification System of Proteins (SCOP).
+13.4.1 Optimal Sequence Alignment
+The argument used to compute the proximity of two proteins centers on the idea that amino acids can be altered by random mutations over a long period of evolution. Mutations of a protein sequence can take various
+13.4 Comparing Protein Sequences 473
+TABLE 13.3. The 20 amino acids (and their 3-letter and 1-letter abbre- viations).
+Alanine (ala, A), Arginine (arg, R), Asparagine (asn, N), Aspartic acid (asp, D), Cysteine (cys, C), Glutamine (gln, Q), Glutamic acid (glu, E), Glycine (gly, G), Histidine (his, H), Isoleucine (ile, I), Leucine (leu, L), Lysine (lys, K), Methionine (met, M), Phenylalanine (phe, F), Proline (pro, P), Serine (ser, S), Threonine (thr, T), Tryptophan (trp, W), Tyrosine (tyr, Y), Valine (val, V)
+forms, such as the deletion or insertion of amino acids, or swapping similar amino acids for ones already in the sequence. For an evolving organism to survive, the structure and functionality of the most important segments of its protein sequences would have to be preserved (or even be improved). Thus, researchers try to understand the evolutionary process of proteins by studying relationships between their respective amino acid sequences.
+The comparison problem is complicated by the fact that each sequence is actually a “word” composed of a string of letters selected from a 20-letter alphabet; see Table 13.3. It is a nontrivial task to compute a similarity value between two sequences that have different lengths and different amino acid distributions. The trick here is to align the two sequences (or segments of each of them) so that as many letters in one sequence can be “matched” with the corresponding letters in the other sequence. The extent to which matching occurs will have some bearing on how related (or unrelated) we consider the sequences to be.
+There are several methods for carrying out sequence alignment. These are generally divided into global and local methods. Global alignment tries to align all the letters in the two entire sequences assuming that the two sequences are very similar from beginning to end, whereas local alignment assumes that the two sequences are highly similar only over short segments of letters. Alignment methods use dynamic programming algorithms as the primary tool (Needleman and Wunsch, 1970; Smith and Waterman, 1981). For searching the huge databases available today, local methods, such as BLAST (Altschul, Gish, Miller, Myers, and Lipman, 1990) and FASTA (Pearson and Lipman, 1988), which use more heuristic-type techniques, have become popular because of their extremely fast computation times, even though their solutions may be slightly suboptimal.
+A sequence alignment is declared to be “optimal” if it maximizes an alignment score. For a particular alignment of two sequences, an alignment score is the sum of a number of terms, each term comparing an element from the first sequence and a corresponding element in the same position from the second sequence, where an element is either an amino acid or a “gap.” When the amino acids in a given position are identical in both
+￼￼
+474 13. Multidimensional Scaling and Distance Geometry
+TABLE 13.4. The BLOSUM62 amino acid substitution matrix. The rows correspond to the amino acids in one protein sequence and the columns correspond to the amino acids in another sequence. At a given position in an alignment of the two sequences, the substitution score of the aligned amino acids is given in the appropriate cell of the matrix. The diagonal entries (in blue) show the scores applied to identities, whereas off-diagonal positive scores are given in red.
+￼￼A C D E F G H I K L M N P Q R S T V W Y
+ACDEFGHIKLMNPQRSTVWY 4 0–2–1–2 0–2–1–1–1–1–2–1–1–1 1 0 0 –3–2 0 9–3–4–2–3–3–1–3–1–1–3–3–3–3–1–1–1 –2–2
+–2–3 6 2–3–1–1–3–1–4–3 1–1 0–2 0–1–3 –4–3 –1–4 2 5–3–2 0–3 1–3–2 0–1 2 0 0–1–2 –3–2 –2–2–3–3 6–3–1 0–3 0 0–3–4–3–3–2–2–1 1 3
+0–3–1–2–3 6–2–4–2–4–3 0–2–2–2 0–2–3 –2–3 –2–3–1 0–1–2 8–3–1–3–2 1–2 0 0–1–2–3 –2 2 –1–1–3–3 0–4–3 4–3 2 1–3–3–3–3–2–1 3 –3–1 –1–3–1 1–3–2–1–3 5–2–1 0–1 1 2 0–1–2 –3–2 –1–1–4–3 0–4–3 2–2 4 2–3–3–2–2–2–1 1 –2–1 –1–1–3–2 0–3–2 1–1 2 5–2–2 0–1–1–1 1 –1–1 –2–310–301–30–3–26–20010–3–4–2 –1–3–1–1–4–2–2–3–1–3–2–2 7–1–2–1–1–2 –4–3 –1–3 0 2–3–2 0–3 1–2 0 0–1 5 1 0–1–2–2–1 –1–3–2 0–3–2 0–3 2–2–1 0–2 1 5–1–1–3 –3–2
+1–1 0 0–2 0–1–2 0–2–1 1–1 0–1 4 1–2 –3–2 0–1–1–1–2–2–2–1–1–1–1 0–1–1–1 1 5 0 –2–2 0–1–3–2–1–3–3 3–2 1 1–3–2–2–3–2 0 4 –3–1
+–3–2–4–3 1–2–2–3–3–2–1–4–4–2–3–3–2–311 2 –2–2–3–2 3–3 2–1–2–1–1–2–3–1–2–2–2–1 2 7
+￼sequences, we say that an identity has occurred and give it a high positive score. When two different amino acids are present at the same position in an alignment, we call it a substitution and give it a score that could be negative, zero, or positive.
+To each possible pairing of amino acids (one from each sequence, at the same position in the alignment), we assign a substitution score, which gives a quantitative measure of the “cost” of replacing one amino acid by another. The substitution scores for all 210 possible pairs of amino acids are collected together to form a symmetric, (20 × 20) substitution matrix, which is used to measure the closeness of the two sequences. One of the most popular substitution matrices is BLOSUM62 (BLOcks SUbstitution Matrix; see Table 13.4), which assumes that no more than 62% of the letters in the two sequences are identical (Henikoff and Henikoff, 1996).
+A gap (or indel) is an empty space (denoted by a “-”) introduced into an alignment to compensate for an insertion or a deletion of an amino acid in one sequence relative to the other. A gap is penalized by assigning to it a large value (the gap score, usually set by the user), which is then subtracted from the alignment score. There are two types of gap penalties, one for starting (or opening) a gap and another for extending the gap; typically, the latter is considered to be more serious than is the former, so that opening a gap merits a smaller penalty than does extending that
+13.4 Comparing Protein Sequences 475
+gap. Gap-scoring methods usually define the gap penalty as q + rk, where q and r are chosen by the user; the gap open penalty uses k = 1 and the gap extension penalty uses k = 2, 3, . . ..
+The alignment score s is the sum of the identity and substitution scores, minus the gap score. Implicitly, we are assuming that the score for a partic- ular position in the alignment is independent of scores derived from neigh- boring positions (Karlin and Altschul, 1990); such an assumption appears to be reasonable for protein sequences. The optimal alignment between two sequences (including gaps) corresponds to that alignment with the highest alignment score.
+In general, given n proteins from some database, let sij be the alignment score between the ith and jth protein, i,j = 1,2,...,n. Because closely related proteins will have a high alignment score, the alignment score is a similarity and so has to be transformed into a dissimilarity using δij = smax − sij , where smax is the largest alignment score among all m = n(n − 1)/2 protein pairs. The proximity matrix is then given by Δ = (δij ).
+13.4.2 Example: Two Hemoglobin Chains
+Suppose we wish to compare the hemoglobin alpha chain protein (Swiss- Prot database code HBA HUMAN, AC# P69905/P019122) having length 141 with the related hemoglobin beta chain protein (Swiss-Prot database code HBB HUMAN, AC# P68871/P02023) having length 146. Both of these human proteins transport oxygen from the lungs to the various peripheral tissues. HBA gives blood its red color, and defects in HBB are the cause of sickle cell anemia.
+To compare these proteins, we use the BLOSUM62 matrix and the gap scoring method with q = 12, r = 4. The SIM algorithm (Huang and Miller, 1991), which is a local similarity program using dynamic programming techniques, finds that the optimal alignment over 145 amino acids is:
+LSPADKTNVKAAWGKVGAHAGEYGAEALERMFLSFPTTKTYFPHF------DLSH L+P+K+VAWGKV + EGEALR+++PT++F F D LTPEEKSAVTALWGKV--NVDEVGGEALGRLLVVYPWTQRFFESFGDLSTPDAVM
+GSAQVKGHGKKVADALTNAVAHVDDMPNALSALSDLHAHKLRVDPVNFKLLSHCL G+ +VK HGKKV A ++ +AH+D++ + LS+LH KL VDP NL+LL + L GNPKVKAHGKKVLGAFSDGLAHLDNLKGTFATLSELHCDKLHVDPENFRLLGNVL
+LVTLAAHLPAEFTPAVHASLDKFLASVSTVLTSKY + LAH EFTPVA+ K+AV+ L KY VCVLAHHFGKEFTPPVQAAYQKVVAGVANALAHKY
+The first line is a portion of the HBA HUMAN protein sequence, and the third line is a portion of HBB HUMAN. The sequences have been “locally” aligned
+￼￼￼￼
+476 13. Multidimensional Scaling and Distance Geometry
+(with gaps). Looking at the middle line, we see 86 positive substitution scores (the 25 “+”s and the 61 identities). The alignment score is s = 259. For different values of q and r, we would obtain different optimal alignments and alignment scores.
+13.5 String Matching
+The problem of comparing different protein sequences is closely related to a more general class of problems involving the matching of different strings of letters, characters, or symbols drawn from a common alphabet A. The alphabet could be binary {0,1}, decimal {0,1,2,...,9}, English language {A,B,C,...,Z}, the four DNA bases {A,C,G,T}, or the 20 amino acids. In pattern matching, we study the problem of finding a given pattern (typ- ically, a collection of strings described in terms of some alphabet A) within a body of text. If a pattern is a single string, the problem is called string matching. We can imagine, for example, a string-matching problem in which we need to know whether a particular word or phrase can be found within a given sentence, paragraph, article, or book.
+String matching is used extensively in text-processing applications; in particular, it is used in searching a document for a word, phrase, or an ar- bitrary string of letters; designing spell-checkers; predicting unknown words when writing in a second language; and name-retrieval systems in genealog- ical research. The Unix programming environment (Kernighan and Pike, 1984), for example, employs various string- and pattern-matching algo- rithms (e.g., awk, diff, and grep), and the Perl language was designed specifically to possess powerful string-matching capabilities. The related problems of string- and pattern-matching have obvious implications for the design of an Internet search engine (e.g., GoogleTM, www.google.com), where the text is the union of all linked webpages (Brin and Page, 1998).
+String matching techniques are needed in many different applications, including matching melodies in large databases of digital music (Uitden- bogerd and Zobel, 1999), dating trees by the sequence of rings they contain (Wenk, 1999), and comparing different speech pronunciations in computa- tional linguistics (Nerbonne, Heeringa, and Kleiweg, 1999).
+13.5.1 Edit Distance
+A popular numerical measure of the similarity between two strings is edit distance (also called Levenshtein distance), which was adapted from meth- ods used to compare two different protein sequences. The usual definition of edit distance is the fewest number of editing operations (insertions, dele- tions, substitutions) which would be needed to transform one string into
+￼
+the other. An insertion inserts a letter into the sequence, a deletion deletes a letter from the sequence, and a substitution replaces one letter in the sequence by another letter. Identities (or matches) are not counted in the distance measure. In some definitions of edit distance, each editing oper- ation is assigned a nonnegative cost, that reduces to the above definition if each editing operation has unit cost. The sequence of editing operations that achieves the minimum edit distance will probably not be unique.
+An early application of edit distance was to comparative biochemistry (de Duve, 1984, p. 354), where it was used to construct a phylogenetic tree — a diagram laying out a possible evolutionary history — of a single protein. The resulting proximity matrix shows the number of amino-acid substitutions in the protein cytochrome c from 25 different species, includ- ing mammals and other vertebrates, invertebrates, plants, and fungi. The entries in the matrix show the fewest number of nucleotide substitutions in DNA (according to the genetic code) needed to account for the observed amino-acid replacements.
+13.5.2 Example: Employee Careers at Lloyds Bank
+An unusual example of string matching using edit distance is that of analyzing changes in employee careers over a given period of time. The ca- reers of two individuals can be compared by determining the fewest number of changes necessary to transform one career into the other (Abbott and Hrycak, 1990). Each type of change incurs a cost, and the total cost of transforming one career into another is the sum of all such costs.
+One fascinating study looked at a large database of employee information from Lloyds Bank, one of England’s oldest and largest banks, during the period 1890–1970 (Stovel, Savage, and Bearman, 1996). The authors were interested in tracing how “static, status-based employment arrangements” of the early 1900s had been replaced, less than two generations later, by “highly-dynamic, achievement-oriented careers” within large bureaucratic organizations, such as the British banking system and, in particular, Lloyds Bank.
+The available data give every job held by each employee of the bank. The data are described by a rectangular array, where each row corresponds to a different employee and the columns (variables) record the various jobs held by that employee over the number of years of the study. In this par- ticular study, job termination (resignation, death, firing) is coded by type of termination, and each year the employee is absent from bank employ- ment is coded as 999. These termination codes and 999s are not used in the matching algorithm.
+An employee’s job at Lloyds Bank is characterized by three factors: branch size and type (1=small rural, 2=large rural, 3=small urban, 4=large
+13.5 String Matching 477
+478 13. Multidimensional Scaling and Distance Geometry
+urban [London], 5=specialist head office, and 6=head office) and job cate- gory (1=clerk, 2=senior clerk, 3=regular manager, and 4=specialist man- ager). Thus, there are 6 × 4 = 24 branch-position categories of jobs, where a job would be characterized as “years@branch·position.” For example, a 45-year career at Lloyds might be summarized as {15@11,6@22,24@23}, which translates into 15 years as a clerk in a small rural branch, then a move to a large rural branch where he spent 6 years as a senior clerk and 24 years as a regular manager.
+In this example, we reanalyze two data sets on the careers of Lloyds’ employees. The data sets consist of sequential employment records for ran- dom samples of n = 80 employees drawn from two different cohorts, those who started work at Lloyds during the period 1905–1909 and those who started during 1925–1929.1 (See also Oh and Raftery, 2001, who used only the 1905-1909 cohort data.) Each data set contains an ID variable, a vari- able containing the first year of the employee’s employment, and r = 71 variables containing the sequential data of the employment history of each employee.
+A (24 × 24) substitution matrix with branch-position categories forming its rows and columns was constructed from the entire collection of employee records (Stovel, Savage, and Bearman, 1996, Table A3). The entries in the substitution matrix represent costs; they range from 0.5 to 6.5 and reflect the notion that unlikely changes are costly and frequent changes are inexpensive. The cost of an insertion or deletion was fixed at the maximum substitution cost, 6.5. The career records, the substitution matrix, and the edit-distance method were then used by an alignment algorithm to construct an (80 × 80) non-Euclidean proximity matrix for each cohort of employees.
+13.6 Classical Scaling and Distance Geometry
+The airline-distances example (see Section 13.1.1) illustrates the classical scaling method of MDS. Suppose we are given n points x1,...,xn ∈ Rr. From these points, we compute an (n × n) proximity matrix Δ = (δij ) of dissimilarities, where
+￼􏰘􏰏r 􏰠1/2 δij =∥xi−xj∥= (xik−xjk)2
+k=1
+(13.4)
+￼1The author thanks Katherine Stovel for kindly providing him with the employment data on the two cohorts of Lloyds’ employees and for the corresponding two (80 × 80) proximity matrices. The data can be found in the files samp05 and samp25, and the proximity matrices in the files samp05d and samp25d, all on the book’s website.
+13.6 Classical Scaling and Distance Geometry 479
+is the dissimilarity between the points xi = (xik) and xj = (xjk); these dissimilarities are the Euclidean distances between all m = 1 n(n − 1) pairs
+2
+of points in that space.
+Actually, there is no requirement that the {δij} be Euclidean distances; they can be any kind of distances. For example, the Minkowski or Lp dis-
+tance is given by
+￼􏰘􏰏r k=1
+􏰠1/p
+where p ≥ 1 is set by the user. When p = 1, we have the city-block or
+|xik −xjk|p
+Manhattan distance, and when p = 2, we have Euclidean distance.
+13.6.1 From Dissimilarities to Principal Coordinates
+From (13.4), we note that
+δ2 =∥x∥2+∥x∥2−2xτx. (13.6)
+δij =
+, (13.5)
+ij i j ij
+Let b = xτx = −1(δ2 −δ2 −δ2 ), where δ2 = ∥x∥2 is the squared
+ijij2iji0j0 i0i
+distance from the point xi to the origin. Summing (13.6) over i and over j
+￼yields the following identities:
+n−1􏰏δ2 = n−1􏰏δ2 +δ2
+(13.7) (13.8) (13.9)
+ij i0 j0 ii
+n−1􏰏δ2 = δ2 +n−1􏰏δ2 ij i0 j0
+jj
+n−2 􏰏􏰏δ2 = 2n−1 􏰏δ2 .
+ij iji
+i0
+Substituting (13.7)–(13.9) into (13.6) and simplifying, we get bij = aij − ai· − a·j + a··,
+(13.10) wherea =−1δ2,andtheusual“dot”notationisused,a =n−1􏰊 a ,
+ij 􏰊 2 ij 􏰊 􏰊 i· j ij a·j =n−1 aij,anda·· =n−2 aij.IfwesetA=(aij)tobethe
+￼iij
+matrix of squared dissimilarities and B = (bij ), then A and B are related
+through B = HAH, where H = In −n−1Jn is a centering matrix and Jn is an (n × n)-matrix of ones. The matrix B is said to be a “doubly centered” version of A.
+In the dimensionality-reduction aspect of MDS, we wish to find a t- dimensional representation, y1 , . . . , yn ∈ Rt (referred to as principal coor- dinates), of those r-dimensional points (with t < r), such that the inter- point distances in t-space “match” those in r-space. When dissimilarities are defined as Euclidean interpoint distances, this type of “classical” MDS
+480 13. Multidimensional Scaling and Distance Geometry
+is equivalent to PCA in that the principal coordinates are identical to the scores of the first t principal components of the {xi}.
+Typically, in classical scaling (Torgerson, 1952, 1958) we are not given the
+{xi} ⊂ Rr; instead, we are given only the dissimilarities {δij} through the
+(n × n) proximity matrix Δ. Using Δ, we form A, and then B. Motivation
+for classical scaling comes from a least-squares argument similar to the one
+employed for PCA; see Section 7.2.3. The idea is to find a matrix B∗ = (b∗ij )
+with rank at most t that minimizes tr{(B − B∗)2} = 􏰊 􏰊 (bij − b∗ )2. ij ij
+It can be shown (Mardia, 1978) that if {λk} are the eigenvalues of B and {λ∗} are the eigenvalues of B∗, then the minimum of tr{(B−B∗)2} is given
+k􏰊n ∗2 ∗
+by k=1(λk −λk) , where λk = max(λk,0) for k = 1,2,...,t, and zero
+otherwise. Because of the rank constraint, at least n−t of the eigenvalues of B∗ have to be zero. If any of the eigenvalues of B are negative, a suitable constant can be added to the dissimilarities, or the negative eigenvalues can be ignored. The first t principal coordinates, as defined by the classical scaling algorithm in Table 13.5, are taken to be the required projections in t-dimensional space.
+The classical scaling algorithm is based upon an eigendecomposition of the matrix B. This eigendecomposition produces y1, . . . , yn ∈ Rt, t < r, a configuration whose Euclidean interpoint distances,
+d2ij = ∥yi − yj∥2 = (yi − yj)τ (yi − yj), (13.11)
+match those given in the matrix Δ. The classical scaling algorithm auto- matically sets the mean y ̄ of all n points in the configuration to be the origin in Rt. To see this, we note that because H1n = 0, we have that B1n = 0, whence, n2y ̄τy ̄ = (yτ1n)τ(yτ1n) = 1τnB1n = 0, and so y ̄ = 0.
+The solution of the classical scaling problem is not unique. Consider an orthogonal transformation of two points that are obtained through the clas- sical scaling algorithm: yi → Pyi and yj → Pyj , where P is an orthogonal matrix. Then, Pyi − Pyj = P(yi − yj ), whence,
+∥P(yi −yj)∥2 = (yi −yj)τPτP(yi −yj) = ∥yi −yj∥2. (13.12)
+So, a common orthogonal transformation of the points in the configuration found by classical scaling yields a different solution to the classical scaling problem.
+13.6.2 Assessing Dimensionality
+One way of determining the dimensionality of the resulting configuration is to look at the eigenvalues of B.
+The usual strategy is to plot the ordered eigenvalues (or some function of them) against dimension and then identify a dimension at which the
+13.6 Classical Scaling and Distance Geometry 481
+TABLE 13.5. The classical scaling algorithm.
+￼1. Given an (n×n)-matrix of interpoint distances Δ = (δij ), form the (n×n)- matrix A = (aij), where aij = −1δ2 .
+2 ij
+2. Form the “doubly centered,” symmetric, (n × n)-matrix B = HAH, where
+￼H=In−n−1Jn andJn =1n1τn isan(n×n)-matrixofones.
+3. ComputetheeigenvaluesandeigenvectorsofB.LetΛ=diag{λ1,···,λn} be the diagonal matrix of the eigenvalues of B and let V = (v1, · · · , vn) be the matrix whose columns are the eigenvectors of B. Then, by the spectral theorem, B = VΛVτ .
+4. If B is nonnegative-definite with rank r(B) = t < n, the largest t eigen- values will be positive and the remaining n − t eigenvalues will be zero. Denote by Λ1 = diag{λ1, · · · , λt} the (t × t) diagonal matrix of the posi- tive eigenvalues of B and let V1 = (v1, · · · , vt) be the corresponding matrix of eigenvectors of B. Then,
+B=V1Λ1Vτ =(V1Λ1/2)(Λ1/2V1)=YYτ, 111
+where Y = V1Λ1/2 = (√λ1v1,···,√λtvt) = (y1,···,yn)τ. 1
+5. The principal coordinates, which are the columns, y1, . . . , yn, of the (t × n)-matrix Yτ, yield the n points in t-dimensional space whose interpoint distances dij = ∥yi − yj ∥ are equal to the distances δij in the matrix Δ.
+6. If the eigenvalues of B are not all nonnegative, then either ignore the neg- ative eigenvalues (and associated eigenvectors) or add a suitable constant to the dissimilarities (i.e., δij ← δij + c if i ̸= j, and unchanged otherwise) and return to step 1. If t is too large for practical purposes, then the largest t′ < t positive eigenvalues and associated eigenvectors of B can be used to construct a reduced set of principal coordinates. In this case, the interpoint distances dij approximate the δij from the matrix Δ.
+eigenvalues become “stable” (i.e., do not change perceptively). At that dimension, we may observe an “elbow” that shows where stability occurs. If xi ∈ Rt, i = 1, 2, . . . , n, then stability in the plot should occur at dimension t + 1. For easier graphical interpretation of a classical scaling solution, we hope that t is small, of the order 2 or 3.
+13.6.3 Example: Airline Distances (Continued)
+In Table 13.6, we give the 18 eigenvalues of the matrix B. One can see three large positive eigenvalues, eight negative eigenvalues, six smaller positive eigenvalues, and one zero eigenvalue (due to the double-centering operation). Ignoring the negative eigenvalues (which, in this case, result
+￼￼￼
+482 13. Multidimensional Scaling and Distance Geometry
+TABLE 13.6. Eigenvalues of B and the eigenvectors corresponding to the first three largest eigenvalues (in red) for the airline distances example.
+￼￼1 2 3 4 5 6 7 8 9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+Eigenvalues
+ 471582511
+ 316824787
+ 253943687
+ –98466163
+ –74912121
+ –47505097
+  31736348
+  –7508328
+   4338497
+   1747583
+  –1498641
+    145113
+   –102966
+     60477
+     –6334
+     –1362
+       100
+         0
+0.245 0.003 0.323 0.044
+–0.145 0.366 –0.281 –0.272 –0.010 0.209 –0.292 –0.141 –0.364 –0.104 –0.140 0.375 –0.074 0.260
+Eigenvectors –0.072
+0.502 –0.017 –0.487
+0.144 –0.128 –0.275 –0.115
+0.134
+0.195 –0.117 0.163 0.172 0.220 –0.356 0.139 0.112 –0.214
+0.183 -0.347 0.103 -0.080 0.205 –0.569 –0.174 0.094 0.202 0.110 0.061 0.196 –0.473 0.163 –0.009 –0.054 0.215 0.173
+￼TABLE 13.7. First three principal coordinates of the 18 cities in the air- line distances example.
+￼City
+       Beijing
+     Cape Town
+     Hong Kong
+      Honolulu
+        London
+     Melbourne
+        Mexico
+      Montreal
+        Moscow
+     New Delhi
+      New York
+         Paris
+Rio de Janeiro
+          Rome
+ San Francisco
+     Singapore
+     Stockholm
+         Tokyo
+1st 5315.24
+57.63 7010.90 962.86 –3157.53 7948.29 –6108.97 –5912.57 –220.84 4528.94 –6341.02 –3058.30 –7905.60 –2262.26 –3041.92 8139.01 –1610.37 5656.51
+2nd –1272.90
+8935.14
+–306.52 –8677.05 2557.96 –2283.67 –4896.64 –2039.70 2377.27 3474.33 –2078.66 2910.08 3067.34 3916.47 –6341.23 2470.83 1997.61 –3810.66
+3rd 2920.75
+–5522.26 1645.53 –1270.47 3268.11 –9062.28 –2778.04 1495.92 3221.22 1751.50 972.39 3118.95 –7537.69 2595.85 –142.88 –867.84 3429.67 2761.56
+Principal Coordinates
+￼￼
+￼15000
+10000
+5000
+4000 2000 0 -2000 -4000 -6000 -8000
+2D 3D 20000
+15000
+10000
+5000
+13.6 Classical Scaling and Distance Geometry 483
+00
+3000 8000 13000 18000
+ObservedDistance ObservedDistance
+2D 3D 4000
+3000 2000 1000
+0
+Residual EstimatedDistance
+Residual EstimatedDistance
+-1000
+50 150 250 350 50 150 250 350
+FIGURE 13.5. Estimated and observed airline distances. The left panels show the 2D solution and the right panels show the 3D solution. The top panels show the estimated distances plotted against the observed distances, and the bottom panels show the residuals from the the fit (residual = esti- mated distance – observed distance) plotted against sequence number.
+from the distances not being Euclidean due to the earth’s curvature), we see that the magnitudes of the three largest positive eigenvalues suggest that a 3D solution makes the most sense here for recreating the world map. As a result, we retain only the eigenvectors corresponding to the first t = 3 eigenvalues. In Table 13.7, we display the n = 18 scores of the first three principal coordinates using step 4 of the classical scaling algorithm. The 2D solution is given in Figure 13.1 and the 3D solution in Figure 13.2.
+Figure 13.5 shows the estimated and observed airline distances plotted against each other for the 2D and 3D solutions. In the top-left panel, the scatterplot corresponding to the 2D solution shows that many of the ob- served distances are severely underestimated, with a number of them also being overestimated. In the top-right panel, the scatterplot corresponding
+3000 8000 13000 18000
+484 13. Multidimensional Scaling and Distance Geometry
+to the 3D solution indicates a better fit to the observed distances, yet it also shows that the observed distances are consistently overestimated.
+We should not really be surprised at the results in this example. The differences occur because of the fact that the estimated airline distances are taken to be Euclidean. Airline distances are measured over a curved surface rather than a flat one. We should, therefore, expect to see a certain amount of distortion when we use a Euclidean metric to estimate distances between cities distributed across the surface of a globe.
+The Euclidean distance between two cities “near” each other is close to its airline distance; see, for example, the European, Asian, or North American clusters of cities in Figure 13.1, whose 2D configurations are similar to their usual geographical locations. However, when the cities are far apart from each other, maybe on opposite sides of the globe, we expect large distortions to be introduced. We see this effect in the 2D and 3D solutions, with the three cities of Cape Town, Rio de Janeiro, and Melbourne each involved in producing all the largest absolute residuals (where residual = dij − δij ); see the bottom two panels of Figure 13.5, where residuals are plotted against sequence number. The largest residuals in the 3D solution are the Cape Town–Rio de Janeiro and Melbourne–Tokyo distances.
+13.6.4 Example: Mapping the Protein Universe
+Molecular evolution has led to the development of “families” of proteins, so that information on the shape and function of one protein can be used to predict the shape and function of another protein within the same family. Sifting through the 100,000 or so amino acid sequences to group similar proteins into families becomes more difficult when the evolutionary dis- tances between proteins grow too large. In such cases, it is natural to turn toward comparing the three-dimensional shapes of proteins (rather than their one-dimensional amino acid sequences).
+Molecular biologists would, therefore, like to obtain a global represen- tation (i.e., a map) of the “protein structure universe,” in which adjacent points represent structurally related proteins. In order to do this, biologists have been using the classical scaling algorithm under the name “distance geometry” (Havel, Kuntz, and Crippen, 1983) to construct various 2D and 3D protein maps (see, e.g., Holm and Sander, 1996; Hou, Sims, Zhang, and Kim, 2003).
+In this example, we reanalyze data on 498 proteins taken from the SCOP (Structural Classification System of Proteins) database.2 We applied the
+2The author thanks Sung-Hou Kim and Jingtong Hou for kindly providing him with their list of 498 proteins and the resulting (498 × 498) proximity matrix Δ. The list of
+￼
+13.6 Classical Scaling and Distance Geometry 485
+￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼50000
+40000
+30000
+20000
+10000
+0
+￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼1 2 3 4 5 6 7 8 910111213141516171819202122232425
+FIGURE 13.6. The first 25 ordered eigenvalues of B obtained from the classical scaling algorithm on 498 proteins.
+classical scaling algorithm (Table 13.5) to the proximity matrix Δ. From inspection of the largest 25 eigenvalues of B (see Figure 13.6), we see that the first three eigenvalues are dominant, suggesting a 3D configuration is probably most appropriate.
+A 2D map of the first two principal coordinate scores for the 498 proteins is given in Figure 13.7. We can clearly see three arms with four clusters of points corresponding to four of the SCOP classes. The first (red dots) arm contains 136 α-helix proteins (class 1), the second (blue dots) arm contains 92 β-sheet proteins (class 2), the third (green dots) arm consists of 94 α/β proteins (class 3, mainly parallel β-sheets), and the 176 α + β proteins (class 4, mainly antiparallel β-sheets) congregate (brown dots) at the junction of the three arms. Class 1 does not overlap with class 3 and has minimal overlap (two outlying points) with class 2; classes 2 and 3 have only two overlapping points; class 4, however, spreads and mixes with all three other classes. These results suggest that certain proteins may be misclassified by SCOP. We also notice the presence of a few outliers in the display.
+A 3D map of the first three principal coordinates for the 498 proteins shows more interesting structure; see Figure 13.8. The blue points of class 1 (the α-helix proteins) and the red points of class 2 (the β-sheet proteins)
+proteins may be found in the file 498.SCOP.txt and the proximity matrix is in the file 498.matrix.txt on the book’s website.
+￼
+￼486
+13. Multidimensional Scaling and Distance Geometry
+15 10 5 0 -5 -10 -15
+2ndPrincipalCoordinateScore
+-30-20-1001020 1stPrincipalCoordinateScore
+FIGURE 13.7. Two-dimensional map of four protein classes using the classical scaling algorithm on 498 proteins. Class 1 (red dots) are α- proteins, class 2 (blue dots) are β-proteins, class 3 (green dots) are α/β- proteins, and class 4 (brown dots) are α + β-proteins.
+appear to fall along two separate axes. The black points of class 4 (the α+β proteins, a random mixture of α-helix and β-sheet proteins) jut out from the middle of those two axes and lie on the plane formed by those axes. The green points representing the proteins in class 3 (the α/β proteins) are actually scattered around a third axis, perpendicular to the other two axes. These results are very similar to those discovered by Hou, Sims, Zhang, and Kim (2003).
+13.7 Distance Scaling
+Given n items (or entities) and the matrix of their dissimilarities, Δ = (δij), we saw that the classical scaling problem is to find a configuration of points in a lower-dimensional space such that the interpoint distances {dij} satisfy dij ≈ δij. In distance scaling, this relationship is relaxed; we wish to find a suitable configuration for which
+dij ≈ f(δij), (13.13)
+where f is some monotonic function. The function f transforms the dis- similarities into distances. The use of “metric” or “nonmetric” distance
+FIGURE 13.8. A three-dimensional map of four protein classes using the classical scaling algorithm on 498 proteins. The graph shows two separate axes, one for the blue points of the α-helix class of proteins and the other for the red points of the β-sheet class of proteins. A third axis of green points for the α/β class of proteins is also visible in both panels. Lying midway in the plane formed by the α and β axes, we see the black points of the α + β class of proteins.
+scaling depends upon the the nature of the dissimilarities. If the dissimilar- ities are quantitative (e.g., ratio or interval scale), we use metric distance scaling, whereas if the dissimilarities are qualitative (e.g., ordinal), we use nonmetric distance scaling. In the MDS literature, metric distance scaling is traditionally called metric MDS and nonmetric distance scaling is called nonmetric MDS.
+13.8 Metric Distance Scaling
+In metric distance scaling, the dissimilarities {δij} are quantitative mea- surements, usually Euclidean, but other distance metrics are possible. The function f is usually taken to be a parametric monotonic function, such as f(δij) = α + βδij, where α and β are unknown positive coefficients. In some MDS software (e.g., SAS PROC MDS), metric distance scaling is characterized in three ways: absolute MDS (α = 0, β = 1), ratio MDS (α = 0, β > 0), and interval MDS (α ≥ 0 and β ≥ 0). It is worth noting
+13.8 Metric Distance Scaling 487
+￼￼
+488 13. Multidimensional Scaling and Distance Geometry
+that absolute MDS is not very useful in practice. If the {δij } are similarities (rather than dissimilarities), then we need β < 0.
+13.8.1 Metric Least-Squares Scaling
+Because f is a parametric function, the distances {dij} can be fitted to {f(δij)} by least-squares (LS). The result is metric LS scaling. If the dissimilarities are Euclidean distances and f is taken to be the identity function, then classical scaling can be viewed as an example of metric LS scaling. In fact, metric distance scaling is often regarded as synonymous with classical scaling.
+A given configuration of points {yij} ⊂ Rt can be evaluated by com- puting the pairwise distances {dij} and then, for an unknown monotone function f, using the weighted loss function,
+􏰏
+Lf(y1,...,yn;W) =
+as a goodness-of-fit criterion, where W = (wij ) is a given matrix of weights.
+For a specific dimensionality t, the square-root of Lf ,
+stress = [Lf (y1, . . . , yn; W)]1/2, (13.15)
+is known as the metric stress function. Minimizing stress over all t-dimen-
+sional configurations {yij} and monotone f yields an optimal metric dis-
+tance scaling solution. Weighting systems include wij = {􏰊 δ2 }−1 and k<l kl
+wij = δ−2. More general loss functions, where g(dij) replaces dij in (13.14), ij
+for some function g, have also been proposed. 13.8.2 Sammon Mapping
+The so-called Sammon nonlinear mapping, which has become a popular
+tool for pattern recognition, is a special case of metric LS scaling, where
+wij = δ−1{􏰊 δkl}−1 is used as the weighting system in (13.14) and f ij k<l
+is the identity function (Sammon, 1969). This weighting system normalizes the squared-errors in pairwise distances by using the distance in the original space. As a result, Sammon mapping preserves the small δij , giving them a greater degree of importance in the fitting procedure than for larger values of δij; this can be a useful strategy if one is trying to identify clusters in the data.
+Differentiating (13.14) with Sammon weights yields a set of nonlinear least-squares equations, which are then solved using an iterative numerical procedure. The usual algorithm (see, e.g., Cox and Cox, 2001, Section 2.4) starts at the classical scaling solution, then follows that up by using a
+i<j
+wij(dij −f(δij))2, (13.14)
+pseudo-Newton iterative procedure with step size reduced by a “magic” factor, usually in the range 0.3–0.4; in some cases, this factor has to be set to a much smaller value to carry the algorithm to convergence.
+13.8.3 Example: Lloyds Bank Employees
+As an example of metric LS scaling, we compare the two-dimensional Sammon mapping and classical scaling solutions of the 1905–1909 and 1925–1929 cohorts of the Lloyds Bank employee data (see Section 13.5.2). Figure 13.9 displays the two types of metric MDS for each cohort. We see that whereas the plotted points for classical scaling and Sammon mapping appear to have similar patterns, with a number of well-separated clus- ters, the points in the Sammon map for each cohort are considerably more spread out than are those derived from classical scaling. A similar effect using different data was also noticed by Ripley (1996, p. 309).
+For the 1905–1909 cohort, there are three employees (1587, 1590, 3240) who can be considered as outliers with respect to the remaining employees. The two employees 1590 and 3240 only worked at Lloyds Bank for two years (the next shortest employment tenure was 10 years) and employee 1587 worked there for 59 years (the next longest tenure was 48 years). The Sammon mapping algorithm stopped (no further iterations) at the classical scaling solution, so that the upper-left and upper-right panels of Figure 13.9 are identical.
+13.8.4 Bayesian MDS
+In certain situations, it may be reasonable to assume that the observed dissimilarities in the proximity matrix Δ = (δij ) are tainted by measure- ment error. We may see this, for example, when the elements of Δ are clearly measured in three dimensions, but the stress value for the three- dimensional solution is not zero as it should be; instead, it may require a much-higher dimensional solution to reduce stress down to zero. One way to incorporate measurement error into metric MDS is to adopt a more ex- plicit modeling framework, such as a Bayesian viewpoint (Oh and Raftery, 2001).
+A cautionary note: in general, it is often difficult to verify the types of dis- tributional assumptions used in statistical modeling, and the assumptions used in Bayesian MDS are no exception.
+In this model, we assume the dissimilarity, δij > 0, between entities i and j is observed with Gaussian error:
+δ =δ0 +ε , (13.16) ij ij ij
+where δ0 is the true dissimilarity and ε ∼ N(0,σ2), i,j = 1,2,...,n. ij ij
+13.8 Metric Distance Scaling 489
+490 13. Multidimensional Scaling and Distance Geometry
+1905-1909Cohort:ClassicalScaling 1905-1909Cohort:SammonMapping
+￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼-1001020-1001020
+1925-1929Cohort:ClassicalScaling 1925-1929Cohort:SammonMapping
+￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼-1001020 -100102030
+FIGURE 13.9. Two-dimensional MDS solutions for the Lloyds Bank data. The left panels show classical scalings and the right panels show Sam- mon mappings. The upper panels show the 1905–1909 cohorts of Lloyds Bank employees and the lower panels show the 1925–1929 cohorts.
+Thus, given δ0 , the observed dissimilarity δij, which is a function of the ij
+unknown {xi}, follows the truncated Gaussian distribution,
+δ ∼ N(δ0 ,σ2)I , i ̸= j, i,j = 1,2,...,n. (13.17)
+ij ij [δij>0]
+The likelihood function of ({xi},σ2), given Δ, is given by
+􏰛 􏰘 02􏰠􏰘􏰈0􏰙􏰠−1 L({xi},σ2|Δ) = √ 1 exp −(δij −δij) 1−Φ −δij
+￼￼￼i<j 2πσ2 2σ2
+⎧⎨ESS􏰏 􏰈δ0􏰙⎫⎬
+￼σ
+∝ (σ2)−m/2exp − − logΦ ij , (13.18)
+￼￼σ ⎭
+where ESS = 􏰊 (δ −δ0 )2 is the error sum of squares, Φ(·) is the stan-
+⎩ 2σ2
+dard Gaussian cdf, and m = n(n−1)/2 is the number of dissimilarities. The
+i<j ij ij
+i<j
+-5 0 5 10 -4-202468
+-10 -5 0 5 10 -4-202468
+second term in the exponent of the likelihood function is the modification to the normalizing constant due to the truncation.
+Next, we assume that the underlying random vectors {Xi} are iid with a common multivariate-Gaussian prior density,
+iid
+Xi ∼ Nr(0,ΣXX), i = 1,2,...,n, (13.19)
+whereΣXX =diag{λ1,...,λr}.Then,thefullconditionalposteriordensity of the {Xi}, that is, π({xi}|σ2,{λj}), is proportional to
+⎛⎞⎧ 􏰈􏰙⎫ 􏰛r ⎨Q+Q􏰏 δ0⎬
+(σ2)−m/2 ⎝ λ−n/2⎠exp − 1 2 − logΦ ij , (13.20) j⎩2σ⎭
+13.8 Metric Distance Scaling 491
+￼￼j=1 i<j
+where Q1 = ESS/σ2 and Q2 = 􏰊n (xτi Σ−1 xi) = 􏰊r λ−1sj are
+i=1􏰊n XX j=1 j quadratic functions of the {xi}, and sj = i=1 x2ij.
+We now assume that the error variance σ2 has the (conjugate) prior
+σ2 ∼ IG(a, b), (13.21)
+where IG(a,b) is the inverse-gamma distribution with parameters a and b (i.e., π(σ2) ∝ (σ2)−(a+1)e−b/σ2 , a, b > 0; see, e.g., Bernardo and Smith, 1994, p. 119). Similarly, the prior for λj is taken to be
+λj ∼ IG(α,βj) (13.22) (i.e., π(λj) ∝ λ−(α+1)e−βj/λj, α,βj > 0), independently for each j =
+j
+1,2,...,r. Finally, the prior densities of {Xi}, {λj}, and σ2 are assumed to be independent.
+The joint posterior density of ({xi},{λj},σ2), given the proximity matrix Δ = (δij), is
+p({xi},{λj},σ2|Δ) = L({xi},σ2|Δ)·π({xi})·π(σ2)·π({λj}) ⎛⎞
+where
+􏰛r
+∝ (σ2)−(m/2+a+1) ⎝ λ−(n/2+α+1)⎠ e−A,
+j j=1
+􏰏 􏰈0􏰙 􏰏r
+A = Q1 + Q2 + log Φ δij + b + βj .
+(13.23)
+(13.24) The posterior distribution (13.23) is a complicated function of the unknown
+￼￼￼￼2 σσ2λj i<j j=1
+quantities ({xi},{λj},σ2).
+The numerical integration necessary to compute Bayes estimates of these quantities is best accomplished using Markov chain Monte Carlo (MCMC)
+492 13. Multidimensional Scaling and Distance Geometry
+methods. See Section 10.12.2. Oh and Raftery used a random-walk, Metro- polis–Hastings algorithm. Initial values for the {xi} and the other unknown parameters, σ2 and {λj}, of the posterior distributions are taken from a classical scaling solution. For the algorithmic details, we refer the reader to the original article.
+13.9 Nonmetric Distance Scaling
+In many applications of MDS, dissimilarities are known only by their rank order, and the spacing between successively ranked dissimilarities is of no interest or is unavailable. This may happen because the data collected involve only ordinal information (possibly through pairwise comparisons of a set of entities). See, for example, the color stimuli and Morse code examples in Section 13.2. In these types of situations, we have no metric to deal with such comparisons.
+In nonmetric distance scaling (also known as ordinal MDS), we assume that f is an arbitrary function that satisfies the monotonicity constraint f(δij) ≤ f(δkl) whenever δij < δkl, for all i,j,k,l = 1,2,...,n. Explana- tions as to why f should be a monotone transformation of a dissimilarity include the following:
+People vary remarkably in the way in which they use rating scales in general, with some showing tendencies to avoid ex- treme ratings, others using specific categories disproportionately often, and still others piling their judgments up against one ex- treme of the scale. (Ramsay, 1988)
+In psychophysical applications, the measuring device by which dissimilarities are observed is the human mind, which is known to perceive distances in ways that are subject to monotonic dis- tortion. (For example, the mind has a tendency to underesti- mate large distances.) (Trosset, 1998)
+So, rather than using subjective judgment as a distance measure, we choose instead to construct f to preserve the rank-order of the dissimilarities.
+13.9.1 Disparities
+Suppose we have a symmetric matrix Δ = (δij) of dissimilarities (with zero diagonal entries) between a collection of n r-dimensional entities. Ig- noring the diagonal entries in Δ (which avoids the problem in the Morse-
+code example), we have m = 1 n(n − 1) dissimilarities, which we further 2
+￼￼
+13.9 Nonmetric Distance Scaling 493
+assume can be strictly ordered from smallest to largest:
+δi1j1 < δi2j2 < ··· < δimjm, (13.25)
+where (i1, j1) indicates the pair of entities having the smallest dissimilarity, and (im,jm) indicates the pair of entities having the largest dissimilarity.
+The objective is to represent these r-dimensional entities as a configura- tion of n points in the lower-dimensional space Rt, where for the moment we assume that the dimensionality t is given. Denote the points in this configurationbyy1,...,yn andlet
+dij = ∥yi −yj∥ = {(yi −yj)τ(yi −yj)}1/2 (13.26) be the Euclidean distance between the points yi and yj , i < j. Nonmetric
+distance scaling finds a configuration such that the ordering of the distances di1j1 < di2j2 < ··· < dimjm (13.27)
+matches exactly the ordering of the dissimilarities in (13.25).
+A plot of the configuration distances {dij} against their rank-order will
+not necessarily produce a monotonically looking scatterplot, thereby vi-
+olating the monotone condition (13.27). To overcome this difficulty, we
+approximate the {d } by {d􏰡 }, say (usually called disparities), which are ij ij
+monotonically related to the {dij} and where
+d􏰡 ≤ d􏰡 ≤ · · · ≤ d􏰡 . ( 1 3 . 2 8 )
+i1j1 i2j2 imjm
+This formulation allows for possible ties in the disparities. Think of the
+{d􏰡 } as fitted values obtained from fitting a monotonically increasing func- ij
+tion to the {d }; the {d􏰡 } are not themselves distances, and there may ij ij
+be no configuration of points {y } for which the {d􏰡 } are its interpoint i ij
+distances. These disparities, which are joined up to form a “curve,” are then superimposed upon the plot of the configuration distances against rank-order. The resulting plot is usually called a Shepard diagram.
+There are two main methods for computing nondecreasing disparities for the nonmetric distance-scaling problem. The first method, isotonic regres- sion (also known as monotonic regression) (Kruskal, 1964b), results in a step-like function, whereas the second, monotone splines, yields a smoother transformation.
+Isotonic Regression: A Simple Example
+Consider the following artificial example with n = 6 entities. Suppose the rank-order of the 15 dissimilarities, {δij }, is given in Table 13.8 by the col- umn marked “rank.” Suppose, further, that a specific configuration yields
+494 13. Multidimensional Scaling and Distance Geometry
+TABLE 13.8. Finding the disparities by isotonic regression for an artifi- cial example with n = 6 and m = 15. The columns I, II, III, IV, V, and VI display a sequence of trial solutions for the disparities. The cells in red indicate the active block at each trial solution. The value of S is 6.85%.
+￼rank dij I II III
+1 2.3 2.3 2.3 2.30
+2 2.7 2.7 2.7 2.70
+3 8.1 8.1 6.9 6.67
+4 5.7 5.7 6.9 6.67
+5 6.2 6.2 6.2 6.67
+6 8.1 8.1 8.1 8.10
+7 8.6 8.6 8.6 8.60
+8 7.7 7.7 7.7 7.70
+9 6.8 6.8 6.8 6.80
+10 9.3 9.3 9.3 9.30
+11 10.5 10.5 10.5 10.50
+12 9.8 9.8 9.8 9.80
+13 10.0 10.0 10.0 10.00
+14 12.6 12.6 12.6 12.60
+15 12.8 12.8 12.8 12.80
+IV V 2.30 2.30 2.70 2.70 6.67 6.67 6.67 6.67 6.67 6.67
+8.13 7.80 8.13 7.80 8.13 7.80 6.80 7.80 9.30 9.30
+10.50 10.50 9.80 9.80 10.00 10.00 12.60 12.60 12.80 12.80
+VI d􏰡ij 2.30 2.30 2.70 2.70 6.67 6.67 6.67 6.67 6.67 6.67 7.80 7.80 7.80 7.80 7.80 7.80 7.80 7.80 9.30 9.30
+10.15 10.10 10.15 10.10 10.00 10.10
+12.60 12.60 12.80 12.60
+￼￼the estimated dissimilarities, {dij }, given in the second column. Clearly, the estimates are not rank-ordered to fit with the ranks of the dissimilarities.
+We partition the estimated dissimilarities into blocks, and at each step of the algorithm one of these blocks becomes “active.” A “block” is a consecu- tive set of dissimilarities that have to be set equal to each other to maintain monotonicity. A trial solution consists of averaging the values within the active block. Table 13.8 shows the complete sequence of trial solutions for this example to obtain the set of disparities for a single iteration.
+From the second column of Table 13.8, we see that the first three dij are increasing (2.3, 2.7, 8.1). The next distance (5.7) is smaller only than the preceding 8.1, so the active block is (8.1, 5.7), whose values are averaged to get 6.9. The next distance 6.2 is smaller than the two previous 6.9s, so the active block is (6.9, 6.9, 6.2), with an average of 6.67. The two distances (8.1, 8.6) are increasing, but the next one (7.7) is smaller than the preceding two. The active block is now (8.1, 8.6, 7.7), and their average value is 8.13. The next distance (6.8) is smaller than the three 8.13s, so the active block is (8.13, 8.13, 8.13, 6.80), with an average of 7.80. The next two distances (9.3, 10.5) are increasing, but 9.8 is smaller than 10.5. So, we average the two distances (10.5, 9.8) to get 10.15. The next distance 10.0 is smaller than the two 10.15s, so we average the three values to get 10.1. The remaining distances satisfy the monotonicity requirement, and the procedure stops.
+The last column of Table 13.8 shows the disparities {d􏰡 }. The Shepard ij
+diagram of the {d } and the {d􏰡 } is given in the left panel of Figure ij ij
+13.10. In preparation for the next step in the algorithm (i.e., updating the
+￼￼￼￼￼￼￼￼13 13 11 11 99 77 55 33
+13.9 Nonmetric Distance Scaling 495
+￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼11 0.5 3.0 5.5 8.0 10.5 13.0 15.5
+￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼0.5 3.0 5.5 8.0 10.5 13.0 15.5 SequenceNumber SequenceNumber
+FIGURE 13.10. Shepard diagram for the artificial example. Left panel: Isotonic regression. Right panel: Monotone spline. Horizontal axis is rank order. For the red points, the vertical axis is the dissimilarity dij, whereas for the fitted blue points, the vertical axis is the disparity d􏰡 .
+configuration), the disparities are normalized so that their sum-of-squares equals 1 n(n − 1).
+2
+Monotone Splines
+As we see from the left panel of Figure 13.10, the disparities are plotted as a step-like function. We would like to make the transformation smoother than a step function while retaining the property that it be nondecreas- ing. We now describe a class of monotone spline transformations (Ram- say, 1988), which can be constrained to be everywhere nondecreasing and smooth. Monotone splines are constructed from polynomials defined over a grid of subintervals so that adjacent polynomials are joined up in a very smooth way at the interval boundaries.
+Let [L, U ] ⊂ R be an interval. Define a grid in the interior of that interval bythesequenceofpoints(orknots)L=ξ0 <ξ1 <···<ξq <ξq+1 =U. This grid has q interior knots, ξ1,...,ξq. Let pi represent the rank of the ith dissimilarity, i = 1,2,...,m. The grid of points defines a sequence of adjacent subintervals, [ξ0,ξ1],[ξ1,ξ2],...,[ξq,ξq+1], so that each pi falls into one of these subintervals. Within the jth subinterval [ξj , ξj+1], the function f consists of a polynomial Pj having a given degree k − 1 (or order k). The smoothness of f is characterized by the two polynomials Pj and Pj+1 having equal (and, hence, continuous) derivatives up to order k − 2 at the knot ξj , i = 1,2,...,q; that is, (Di−1Pj)(ξj) = (Di−1Pj+1)(ξj), i = 1,2,...,k − 1,
+ij
+￼D issim ilarities,D isparities
+D issim ilarities,D isparities
+496 13. Multidimensional Scaling and Distance Geometry
+where (Di−1P)(ξ) = di−1P/dxi−1 evaluated at the point ξ if i > 1 and (D0P )(ξ) = P (ξ).
+Thus, if k = 1, the spline is a step function discontinuous at the knots; if k = 2, the spline is a sequence of piecewise linear segments that join up con- tinuously at the knots; if k = 3, we have piecewise quadratic segments with continuous first derivatives at the knots; and if k = 4, we have piecewise cubic segments with continuous first and second derivatives at the knots (usually called a cubic spline). Note that the number of knots and their placement play important roles in the definition of any spline function; a poor choice of knots can result in a low-quality spline fit to the data.
+It can be shown that a monotone spline of degree k with q interior knots can be computed using the equation,
+d􏰡 = b01m + Mb, (13.29)
+where M = (M1,···,Mk+q) is an (m × (k + q))-matrix, b is a (k + q)- vector of nonnegative weights, and b0 is a nonnegative constant. These type of splines are also called regression splines. The columns {Mj} of M are each piecewise polynomial functions of the pi. The first max{0, j − k} intervals of Mj are each zero and the last max{0, q − j + 1} intervals of Mj are each one. For example, suppose k = 2 (quadratic) and q = 4 interior knots. Then, M1 has ones in the last four intervals, M2 has ones in the last three intervals, M3 has a zero in the first interval and ones in the last two intervals, M4 has zeroes in the first two intervals and a one in the last interval, M5 has zeroes in the first three intervals, and M6 has zeroes in the first four intervals. The remaining intervals constitute an appropriate polynomial in the pi with equal derivatives at the knots.
+More formally, let Mij denote the ith element of the jth column Mj of
+the matrix M, i = 0,1,2,...,m − 1, j = 1,2,...,k + q, where q is the
+number of interior knots. A zero-order (k = 0) spline has Mij equal to zero
+ifξ0 ≤pi <ξj andoneifξj ≤pi <ξq+1.Alinear(k=1)splinehas
+elements ⎧ ⎨ 0
+if ξ0 ≤ pi < ξj−1
+if ξj−1 ≤pi <ξj (13.30) 1 if ξj ≤ pi < ξq+1
+Mij =⎩ aij
+where aij = (pi − ξj)/(ξj − ξj−1). For a quadratic spline (k = 2), we have
+that: ⎧ ⎪ ⎪⎨ 0
+i f ξ 0 ≤ p i < ξ j − 2
+if ξj−2 ≤ pi < ξj−1 (13.31)
+if ξj−1 ≤ pi < ξj if ξj ≤ pi < ξq+1
+Mij = bij
+⎪⎩ 1 − cij
+1
+where bij = (ξj−2 −pi)2/(ξj−1 −ξj−2)(ξj −ξj−2) and cij = (ξj −pi)2/(ξj − ξj−1)(ξj−ξj−2).Forj=1,wesetξ−1 =ξ0,andforj=q+1,weset ξq+1 = ξq. In the special case that q = m−1 and k = 0, the monotone spline
+13.9 Nonmetric Distance Scaling 497
+(using appropriately located knots) is identical to a monotone regression transformation (see Exercise 13.4).
+Thus, we can write the ith disparity (i.e., ith element of the m-vector d􏰡) as the linear combination,
+k+q
+d􏰡 = 􏰏 b M , ( 1 3 . 3 2 )
+i jij j=0
+with nonnegative weights, bj ≥ 0, j = 0,1,2,...,k+q, where we set Mi0 = 1, i = 1, 2, . . . , m. Redefine M to be an (m × (k + q + 1))-matrix with first column 1m to take care of the constant b0. Then, b = (b0,b1,···,bk+q)τ is the coefficient vector having nonnegative elements. The vector of disparities is defined as d􏰡 = Mb.
+We now wish to find nonnegative b that will solve the LS problem,
+b∗ = arg min (d − Mb)τ (d − Mb). (13.33)
+b≥0
+This problem can be solved using the following alternating least-squares
+(ALS) algorithm. First, fix all entries of b except bj. We now choose a
+nonnegative bj to minimize (13.33). Compute the “residual” 􏰡ej = d −
+􏰊 bkMk. Then, 􏰡ej −bjMj = d−Mb, and (􏰡ej −bjMj)τ(􏰡ej −bjMj) = k̸=j
+􏰡eτj􏰡ej+b2jMτjMj−2bjMτj􏰡ej,whichisminimizedwhenbj =Mτj􏰡ej/MτjMj. If bj < 0, set bj = 0. Thus, bj ≥ 0. Repeat this computation for every other element of b while keeping all other elements of b fixed. These steps constitute the first iteration of the ALS algorithm, which yields b ≥ 0. We update these values in an iterative fashion until no change is observed in b. This algorithm has been shown to converge to a global minimum of the nonnegative LS problem.
+In the right panel of Figure 13.10, we show the monotone spline fitted to the artificial data example given in Table 13.8.
+13.9.2 The Stress Function
+If we square the horizontal deviations, d − d􏰡 , from a Shepard diagram ij ij
+and then add them up, we get a form of residual sum of squares,
+raw stress = S∗(y ,...,y ) = 􏰏(d −d􏰡 )2, (13.34)
+1 n ij ij i<j
+which acts as a measure of goodness of fit. Although this measure is invari- ant under translations, reflections, and rotations (orthogonal transforma- tions) of the {yi}, it is not scale-invariant under stretching (or shrinking) of each of the {yi} by some constant k; we see that yi → kyi means
+d →kd andd􏰡 →kd􏰡,sothatS∗ →k2S∗.Thus,rawstresscan ij ij ij ij
+498 13. Multidimensional Scaling and Distance Geometry
+always be reduced in magnitude by scaling down (shrinking) the config- uration to a single point where all the dij = 0. To counter this effect of scale-dependency, we normalize the measure S∗ to have the general form,
+⎧⎨ ⎫⎬1/2
+􏰏 w ( d − d􏰡 ) 2 , ( 1 3 . 3 5 )
+ij ij ij ⎭
+where the {wij} are weights chosen by the user. The most popular nor-
+⎩ malization is where wij = (􏰊
+1964a)
+stress = S(y1,...,yn) =
+􏰊 d2 i<j ij
+, (13.36)
+i<j
+i<j
+d2ij)−1, so that (13.35) becomes (Kruskal,
+􏰘􏰊 (d−d􏰡)2􏰠1/2 i<j ij ij
+￼where it is understood that the summations in both the numerator and denominator of S are computed for all i,j = 1,2,...,n such that i < j. The stress value S lies between 0 and 1.
+The stress criterion S (more commonly known as Kruskal’s stress formula
+one or Stress-1) can be interpreted as a loss function that depends upon the
+configuration points {y } and the disparities {d􏰡 } and measures how well i ij
+a particular configuration fits the given dissimilarities. It is worth noting that certain authors refer to S2 as the stress function.
+A slightly different version of S (called stress formula two or Stress-2) has weights given by
+⎧⎨ ⎫⎬−1
+i<j
+􏰏 ̄2
+(dij −d) ⎭ , (13.37) situations where certain types of degeneracies occur. Other recommended
+wij =⎩
+where d ̄is the average distance. The normalization (13.37) has been used in
+􏰡 􏰊􏰡􏰡
+normalizations include wij = d−2 and wij = ( dij )−1 d−1 (Sammon, ij i<j ij
+1969). The sstress criterion, which uses squared distances and squared dis-
+parities,
+􏰏
+i<j
+sstress=
+(d2ij −d2ij)2, (13.38)
+is the minimization criterion of choice in the MDS program Alscal (Takane, Young, and de Leeuw, 1977). A disadvantage of the sstress criterion (13.38) is that it emphasizes larger dissimilarities at the expense of smaller ones. More general versions of all these stress functions are available.
+􏰡
+configuration.
+13.9 Nonmetric Distance Scaling 499
+TABLE 13.9. The nonmetric distance-scaling algorithm.
+1. Order the m = 1 n(n − 1) dissimilarities {δij } from smallest to largest as 2
+in (13.25).
+2. Fix the number t of dimensions and choose an initial configuration of points
+yi ∈ Rt, i = 1,2,...,n.
+3. Compute the set of distances {dij } between all pairs of points in the initial
+￼￼􏰡
+5. Change the configuration of points by applying an iterative gradient search algorithm (e.g., method of steepest descent) to the stress criterion. This step will produce a new set of {dij }.
+􏰡
+7. Repeat steps 5 and 6 until the current configuration produces a minimum stress value, so that no further improvement in stress can take place by further reconfiguring the points.
+8. Repeat the previous steps using a different value of t. Plot stress against t. Choose that value of t that gives a reasonably small value of stress and where no significant decrease in stress can result from increasing t. This is usually exhibited by an “elbow” in the plot.
+13.9.3 Fitting Nonmetric Distance-Scaling Models
+The goal here is to find a configuration of points {yi} ⊂ Rt that min- imizes the stress value S under the monotonicity condition (13.28) for the disparities. To minimize such a nonlinear function in many variables, gradient-based optimization algorithms (e.g., method of steepest descent) have traditionally been used (Kruskal, 1964b).
+Starting with an arbitrary configuration (which may be a random scat- ter of points having little relationship to the given dissimilarities or the configuration found from carrying out metric MDS on Δ), we change the locations of the points in an iterative fashion. At each iteration, we im- prove the configuration by finding the direction for which S decreases most quickly, and we move the points in the configuration a short step in that direction. This iterative scheme is carried out until S does not decrease significantly. The algorithm is listed in Table 13.9.
+Let Yτ = (y1,···,yn) be a (t × n)-matrix whose columns are the con- figuration points. Let y = vec(Yτ ) = (y1τ , · · · , ynτ )τ be the nt-vector ob- tained by placing the columns of Yτ under one another successively. Stress
+4. Use an isotonic regression algorithm to produce fitted values {dij}. Com- pute the initial value of stress.
+6. Use an isotonic regression algorithm to produce revised values of the {dij }, together with a smaller stress value.
+￼
+500 13. Multidimensional Scaling and Distance Geometry
+S = S(y) is now a function of y. The method of steepest descent moves the configuration in a direction determined by the partial derivatives of S with respect to y. Thus, given the configuration y(m) at the mth iteration, a revised configuration at the next iteration is given by:
+y(m+1) = y(m) − αm+1z, (13.39) where αm+1 is the step-size at the (m + 1)th iteration and
+z = ∂S/|∂S| (13.40) ∂y ∂y
+is the (normalized) gradient function. Explicit formulas for z were first given by Kruskal (1964b). See also Cox and Cox (2001, Section 3.2.2). Step size should be changed at each iteration to speed up the algorithm (Kruskal suggests starting in general with α0 = 0.2).
+This gradient-based procedure has been extended and generalized in many different ways. However, there is no guarantee that any of these algorithms will find a global minimum. Indeed, it is not unusual for these algorithms to find only local minima. As a result, the best that can often be accomplished is to try different initial configurations (i.e., random starts) to check the convergence properties of the algorithm. This may be accom- plished by choosing a very large step size to start the iteration process all over again whenever a local minimum is thought to have been reached. If the same solution is obtained from repeated application of the algorithm, then the common solution is probably a global minimum.
+13.9.4 How Good Is an MDS Solution?
+Kruskal’s experience with various types of real and simulated data led him to assess the global fit of any nonmetric distance-scaling solution by various levels of stress values (Kruskal, 1964a); see Table 13.10. The distance-scaling solution for the color-stimuli example has a clear elbow at two dimensions in the scree plot and a 2D minimum-stress value of 0.023, which would classify the configuration as an excellent fit to the data.
+The assessment given by Table 13.10 should be considered only as a pos- sible guideline of how well an MDS solution fits the “true” data structure; in fact, this guideline often fails to do this, especially in situations where the data are noisy. For example, in the distance-scaling solution for the Morse- code example, the scree plot shows no elbow and the minimum-stress value for the 2D solution is 0.18, which would declare the configuration close to a poor fit to the data. In general, if the number of subjects is larger in one study than in another, then we would expect the stress value from the former study to be larger. We see this in the Morse-code example, where
+￼￼
+TABLE 13.10 Evaluation of “stress.”
+13.10 Software Packages 501
+￼Stress 0.20 0.10 0.05 0.025 0.0
+Goodness of Fit Poor
+Fair Good Excellent “Perfect”
+￼￼the number of subjects is much larger than in the color-stimuli example and so would be expected to have a higher stress value.
+13.9.5 How Many Dimensions?
+Stress S measures the goodness of fit of a given configuration in Rt, and the configuration that best matches the dissimilarities enjoys minimum stress. Furthermore, as we increase t, we find that the minimum stress decreases. In fact, if t ≥ n − 1, the minimum stress is exactly zero, a solution that is clearly undesirable; too large a dimensionality implies that we are including in the solution overly many noisy dimensions, which, in turn, leads to overfitting.
+The goal is to choose a configuration for which t is reasonably small (typically, 2 or 3, if possible). With this consideration in mind, we compute
+the minimum value of stress, S(t) , for different dimensionalities t, plot the min
+points (t,S(t) ), and then join up the plotted points. The resulting “curve” min
+will be monotonically decreasing from right to left, with the decrease be- coming less severe as t gets larger. This “curve” is sometimes called a scree plot if all minimum-stress values for t from 1 to r are computed.
+We choose that value of t for which the minimum stress is small and any further increase in t does not significantly decrease the minimum stress. Using an informal selection procedure also found in PCA and factor anal- ysis, we look for a t that exhibits an “elbow” in the plot. That value of t is taken as the chosen dimensionality. The results of simulation studies with noise-perturbed distances (e.g., Spence and Graef, 1974), however, have shown that “elbows” are not all that obvious in scree plots even when noise is kept at a fairly low level.
+13.10 Software Packages
+Classical scaling can be carried out in S-Plus and R by using the com- mand cmdscale [in library(mva)] (Venables and Ripley, 2002, p. 306). Sam-
+￼
+502 13. Multidimensional Scaling and Distance Geometry
+mon mapping can be computed using the S-Plus and R command sammon [in library(MASS)] (Venables and Ripley, 2002, p. 308) and is also avail- able in the SOM toolbox in Matlab. A Fortran program, bmds, written by Oh and Raftery to compute Bayesian MDS is available at the StatLib website. R (version 1.9.0) contains the command isoreg [now in pack- age stats, moved from package modreg] to compute isotonic regression. Kruskal’s method of nonmetric distance scaling using the stress function (13.36) and isotonic regression can be carried out in S-Plus and R by using the command isoMDS [in library(MASS)] (Venables and Ripley, 2002, p. 308). Figure 13.8 was created using POV-Ray v.3.1 (Persistence of Vi- sion Pty, Ltd., 2001, Persistence of Vision (TM) Raytracer, Williamstown, Vistoria, Australia. www.povray.org).
+Bibliographical Notes
+Book-length descriptions of MDS include Cox and Cox (1994) and Borg and Groenen (1997).
+The early development of MDS procedures was dominated by applica- tions to psychology. Another very popular area for MDS application has been marketing, where the entities are different brand-name products, and the distance between a pair of those products gives a measure of how closely associated the two products appear to be in the eyes of consumers. Re- searchers in areas of molecular biology (Crippen and Havel, 1978; Havel, 1991; Glunt, Hayden, and Raydan, 1993; Basalaj and Eilbeck, 2003; Hou, Sims, Zhang, and Kim, 2003), computational chemistry (Trosset, 1998), so- cial networks (Theus and Schonlau, 1998), and graph layout and drawing (Kruskal and Seery, 1980; Di Battista, Eades, Tamassia, and Tollis, 1994) have shown that those areas can also profit from using MDS. We note that the MDS application to network design (Kruskal and Seery, 1980) is used as part of the Isomap algorithm for nonlinear manifold learning (see Section 16.6.3), but where geodesic distance along the manifold is used instead of Euclidean distance.
+Classical scaling was introduced by Torgerson (1952, 1958). Gower (1966) called it principal coordinate analysis because of its close resemblance to PCA. Its roots go back to the results of Eckart and Young (1936) and Young and Householder (1938). Classical scaling has variously been referred to as Torgerson scaling, Torgerson–Gower scaling, and Torgerson–Young scaling.
+In 1995, the National Academy Commission on Physical Sciences, Math- ematics, and Applications published a report entitled Mathematical Chal- lenges from Theoretical/Computational Chemistry. In Chapter 3 of that report, “distance geometry” was described as “an important technique in computational chemistry” and “a key tool in the NMR spectroscopist’s ar-
+￼
+senal, providing not only the [3D] structures, but also a [quantification] of how accurately they are known.”
+Useful books on protein sequence alignment include Durbin, Eddy, Krogh, and Mitchison (1998) and Deonier, Tavar ́e, and Waterman (2005). An ex- cellent account of BLAST can be found in the book by Korf, Yandell, and Bedell (2003), where Altschul reports that the name BLAST was originally chosen to be a pun on the name FASTA, but then morphed into its current expanded name. The SIM sequence alignment program can be found at the website us.expasy.org/tools/sim-prot.html.
+Nonmetric MDS was formulated by Kruskal (1964a,b), who introduced the notion of stress and gave an iterative computational algorithm for car- rying out MDS. Monotone splines have been used as a main ingredient in a model-based framework for statistical inference in MDS (Ramsay, 1982). We note that even though the idea of extending nonmetric MDS into a model-based methodology is very controversial (see the discussion accom- panying Ramsay’s article), monotone splines in MDS have been found to be a useful exploratory tool for calculating disparities.
+The algorithms that are still being used for MDS are known to be very slow and inefficient and do not scale well for very large data sets. Accord- ingly, workshops on MDS algorithms are being held to develop new and different algorithms for MDS.
+Exercises
+13.1 Consider the color-stimuli experiment outlined in Section 13.2.1. The similarity ratings are given in the file color-stimuli on the books’s web- site. Carry out a classical scaling of the data and show that the solution is a “color circle” ranging from violet (434 mμ) to blue (472 mμ) to green (504 mμ) to yellow (584 mμ) to red (674 mμ). Compare your solution to the nonmetric scaling solution given in Figure 13.3.
+13.2 Consider the Morse-code experiment outlined in Section 13.2.2. The
+file Morse-code on the book’s website gives a table of the percentages of
+times that a signal corresponding to the row label was identified as being
+the same as the signal corresponding to the column label. A row of this
+table shows the confusion rate for that particular Morse-code signal when
+presented before each of the column signals, whereas a column of the table
+shows the confusion rate for that particular signal when presented after
+each of the row signals. This table of confusion rates is not symmetric
+and the diagonal elements are not each 100%. Now, every square matrix
+M can be decomposed uniquely into the sum of two orthogonal matrices,
+M = A+B, where A = 1(M+Mτ) is symmetric (Aτ = A), and B = 2
+13.10 Exercises 503
+￼￼1(M−Mτ)isskew-symmetric(Bτ =−B)withzerodiagonalentries.Find 2
+￼
+504 13. Multidimensional Scaling and Distance Geometry
+the decomposition for the Morse-code data. Ignore that part of the Morse- code data provided by B and carry out a nonmetric scaling only of the symmetric part A. Decide how many dimensions you think are appropriate for representing the data.
+13.3 Let ∥M∥2 = 􏰊 􏰊 M2 . From the decomposition in Exercise 13.2, i j ij
+show that ∥M∥2 = ∥A∥2 + ∥B∥2. This result enables us to analyze sepa- rately the symmetric part (see Exercise 13.2) and the asymmetric part of the Morse-code data. Ignore the diagonal entries in M, A, and B. Find the sum of squares of the remaining entries of all three matrices and argue why you may think that the symmetric part of the data plays a major role in the analysis, whereas the asymmetric part plays only a minor role.
+13.4 Show that the dissimilarities in the matrix Δ are Euclidean distances if and only if the doubly centered matrix B = HAH is nonnegative definite, where A is given in the classical scaling algorithm of Table 13.5.
+13.5 This exercise shows that monotone regression is a special case of monotone spline transformations. Consider a zero-order (k = 0) monotone spline with q = m − 1 interior knots (where m is the number of dissimilar- ities). Let pi = i, i = 0,1,2,...,m−1. Let m = 5 and put the knots at the points ξ0 = 0.5,ξ1 = 1.5,ξ2 = 2.5,ξ3 = 3.5,ξ4 = 4.5,ξ5 = 5.5. Find the (5 × 4)-matrix M and the vector of disparities d􏰡 = b01m + Mb, for any nonnegative bi, i = 0, 1, . . . , m − 1. Show that the disparities obey the same monotonicity property as they do in (13.28) for monotone regression.
+13.6 In the British-towns file on the book’s website, there is a proximity matrix of the distances between 48 towns in Great Britain. Carry out a classical scaling of these pairwise distances and construct a map of Great Britain.
+13.7 In ratio MDS and interval MDS, find the LS estimates of α and β in each case, where the minimizing criterion is the weighted loss function (13.14).

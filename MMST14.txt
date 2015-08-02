@@ -1,0 +1,927 @@
+14
+Committee Machines
+14.1 Introduction
+One of the most important research topics in machine learning is the prob- lem of how to lower the generalization error of a learning algorithm, either by reducing the bias or the variance (or both). A major complication of any attempt to reduce variance or bias (or both) is that the definitions of “bias” and “variance” of a classification rule are not as obvious as they are in regression. In fact, there have been several conflicting suggestions for the bias-variance decomposition for classification problems.
+Such a desire to control bias and variance, and, hence, generalization error, is related to the idea of “instability” of a prediction or classification method. If a small perturbation of the learning set induces major changes in the resulting predictor or classifier, we say that the associated regression or classification method is unstable. Unstable predictors or classifiers have high variance (due to overfitting) and low bias. High bias occurs for predictors or classifiers that underfit the data. Decision trees and neural nets are, by this definition, unstable, whereas linear discriminant analysis is an example of a stable classifier with low variance and possibly high bias.
+In this chapter, we show that the instability of a predictor or classifier (or, more generally, of any learning algorithm) is an important tool that can be
+A.J. Izenman, Modern Multivariate Statistical Techniques, Springer Texts in Statistics, 505 DOI 10.1007/978-0-387-78189-1_14, © Springer Science+Business Media New York 2013
+￼
+506 14. Committee Machines
+used to improve the accuracy of that learning algorithm. Novel approaches to the problem of predictor instability include bagging and boosting. Both of these approaches exploit the presence of instability in order to create a more accurate learning method (i.e., predictor or classifier). By perturbing the learning set, these methods generate an ensemble of different base pre- dictors or base classifiers, which are then combined into a single combined predictor or combined classifier, as appropriate. The success of such com- bined learning methods — called ensemble learning or committee machines — often depends upon the degree of instability of the base predictors or classifiers.
+Bagging and boosting can be distinguished from each other by the man- ner in which their respective perturbations are generated. The bagging pro- cess (Breiman, 1996b) generates perturbations by random and independent drawings from the learning set, whereas the boosting process (Freund and Schapire, 1998) is deterministic and generates perturbations by successive reweightings of the learning set, where current weights depend upon the misclassification history of the process. Bagging was designed specifically to reduce variance, whereas boosting appears to have more of a bias-reducing flavor. Another example of a committee machine that will be described in this chapter is random forests (Breiman, 2001b).
+14.2 Bagging
+The word bagging is an acronym for the phrase “bootstrap aggregating” (Breiman, 1996b). Bagging was the first procedure that successfully com- bined an ensemble of learning algorithms to improve performance over a single such algorithm.
+Bagging is most successful if the predictor is unstable. If the learning procedure is stable, the bagged predictor will not differ much from the single predictor and may even weaken its performance somewhat. However, when the learning procedure is unstable, we tend to see a significant improvement for the bagged predictor over the original unstable procedure.
+As before, we denote the learning set of n observations by
+L = {(xi,yi),i = 1,2,...,n}, (14.1)
+where the {yi} are the values of a continuous variable (a regression prob- lem) or unordered class labels (a classification problem). Bagging takes an ensemble of learning sets, {Lk}, say, each containing n observations drawn from the same underlying distribution as those in L, and combines the pre- dictors from those learning sets in such a way that the resulting predictor improves upon that obtained from the single learning set L.
+The bagging procedure starts by drawing B bootstrap samples from L. Each bootstrap sample is obtained by repeated sampling with replacement
+￼
+from L. In other words, we place equal probabilities on the sample points (i.e., pi = 1/n on the ith observation (xi,yi) in L, i = 1,2,...,n) and then sample n times with replacement from this distribution. We denote the bootstrap samples by
+L∗b = {(x∗b,y∗b),i = 1,2,...,n}, b = 1,2,...,B. (14.2) ii
+Some of the original learning set will appear in L∗b, some will appear several times, whereas others will not appear at all. What we do next depends upon whether we are dealing with a classification or a regression problem.
+14.2.1 Bagging Tree-Based Classifiers
+In the classification case, yi ∈ {1, 2, . . . , K} is a class label attached to xi. We grow a classification tree T ∗b from the bth bootstrap sample L∗b. To reduce bias, we grow this tree very large without pruning. Suppose (x,y) is independently drawn from the same joint distribution as the members of L. We drop x down each of the B bootstrap trees. For each tree, when x falls into a terminal node associated with a particular class, we say that the tree “votes” for that class. We then predict the class of x by the class that receives the most number of votes over all B trees. We call this classification procedure the majority-vote rule.
+In order to evaluate the bagging method, we need an independent test set of observations. The fact that we are sampling (with replacement) from L means that about 37% of the observations in L will not be chosen for each bootstrap sample (see Section 5.4.3). Let L − L∗b denote those ob- servations in L that are not selected for the bth bootstrap sample L∗b. If the observation (x, y) is in L − L∗b (which we write as (x, y) ∈/ L∗b), then (x, y) is called an out-of-bag (OOB) observation. The collection of OOB ob- servations (which we call an OOB sample) corresponding to the bootstrap sample L∗b will function as an independent test set.
+The OOB approach to estimating generalization error is equivalent to us- ing an independent test set of the same size. The OOB approach is also able to use all the data, rather than partitioning the data into a separate (and smaller) learning set and a test set, and it does not require any additional computing as is needed for cross-validation.
+Suppose (xi, yi) ∈/ L∗b. We drop xi down the classification tree T ∗b grown from L∗b, and predict the class label for xi. This acts as a classification vote on xi. Suppose there are ni (≤ B) trees for which xi is a member of the corresponding OOB sample. Drop xi down each of those ni trees and aggregate the votes for each of the K classes. Summarize the results by the K -vector,
+p􏰡 ( x i ) = ( p􏰡 1 ( x i ) , p􏰡 2 ( x i ) , · · · , p􏰡 K ( x i ) ) τ , ( 1 4 . 3 )
+14.2 Bagging 507
+508 14. Committee Machines
+where p􏰡k(xi) is the proportion of the ni trees that vote for Xi = xi to be a member of the kth class Πk. The proportion p􏰡k(xi) is an estimate of the true probability, p(Πk|xi) = P(X ∈ Πk|X = xi), that the observed xi belongs to Πk. The OOB classifier, Cbag(xi), of xi is then obtained by the majority-vote rule:
+Cbag(xi) = argmax{p􏰡k(xi)}. (14.4) k
+That is, it assigns xi to that class that enjoys the largest number of votes. We repeat this for every observation in L. The OOB misclassification rate,
+− 1 􏰏n i=1
+is the proportion of times that the predicted class, Cbag(xi), is different from the true class, yi, for all observations in L, and is an unbiased estimate of generalization error.
+Examples of Bagging Classification Trees
+As a first example of bagging classification trees, we estimate the OOB misclassification rate for the binary classification data set spambase, which consists of 57 variables measured on 4,601 messages, each one classified as spam (1,813 messages) or e-mail (2,788 messages). If we declare every mes- sage as non-spam, we get a baseline misclassification rate of 1, 813/4, 601 = 0.394.
+We grew different-sized classification trees (stumps, 4-node trees, 8-node trees, and largest-possible trees) and then bagged them using B = 10(25)200 bootstrap replications; each combination of tree-size and B was then re- peated 10 times. Figure 14.1 plots the average OOB misclassification rates for bagging different size trees against B (left panel) and parallel boxplots for bagging the largest-possible trees (right panel). We see that bagging stumps is obviously a bad idea. Otherwise, as the complexity of the tree increases, the OOB misclassification rates decrease significantly.
+In Figure 14.2, we display the results of bagging classification trees for the two-class data sets BUPA liver disorders and Wisconsin diagnostic breast cancer (wdbc) and for the multiclass data sets glass (six classes) and yeast (ten classes) as parallel boxplots. For each data set, the largest- possible tree was grown, the number of bootstrap samples was varied as B = 10, 25(25)200, and for each B, we repeated the bagging procedure 10 times. The results, which are representative of many different data sets, show that for binary classification problems, as we increase B, the misclas- sification rate declines, until about B = 50, when it appears to stabilize. For multiclass classification problems, and especially in situations where there
+PEbag = n
+I[Cbag(xi)̸=yi], (14.5)
+￼￼￼￼￼Stumps
+4-NodeTrees
+8-NodeTrees
+Largest-PossibleTrees
+￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼0.21
+0.16
+0.11
+0.06
+0.01
+Spambase:ComparisonbyTreeSize Largest-PossibleTrees
+0.075 0.070 0.065 0.060 0.055 0.050
+14.2 Bagging 509
+￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼30
+NumberofBootstrapSamples,B NumberofBootstrapSamples,B
+80
+130 180
+0 20 40 60 80 100120140160180200
+FIGURE 14.1. Bagging classification trees for the spambase data. Left panel: Comparison of average profiles (over 10 repetitions) of out-of-bag (OOB) misclassification rates plotted against number of bootstrap samples (B = 10, 25(25)200) for different size trees (stumps, 4-node trees, 8-node trees, and the largest-possible trees). Notice how poorly stumps perform as base classifiers, and misclassification rates decline as tree complexity in- creases. Right panel: Parallel boxplots of OOB misclassification rates for the spambase data plotted against the number of bootstrap samples B, where largest-possible trees were grown.
+are a large number of classes, the misclassification rate tends to stabilize when B is taken to be 75–100.
+14.2.2 Bagging Regression-Tree Predictors
+In the regression case, yi ∈ R. Bagging regression-tree estimates is a very similar procedure to that applied to classification trees, but instead of using a voting mechanism to determine the predicted class of an observa- tion, we average the predicted response values obtained from the individual regression trees.
+Specifically, from the bth bootstrap sample L∗b, we grow a regression tree T∗b and obtain the predictor μ􏰡∗b(x) We drop x down each of the B regression trees and then average the predictions,
+􏰏B b=1
+To evaluate the predictive abilities of a bagged regression estimate such as (14.6), we again use the OOB approach. Let (xi,yi) ∈ L. We drop xi down each of the ni bootstrap trees whose OOB samples contain (xi,yi). The OOB regression estimate, μ􏰡bag(xi), is found by averaging the ni bootstrap
+μ􏰡bag(x) = B−1 to arrive at a bagged estimate of y.
+μ􏰡∗b(x), (14.6)
+AverageOOBMisclassificationRate
+O O B M isclassification R ate
+￼510
+14. Committee Machines
+0.37
+0.33
+0.29
+0.25
+0.32
+0.28
+0.24
+0.20
+BUPALiverDisorders WDBC 0.08
+0.07 0.06 0.05 0.04 0.03
+0 20 40 60 80 100120140160180200
+NumberofBootstrapSamples,B NumberofBootstrapSamples,B
+Glass Yeast
+0.48 0.46 0.44 0.42 0.40 0.38
+0 20 40 60 80 100120140160180200
+NumberofBootstrapSamples,B NumberofBootstrapSamples,B
+O O B M isclassification R ate O O B M isclassification R ate
+O O B M isclassification R ate O O B M isclassification R ate
+FIGURE 14.2. Parallel boxplots of out-of-bag (OOB) misclassification rates plotted against the number of bootstrap samples B. Top-left panel: BUPA liver disorders (K = 2); top-right panel: WDBCt (K = 2); bottom- left panel: Glass (K = 6); bottom-right panel: Yeast (K = 10), where K is the number of classes. For each B = 10, 25(25)200, 10 repetitions were generated.
+predicted values; that is,
+μ􏰡bag(xi) = n−1 􏰏 μ􏰡∗b(xi), (14.7)
+where Ni is the set of ni bootstrap samples that do not contain (xi,yi). We repeat this procedure for all observations in L. We then estimate the generalization error of the bagged estimate by the OOB error rate,
+􏰏n i=1
+PEbag = n−1
+(yi − μ􏰡bag(xi))2, (14.8)
+i
+b∈Ni
+0 20 40 60 80 100120140160180200
+0 20 40 60 80 100120140160180200
+which is computed as the mean-squared-error between the bagged estimates and their true response values.
+14.3 Boosting
+The underlying notion of “boosting” is to enhance the accuracy of a “weak” binary classification learning algorithm. This idea originated in a field known in machine learning as “probably approximately correct” (PAC) learning (Valiant, 1984). The first successful boosting algorithms were provided by Schapire (1990) and Freund (1995). The name derives from the idea of creating a “strong” classifier by substantially improving or “boosting” the performance of a single “weak” classifier, where improve- ment is obtained by combining the classification votes from an ensemble of similar classifiers.
+We define a weak (or base) classifier to be one that correctly classifies slightly more than 50% of the time (i.e., a little better than random guess- ing).BoostingalgorithmscombineMbaseclassifiersC1,C2,...,CM inthe following way. For an observation x, the boosted classifier is given by:
+where
+􏰏M􏰈 􏰙
+􏰊αj Cj (x),
+fα(x) =
+and α = (α1,···,αM)τ is an M-vector of constant coefficients.
+14.3 Boosting 511
+￼Cα(x) = sign{fα(x)},
+(14.9)
+(14.10)
+￼j=1
+j′ αj′
+Suppose, for example, we wish to determine whether a particular e-mail is spam (i.e., junk e-mail) or not without actually opening it. If we decide it is spam, we delete the e-mail without looking at it; if not, we read it. Suppose we have software that automatically detects whether an e-mail contains any particular word, say, the word “money,” and then classifies the e-mail as spam or not spam depending upon whether that word is or is not in the e-mail. This is an example of a weak classifier because by itself it may classify too many legitimate e-mails as spam and give the appearance of pure guessing. We could improve upon this classifier by combining it with other weak classifiers each of which detects one word thought to characterize spam, say, “free,” order,” “credit,” and so on. We would then expect the resulting combined classifier to be a much stronger classifier than any of them separately.
+More often than not, boosting (and the other ensemble methods) is ap- plied to classifiers derived from decision trees. The weak classifier described above is an example of a “stump” classifier, a decision tree having only a single split and two terminal nodes. In that example, the stump classifier
+512 14. Committee Machines
+asks only one question: Does the e-mail contain the word “money”? If it does, classify it as spam (i.e., +1); otherwise, as not spam (i.e., –1). More complicated problems may require a weak classifier to be derived from two- or three-level decision trees. A strong classifier has a much smaller misclas- sification rate using a test set of observations.
+Suppose, in the spam/not spam example, we use four (M = 4) stump
+classifiers that separately use “credit” to characterize spam.
+the words “money,” “free,” “order,” and Define these classifiers as follows:
+if e-mail contains word “money” otherwise
+if e-mail contains word “free” otherwise
+if e-mail contains word “order” otherwise
+if e-mail contains word “credit” otherwise
+C1 (e-mail)
+C2 (e-mail) =
+􏰇 􏰇 􏰇 􏰇
++1 −1
++1 −1
++1 −1
++1 −1
+= C4 (e-mail) =
+C3 (e-mail)
+=
+Now, linearly combine these four classifiers by using nonnegative weights summing to one. Suppose the combined classifier is
+f(e-mail) =
+0.2C1(e-mail) + 0.1C2(e-mail) + 0.4C3(e-mail) + 0.3C4(e-mail).
+How should an e-mail having the words “money,” “order,” and “credit” be classified? We calculate f(e-mail) = 0.2 − 0.1 + 0.4 + 0.3 = 0.8. The classification is given by sign{f(e-mail)} = sign{0.8} = +1, and so we classify the e-mail as spam.
+Different versions of boosting have been applied to a wide variety of data sets with enormous success; consequently, this class of improvement algorithms has become an important research topic in both the statistics and machine learning communities. The most well-known of these boosting algorithms is AdaBoost (Freund and Schapire, 1997).
+14.3.1 AdaBoost: Boosting by Reweighting
+AdaBoost (an acronym for “adaptive boosting”) is an algorithm that is designed to improve performance in binary classification problems; it is generally regarded as the first step toward a truly practical boosting procedure. Details of the algorithm are shown in Table 14.1. It is also known as “Discrete AdaBoost” (because the goal is to predict class la- bels). A simple generalization of AdaBoost to more than two classes is called “AdaBoost.M1.” AdaBoost was originally devised with the spe-
+TABLE 14.1. AdaBoost algorithm for binary classification.
+1. Input: L = {(xi,yi),i = 1,2,...,n}, yi ∈ {−1,+1}, i = 1,2,...,n, C =
+{C1,C2,...,CM}, T = number of iterations.
+2. Initialize the weight vector: Set w1 = (w11,···,wn1)τ, where wi1 = 1/n,
+i = 1,2,...,n.
+3. Fort=1,2,...,T:
+• SelectaweakclassifierCjt(x)∈{−1,+1}fromC,jt ∈{1,2,...,M}, and train it on the learning set L, where the ith observation (xi,yi) has (normalized) weight wit, i = 1, 2, . . . , n.
+et,
+where Ew indicates taking expectation with respect to the probability distribution of wt = (w1t, · · · , wnt)τ , and et is an n-vector with ith entry [et]i = I[yi̸=Cjt (xi)].
+• Set βt = 1 log􏰉1−PEt 􏰀. 2 PEt
+• Update weights:
+wi,t+1 = wit exp{2βtI[yi̸=Cj (xi)]}, i = 1, 2, . . . , n,
+where Wt is a normalizing constant needed to ensure that the vector
+wt+1 = (w1,t+1, · · · , wn,t+1)τ represents a true weight distribution over L; that is, 1τnwt+1 = 1.
+4. Output: Classifier C(x) = sign{f(x)}, where f(x) = 􏰊T βtCjt(x) = 􏰊M 􏰊T t=1
+j=1 αjCj(x) and αj = t=1 βtI[jt=j].
+cific intention of driving the prediction error from the learning set (i.e., the learning set error) quickly to zero.
+In the AdaBoost algorithm for binary classification, we start with a learning set L = {(xi,yi)}, where xi is an r-vector of inputs and yi ∈ {−1, +1} is a class label. AdaBoost weights the observations in L by a weight vector, w = (w1,w2,···,wn)τ, and these weights are recalculated at each iteration. Initially, we use equal weights for each observation in L.
+At each iteration, the algorithm selects a “weak” classifier from a very large, but finite, set C of all possible weak classifiers. The finiteness as- sumption always holds for classification problems where each classifier in C has a finite set of possible outputs. For example, in binary classification, at most 2n distinct labelings can be applied to the learning set. Because C is finite, it is entirely possible that, in constructing the ensemble, certain of
+14.3 Boosting 513
+￼• Compute the weighted prediction error:
+PEt = PE(wt) = Ew{I[yi̸=Cj (xi)]} = τ
+􏰁wtτ 􏰂 t 1nwt
+￼￼￼￼Wt t
+￼
+514 14. Committee Machines
+the weak classifiers in C will be selected more than once (i.e., the smaller the set, the more likely that repetitions will occur).
+At the tth iteration of AdaBoost, we modify the weighting system so that observations misclassified in the previous iteration will be more heavily weighted in the current iteration. In this way, AdaBoost tries hard to classify correctly any previously misclassified observations.
+After T iterations, we have a sequence, Cj1(x),Cj2(x),...,CjT (x), of weak classifiers, where jt ∈ {1,2,...,M}, t = 1,2,...,T. If the weak clas- sifier Cj is selected multiple times in the process of the algorithm, then the coefficient for that component in the combined classifier is the sum of those coefficients obtained at all iterations when Cj was chosen. If the clas- sifiers are small decision trees (as they often are when boosting is applied), then the jth weak classifier can be parameterized as Cj(x;aj), where the parameter vector aj contains information on the splitting variables, split points, and the mean at each terminal node of the jth tree.
+The value of the boosted classifier C(x) depends upon the sign of the linear combination, f(x) = 􏰊Mj=1 αjCj(x), of the weak classifiers, where αj is the coefficient for Cj. In other words, C(x) = +1 if f(x) > 0, and −1 otherwise. AdaBoost does not restrict the sum of the coefficients {αj}, which may grow to be very large; all AdaBoost assumes is that f is in the linear span of the class C of weak classifiers. If we restrict the coefficients to be nonnegative with a fixed sum λ, say, this produces a regularized version of AdaBoost, where λ acts as a smoothing parameter; in this case, f ∈ conv(C), the convex hull of C (see, e.g., Lugosi and Vayatis, 2004).
+14.3.2 Example: Aqueous Solubility in Drug Discovery
+In order to identify high-quality candidate drugs, pharmaceutical compa- nies need to assess the absorption, distribution, metabolism, and excretion (ADME) characteristics of compounds, including biopharaceutical prop- erties such as aqueous solubility, permeability, metabolic stability, and in vivo pharmacokinetics. One of the most fundamental tests to perform is that of solubility of a compound in water (or a solvent mixture), which now takes place routinely prior to biological testing. In fact, “aqueous- solubility” testing now usually occurs very early within the drug discovery and development process. Moreover, the Biopharmaceutics Classification System classifies compounds based upon their solubility and other proper- ties.
+Because patients tend to prefer oral medication, the commercial viabil- ity of a candidate drug would be greatly improved if the drug were soluble in water and could be delivered orally. For compounds that are not water soluble, results from experimental in vitro screening assays (which test the
+ability of a compound to dissolve in water) may not be reliable or repro- ducible and can lead to biological problems and increased drug-development costs. In recent years, the pharmaceutical industry has seen more candidate drugs that are highly insoluble, and this has become a real problem in drug development.
+This example examines a data set involving 5,631 compounds on which an in-house solubility screen was performed.1 Based upon this screen, com- pounds were categorized as either “insoluble” (3,493 compounds) or “sol- uble” (2,138 compounds). Then, for each compound, 72 continuous, noisy structural variables were recorded. One variable (71) had a large number (14%) of missing data and so was deleted from the data set. For propri- etary reasons, the identities of the variables and compounds were not made publicly available.
+The 5,631 compounds were randomly separated into a learning set (2,815 compounds) and a test set (2,816 compounds). We applied the discrete AdaBoost algorithm (using an exponential loss function; see below) and the results are displayed in Figure 14.3, where we plot the misclassification rate of both the learning set and the test set.
+When we use “stumps” as classification trees in this example (left panel), the misclassification rates of both the learning set and the test set continue to decline, even after 2,000 iterations of AdaBoost, where the misclassi- fication rates are 0.2298 for the learning set and 0.2553 for the test set. When we use 16-node trees (right panel), we see a different picture: after 500 boosting iterations, the learning set has a misclassification rate of zero, reached at iteration 312, and the test set declines to about 0.205.
+In Figure 14.4, we show a comparison of test-set misclassification rates using different size trees: stumps (red curve), 4-node trees (magenta), 8- node trees (blue), and 16-node trees (green). We see that using AdaBoost on stumps actually performs the worst, whereas 16-node trees perform best. However, boosting 32-node trees (not shown here) yields slightly higher test-set misclassification rates than does boosting 16-node trees.
+14.3.3 Convergence Issues and Overfitting
+Empirical experiments have demonstrated that AdaBoost tends to be quite resistant to overfitting: the test set error (an estimate of generaliza-
+1These data are available at the book’s website under the filename soldat. The data are part of the R-package ada (Culp, Johnson, and Michailidis, 2006), which implements several versions of boosting, and can be downloaded from the website www.stat.lsa.umich.edu/~culpm/math/ada/img.html. The description of the data set is taken from that article. The author thanks Mark V. Culp for discussions about the ada package and the soldat data set.
+14.3 Boosting 515
+￼
+516
+14. Committee Machines
+Stumps 8-SplitTrees
+￼￼￼￼￼￼￼￼0.35
+0.30
+0.25
+0.20
+0.3
+0.2
+0.1
+TestSet
+LearningSet
+0 200 400 600 800100012001400160018002000
+NumberofBoostingIterations NumberofBoostingIterations
+TestSet
+M isclassification R ate
+M isclassification R ate
+LearningSet 0.0
+￼￼FIGURE 14.3. AdaBoost for the solubility data (soldat). Misclassifi- cation rates for the training set (blue curve) and test set (red curve) plotted as a function of the number of boosting iterations. An exponential loss func- tion was used with the discrete Adaboost algorithm. Left panel: Stumps are used as classification trees and AdaBoost was run for 2,000 iterations. Right panel: 16-node trees and AdaBoost was run for 500 iterations.
+tion error) almost always continues to decline (and then levels off) as we increase the number of classifiers involved even after the learning-set er- ror has been driven to zero! Recall that in a typical classification scenario, test-set error decreases for a little while and then begins to increase as the classifier becomes more and more complex. The discovery that AdaBoost is resistant to overfitting led to it being called the “most accurate, general- purpose, classification algorithm available” (Breiman, 2004).
+Since AdaBoost was introduced, hundreds of articles have been pub- lished attempting to penetrate the “mysterious” secret of why it appears to be resistant to overfitting. Many explanations have been attempted, but the question still remains open. This mystery has been described as “the most important unsolved problem in machine learning” (Breiman, 2004).
+This does not mean, however, that AdaBoost never overfits. Indeed, examples of AdaBoost have been constructed in which the test-set er- ror increases (i.e., AdaBoost does overfit) as the number of iterations increases.
+In a simulated 2D example of 150 observations drawn from each of two circular-Gaussian distributions with some overlap, Breiman (2002) reports that the test-set error decreases to a minimum after about 5,000 iterations, but then reverses direction and starts to increase. Friedman, Hastie, and Tibshirani (2000) observed much the same behavior when they applied AdaBoost to 400 observations drawn from each of two 10-dimensional,
+0 100 200 300 400 500
+0.35
+0.30
+0.25
+0.20
+14.3 Boosting 517
+￼￼￼￼￼Stumps
+2-Splits
+4-Splits
+8-Splits
+￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼0 100 200 300 400 500 NumberofBoostingIterations
+FIGURE 14.4. Comparison of test-set misclassification rates for the solu- bility data using different size trees: stumps, 4-node trees (2-Splits), 8-node trees (4-Splits), and 16-node trees (8-Splits), where AdaBoost was run for 500 iterations.
+spherical-Gaussian distributions having the same mean, where the reversal occurs at about 50 iterations.
+Breiman (2004) suggests that the AdaBoost process may actually con- sist of two stages. In the first stage (which may consist of several thousand iterations), the test-set error approaches close to the optimal Bayes er- ror, mimicking its population (i.e., infinite sample size n) behavior. (In its population version, Breiman showed that AdaBoost is Bayes consistent; that is, its risk converges in probability to the Bayes risk.) If, for what- ever reason, convergence fails, its test-set error then starts increasing. This second-stage behavior is not yet understood.
+Further study of the convergence problem has shown that, for finite sam- ple sizes, AdaBoost can be Bayes consistent only if it is regularized; see, for example, the articles on boosting in the February 2004 issue of The Annals of Statistics. One possible type of regularization for AdaBoost is that of stopping the algorithm very early (e.g., after 10 or 100 iterations), rather than letting it run forever; essentially, the argument is that overfit- ting will occur as soon as the classifier becomes too complicated and that continuing to run the algorithm will only produce larger misclassification rates. Jiang (2004) and Bickel and Ritov (2004) show that for any finite n, there is a stopping time tn such that if the algorithm is stopped at tn iterations, then AdaBoost will be Bayes consistent. The question then becomes, if the strategy is to stop AdaBoost early, how does one deter-
+TestSetMisclassificationRate
+518 14. Committee Machines
+mine the best time to stop (i.e., an optimal tn)? One suggested method is to use a data-based procedure, such as cross-validation. Other regularized versions of AdaBoost are discussed in Section 14.3.6.
+There is empirical evidence (Mease and Wyner, 2007) that shows that early stopping may not be the panacea needed to prevent overfitting; in- deed, the evidence suggests that overfitting tends to occur very early in the life of the algorithm and that running the algorithm for a much larger number of iterations actually reduces the amount of overfitting (to a level close to that of the Bayes risk) rather than increases it.
+14.3.4 Classification Margins
+One interesting argument put forward to explain why boosting works so well in classification problems involves the concept of a “margin” (Schapire, Freund, Bartlett, and Lee, 1998).
+Let C be the set of all potential weak classifiers. For example, weak classifiers could be chosen from all those decision trees that have a speci- fied number of terminal nodes. Consider a boosted classifier f of the type (14.9), where the weights, {αt}, are each nonnegative and sum to one. Then, f ∈ conv(C) is a weighted average of weak classifiers from C. If the weak classifiers are defined by a voting scheme, then the prediction is that label y that receives the highest vote from the weak classifiers.
+Let g(x,y) denote a classifier that predicts the label y for an observa- tion x. Then, g predicts y iff g(x,y) > maxy′̸=y g(x,y′). The classification margin of the labeled observation (x, y) is defined as
+m(x, y) = g(x, y) − max g(x, y′). (14.11) y′̸=y
+Thus, if y is the correct label for x, then g misclassifies x iff m(x, y) < 0. If g(x, y) = 􏰊 I denotes the total number of votes for y obtained
+t [Cjt (x)=y]
+from all the weak classifiers, then the classification margin is the amount by which the total vote for the correct class y exceeds the highest total vote for any incorrect class. That is,
+􏰏 􏰘􏰏 􏰠
+m(x, y) = I[Cj (x)=y] − max I[Cj t y′̸=y t
+tt
+(x)=y′] . (14.12)
+Thus, an observation (x,y) is misclassified by the voting scheme iff its margin is not positive. Because the observation (x,y) is misclassified by the boosted classifier f only if yf(x) ≤ 0, we can think of the margin of (x,y) with respect to f as m(x,y) = yf(x). The margin of the boosted classifier f is the minimum margin over all n observations in L.
+In binary classification problems (with labels −1 and +1), the margin can be viewed in the following terms: the bigger the margin, the more
+“confidence” we have that the observation has been correctly classified. If the margin is large but negative, this tells us we are very confident that the observation has been misclassified. Small margins indicate doubtful reliance on classifications.
+To assess the performance of a boosted classifier, Schapire et al. (1998) derive a probabilistic upper-bound on its generalization error. The upper bound turns out to depend upon the sum of the empirical margin distribu- tion, n−1 􏰊ni=1 I[yif(xi)≤δ], and the VC-dimension of the class of boosted classifiers (Vapnik and Cheronenkis, 1971), but is independent of the num- ber of weak classifiers being combined. From the upper-bound, they argue that the bigger the margins (over a learning set), the lower the gener- alization error of the classifier. They then conjecture that AdaBoost is successful because it produces large margins for the learning set.
+Unfortunately, the probabilistic upper-bound only tells part of the story. Schapire et al. (1998) realized that their bound is much too loose to be use- ful for a majority-vote classifier. Although not asymptotic by construction (the bound is not dependent upon the size of the learning set), empirical results show that for the bound to be of any practical use, the size of the learning set would have to be huge (of the order tens of thousands). Con- structing tighter upper bounds on the generalization error remains an open problem (see, e.g., Koltchinskii and Panchenko, 2002).
+Breiman (1999) demonstrated also that high margins alone cannot ex- plain the success of AdaBoost. Using a game-theoretic argument, he con- structed a boosted classifier that not only had large margins (higher indeed than obtained by AdaBoost on each of a number of data sets) but also had higher generalization error in each case.
+14.3.5 AdaBoost and Maximal Margins
+So far, we have adopted a “nonoptimal” point of view (or strategy) for AdaBoost, where it is only necessary to provide a “sufficiently good” classifier at each iteration (not necessarily the best one) from the set C of weak classifiers; examples of nonoptimal AdaBoost include decision trees and neural networks. We can also identify an “optimal” AdaBoost strategy, where the best weak classifier is selected at each iteration from C. This strategy has the effect of introducing an optimality step into the AdaBoost algorithm, so that, in principle, specific weak classifiers can be chosen again and again from C.
+From the above discussion, we know that AdaBoost induces “large” margins. In fact, if ρ is the maximum achievable margin, then AdaBoost produces a margin m(x, y) that is bounded below and above by
+14.3 Boosting 519
+520 14. Committee Machines
+￼￼￼￼"GapinTheory"
+UpperBound
+Lower Bound
+rho/2
+￼1.0 0.8 0.6 0.4 0.2 0.0
+￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼0.1 0.3 0.5 0.7 0.9 Maximal-AchievableMargin(rho)
+FIGURE 14.5. The margin achieved by AdaBoost as a function of the maximal-achievable margin ρ. Shown are the upper bound (green line), the lower bound (red curve), and the line ρ/2 (blue line). The lower bound was derived by Ra ̈tsch and Warmuth (2005).
+ρ log(1 − ρ2)
+2 ≤ − 􏰁1+ρ􏰂 ≤ m(x,y) ≤ ρ (14.13)
+log 1−ρ
+(Schapire et al., 1998; Ra ̈tsch and Warmuth, 2005). In Figure 14.5, we plot the lower and upper bounds of m(x,y) based upon (14.13), and the line ρ/2. The vertical distance between the upper and lower bounds has been referred to as the “gap in theory” (Ra ̈tsch and Warmuth, 2005). The lower bound (i.e., the red curve in Figure 14.5) has been shown to be exactly tight, however, for the nonoptimal AdaBoost strategy (Rudin, Schapire, and Daubechies, 2007).
+Recall that the closer a classifier gets to the maximum margin, the more confidence we have in that classifier. Even though AdaBoost was not specially designed to attain the maximum margin (margin theory came just after the introduction of AdaBoost), there is widespread belief that (as a by-product of its remarkable practical properties) AdaBoost also maximizes the margin. R ̈atsch and Warmuth (2005) noted, however, that empirical evidence (simulations and Figure 14.5) showed that might not always be the case.
+The conjecture that AdaBoost does not always attain the maximum possible margin turns out to be true (Rudin, Daubechies, and Schapire, 2004). Because the margin does not increase monotonically as the itera-
+￼￼￼MarginAchievedbyAdaBoost
+tions proceed, standard methods for examining convergence properties of AdaBoost margins are not applicable. Instead, following the remarkable work by Rudin et al., we look at the limiting performance of the sequence of weight vectors {wt} that defines AdaBoost.
+Let Q = (Qij) be an (n × M)-matrix, where Qij = yiCj(xi), i = 1,2,...,n, j = 1,2,...,M, are the margin values. The columns of Q are the M weak classifiers in C, the rows are the n observations in L, and Qij is +1 if xi is correctly classified by the weak classifier Cj and −1 otherwise. In applications, the values of n and M may be huge; as a result, Q is a matrix that is unlikely to be used in practice. However, Q has proved most useful in understanding certain properties of AdaBoost.
+If the learning algorithm selects classifier Cjt, we can write Qijt = I[yi =Cjt (xi )] − I[yi ̸=Cjt (xi )] = 1 − 2I[yi ̸=Cjt (xi )] . Substituting I[yi ̸=Cjt (xi )] =
+1 (1 − Qijt ) into the weighted prediction error in Table 14.1 yields 2
+PEt = 1 − 1rt, 22
+i=1
+The “edge” can be used to select a weak classifier from C. Up to this point, we have not explained how to select an element of C at each iteration. Corresponding to the two types of AdaBoost strategies, we consider the following two selection rules:
+optimal strategy: jt ∈ arg maxj [wtτ Q]j nonoptimal strategy: jt ∈ {j : [wtτ Q]j ≥ ρ},
+where ρ is the maximum achievable margin for Q. In other words, the optimal strategy selects the classifier from C that has the largest edge, whereas the nonoptimal strategy selects any classifier in C whose edge is at least ρ.
+The next step is to initialize the M-vector of coefficients by setting β1 = 0. Substituting PEt from (14.14) into the expression for the coefficient βt
+where
+τ 􏰏n rt = [wt Q]jt =
+(14.15) is the edge of Cjt over L, and where the wt are normalized. Thus, rt shows
+witQijt how much Cjt varies from a pure-chance classifier.
+in Table 14.1 yields
+By iterating on the update formula for the weights, we have that wit ∝ e−[Qβt]i , where [Qβt]i = 􏰊tj=1 yiβjCj(xi) is the ith entry of the n-vector
+1 􏰃1+r 􏰄
+βt = log t . (14.16)
+14.3 Boosting 521
+￼(14.14)
+￼￼￼￼2 1−rt
+522 14. Committee Machines
+Qβt, and the proportionality factor does not involve the subscript i. We can update βt by the formula
+βt+1 = βt + δjt (14.17) where δjt is an M-vector with βt in the jtth position and zeroes in all other
+positions. The normalized weights {wit} can now be written as: e−[Qβt ]i
+wit=􏰊 , i=1,2,...,n. (14.18) n −[Qβ ] ′
+￼i′=1e ti
+Note that the initialization step β1 = 0 yields wi1 = 1/n, i = 1,2,...,n.
+From (14.16) and the fact that the elements of Q are ±1, we have that
+􏰃1−Q r 􏰄1/2 ijt t
+1 + rt
+whence, the update for the weights is given by
+􏰃1−r 􏰄Qijt/2 e−Qijtβt = t =
+1 + Qijt rt
+,
+(14.19)
+(14.20)
+￼￼wi,t+1 = 􏰊 wite−Qijtβt
+n −Q′β
+￼=
+i′=1wi′te ijt t wit
+.
+􏰊
+′ wi′t i =1
+􏰁1−Q ′ rt 􏰂1/2 􏰁1+Q tt
+r 􏰂1/2 n ij ijt
+￼￼￼1+Qi′jtrt 1−Qijtrt
+The first line uses (14.17); the second line divides both numerator and
+denominator by 􏰊n e−[Qβt]i′ , and then uses (14.18); and the third line
+uses (14.19).
+i′=1
+To simplify the denominator of (14.20), consider the two cases, Qijt = −1
+and Qijt = +1, separately. Then, for each case, divide the summation
+into two sets of indices, {i′ : Qi′jt = −1} and {i′ : Qi′jt = +1}. Let 􏰊′
+w−,t = {i′:Qi′jt =−1} wi′t and w+,t = 1 − w−,t. On the set {i : Qi′jt = −1}, we have rt = 1 − 2w−,t, or w−,t = 1(1 − rt). Similarly, on the set
+￼2
+{i′ : Qi′ jt = +1}, we have w+,t = 1 (1 + rt ). Simple algebra yields the 2
+￼update formula,
+wi,t+1 =
+wit
+1 + Qijt rt
+, i = 1,2,...,n. (14.21)
+￼Note that 􏰊ni=1 wi,t+1 = 1. Thus, the weight vector wt (at iteration t) in the AdaBoost algorithm can be expressed as a nonlinear iterated map (14.21) that connects wt+1 directly to wt, including renormalization.
+The update formula (14.21) was discovered by Rudin, Daubechies, and Schapire (2004). The version derived here is for the nonoptimal AdaBoost strategy; the corresponding optimal strategy can be obtained by incorpo- rating a step into the algorithm that, at each iteration, picks the weak
+classifier from C that has the largest edge and, hence, is furtherest away from a pure-chance classifier.
+Rudin et al. showed that AdaBoost can be written as a dynamic system, which can be analyzed in terms of fixed points and stable limit cycles. AdaBoost is said to exhibit “cyclic behavior” if the same weak classifiers keep turning up again and again and the sequence of weight vectors keeps repeating with constant periodicity; that is, a cycle with period s (called an “s-cycle”) occurs if there exists an integer s such that, at some iteration t, wt+s = wt. Large-scale simulations have shown that it is not unusual for AdaBoost to produce periodic cycles in its weight vectors. A fixed point is produced if, at some iteration t, wt+1 = wt.
+Using specific low-dimensional examples that are simple enough for the details to be worked out completely, Rudin et al. showed that AdaBoost does not always converge to a maximum-margin solution. Instead, Ad- aBoost may converge to a solution whose margin is significantly below the maximum value. It may do this for nonoptimal AdaBoost even if op- timal AdaBoost converges to a maximum-margin solution. AdaBoost can also operate in chaotic mode, where the algorithm moves into and out of cyclic behavior, possibly due to a sensitivity to initial conditions.
+With so much attention paid to AdaBoost and maximum margins, it was only natural for alternative boosting algorithms to be designed specif- ically to maximize the margin. Such algorithms include arc-gv (Breiman, 1999) and AdaBoost* (R ̈atsch and Warmuth, 2002), neither of which are based upon coordinate-descent optimization. Two related algorithms, Coordinate-Ascent Boosting and Approximate Coordinate-Ascent Boost- ing algorithms (Rudin, Schapire, and Daubechies, 2004), do use a coordi- natewise optimization method to find the classifier to maximize the margin.
+14.3.6 A Statistical Interpretation of AdaBoost
+Can we give a statistical interpretation of the AdaBoost algorithm? Friedman, Hastie, and Tibshirani (2000) showed that AdaBoost is equiv- alent to running a coordinate-descent algorithm to fit an additive, logistic- discrimination model to the learning set. That article (and the discussants) had much to say about the philosophical, statistical, and computational is- sues of boosting; we outline some of their development work here.
+Let {Cj,j = 1,2,...,M} be a set of M base classifiers, where each Cj ∈ {−1, +1}. Consider the following linear combination of those classifiers:
+􏰏M j=1
+where the {αj} are constants. This has the general form of an additive model. Because αjCj(x) ∈ R, the combined binary classifier is defined as
+f(x) =
+αjCj(x), (14.22)
+14.3 Boosting 523
+524 14. Committee Machines
+sign{f (x)}. We wish to find the {αj } and {Cj } in (14.22) to minimize some optimality criterion.
+To evaluate the classifier f(x), we would like to minimize the number of misclassifications using a criterion based upon the usual zero-one loss function,
+L(y,f(x)) = I[y̸=f(x)] = I[yf(x)≤0]. (14.23)
+Unfortunately, this minimization problem will not work. Instead, we use a smooth, strictly convex, differentiable loss function of the random variable Y f (X). In this case, the risk function,
+R(f ) = EX,Y {L(Y, f (X))}, (14.24) is constructed using the exponential loss function,
+L(y, f (x)) = e−yf (x), y ∈ {−1, +1}. (14.25)
+In (14.24), the expectation E is a population expectation (taken over the joint distribution of X and Y). If y ̸= f(x), then, yf(x) ≤ 0, and so, e−yf(x) ≥ 1. Thus,
+I[yf(x)≤0] ≤ e−yf(x) (14.26) (Schapire and Singer, 1998). It follows that the generalization error (in this
+case, the probability of misclassification),
+Prob{Y ̸= f(X)} = EX,Y {I[Y f(X)≤0]} ≤ R(f), (14.27)
+is bounded above by R(f).
+The objective now is to minimize R(f). Because
+R(f) = EX[ EY {L(Y,f(x))| x} ], (14.28) it suffices to carry out the minimization conditional on X = x; that is, we
+wish to find f(x) to minimize
+l(f(x)) = EY {L(Y,f(x))| x}. (14.29)
+Plugging the exponential loss function (14.25) into (14.29), we have that EY {e−Y f(x)|x} = ef(x)Prob{Y = −1|x} + e−f(x)Prob{Y = 1|x}. (14.30)
+Differentiating (14.30) wrt f(x) and setting the result equal to zero gives ef(x)Prob{Y = −1|x} − e−f(x)Prob{Y = 1|x} = 0. (14.31)
+Solving for f yields
+1 􏰃 Prob{Y = 1|x} 􏰄
+f(x) = 2 log Prob{Y = −1|x} , (14.32)
+￼￼
+which is half the log-odds of the class probabilities. Rearranging (14.32), we have
+Prob{Y = 1|x} = 1
+1 + e−2f(x)
+Prob{Y = −1|x} = 1 , 1 + e2f(x)
+which gives us the logistic regression model.
+,
+(14.33) (14.34)
+Because of the nonconvexity of the indicator function, this makes the prob- lem of minimizing (14.35) wrt f a computationally difficult task. A way of avoiding this problem is to minimize instead a convex upper bound on the indicator function (see, e.g., Schapire and Singer, 1998). First, note that I[yi̸=f(xi)] = I[yif(xi)≤0]; then, from the inequality (14.26), we have that
+􏰏n i=1
+PE ≤ n−1
+Thus, the exponential criterion (14.36) is a differentiable upper bound on
+e−yif(xi). (14.36) PE. 􏰊j
+Now, let the partial sum, fj(xi) = k=1 αkCk(xi), of (14.22) be an additive model in the first j classifiers, j = 1,2,...,M. We can write fj as an update to fj−1; that is,
+fj(xi) = fj−1(xi) + αjCj(xi).
+Then, the minimization problem can be formulated as
+􏰏n
+i=1
+(14.37)
+(14.38)
+(αj,Cj) = argmin α,C
+e−yi[fj−1(xi)+αC(xi)].
+AdaBoost solves this minimization problem using a coordinate-descent optimization algorithm; see Table 14.2. Friedman et al. (2000) call this pro- cedure a forward-stagewise minimization (see Section 5.7.3) of an additive model; in this case, the model is an additive, logistic-regression model.
+We solve (14.38) in two steps: first, by fixing α and minimizing (14.38) wrt C, and then, given Cj, minimizing the result wrt α to get αj. Now,
+e−yi[fj−1(xi)+αC(xi)] = wi,j−1e−yiαC(xi), (14.39)
+14.3 Boosting 525
+￼￼Next, consider an empirical version of the risk function (14.24) for the classifier f. In this case, we replace the expectation E by an average over the learning set; this gives us the learning-set prediction error for f:
+􏰏n PE = n−1
+i=1
+L(yi,f(xi)) = n−1
+􏰏n i=1
+I[yi̸=f(xi)]. (14.35)
+526 14. Committee Machines
+TABLE 14.2. Coordinate-descent algorithm for fitting an additive model.
+1. Input: L = {(xi,yi),i = 1,2,...,n}, T = number of iterations, h(x;θ) is
+a parametric function of x with unknown parameters θ.
+2. Initialize: f0(x) = 0.
+3. Fort=1,2,...,T:
+￼• Compute(βt,θt)=argmin
+• Setft(x)=ft−1(x)+βth(x;θt).
+β,θ
+4. Output: f(x) = fT (x) = t=1 βth(x; θt).
+􏰡 􏰊T
+i=1
+wi,j−1I[yi̸=C(xi)]. 􏰠
+−e−αj which, solving for αj, yields
+wi,j−1 + (eαj + e−αj )Cj = 0,
+Cj = arg min C
+􏰘􏰏n i=1
+wi,j−1I[yi̸=C(xi)]
+Next, we substitute Cj from (14.42) into (14.41) and minimize the result wrt α. Differentiating (14.41) wrt α and setting the result equal to zero, we get
+(14.43)
+(14.44)
+(14.45)
+􏰏n i=1
+αj =
+log
+2 PEj
+j ,
+1 􏰃1−PE 􏰄
+􏰊n L(yi,ft−1(xi)+βh(xi;θ)). i=1
+￼where wi,j−1 = e−yifj−1(xi) is a weight. Using the fact that yiC(xi) = −1 if yi ̸= C(xi) and +1 otherwise, the criterion is
+􏰏n i=1
+wi,j−1I[yi̸=C(xi)] + e−α
+􏰏n i=1
+eα
+which can be written as
+wi,j−1{1 − I[yi̸=C(xi)]},
+(14.40)
+􏰏n e−α
+􏰏n i=1
+wi,j−1 + (eα − e−α)
+The only term depending upon C is the second sum, and so, we take
+(14.41)
+. (14.42)
+￼￼where
+C 􏰏n􏰃w 􏰄 PE=􏰊j = 􏰊i,j−1 I
+j n w n w [yi̸=Cj(xi)]) i=1 i,j−1 i=1 l=1 l,j−1
+￼￼
+is the weighted learning-set prediction error. Plugging (14.44) into gives us the update formula for f(xi):
+(14.37)
+(14.46)
+(14.47)
+(14.48)
+(14.49)
+fj(xi) = fj−1(xi) + log
+2 PEj
+j Cj(xi).
+1 􏰃1−PE 􏰄
+14.3 Boosting
+527
+￼￼Using (14.37), we update the weights,
+wij =e−yifj(xi) =wi,j−1e−yiαjCj(xi).
+From above, we have that
+−yiCj(xi) = 2I[yi̸=Cj(xi)] − 1. Substituting (14.48) into (14.47) gives
+wij =wi,j−1e2αjI[yi̸=Cj(xi)]e−αj.
+We can ignore the final term e−αj in (14.49) as it is a multiplying constant with respect to all the weights and, thus, is removed when the weights are normalized. These results constitute the AdaBoost algorithm (see Table 14.1).
+Notice that the coordinate-descent algorithm (Table 14.2) used in Ad- aBoost fits the terms in the additive model one term (or coordinate) at a time, not jointly. At each iteration, the procedure fits only a single term of the model, unlike a stepwise procedure, which readjusts all currently ex- isting terms to compensate for adding a new term. This fitting procedure is contrary to the usual statistical way of fitting a model with many terms (see, e.g., Buja’s discussion of Friedman et al., 2000). If the model has a large number of terms, as happens with AdaBoost, then coordinatewise fitting, one term at a time, makes a lot more sense — computationally — than does fitting all the terms simultaneously, even though the latter would be optimal. Coordinatewise algorithms are typically quite efficient, converge fairly rapidly, and are simple to program. Thus, although coordi- natewise fitting is a suboptimal procedure, it enables AdaBoost to work successfully.
+14.3.7 Some Questions About AdaBoost
+Since the Friedman, Hastie, and Tibshirani (2000) paper on the statisti- cal view of boosting appeared, much has been written on the subject, with extensions in many directions. Many studies using real and simulated data have appeared that try to examine the statistical issues discussed in the Friedman et al. paper. Simulated data have been particularly important in understanding the behavior of AdaBoost because then the joint dis- tribution of (X, Y ) is completely known. However, several major questions
+528 14. Committee Machines
+about AdaBoost have been left unanswered by Friedman et al. and other researchers. Here, we offer brief discussions of a few of these issues.
+Why Does AdaBoost Work?
+This is probably the most important question of interest to users of Ad- aBoost. As we have seen, AdaBoost can be viewed as algorithmically similar to an approach consisting of an amalgam of three separate compo- nents: (1) an additive logistic regression model (e.g., a linear combination of classification trees), (2) an exponential loss criterion, and (3) a coor- dinatewise fitting procedure. This interpretation of AdaBoost has since encouraged researchers to develop other boosting algorithms by changing either the type of smooth, convex loss function used in the basic algorithm, or the numerical fitting procedure, or both.
+But this still begs the question of why AdaBoost works so well. Ad- aBoost yields very small misclassification rates (compared with other competing classifiers) over a wide variety of data sets and is (in most cases) highly resistant to overfitting. As we have already noted, not all data sets are immune to overfitting; there are a number of specially constructed ex- amples that show that AdaBoost can indeed overfit. What Friedman et al. gave us is a useful description of a way of thinking — statistically — about AdaBoost. But they did not address the main issue of why Ad- aBoost is so resistant to overfitting, whether for simulated or real data.
+Since the appearance of that article, many suggestions have been made as to why AdaBoost is successful in classification situations. Some re- searchers have pointed to the stagewise fitting machine, or to the 0–1 loss function, or to the notion of margin, but none of these explanations are really convincing. It is still an open question as to why AdaBoost works as well as it does. Specifically, we would like to know under what conditions we can expect AdaBoost not to overfit, and under what conditions we should expect AdaBoost to overfit.
+How Well Can AdaBoost Estimate Conditional Class Probabilities?
+On a related problem to classification, we may wish to estimate the
+conditional class probability function,
+p(x) = P{Y = 1|x}. (14.50)
+If we can estimate p(x) well across the entire range of x, we would then be able to obtain a solution to the classification problem by choosing an appropriate quantile q of this function to be the class boundary; that is,
+find q such that all cases in the region p(x) > q are classified as positive (+1).
+Building upon the connection between AdaBoost and logistic regres- sion, Friedman, Hastie, and Tibshirani (2000, Algorithm 3) introduced the LogitBoost algorithm to estimate p(x) directly using the link function (14.33); that is,
+p􏰡 ( x ) = 1 , ( 1 4 . 5 1 )
+where fj is the classifier evaluated at the jth iteration and which satisfies (14.37). LogitBoost is a modified version of the AdaBoost algorithm that uses stagewise minimization of the binomial log-likelihood loss function (in place of exponential loss). Thus, the current estimate of the boosted classifier fj(x) is transformed via the link (14.51) to produce a current estimate of p(x).
+In simulations, Mease, Wyner, and Buja (2007) show that boosting clas- sification trees (and LogitBoost, in particular) is not well-suited to esti- mating p(x), except for estimating the median of that probability function (and other special cases). Indeed, there is empirical evidence that boosting can severely overfit the estimate of p(x) — even when the AdaBoost clas- sification rule performs well with no appearance of overfitting. These results throw doubt on the popularly made claim that the success of boosting is due to its close relationship to logistic regression.
+Do Stumps Make the Best Base Classifiers for AdaBoost?
+It has been argued (Friedman, Hastie, and Tibshirani, 2000, pp. 360–361; Hastie, Tibshirani, and Friedman, 2001, Section 10.11) that larger trees in- troduce higher-level interaction effects among the input variables X. Thus, stumps represent main effects (Xj), the second level of 4 nodes represents first-order interactions (XjXk), the third level of 8 nodes represents second- order interactions (XjXkXl), and so on. Such higher-order interactions, it is argued, then lead to overfitting. A corollary to this argument is that if we believe that the optimal Bayes risk can be closely approximated by an additive function of elements of X, then only stumps provide an additive model. Although larger trees are not ruled out as base classifiers, stumps, in this context, are said to provide an “ideal match” and, according to this argument, are to be preferred to larger trees.
+Yet, simulations have shown (Mease and Wyner, 2007) that stumps do not necessarily provide the best base classifiers for AdaBoost even if the optimal Bayes risk is additive, and that larger trees can actually be more effective. The solubility example in Section 14.3.2 shows that using stumps
+j
+1 + e−2fj (x)
+14.3 Boosting 529
+￼
+530 14. Committee Machines
+as base classifiers gives a relatively ‘poor’ performance when compared with the results from using larger trees with 4, 8, or 16 terminal nodes.
+14.3.8 Gradient Boosting for Regression
+We saw that one of the crucial steps in the derivation of AdaBoost was the minimization of l(f(x)). Given an exponential loss criterion and an additive model, the minimization procedure led to a coordinate-descent al- gorithm. In an extension of that idea, Friedman (2001) showed that other boosting strategies could be obtained by using different minimizing pro- cedures combined with different loss functions. In particular, he adapted the well-known gradient-descent (also known as steepest-descent) algorithm to derive a more general boosting procedure — which he called “gradient boosting” — primarily for regression situations.
+The general minimization problem is to find f􏰡 such that 􏰡
+f (x) = arg min l(f (x)). (14.52) f
+For a given x, let f0(x) be an initial guess and let ft−1(x) be the current 􏰡
+approximation to f(x). According to the gradient-descent algorithm, we update ft−1(x) by moving a small step-size ρt > 0 in the direction of the negative gradient, and evaluate the result at ft−1(x). In other words, we set
+ft(x) = ft−1(x) − ρtgt(x), (14.53) 􏰡
+where −ρtgt(x) is the best steepest-descent step direction toward f(x),
+gt(x) =
+∂ l ( f ( x ) ) 􏰮􏰮􏰮􏰮
+∂f(x) f(x)=ft−1(x)
+￼= ∂EY {L(Y,f(x))| x}􏰮􏰮􏰮􏰮
+∂f(x) f(x)=ft−1(x)􏰠
+￼􏰇 ∂ L ( Y , f ( x ) ) 􏰮􏰮􏰮 = EY ∂f(x) 􏰮
+|x (14.54) is the gradient (assuming differentiation and integration can be exchanged),
+￼f (x)=ft−1 (x)
+and the step-size (or learning rate) ρt is determined from the line search,
+ρm = arg min EX,Y {L(Y, ft−1(X) − ρgt(X))}. (14.55) ρ
+Choice of ρm is crucial to the steepest-descent method: too large a ρm may lead to overshooting the minimum and possibly divergent oscillations, whereas too small a ρm will slow down the search and greatly increase computation time.
+The expectations in (14.54) and (14.55) are estimated using the learning set L = {(xi,yi),i = 1,2,...,n}. For example, the gradient (14.54) at xi
+is estimated by
+gt(xi) = ∂L(yi,f(xi))􏰮􏰮􏰮􏰮
+, i = 1,2,...,n,
+(gt(xi)) are each n-vectors.
+The important point to note here is that the gradient vector gt is only defined at a very specific set L of n points; we cannot use this formulation to compute the gradient and step-size at any set of points not in L.
+Friedman (2001) found an ingenious way around this problem by approx- imating the negative gradient −gt(x) by a parametric function, h(x;θt), with parameter vector θt. For example, if we use a J-terminal-node regres- sion tree as a base learner, then h(x; θt) takes the simple form (see Section 9.3),
+􏰏J j=1
+where the components of the parameter vector θt = ({y ̄j , Rj })τ define the entire tree: the {Rj } are the J disjoint regions of input space and represent the terminal nodes of the tree, and the {y ̄j} are terminal-node means that define the region boundaries.
+How can we choose θt? A simple idea is to choose θt so that h(x;θt) is most highly correlated with the negative gradient −gt(x). This is a least- squares minimization problem: define n “pseudoresponses” as y􏰣i = −g(xi), i = 1,2,...,n, and solve
+The update formula is
+θ,β i=1
+ft(x) = ft−1(x) + ρth(x; θt),
+where ρt is found from the line search,
+􏰏n
+i=1
+ρt =argmin ρ
+L(yi,ft−1(xi)+ρh(xi;θt)).
+ρ
+i=1
+(14.57)
+h(x;θt) =
+y ̄jI[x∈Rj], (14.58)
+􏰏n
+(θt, βt) = arg min (y􏰣i − βh(xi; θ))2.
+(14.59)
+(14.60)
+(14.61)
+These steps constitute the Gradient.Boost algorithm (Friedman, 2001, Algorithm 1) given in Table 14.3. If each h(x;θt) is a J-terminal-node
+14.3 Boosting
+531
+￼∂f(xi)
+the step-size ρt by
+ρt = arg min
+(14.56)
+f(xi)=ft−1(xi)
+􏰏n
+L(yi, ft−1(xi) − ρgt(xi)),
+and the update rule by where ft = (ft(xi)), ft−1 = (ft−1(xi)), and gt =
+532 14. Committee Machines
+TABLE 14.3. Gradient.Boost algorithm for fitting an additive model. 1. Input: L = {(xi,yi),i = 1,2,...,n}, T = number of iterations.
+􏰊n
+2. Initialize:f0(x)=argminρ i=1L(yi,ρ).
+￼3. Fort=1,2,...,T:
+• y􏰣i = −gt(xi) = − ∂L(yi,f(xi))􏰮􏰮
+￼∂f(xi)
+• Compute(θt,βt)=argmin 􏰊n
+, i = 1,2,...,n, (y􏰣i−βh(xi;θ))2.
+n
+• Compute ρt = arg minρ i=1 L(yi, ft−1(xi) + ρh(xi; θt)).
+• Setft(x)=ft−1(x)+ρth(x;θt). 􏰡 􏰊T
+4. Output: f(x) = fT (x) = f0(x) + t=0 ρth(x; θt).
+􏰮
+f (xi )=ft−1 (xi ) 􏰊 θ,β i=1
+￼regression tree, the algorithm is referred to as the Gradient.TreeBoost algorithm.
+14.3.9 Other Loss Functions
+Several different loss functions have been proposed as alternatives to exponential loss (14.25) as part of AdaBoost or for gradient boosting. These include the following:
+logistic (log)loss: L(y, ft(x)) = log 􏰨1 + e−2yft(x)􏰩 , y ∈ {−1, +1}. This loss function is used in the LogitBoost algorithm (Friedman
+et al., 2000) for classification, where ft(x) = Ct(x); see Exercise 14.1. squared-error loss: L(y, ft(x)) = 1 (y − ft(x))2, y ∈ R.
+2
+For continuous Y ∈ R, this loss function is used for least-squares regression boosting by the LS.Boost (and the LS.TreeBoost) al- gorithm (Friedman, 2001, Algorithm 2) and the L2Boost algorithm (Buhlmann and Yu, 2003); see Exercise 14.2.
+absolute-error loss: L(y, ft(x)) = |y − ft(x)|, y ∈ R.
+This loss function is used in the LAD.TreeBoost algorithm (Fried- man, 2001, Algorithm 3) for boosting regression trees using least- absolute-deviation. The resulting procedure is robust against outliers in both input and output variables.
+􏰇 1(y−ft(x))2, if|y−ft(x)|≤δ, Huber loss: L(y, ft(x)) = 2
+￼￼δ(|y − ft(x)| − δ/2), otherwise.
+Classification Regression
+88 66 44 22 00
+-3-2-1012 -4-202 yf y-f
+FIGURE 14.6. A comparison of loss functions for binary classification (left panel), where the label y is −1 or +1, and regression (right panel), where y is real-valued. The predictor is f. Left panel: Shown are the expo- nential (e−yf , blue curve), binomial (scaled version of log{1 + e−2yf }, red curve), squared-error ((y − f )2 = 2(1 − yf ), green curve), and misclassi- fication (I[yf<0], black step-function) loss functions, graphed as functions of the margin yf . Right panel: Shown are the absolute-error (|y − f |, blue curve), squared-error ((y − f)2, green curve), and Huber (with δ = 1, red curve) loss functions, graphed as functions of the error y − f .
+This loss function (specially constructed for Huber’s theory of robust M-regression) combines features of squared-error loss and absolute- error loss (Huber, 1964), and is used by the M.TreeBoost algorithm (Friedman, 2001, Algorithm 4). The constant δ is used to identify outlying residuals, whose loss is measured by absolute error instead of squared error.
+The left panel of Figure 14.6 shows graphs of the exponential, bino- mial, and squared-error loss functions, each of which can be regarded as a continuous, convex approximation to misclassification loss, a step function having a loss of one for yf < 0 and zero for yf > 0. We can clearly see that squared-error loss is a poor approximation to misclassification loss. Instead of being a monotonically decreasing function of the margin yf as are the exponential, binomial, and misclassification losses, squared-error loss be- comes larger the more confidently we can classify an observation (i.e., the larger the margin value)! The right panel shows graphs of absolute-error loss, squared-error loss, and the Huber loss function (with δ = 1).
+14.3.10 Regularization
+Regularization by restricting the fitting process is popularly used as an antidote to overfitting. There are several ways to do this; one possible ap- proach is that of model selection, whereby the number of components in the
+14.3 Boosting 533
+￼￼￼Squared-Error
+Binomial
+Exponential
+M isclassification
+￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼Squared-Error
+Absolute-Error
+Huber
+￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼LossFunction
+LossFunction
+534 14. Committee Machines
+combined classifier or predictor is not allowed to get too large. Another ap- proach shrinks the values of all coefficients in the model. As a general rule, regularization by restricting the number of components is not as effective as shrinking the coefficient values.
+Regularized predictors are obtained using a penalty function p(α) to restrictthesizeofthecoefficientvectorα=(α1,···,αM)τ ofthecombined predictor f(x) = 􏰊Mj=1 αjCj(x). The penalized estimates are given by the solution to the constrained minimization problem:
+􏰘􏰏n 􏰠 L(yi,f(xi))+λp(α) , (14.62)
+i=1
+where L is any of the loss functions listed above and λ > 0 is a small regularization parameter usually interpreted as a “learning rate.” We then apply the forwards-stagewise (or a related gradient-boosting) procedure to the constrained-minimization problem. There are two types of penalty functions that have been suggested for use in the boosting context:
+l1-Penalty: The coefficients are constrained so that the sum of their ab- solute values,
+􏰏M
+α􏰡λ =argmin α
+p1(α) =
+|αj|, (14.63)
+j=1
+is smaller than a given value. In the case of squared-error loss function
+for regression boosting, this l1-penalty yields a method closely related to the Lasso algorithm and to the least-angle regression (LAR) algorithm; see Sections 5.7 and 5.8. As we noted in Section 5.8, empirical evidence suggests that the l1-penalty works best when there are a small-to-medium number of moderate-sized true coefficients.
+l2-Penalty: This penalty function restricts the sum of squares of the coefficients,
+􏰏M
+p2(α) =
+α2j. (14.64)
+j=1
+When the combined learner is a convex combination of base learners and
+we use squared-error loss, the optimum penalized-regression predictor is the ridge regression estimator of Section 6.3.3.
+As we vary the value of λ in the above constrained-minimization problem, we obtain a sequence of values of the components of the estimated coef- ficient vector α􏰡λ. We then plot the trace of each coefficient α􏰡j,λ against λ.
+Friedman (2001) introduces a regularization parameter λ into the Gra- dient.Boost algorithm in Table 14.3 by adding λ ∈ (0,1] to the input line, and then changing the fourth line in the for-loop to
+ft(x) = ft−1(x) + λ · ρth(x; θt), (14.65)
+where h(x;θt) is a parametric function. This particular form of regular- ization is also referred to as “shrinkage.” The parameter λ operates (in conjunction with the number of iterations T) to find the best fit to the data. However, there is a “trade-off” between the values of λ and T in the fitting process: the best value for T is observed to be higher for smaller values of λ. From simulations, Friedman notes that the performance of the gradient-boosting method is generally enhanced (sometimes dramatically) by using as large a value of T as is computationally feasible and then set- ting λ to be a small (but not too small) value (e.g., λ = 0.1) so that an appropriate criterion is optimized close to the chosen value for T . Using a value of λ close to one typically produces evidence of serious overfitting.
+14.3.11 Noisy Class Labels
+In classification problems, label noise exists when the learning set con- tains observations with incorrect class labels. Dietterich (2000) showed that noisy labels degrade the accuracy of AdaBoost when applied to classifica- tion trees, whereas bagging appears to be quite robust against label noise.
+We can create label noise by randomly selecting (without replacement) a fraction (e.g., 5%) of the observations from a data set and then changing the class label of each chosen observation using a random assignment from the set of incorrect class labels. In Section 5.6.2, we saw that, on average, about 37% of the observations from the learning set are omitted from each bootstrap sample; thus, it is likely that a large proportion of the misla- beled observations will not appear in a bootstrap sample. The omission of misclassified observations (which should behave like regression outliers) from the bootstrap sample will increase instability and, hence, improve the performance of bagging.
+On the other hand, after a few iterations, AdaBoost will keep assigning large weights to the fraction of mislabeled observations because it will have difficulty classifying the “corrupted” observations, and this may, in turn, degrade performance and lead to overfitting.
+When noisy class labels are present, there is empirical evidence (Krieger, Long, and Wyner, 2001) that we can improve the classifier’s performance if we apply bagging following boosting (a “BB” algorithm). Specifically, we generate B = ρn bootstrap samples from the learning set (0 < ρ < 1), compute a boosted classifier from each bootstrap sample using M itera- tions, combine the B different boosted classifiers into an ensemble, and then average over the ensemble. Studies show, using real data, that the BB classifier averages out (or smoothes) the overfitting in AdaBoost and, hence, decreases test error.
+14.3 Boosting 535
+536 14. Committee Machines
+14.4 Random Forests
+We have seen how perturbing the learning set L in various ways can be used to generate an ensemble (or forest) of tree-structured classifiers. A classification tree Tk is grown for each perturbation Lk of the learning set, k = 1,2,...,K; a test set observation x is dropped down each tree; and the classifier predicts the class of that observation by that class that enjoys the largest number of total votes over all of the trees.
+In bagging, randomization is used only in selecting the data set on which to grow each tree. An extension of this idea is random forests (Breiman, 2001b), where randomization adds another layer onto bagging and is a crucial part of constructing each tree. Suggestions on how to introduce randomization into tree construction include random split selection in which each node is split by randomly choosing one of the t best splits at that node (Dietterich, 2000) and random input selection in which the split at each node is decided by a random choice of subset of the r input features (Ho, 1998).
+14.4.1 Randomizing Tree Construction
+In random forests, we start in the same way that bagging starts, with B bootstrap samples drawn from the learning set L, but the difference is how the trees are grown from those samples. The idea is to introduce a randomization component into tree construction so that, for the tree T∗b, each node is split in a random manner. Possible options for developing a randomized splitting strategy at each node include using some form of random input selection and linear combinations of inputs.
+Recall that bagging applied to a tree-structured classifier reduces vari- ance (due to aggregation) and bias (if the trees are fully grown). A random forest reduces the correlation between the tree-structured classifiers that enter into the averaging step. The algorithm is given in Table 14.4.
+￼There are only two tuning parameters for a random forest: the number m of variables randomly chosen as a subset at each node and the number B of bootstrap samples. The procedure is relatively insensitive to a wide range
+r; if that is of values of m and B. A good starting point is to take m as √
+￼r and not sufficient, it is recommended to rerun the program with m = 2√
+￼r as a way of monitoring the procedure. We have often found that m = 0.5√
+￼values smaller than √
+r yield smaller misclassification rates. The number
+￼B of bootstrap samples can be taken to be at least 1,000, and if r is very large, then B can be around 5,000.
+TABLE 14.4. Random forest classification algorithm using random input selection at each tree node.
+1. Input: L = {(xi,yi),i = 1,2,...,n}, yi ∈ {1,2,...,K}, m = number of variables to be chosen at each node (m ≪ r), B = number of bootstrap samples.
+2. Forb=1,2,...,B:
+• Draw a bootstrap sample L∗b from the learning set L.
+• From L∗b, grow a tree classifier T∗b using random input selection: at each node, randomly select a subset m of the r input variables, and, using only the m selected variables, determine the best split at that node (using entropy or the Gini index). To reduce bias, grow the tree to a maximum depth with no pruning.
+• The tree T∗b generates an associated random vector θb, which is in- dependent of the previous θ1, . . . , θb−1, and whose form and dimen- sionality are determined by context.
+• Using θb and an input vector x, define a classifier h(x,θb) having a single vote for the class of x.
+3. The B randomized tree-structured classifiers {h(x,θb)} are collectively called a random forest.
+4. The observation x is assigned to the majority vote-getting class as deter- mined by the random forest.
+14.4.2 Generalization Error
+Consider an ensemble (or committee) of B randomized tree-structured classifiers,
+h(x,θ1),h(x,θ2),...,h(x,θB). (14.66) Define the generalization error for a random forest having B trees as
+(14.67)
+(14.68)
+is the classification margin for the ensemble, and the probability is com- puted over the (X, Y )-space. Note that if mB (X, Y ) > 0, then the commit- tee votes for the correct classification, whereas otherwise it does not.
+14.4 Random Forests 537
+￼￼PEB = PX,Y {mB(X,Y ) < 0},
+􏰏B 􏰘􏰏B 􏰠
+where
+mB(X,Y ) = B−1 I[h(X,θb)=Y ] − max B−1 I[h(X,θb)=k]
+k̸=y
+b=1 b=1
+538 14. Committee Machines
+Breiman (2001b) showed, using the strong law of large numbers, that, as the number of trees increases (B → ∞), PEB converges almost surely ({θb}) to the generalization error,
+PE = PX,Y {m(X,Y ) < 0}, (14.69)
+where
+m(X,Y) = PΘ{h(X,Θ) = Y}−maxPΘ{h(X,Θ) = k}. (14.70)
+k̸=Y
+is defined as the margin function for a random forest. The margin, m(X, Y ), is the amount by which the average number of votes at (X,Y) for the correct class exceeds the average vote for any other class. This limiting result is important: it shows that as we increase the number of trees in the forest, generalization error for a random forest converges to a limit; in other words, random forests cannot overfit, even if we have an infinite number of trees in the forest.
+14.4.3 An Upper Bound on Generalization Error
+The generalization error of a random forest can be bounded by a quantity that depends upon two parameters: a first-order parameter μ measuring the “strength” of any single tree in the forest and a second-order parameter ρ ̄ measuring the overall “correlation” between pairs of trees in the forest (Breiman, 2001b). These two parameters can be used to assess the accuracy of classifiers and the amount of dependence between them. For an accurate classification, we would like a strong classifier (large μ) with low correlation (small ρ ̄) between trees.
+Consider the set of classifiers (14.66). From (14.70), define
+μ = EX,Y {m(X, Y )} (14.71)
+to be the expected “strength” of the set of classifiers, which is assumed to be positive. Think of strength as a measure of accuracy of a tree in the forest. In the binary case, we see from (14.70) that m(X, Y ) can be written as
+m(X,Y) = 2·PΘ{h(X,Θ) = Y}−1, (14.72)
+and the condition μ > 0 translates to EX,Y PΘ{h(X, Θ) = Y } > 0.5; this result mimics the learning condition that a “weak” classifier is one that correctly classifies at a rate higher than 50%.
+Our goal in this section is to provide an upper bound on the generaliza- tion error,
+PE∗ =PX,Y{|m(X,Y)−EX,Y{m(X,Y)}|>μ}, (14.73)
+of a random forest. Applying Chebychev’s inequality (Rao, 1965, p. 77) to (14.73), it follows that
+PE∗ ≤ varX,Y{m(X,Y)}. (14.74) μ2
+We now derive a suitable expression for the numerator of this upper bound. Let 􏰣k = 􏰣k(X, Y ) denote the class with the most incorrect votes; that is,
+can be regarded as a “raw” margin function. Assuming that Θ and Θ′ are iid,
+[m(X,Y)]2 =[EΘ{m∗(X,Y,Θ)}]2 =EΘ,Θ′{m∗(X,Y,Θ)m∗(X,Y,Θ′)}. (14.78)
+Thus, the variance function is
+varX,Y {m(X, Y )} = EΘ,Θ′ {covX,Y (m∗(X, Y, Θ), m∗(X, Y, Θ′))}
+= EΘ,Θ′{ρ(Θ,Θ′)σ(Θ)σ(Θ′)}, (14.79) where, for fixed θ and θ′,
+ρ(θ, θ′) = corrX,Y {m∗(X, Y, θ), m∗(X, Y, θ′)} (14.80) is the correlation between the raw margin functions of two different mem-
+bers in the forest, and, for fixed θ, σ(θ) is the square-root of σ2(θ) = varX,Y {m∗(X, Y, θ)}.
+Hence, from (14.79) and the definition of variance,
+varX,Y {m(X, Y )} = ρ ̄ · [EΘ{σ(Θ)}]2 ≤ ρ ̄ · EΘ{σ2(Θ)},
+(14.81)
+(14.82)
+(14.83)
+where
+ρ ̄= EΘ,Θ′{ρ(Θ,Θ′)σ(Θ)σ(Θ)} EΘ,Θ′ {σ(Θ)σ(Θ)}
+14.4 Random Forests 539
+￼􏰣k = arg max PΘ{h(X, Θ) = k}. k̸=Y
+Then, from (14.70),
+m(X,Y) = PΘ{h(X,Θ)=Y}−PΘ{h(X,Θ)=􏰣k}
+(14.75)
+(14.76) ( 1 4 . 7 7 )
+where
+= EΘ{m∗(X, Y, Θ)},
+m ∗ ( X , Y , θ ) = I [ h ( X , θ ) = Y ] − I [ h ( X , θ ) = 􏰣k ]
+￼is the average correlation between all possible pairs of trees in the forest. Note that, from (14.82), we can write
+ρ ̄ = varX,Y {m(X, Y )} . (14.84) [EΘ{σ(Θ)}]2
+￼
+540 14. Committee Machines
+Now, from (14.81),
+EΘ{σ2(Θ)} = EΘ{EX,Y [(m∗(X, Y, Θ))2] − [EX,Y (m∗(X, Y, Θ))]2}. (14.85)
+In the first term on the rhs, m∗(X,Y,Θ) is the difference of two indicator functions; see (14.77). So, [m∗(X, Y, Θ)]2 ≤ 1. The second term on the rhs can be written as
+(14.86)
+(14.87)
+EΘ{[EX,Y (m∗(X, Y, Θ))]2} ≥
+= [EX,Y (EΘ(m∗(X, Y, Θ))]2
+= μ2.
+The first line used the inequality E(X2) ≥ [E(X)]2. Thus,
+EΘ{σ2(Θ)} ≤ 1 − μ2.
+p􏰡 ( x , y ) =
+􏰊
+( 1 4 . 8 9 )
+[EΘ(EX,Y (m∗(X, Y, Θ))]2 = [EX,Y (m(X, Y ))]2
+Substituting the inequality (14.87) into (14.82), and the result into (14.74) gives us an upper bound on generalization error for a random forest in terms of μ and ρ ̄:
+P E ∗ ≤ ρ ̄ ( 1 − μ 2 ) . ( 1 4 . 8 8 ) μ2
+This upper bound was derived by Breiman (2001b); however, the bound is generally quite loose.
+Estimation of μ and ρ ̄ can be carried out as follows. Let L∗b be the bth bootstrap sample and let h(x,θb) be the bth classifier of x based upon L∗b. For an OOB observation (x, y), let
+￼􏰊I
+b [ h ( x , θ b ) = y ; ( x , y ) ∈/ L ∗ b ]
+b I[(x,y)∈/L∗b]
+￼denote the proportion of votes received for class y. It is an estimate of PΘ{h(x,Θ) = y}. The strength (14.71), which is the expected value of (14.70), can be estimated by:
+To estimate ρ ̄ in (14.84), we estimate the numerator and denominator separately. The numerator,
+varX,Y {m(X, Y )} =
+􏰇􏰁 􏰣 􏰂2􏰢
+EX,Y PΘ[h(X,Θ)=Y]−PΘ[h(X,Θ)=Y] −μ2, (14.91)
+− 1 􏰏n i=1
+{ p􏰡 ( x i , y i ) − p􏰡 ( x i , y􏰣 i ) } , ( 1 4 . 9 0 ) where y􏰣i = arg maxy′̸=y p􏰡(xi, yi′).
+μ􏰡 = n
+can be estimated by
+􏰏n i=1
+The standard deviation is
+σ(θ) = {p1 + p2 + (p1 − p2)2}1/2,
+σ􏰡(θ) = B−1
+n−1
+{p􏰡(xi, yi) − p􏰡(xi, y􏰣i)}2 − μ􏰡2.
+(14.92)
+(14.93) wherep1 =EX,Y{h(X,Θ)=Y}andp2 =EX,Y{h(X,Θ)=Y􏰣}.Wecan
+estimate p1 and p2 for the bth OOB sample by
+p􏰡 = n−1 􏰏 I ,
+(14.94) (14.95)
+respectively, where nb = 􏰊ni=1 I[(xi,yi)∈/L∗b] is the number of observations in the bth OOB sample. The denominator of (14.84) is found by substituting (14.94) and (14.95) into (14.93) to get an estimate of σ(θb), and then averaging over all OOB samples:
+􏰏B b=1
+Gene expression profiling using cDNA microarrays has become a very popular way of studying diseases. In this example, we analyze data from microarray experiments (Khan et al., 2001) on the small, round, blue-cell tumors (SRBCTs) of childhood, which include the distinct diagnostic cat- egories of neuroblastoma (NB), rhabdomyosarcoma (RMS), non–Hodgkin lymphoma (NML), and the Ewing family of tumors (EWS). SRBCTs are so-named because of their similar appearance on routine histology; they often masquerade as each other, making correct clinical diagnosis difficult. Getting the diagnosis correct impacts directly upon the type of treatment, therapy, and prognosis the patient receives. Currently, there is no single clinical test that can discriminate between these cancers.
+Gene-expression data were collected with a goal of distinguishing between the four types of SRBCT categories.2 The data initially consisted of 83 cases
+2 The data are publicly available and can be downloaded from the website research.nhgri.nih.gov/microarray/Supplement.
+1,b b
+p􏰡 = n−1 􏰏 I ,
+2,b b
+(xi ,yi )∈/ L∗b (xi ,yi )∈/ L∗b
+[h(xi ,θb )=􏰣yi ]
+{p􏰡1,b + p􏰡2,b + (p􏰡1,b − p􏰡2,b)2}1/2. (14.96) 14.4.4 Example: Diagnostic Classification of Four Childhood
+Tumors
+14.4 Random Forests
+541
+[h(xi ,θb )=yi ]
+￼
+542 14. Committee Machines
+(29 EWS, 11 BL, 18 NB, and 25 RMS) of both tumor biopsy material and cell lines measured on microarrays containing 6,567 genes. Requiring that each gene should have a certain minimal level of intensity reduced the number of genes to 2,308.
+A random forest was applied to these data using 500 fully grown trees, where at each node we specified that 25 variables were to be randomly sampled (from the 2,308 variables available) as candidates for splitting. Over the 500 trees, the 83 cases were OOB the following numbers of times:
+￼1 2 3 194 170 187 11 12 13 175 190 174 21 22 23 175 185 179 31 32 33 163 165 182 41 42 43 165 169 191 51 52 53 183 177 178 61 62 63 192 165 198 71 72 73 172 187 183 81 82 83 181 172 193
+4 5 6 7 8 9 10 189 181 179 201 187 175 195 14 15 16 17 18 19 20 195 199 189 162 174 187 189 24 25 26 27 28 29 30 180 201 192 170 180 192 191 34 35 36 37 38 39 40 179 173 193 184 168 186 166 44 45 46 47 48 49 50 186 186 187 185 191 183 185 54 55 56 57 58 59 60 172 194 180 185 188 176 185 64 65 66 67 68 69 70 179 179 180 176 205 187 180 74 75 76 77 78 79 80 181 184 181 186 183 188 193
+￼￼￼￼￼￼￼￼￼From these OOB instances, we obtain, for each case, the fraction of “votes” from the random forest for each disease category; each case is then classified according to the category with the highest fraction of votes received; and the OOB misclassification rate is calculated over all 83 classified cases. For this example, the results are indeed impressive: all 83 samples are correctly classified (0% OOB misclassification rate).
+14.4.5 Assessing Variable Importance
+If the objective is to classify new observations, it is useful to know which variables really control the classification process; in a regression situation, we need to know which subset of variables best explains the response values. We recognize, of course, that identifying which variables are important can be complicated by the existence of interactions between variables. Random forests can be used to evaluate the variables in a data set and provide a graphical display to assess the importance of each variable.
+Computations are carried out one tree at a time. As before, let T ∗b be the tree classifier constructed from the bootstrap sample L∗b. First, drop the OOB observations corresponding to L∗b down the tree T∗b, record the re- sulting classifications, and compute the OOB error rate, PEb(OOB). Next, randomly permute the OOB values on the jth variable Xj while leaving the data on all other variables unchanged. If Xj is important, permuting its observed values will reduce our ability to classify successfully each of the OOB observations. Then, we drop the altered OOB observations down the tree T∗b, record the resulting classifications, and compute the OOB error rate, PEb(OOBj), which should be larger than the error rate of the unaltered data. A raw T∗b-score for Xj can be computed by the difference between those two OOB error rates,
+rawb(j) = PEb(OOBj)−PEb(OOB), b = 1,2,...,B. Finally, average the raw scores over all the B trees in the forest,
+1 􏰏B
+imp(j) = B
+to obtain an overall measure of the importance of Xj. Call this measure
+the raw permutation accuracy importance score for the jth variable.
+Assuming the B raw scores (14.97) are independent from tree to tree, we can compute a straightforward estimate of the standard error. Empirical studies using many different types of data sets show that a good case can be made for independence: indeed, scores between the trees appear to have low correlations. If this estimate of standard error is acceptable, we compute a z-score by dividing the raw score by the estimated standard error and then compute an appropriate Gaussian-based significance level for that z-score. Call this z-score the mean decrease in accuracy for the jth variable.
+A second measure of variable importance derives from the fact that the Gini impurity index for a given parent node is larger than the value of that measure for its two daughter nodes. By averaging the (Gini) decreases in node impurities over all trees in the forest, we obtain a measure we call the Gini importance index.
+For the example of childhood SRBCTs, the 30 most important vari- ables for classification are displayed in Figure 14.7. The 10 variables [gene ID, gene description] that give the largest mean decrease in accuracy (left panel) are, in order of importance: 742 [756847, suppressin (nuclear de- formed epidermal autoregulatory factor-1 (DEAF-1)-related)], 1955 [80410, farnesyl diphosphate synthase ], 246 [345538, cathepsin L], 1003 [825433, ESTs], 1389 [525799, GTP cyclohydrolase I feedback regulatory protein], 509 [37553, protein phosphatase 2A, regulatory subunit B’ (PR 53)], 2050 [244154, KIAA0875 protein], 2046 [128054, ESTs], 1799 [196189, cyto-
+rawb(j),
+(14.98)
+14.4 Random Forests 543
+(14.97)
+￼b=1
+544
+14. Committee Machines
+￼￼XX XX XX XX XX XX XX XX XX XX XX XX XX XX XX
+71 49 25 21 40
+15 30
+22 00
+60
+5
+XX
+XX
+71 49 25 21 43
+15 00
+21 06
+68
+5
+95
+73 43
+5
+￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼89
+3
+9
+XX
+09
+9
+3
+￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼11 73 81 46 11 96 12 25 15 16 12 95 19 01 13 06 12 1 65 05 12 51
+54
+91
+06
+99
+XX
+XX
+11 63 21 01 12 25 81 49 12 71 16 00 51 55 15 4 19 91 13 66 11 71
+54
+01
+05
+19
+￼￼￼￼￼￼￼￼24
+80
+5
+01
+XX
+XX
+49
+64
+￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼95
+96
+4
+XX
+XX
+28
+99
+0
+98
+￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼11
+1
+XX
+￼￼￼￼￼￼￼￼80
+75
+XX XX
+￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼6
+2
+XX
+10
+1
+￼￼￼￼34
+XX
+15
+3
+￼￼￼￼￼￼￼￼39
+8
+XX
+09
+86
+￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼0.55 0.65 0.75 0.85
+MeanDecreaseAccuracy MeanDecreaseGini
+FIGURE 14.7. Variable-importance plots for the SRBCT data. chrome b-5], and 1319 [146868, mitogen-activated protein kinase kinase
+kinase 11],
+The 14 variables [gene ID] that give the largest mean decrease in the Gini index (right panel) are, in order of importance: 742 [756847], 1955 [80410]. 246 [345538], 1389 [525799], 1003 [825433], 509 [37553], 2050 [244154], 1645 [839374, exostoses (multiple)-like 2], 1601 [725188, malate dehydrogenase 1, NAD (soluble)], 1319 [146868, mitogen-activated protein kinase kinase kinase 11], 2046 [128054], 1194 [48285, p53-induced protein], 129 [298062, troponin T2, cardiac], and 255 [154472, fibroblast growth factor receptor 1 (fms-related tyrosine kinase 2, Pfeiffer syndrome)].
+Note that the rankings of important variables changes with the number of variables randomly chosen for splitting at each node, the initial seed for randomization, and the number of bootstrap trees in the forest.
+14.4.6 Proximities for Classical Scaling
+One of the most useful notions incorporated into random forests is that of computing proximities between pairs of observations. Using proximities, we can apply MDS (see Chapter 13) to the learning set to give a graphical view of data clustering in a lower-dimensional space. Proximities can also be used for imputing missing values and identifying multivariate outliers, if they are present in the data.
+0.0 0.2 0.4 0.6
+Suppose we construct a random forest of trees {T∗b} from a learning set L. Recall that each tree T∗b is unpruned and, hence, each terminal node in T∗b will contain only a few observations. If we drop all cases in L (including the OOB observations) down all the trees in the forest, how often do pairs of observations occupy the same terminal node? The answer to this question gives us a measure of “closeness” (or “proximity”) of those pairs of observations to each other.
+We, therefore, wish to define a similarity measure, prox(xi,xj), between pairs of observations, xi and xj, say, so that the closer xi and xj are to each other, the larger the value of prox(xi,xj). If the two observations xi and xj end up at the same terminal node in T∗b, we increase prox(xi,xj) by one. We repeat this procedure over all B trees in the forest, and then divide the frequency totals of pairwise proximities by the number, B, of trees in the forest; this gives us the proportion of all trees for which each pair of observations end up at the same terminal nodes. The results are subtracted from one to yield dissimilarities:
+δij =1−prox(xi,xj), xi,xj ∈L, i,j=1,2,...,n. (14.99)
+We collect these pairwise dissimilarities into an (n × n) proximity matrix Δ = (δij ), which is symmetric, positive-definite, with diagonal entries equal to zero. The proximity matrix is then used as input into the classical- scaling algorithm (see Table 13.5); this algorithm provides us with a visual comparison of the n observations in a lower-dimensional setting, where the interpoint distances between all pairs of observations are preserved (as much as possible) in the reduction to a lower-dimensional space.
+A graphical display of pairs of principal coordinates (typically, the first plotted against the second) often yields a worthwhile comparison of the data in the learning set. In Figure 14.8, we show the MDS plot of proximi- ties for the SRBCT data (left panel) and the BUPA data (right panel). We see that the SRBCT plot separates the data into four clusters correspond- ing to the four classes of SRBCTs, which probably contributes to its 0% OOB misclassification rate. The BUPA MDS plot, by contrast, shows three “arms” corresponding to the two classes in the data; the clusters have a number of overlapping points, and the OOB misclassification rate is 24.35% (500 bootstrap trees in the forest and 2 variables selected at random from the six for splitting each node in each tree), although this rate depends upon the same factors as listed at the end of the previous section.
+14.4.7 Identifying Multivariate Outliers
+Detecting and identifying outliers in multivariate data can be very diffi- cult, especially when the dimensionality is high. So, any procedure that is
+14.4 Random Forests 545
+546 14. Committee Machines
+SRBCT BUPA
+￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼−0.4 −0.2 0.0 0.2 −0.3 −0.2 −0.1 0.0 0.1 0.2 0.3 1stScalingCoordinate 1stScalingCoordinate
+FIGURE 14.8. MDS plots of the SRBCT data (left panel) and the BUPA data (right panel). The types of tumors in the SRBCT plot are (number of points, color): BL (11, red), EWS (29, blue), NB (18, green), and RMS (25, purple). The points in the BUPA plot correspond to Class 1 (145, red) and Class 2 (200, blue).
+successful in outlier-detection is worth its weight in gold. The proximities computed for random forests can be used to detect outliers.
+The basic idea is that we identify an outlier by how far away it is from all other observations belonging to its class in the learning set. Suppose xi ∈ Πk. If the proximity of, say, xi to another kth-class observation, say, xj is small, then it is rare for those two observations to end up at the same terminal nodes when they are simultaneously dropped down all the trees in the forest. In other words, xi and xj are far apart from each other iff their proximity is small. If xi is far away from all the other kth-class observations in the learning set, then all the proximities, prox(xi,xl), of xi with xl, l ̸= i, will be small. Breiman and Cutler (2004) suggest that a raw outlier measure for the ith observation, xi, in the kth class be given by
+uik=􏰊 n , i=1,2,...,n, (14.100) xl ∈Πk ,l̸=i [prox(xi , xl )]2
+where k = 1,2,...,K. Thus, if xi is really an outlier for the kth class, the denominator of (14.100) will be small, so that uik will be large.
+Let mk = medxl∈Πk{ulk} be the median of the raw outlier measures over all kth-class observations. Then, for k = 1,2,...,K, a standardized version of uik is given by
+u􏰣ik=􏰊 uik−mk . i=1,2,...,n. (14.101) xl∈Πk |ulk − mk|,
+￼￼2ndScalingCoordinate
+−0.4 −0.2 0.0 0.2 0.4
+2ndScalingCoordinate
+−0.3 −0.1 0.0 0.1 0.2 0.3
+SRBCT
+14.4 Random Forests 547
+￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼020406080 SequenceNumber
+FIGURE 14.9. Outlier plot for the SRBCT data. The types of tumors in the SRBCT plot are BL (red), EWS (blue), NB (green), and RMS (purple).
+The values of (14.101) are plotted against sequence number, with each class’s values plotted using either a different symbol or color. Values of (14.101) in excess of 10 should generate concern. The SRBCT data set does not appear to have any outliers; see Figure 14.9.
+14.4.8 Treating Unbalanced Classes
+A major impediment to good classification in practical problems occurs when at least one of the classes (often the class of primary interest) con- tains only a very small proportion of the observations. Examples of such “unbalanced” situations include detection of fraudulent telephone calls, in- formation retrieval and filtering, diagnosis of rare thyroid diseases, and de- tection of oil spills from satellite images (Chen, Liaw, and Breiman, 2004). In each of these examples, the result is wildly varying prediction errors for the different classes.
+Classification algorithms, which focus on minimizing the overall mis- classification rate, classify most observations according to the class of the majority of observations (the “majority” class); as a result, the misclassi- fication rate will be very low, but the observations belonging to the class of primary interest (the “minority” class) will be totally misclassified. In the case of random forests, for example, the bootstrap samples will contain
+OutlierMeasure −101234
+548 14. Committee Machines
+very few (and maybe none) of the minority class observations, and so we will see poor class prediction (i.e., high prediction error) for the minority class.
+To alleviate such difficulties, various modifications to the random forest classifier were considered by Chen, Liaw, and Breiman (2004), including balanced random forest (BRF), where the majority class is undersampled, and weighted random forest (WRF), where a heavier weight is placed upon selecting the minority class in bootstrap samples in order to prevent mis- classifying that class. Based upon experiments with various data sets, no real difference in prediction error has been found between BRF and WRF, although BRF turns out to be computationally more efficient.
+14.5 Software Packages
+Bagging for classification or regression can be carried out in R using the package ipred (short for Improved Predictors), which can be downloaded from an appropriate CRAN site. For bagging decision trees, ipred uses the package rpart. For R users, there are several packages that carry out boosting using AdaBoost: ada, boost, and adabag each use rpart and each can be downloaded from an appropriate CRAN site. The AdaBoost computations were carried out here using the ada package.
+Breiman’s random forest software is now a commercial product that is licenced exclusively to Salford Systems (www.salford-systems.com). See the URL www.stat.berkeley.edu/users/breiman/RandomForests. An R-interface to the random forests classifier has been written by A. Liaw and M. Wiener based upon original Fortran code written by Breiman and Cutler. R docu- mentation and help files for version 4.4–2 are available at
+lib.stat.cmu.edu/R/CRAN/doc/packages/randomForest.pdf.
+Software to carry out bagging, boosting, and random forests is also available
+in other packages, such as Matlab, Weka, and Statistica. Bibliographical Notes
+Much of the material in this chapter is based upon the work of Leo Breiman, who has provided great insights into the ensemble methods of bagging, boosting, and random forests, and who has left an indelible mark on this field.
+The statistical derivation of AdaBoost is adapted from the treatments in Friedman, Hastie, and Tibshirani (2000) and Hastie, Tibshirani, and Friedman (2001, Section 10.4). The algorithmic development of Gradi- ent.Boost follows the work in Friedman (2001). The division of Ad-
+￼￼
+aBoost into optimal and nonoptimal strategies can be found in Ra ̈tsch and Warmuth (2002); see also Rudin, Daubechies, and Schapire (2004) and Rudin, Schapire, and Daubechies (2007).
+The section on random forests is based upon Breiman (2001b) and the short course he and Adele Cutler gave at the 26th Symposium on the Inter- face, which was held in Baltimore, MD, in May 2004. Breiman’s inspiration for random forests came from reading Amit and Geman (1997). This author thanks Adele Cutler for conversations on random forests and especially for pointing out and correcting a typographical error in Breiman (2001, equa- tion (8)).
+Exercises
+14.1 Let Y ∈ {−1, +1} and let C(x) ∈ {−1, +1} be a classifier of x. Show that Y ∗ = (Y + 1)/2 is a Bernoulli variable that takes the value 0 with probability p(x) = eC(x)/(eC(x) + e−C(x)) and the value 1 with probability 1 − p(x). Find the binomial log-likelihood and show that it is equal to L(y, C(x)) = loge{1 + e−2yC(x)}.
+14.2 Consider the regression situation, where Y is continuous. Assume squared-error loss: L(y, fm(x)) = 1 (y − fm(x))2. Show that the pseudore-
+2
+sponses are given by y􏰣 = y − f (x ), i = 1,2,...,n, and that the i i m−1 i
+learning rate is ρm = βm. Hence, show that the Gradient.Boost algo- rithm reduces to an iterative least-squares fitting of the current residuals.
+14.3 Show that (14.19) can be reduced to (14.20). Furthermore, show that 􏰊ni=1 wi,m+1 = 1.
+14.4 Consider the following 10 two-dimensional points: the first five points, (1, 4), (3.5, 6.5), (4.5, 7.5), (6, 6), (1.5, 1.5), belong to Class 1, and the second five points, (8, 6.5), (3, 4.5), (4.5, 4), (8, 1.5), (2.5, 0), belong to Class 2. Plot these points on a scatterplot using different symbols or col- ors to distinguish the two classes. Carry through by hand the AdaBoost algorithm on these points, showing the weights at each step of the process. Determine the final classifier and calculate its misclassification rate.
+14.5 Write a program that implements AdaBoost for tree-based binary classification. Extend your program to more than two classes.
+14.6 Use AdaBoost to classify the pima-indian-diabetes data. Com- pare your results with the classification tree results. Can you do any better with random forests?
+14.7 Use a random forest to classify the spambase data. Repeat the analy- sis 100 times using different random seeds to start each replication. For each
+14.5 Exercises 549
+￼￼
+550 14. Committee Machines
+repetition, find the OOB misclassification rate and draw the boxplot for OOB misclassification rates. Repeat this for different values of m (number of variables selected as candidates for splitting) and B (number of boot- strap trees in the forest). What can you say about the effect of m and B on the OOB misclassification rate?
+14.8 Carry out the same computations as in Exercise 14.7 for the glass data. What do you notice about the MDS plot?
+14.9 Carry out the same computations as in Exercise 14.7 for the Wis- consin Diagnostic Breast Cancer data (wdbc).
+14.10 Run random forests 100 times on the SRBCT data, and each time find the 30 most-important variables. Set B = 500 bootstrap trees and m = 25, and for each run use different random seeds as starting values. You should see different sets of variables being ranked as the 30 most important for each run. Create a method for visualizing the overall ranking of the variables. Repeat these operations using different B and different m. Using the Internet, try to get some corroboration for your findings.

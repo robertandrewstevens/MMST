@@ -1,0 +1,665 @@
+16
+Nonlinear Dimensionality Reduction and Manifold Learning
+16.1 Introduction
+We have little visual guidance to help us identify any meaningful low- dimensional structure hidden in high-dimensional data. The linear projec- tion methods of Chapter 7 can be extremely useful in discovering low- dimensional structure when the data actually lie in a linear (or approxi- mately linear) lower-dimensional subspace (called a manifold) M of input space Rr. But what can we do if we know or suspect that the data ac- tually lie on a low-dimensional nonlinear manifold, whose structure and dimensionality are both assumed unknown? Our goal of dimensionality re- duction then becomes one of identifying the nonlinear manifold in question. The problem of recovering that manifold is known as nonlinear manifold learning.
+If we manually search for visual hints of low-dimensional nonlinear struc- ture in high-dimensional data by looking at scatterplot matrices or by spin- ning three-dimensional scatterplots, we can easily be misled, for such per- ceived nonlinearity may actually be due to a small group of multivariate outliers present in the data. In other cases, whatever visual guidance we do possess may not help us. Even though we may observe no unusual behavior in 2D or 3D scatterplots, the data may indeed lie close to a low-dimensional
+A.J. Izenman, Modern Multivariate Statistical Techniques, Springer Texts in Statistics, 597 DOI 10.1007/978-0-387-78189-1_16, © Springer Science+Business Media New York 2013
+￼
+598 16. Nonlinear Dimensionality Reduction and Manifold Learning
+curved manifold M, which would be invisible to linear projection methods such as PCA. In such a case, the data would satisfy nonlinear constraints, and it would then be desirable to determine a nonlinear coordinate system that, when suitably reduced, would best explain the data.
+When a linear representation of the data is unsatisfactory, we turn to specialized methods designed to recover nonlinear structure. Even so, we may not always be successful in our attempts because extracting nonlinear structure from data is a difficult problem in general. If the data lie on some intrinsically weird, nonlinear manifold of input space (e.g., a one- dimensional helix or a two-dimensional “Swiss roll” embedded in three- dimensional space; see Figure 16.7), then the manifold learning problem becomes even harder,
+Nonlinear dimensionality reduction and nonlinear manifold learning have become very active research topics. Some methods were found by gener- alizing linear multivariate methods. For example, an attractive feature of linear PCA is that it can be derived using a variety of approaches, such as variance maximization and least-squares optimality, and that these ap- proaches yield identical solutions. Unfortunately, these equivalences in the linear case do not transfer to the nonlinear case. Thus, authors usually reformulate one of the defining characteristics of linear PCA so that it fits the nonlinear case. As a result, there can be different nonlinear versions of PCA, depending upon how one defines a nonlinear analogue of linear PCA. Furthermore, there may be technical difficulties inherent in the nonlinear versions of PCA that do not appear in linear PCA.
+16.2 Polynomial PCA
+How should we generalize PCA to the nonlinear case? One possibility is to transform the set of input variables using a quadratic, cubic, or higher- degree polynomial, and then apply linear PCA (Gnanadesikan and Wilk, 1969). The resulting polynomial PCA again boils down to an eigenanaly- sis, but this time attention is focused on the smallest few eigenvalues for nonlinear dimensionality reduction.
+In the quadratic PCA case, for example, the r-vector X is transformed into an extended r′-vector X′, where r′ = 2r + r(r − 1)/2. Here, X′ in- cludes the original r variables plus r quadratic powers and r(r − 1)/2 cross-products of the elements of X. Thus, for the bivariate case (r = 2), quadratic PCA transforms X = (X1, X2) to X′ = (X1, X2, X12, X2, X1X2), and a linear PCA is carried out on the five transformed variables of X′. If the bivariate observations follow an exact quadratic curve, the smallest eigenvalue of the covariance matrix of the extended vector will be zero, and
+￼
+TABLE 16.1. Quadratic PCA for the bivariate data (X1, X2), where X1 = −1.5(0.01)0.5, X2 = 4X12 + 4X1 + 2, and n = 201. Eigenanalysis of the covariance matrix of the variables (X1, X2, X12, X2, X1X2) for the noiseless and noisy cases. The noisy case is obtained by replacing X1 by X1 + Z and, independently,X2 byX2+Z,whereZ∼N(0,1).
+–0.253 –0.013 0.243 –0.102 –0.929
+0.620
+0.337 –0.578 –0.063 –0.333
+16.2 Polynomial PCA 599
+￼￼Eigenvalues
+X1 X2 X12 X2
+X1 X2
+Eigenvalues
+X1 X2 X12 X2
+X1 X2
+46.722
+0.003 –0.173 –0.046 –0.979
+0.097 74.617
+0.012 –0.165 –0.019 –0.980
+0.121
+Noiseless Case 4.912 0.052
+Eigenvectors
+0.050
+0.115 –0.909 –0.342
+0.165 –0.129
+0.336
+–0.380 –0.906 –0.014
+0.160 0.089
+0.000
+0.696 –0.174 0.696 0.000 0.000
+0.247
+–0.880 0.388 –0.019 –0.043 0.268
+￼￼Noisy Case 10.229 2.073 Eigenvectors –0.271 –0.081
+0.000 0.009
+0.357 –0.934 –0.120 –0.027 –0.886 –0.348
+￼￼￼the scores of the last principal component will be constant with a value of zero.
+Consider, for example, the noiseless case in which n = 201 bivariate observations, (X1,X2), are generated to lie exactly on the quadratic curve X2 = 4X12 + 4X1 + 2, where X1 = −1.5(0.01)0.5. Suppose we carry out a linear PCA on the extended vector (X12, X2, X1, X2, X1X2) and obtain five sets of principal component scores. See the upper panel of Table 16.1 for the eigenanalysis. The scatterplot matrix of the first four pairs of PC scores is given in Figure 16.1 and shows the pretzel-like shapes of the pairwise PCs. The last PC is not displayed because all its values are zero. The hyperplane defined by the zero eigenvalue is 0.696X1 − 0.0174X2 + 0.696X12 = 0 or X2 = 4X12 + 4X1, which recovers the original quadratic curve (except for the constant). By varying the constant a, we can display a family of possible quadratic curves X2 = 4X12 + 4X1 + a, and the constant a can be recovered from that curve that passes through each data point. The last PC (actually, P C5/0.0174 + X2) is plotted in Figure 16.2 against X1, for a = 0, 1, 2, 3, where we see that a = 2.
+Suppose we now add standard Gaussian noise (mean 0, variance 1) in- dependently to the X1- and X2-coordinates of each observation and then repeat the linear PCA on the resulting extended vector. How would the eigenanalysis and the PCA scatterplot matrix of the noiseless case be af-
+￼600 16. Nonlinear Dimensionality Reduction and Manifold Learning
+-6 -4 -2 -0 2 4
+PC2
+-0.5-0.3-0.10.10.30.50.7
+PC3 -0.2 -0.4 -0.6 -0.8
+PC4
+-0.8-0.6-0.4-0.2 0.0 0.2 0.4
+FIGURE 16.1. Scatterplot matrix of the pairwise scores of the first four principal components from quadratic PCA using the covariance matrix. The last principal component has all its values equal to zero and is not displayed.
+fected by this change? For this noisy case, see the lower panel of Table 16.1. The eigenvalues from the noisy case are each greater than the respective eigenvalues from the noiseless case, with the smallest eigenvalue now 0.247. As we would expect, some of the well-defined patterns in the scatterplot matrix become blurred in the noisy case. Even if we significantly reduce the variance of the added noise component, the results of the quadratic PCA will still be strongly affected by the noisiness of the data.
+Some problems inevitably arise when using quadratic PCA. First, the variables in X′ will not be uniformly scaled, especially for large r, and so a standardization of all r′ variables may be desirable. Second, the size of the extended vector X′ for quadratic PCA increases quickly with increasing r: when r = 10, r′ = 65, and when r = 20, r′ = 230. For higher-degree polynomials, the size of X′ increases even faster. In practical terms, this introduces a lower bound on the sample size n, which has to be larger than r′, the dimensionality of X′.
+16.3 Principal Curves and Surfaces
+Since the Gnanadesikan and Wilk (1969) article appeared, many at- tempts have been made to define a more general nonlinear version of PCA. The first such attempt was principal curves and surfaces.
+Suppose X is a continuous random r-vector having density pX, zero mean, and finite second moments. Suppose further that the data observed
+4 2 -0 -2 -4 -6
+0.7 0.5 0.3 0.1 -0.1 -0.3 -0.5
+PC1
+5
+0 -5
+-10 -15 -20
+0.4 0.2 0.0
+-20 -15 -10 -5 0 5
+16.3 Principal Curves and Surfaces 601
+￼￼￼3 2 1 0
+￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼6
+4
+2
+0
+-2
+￼￼￼￼￼￼￼￼￼￼-1.5 -1.0 -0.5 0.0 0.5 X1
+FIGURE 16.2. Graphs of X2 = 4X12 + 4X1 + a, where a = 0,1,2,3. Superimposed on these graphs are the scores (red points) from the smallest PC (actually, PC5/0.0174 + X2) derived from a quadratic PCA on the generated data.
+on X lie close to a smooth nonlinear manifold of low dimension. A principal curve (Hastie, 1984; Hastie and Stuetzle, 1989) is a smooth one-dimensional parameterized curve f that passes through the “middle” of the data, re- gardless of whether the “middle” is a straight line or a nonlinear curve. A principal surface is a generalization of principal curve to a smooth two- (or higher-) dimensional curve. Here, we use an analogue of least-squares optimality as the defining characteristic: we determine the principal curve or surface by minimizing the average of the squared distances between the data points and their projections onto that curve.
+This idea can be interpreted in terms of the relationship between data points and points on the curve. If every point on the curve is the average of all those data points that project onto it, then the curve can be said to pass through the “middle” of the data set. In this way, it is a nonlinear generalization of the first principal component line.
+Before we define principal curves and surfaces, it will be useful, first, to describe the basic ideas behind one-dimensional curves and the notion of curvature.
+16.3.1 Curves and Curvature
+A one-dimensional curve in an r-dimensional space is an analogue of a straight line in Rr. To formalize this notion, we define a one-dimensional curveinRr asafunctionf:Λ→Rr,forΛ⊆R,sothat
+f(λ) = (f1(λ), · · · , fr(λ))τ (16.1)
+SmallestPCScore
+602 16. Nonlinear Dimensionality Reduction and Manifold Learning
+is an r-vector parameterized by λ ∈ Λ. For example, the unit circle in R2, {(x1,x2) ∈ R2 : x21 +x2 = 1}, is a one-dimensional curve that can be parameterized as
+f(λ) = (f1(λ), f2(λ))τ = (cos λ, sin λ)τ , λ ∈ [0, 2π). (16.2)
+If we take the coordinate functions of λ, {fh(λ)}, to be as smooth as needed (usually, C∞ functions that have any number of continuous derivatives), then we say that f is a smooth curve. The curve f is said to be closed if it is periodic, i.e., if f(λ + α) = f(λ), for all λ, λ + α ∈ Λ. For example, the unit circle is a closed curve.
+We need a notion of how fast something can move along a smooth curve such as f. Accordingly, we define the velocity (or tangent) vector at the point λ as the vector of first derivatives, f′(λ) = (f1′(λ),···,fr′(λ))τ, where f j′ ( λ ) = d f j ( λ ) / d λ . F o r t h e c l o s e d u n i t c i r c l e , f ′ ( λ ) = ( − s i n λ , c o s λ ) τ . T h e length of the velocity vector,
+⎧ ⎫1/2 ⎨􏰏r ⎬
+∥f′(λ)∥ = [fj′(λ)]2 , (16.3) ⎩j=1 ⎭
+is called the speed of the curve f at the point λ. If the speed is never zero,
+then f(λ) is called a regular curve, and if ∥f′(λ)∥ = 1, the curve is said to
+have “unit speed.” The acceleration vector of f is defined as the vector of
+second derivatives, f′′(λ) = (f′′(λ),···,f′′(λ))τ, where f′′(λ) = df′(λ)/dλ. 1rjj
+For the unit circle, ∥f′(λ)∥ = 1 and f′′(λ) = (− cos λ, − sin λ)τ .
+Distance on a smooth curve f is given by arc-length, which is measured from a fixed point λ0 on that curve. Usually, the fixed point is taken as the origin, λ0 = 0, defined to be one of the two endpoints of the data. The arc-length along the curve f from λ0 to λ1 is defined as the integral of the speed of the curve between those two points,
+􏰞 λ1 λ0
+We use arc-length as a natural parameterization of the curve f. If two curves have the same arc-length, they are said to be isometric. If a curve has unit speed, then its arc-length equals λ1 − λ0. We can define a one-dimensional curve uniquely by parameterizing it by arc-length and starting from a given point λ0 having unit speed. We, henceforth, assume that f has been scaled to be a unit-speed, (arc-length) parameterized curve.
+We next introduce a notion of curvature as a way of distinguishing a curve from a straight line. For a unit-speed curve, the acceleration vector f′′(λ) is always orthogonal to the tangent vector f′(λ), so that the two vectors span a plane. The circle of curvature of f at λ is a unique unit- speed circle in the plane with radius r(λ), which is tangent to the curve f
+L(f) =
+∥f′(λ)∥dλ. (16.4)
+If f(λ) satisfies
+16.3 Principal Curves and Surfaces 603
+at the point λ. An interesting result is that r(λ) is a concave function of λ (i.e., d2r(λ)/dλ2 ≤ 0).
+We say that the curve f has radius of curvature r(λ) at λ and that its curvature at λ is K(λ) = 1/r(λ) = ∥f′′(λ)∥; the center of the circle is the center of curvature of f at λ. Knowing the curvature for all values of arc- length λ means that the curve is completely known. If the curvature of a curve is constant and nonzero, it must be a circle (or part of a circle). A straight line is just a curve with everywhere-zero curvature.
+16.3.2 Principal Curves
+Consider a data point x ∈ Rr and let f(λ) be a curve. Project x to a point on f(λ) that is closest (in Euclidean distance) to x. Let
+􏰇􏰢
+λf(x)=sup λ:∥x−f(λ)∥=inf∥x−f(μ)∥ (16.5) λμ
+be the projection index, λf : Rr → R, which produces a value of λ for which f(λ) is closest to x. In the unlikely event that there are multiple points on the curve closest to x (called ambiguity points), the projection index will pick that point with the largest value of the projection index. Note that λf can be a discontinuous function.
+We define the reconstruction error as the expected squared distance be- tween X (or its associated density) and f,
+D2(X,f) = E􏰨∥X−f(λf(X))∥2􏰩. (16.6) f (λ) = E{X|λf (X) = λ}, for almost every λ ∈ Λ, (16.7)
+then f(λ) is said to be self-consistent or a principal curve for X (or its associated density pX). Thus, for any point on the curve, f(λ) is the average of all those data values that project to that point.
+In trying to show that the principal curve f minimizes the reconstruction error (16.6), Hastie and Stuetzle (1989) proved the important result that, in a variational sense, the principal curve f is a stationary (or critical) value of the reconstruction error. Specifically, if we perturb f slightly so that it becomes f + εg, where g is a suitably smooth curve, then
+∂D2(X, f + εg) |ε=0 = 0. (16.8) ∂ε
+Furthermore, principal curves are the solutions of a second-order ordinary differential equation, which makes them computable (Duchamp and Stuet- zle, 1996). However, all principal curves are saddle points and can never be
+￼
+604 16. Nonlinear Dimensionality Reduction and Manifold Learning
+local minima of the reconstruction error. Thus, cross-validation cannot be used for choosing the model complexity when estimating principal curves.
+16.3.3 Projection-Expectation Algorithm
+The goal is to derive an estimate 􏰡f of a principal curve f using n obser- vations, {xi}, on X. To do this, we minimize an estimated reconstruction error,
+􏰡 􏰏n
+D2({xi}, f) = min f
+i=1
+by using an algorithm that alternates between a projection step (estimating λ assuming a fixed f) and an expectation step (estimating f assuming a fixed
+λ).
+We start the algorithm by taking the first principal component line as
+the initial curve f(0) Next, the n observations, {xi}, are each projected onto
+this line, yielding the n points λ (0)(x ) = λ(1), i = 1,2,...,n. Then, the fii
+updated curve f(1) is computed by invoking the self-consistency property, f(1)(λ(1)) = E{X|λ (0)(X ) = λ(1)}, i = 1,2,...,n. (16.10)
+i fii The kth iteration consists of two steps:
+Projection step: Given the current iterate, f(k−1), of the principal curve, we project xi onto that curve to get an updated value of λ:
+λ (k−1) (x ) = λ(k), i = 1,2,...,n. (16.11) fii
+Expectation step: Given the set {λ(k), i = 1,2,...,n} from the pro- i
+jection step, we compute the next iterate of the principal curve by averaging all those points that project to nearby points on the curve:
+􏰦􏰧
+f(k)(λ(k))=E X|λ(k−1)(X)=λ(k) , i=1,2,...,n. (16.12) ifi
+At the kth iteration, let λ(k) denote the ith order statistic of the set of (i)
+projected points, {λ(k),...,λ(k)}, and let x(k) denote the data point whose 1 n (i)
+projection is λ(k), i = 1,2,...,n. Because the order of the projected points (i)
+depends upon the particular iterate, then so do the corresponding data points. Let Nf(k)(λ) be a neighborhood on the principal curve around λ.
+Then, let
+􏰦􏰧
+N(k) = x(k) : λ(k) ∈ N (k) (λ(k)) . (16.13) (i) (l) (l) f (i)
+The span is the fraction of data points that fall into N(k). The conditional (i)
+expectations (16.12) are estimated by
+􏰦􏰧 f(k)(λ(k)) = E􏰡 X|N(k)
+(i) (i)
+,
+(16.14)
+∥xi − f(λf (xi))∥2, (16.9)
+D2({xi},f(k))=n−1
+∥xi −f(k)(λf(k−1)(xi))∥2, (16.15)
+16.3 Principal Curves and Surfaces 605
+where we use a local averaging procedure for E􏰡 in which each coordinate function fh, h = 1, 2, . . . , r, of f is independently estimated. Local averaging for estimating fh is accomplished using a scatterplot smoother (e.g., kernel, cubic spline, or locally weighted running-line smoother).
+We can define a measure of goodness-of-fit of f(k) by an estimate of the reconstruction error,
+􏰏n i=1
+which is the average squared distance of the data values to their projections on the principal curve. The convergence criterion is the relative change in the reconstruction error in going from the (k − 1)st iteration to the kth iteration,
+thresh(k) = |D2({xi},f(k−1))−D2({xi},f(k))|. (16.16) D2({xi},f(k−1))
+We repeat the alternating projection-expectation process until thresh is reduced below some specified threshold, such as 0.001.
+T h e “ fi n a l ” i t e r a t i o n y i e l d s a d i s c r e t e s e t o f n t u p l e s , ( λ􏰡 i , 􏰡f i ) , i = 1 , 2 , . . . , n , the elements of which are ordered by increasing λ􏰡-values. The principal curve 􏰡f (λ) is then the polygon produced by joining up these n tuples. Con- vergence of this algorithm has not yet been proved; indeed, empirical evi- dence suggests that, in certain circumstances, the algorithm can converge to a poor “local” solution.
+As an example, we generated 100 points in two dimensions, where X2 is a quadratic function of X1 plus Gaussian error with mean 0 and standard deviation 0.1. The scatterplot and principal curve are given in Figure 16.3; the left panel shows the first principal component as initial iteration, with D2 = 1023.3, and the right panel shows the fifth (and final) iteration of the principal curve, with D2 = 0.54.
+16.3.4 Bias Reduction
+If segments of f have high curvature, the projection-expectation algo- rithm yields a biased estimate of the principal curve. Bias also enters into the estimation procedure because of the smoothing used to estimate the conditional expectations: the bigger the span, the larger the estimation bias. A modification of this algorithm (Banfield and Raftery, 1992) allows principal curves to be estimated in a way that reduces bias.
+The Banfield–Raftery enhancement of the original algorithm evolved as a means of charting the outlines of ice floes above a certain size from satellite images of the polar regions. In this particular application, ice floe outlines
+￼
+606 16. Nonlinear Dimensionality Reduction and Manifold Learning
+InitialIteration FinalIteration
+￼￼￼￼￼￼￼￼￼￼￼1.0 1.0
+0.6 0.6
+0.2 0.2
+-0 .2 -0 .2
+-0.7 -0.2 0.3 0.8
+-1.0 -0.5 0.0 0.5 1.0
+￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼FIGURE 16.3. Principal curve fitted to 100 randomly generated obser- vations in two dimensions, where X2 is a quadratic function of X1 plus Gaussian noise with mean 0 and standard deviation 0.1. Left panel: ini- tial iteration, first principal component, D2 = 1023.3. Right panel: final iteration, principal curve, D2 = 0.54.
+are modeled as closed principal curves. The original algorithm could not do this because of a basic assumption that the curve does not intersect itself. A further modification was added to ignore the effect of outliers on the estimation procedure.
+16.3.5 Principal Surfaces
+The idea of principal curves has been extended to principal surfaces for two (or higher) dimensions (Hastie, 1984; LeBlanc and Tibshirani, 1994).
+A continuous two-dimensional surface in Rr is a function f : Λ → Rr, where Λ ⊆ R2, so that
+f(λ)=(f1(λ),···,fr(λ))τ =(f1(λ1,λ2),···,fr(λ1,λ2))τ (16.17)
+is an r-vector of smooth continuous coordinate functions parameterized by λ = (λ1,λ2) ∈ Λ. The projection index for a bivariate surface Γ is defined
+as
+􏰇􏰢
+λf(x)=sup λ:∥x−f(λ)∥=inf∥x−f(μ)∥ , (16.18) λμ
+which is the value of λ corresponding to the point on the surface closest to x. Then, a principal surface satisfies the self-consistency property,
+f (λ) = E{X|λf (X) = λ}, for almost every λ ∈ Λ. (16.19)
+16.4 Multilayer Autoassociative Neural Networks 607
+Given n observations {xi} on X, we estimate f by minimizing the residual
+sum of squares,
+􏰏n i=1
+RSS(f) =
+∥xi − f(λf (xi))∥2. (16.20)
+Defining a suitable analogue of the “unit-speed” property for parame- terizing principal surfaces is a lot more complicated than its definition for principal curves, and so an alternative approach is necessary. Toward this end, LeBlanc and Tibshirani (1994) describe an adaptive formulation and algorithm for the computation of principal surfaces, and they give some ex- amples. Malthouse (1998) gives other possible types of parameterizations.
+16.4 Multilayer Autoassociative Neural Networks
+Another version of nonlinear PCA has been constructed using a special type of artificial neural network (ANN) architecture: a five-layer autoas- sociative ANN (Kramer, 1991). An autoassociative (or autoencoder or self- supervised) network is an ANN that is trained to learn its own inputs. The network connects r input nodes to r output nodes in such a way that the output values are trained to approximate the inputs.
+16.4.1 Main Features of the Network
+The main features of a five-layer autoassociative ANN are
+• three hidden layers of nodes (second, third, and fourth layers), where the mapping (or encoding) layer (second) and the demapping (or decoding) layer (fourth) both have nonlinear (sigmoidal) activation functions;
+• an internal bottleneck layer (third) with fewer (linear or sigmoidal) nodes than either the mapping (second) or demapping (fourth) layers;
+• feedforward connections trained by backpropagation.
+The number of nodes in the mapping and demapping layers will depend upon how complicated the nonlinearity feature of the network is required to be. In fact, we should not expect the mapping and demapping layers to have the same number of nodes. Too few mapping/demapping nodes sacrifice accuracy whereas too many such nodes encourage overfitting. Furthermore, it may be better in certain circumstances to have more than one mapping or demapping layer.
+The bottleneck layer is the most important feature of the network be- cause it reduces the dimensionality of the inputs through data compression.
+￼
+￼608 16. Nonlinear Dimensionality Reduction and Manifold Learning
+FIGURE 16.4. Multilayer autoassociative neural network with r = 3 input (X) nodes, s = 3 output (Y ) nodes, and three hidden layers — a mapping layer of four nodes, a demapping layer of four nodes, and a bottleneck layer of t = 2 nodes. The outputs are trained to approximate the inputs.
+Without the bottleneck layer, the network is only capable of producing ei- ther linear combinations of the inputs (given linear output nodes) or sig- moidally compressed outputs (given nonlinear sigmoidal output nodes).
+We saw in Chapter 10 that a three-layer ANN with nonlinear activa-
+tion functions in the hidden layer can be represented by a function of the
+form 􏰊 αj σ(βτj x), where αj and the vector βj are weights, and σ(·) is a j
+sigmoidal-shaped function. Recall also that such a network with linear out- put nodes can approximate any continuous function uniformly on compact sets provided that the number of nodes in the hidden layer is sufficiently large (Cybenko, 1989). A five-layer network, such as the one displayed in Figure 16.4, can then be viewed as the composition of two three-layer sub- networks (layers 1, 2, and 3; layers 3, 4, and 5). In order for each of these two subnetworks to represent continuous functions, the second and fourth layers have to consist of nonlinear activation functions. If we remove the mapping and demapping layers and if we set the nodes in the bottleneck layer to be linear, then the resulting network corresponds to linear PCA.
+16.4.2 Relationship to Principal Curves
+The first part of the autoassociative ANN (layers 1, 2, and 3, with one bottleneck node) can be used to model a continuous one-dimensional func- tion λf : Rr → R, which we call a projection index. The second part of the ANN (layers 3, 4, and 5) can be used to model the function f : R → Rr. The
+first three layers project the original data onto a curve, and the projected data values are then given by the activation values of the bottleneck node. The weights in the network are found by solving the least-squares problem,
+􏰏n
+min ∥xi − f(λf (xi))∥2, (16.21)
+f ,λf i=1
+which reduces to a similar minimization problem as we used to find prin- cipal curves, but where the same criterion was minimized only over f. For modeling a t-dimensional principal surface, we set the functions λf : Rr → Rt and f : Rt → Rr, where t ≥ 2 nodes are set in the bottleneck layer.
+A crucial distinction between principal curves and this type of ANN is that the projection index λf defined for principal curves is allowed to be discontinuous. The fact that the ANN version of λf is a continuous function causes severe problems with its application as a nonlinear PCA technique (Malthouse, 1998):
+1. If f has any ambiguity points for the data point x, then the ANN must avoid becoming discontinuous at the ambiguity point by projecting x to the “wrong” point on the curve (i.e., a point that is not closest to x).
+2. The ANN cannot model any curves or surfaces that intersect them- selves (such as the circle in R2). Recall that the original version of principal curves did not allow the curves to intersect themselves, but modifications by Banfield and Raftery (1992) now allow closed curves to be modeled.
+For these reasons, we should be very cautious in using this type of ANN to model nonlinear PCA.
+16.5 Kernel PCA
+An approach that also generalizes polynomial PCA is given by Ker- nel PCA (Scholkopf, Smola, and Muller, 1998). This is an application of so-called kernel methods, which we have already seen in studying SVMs (Chapter 11) and kernel CVA and ICA (Chapter 15).
+Let xi ∈ Rr, i = 1,2,...,n, be the input data points. We can think of kernel PCA as a two-step process:
+1. Nonlinearly transform the ith input data point xi ∈ Rr into a point Φ(xi) in an NH-dimensional feature space H, where
+Φ(xi) = (φ1(xi),···,φNH(xi))τ ∈ H, i = 1,2,...,n. (16.22)
+16.5 Kernel PCA 609
+￼
+610
+16. Nonlinear Dimensionality Reduction and Manifold Learning
+2.
+ThemapΦ:Rr →Hiscalledafeaturemap,andeachofthe{φj}is a nonlinear map.
+Given Φ(x1), . . . , Φ(xn) ∈ H, with 􏰊ni=1 Φ(xi) = 0, solve a linear PCA problem in feature space H, which will have a higher dimen- sionality than that of input space (i.e., NH > r).
+The argument is that any low-dimensional structure may be more easily discovered when it becomes embedded in the larger space H, which could be infinite dimensional (i.e., we allow the possibility that NH = ∞). Although we do not need to define Φ explicitly, we have to assume in step 2 that the data have been centered in feature space. We return to this assumption in Section 16.5.2. Unless otherwise stated, we also assume that NH < n.
+In the following, we take H to be an NH-dimensional Hilbert space with inner product ⟨·,·⟩ and norm ∥·∥H. For example, if ξj = (ξj1,···,ξjNH )τ ∈
+H,j=1,2,then,⟨ξ,ξ⟩=􏰊NHξ ξ ,andifξ=(ξ,···,ξ )τ ∈H, 1􏰊2 i=1 1i 2i 1 NH
+then∥ξ∥2 =⟨ξ,ξ⟩= NHξ2. H i=1 i
+16.5.1 PCA in Feature Space
+In order to carry out linear PCA in feature space so that it mimics the standard treatment of PCA (as carried out in input space), we have to find eigenvalues λ ≥ 0 and nonzero eigenvectors v ∈ H of the estimated covariance matrix,
+􏰏n i=1
+of the centered and nonlinearly transformed input vectors. The eigenequa- tion Cv = λv, where v is the eigenvector corresponding to the eigenvalue λ ≥ 0 of C, can be written in an equivalent form as
+Because
+C = n−1
+Φ(xi )Φ(xi )τ , (16.23)
+⟨Φ(xi),Cv⟩ = λ⟨Φ(xi),v⟩, i = 1,2,...,n.
+Φ(x1),...,Φ(xn). So, there exist coefficients, αi, i = 1,2,...,n, such that
+􏰏n i=1
+(16.24)
+Φ(xi)⟨Φ(xi),v⟩,
+all solutions v with nonzero eigenvalue λ are contained in the span of
+Cv = n
+− 1 􏰏n i=1
+(16.25)
+v =
+αiΦ(xi). (16.26)
+Substituting (16.26) for v in (16.24), we get that −1􏰏n􏰯􏰏n􏰰 􏰏n
+Φ(xk) ⟨Φ(xk),Φ(xj)⟩ = λ αk⟨Φ(xi),Φ(xk)⟩, k=1
+n αj Φ(xi), j=1
+k=1
+for all i = 1,2,...,n. Define the (n×n)-matrix K = (Kij), where
+(16.27) Kij =⟨Φ(xi),Φ(xj)⟩. (16.28)
+Note that K will generally be a huge matrix. Then, the eigenequation (16.27) can be written as K2α = nλKα, where α = (α1,···,αn)τ, or as
+Kα = λ􏰣α, (16.29) where λ􏰣 = nλ. Note that we can express the eigenvalues and vectors, (λ􏰣, α),
+of K in terms of those, (λ, v), for C.
+Denote the ordered eigenvalues of K by λ􏰣1 ≥ λ􏰣2 ≥ ... ≥ λ􏰣n ≥ 0, with associated eigenvectors α1, . . . , αn, where αi = (αi1, · · · , αin)τ . If we require that ⟨vi, vi⟩ = 1, i = 1, 2, . . . , n, then, using the expansion (16.26) for vi and the eigenequation (16.27), we have that
+− 1 / 2 􏰏n ⟨vk,Φ(x)⟩ = λk
+1 =
+= =
+􏰏n 􏰏n j=1 k=1
+􏰏n 􏰏n j=1 k=1
+αij αik ⟨Φ(xj ), Φ(xk )⟩ αijαikKjk
+⟨αi, Kαi⟩ = λ􏰣i⟨αi, αi⟩,
+which determines the normalization for the vectors α1, . . . , αn.
+(16.30)
+If x is a test point, then the nonlinear principal component scores of x corresponding to Φ are given by the projection of Φ(x) ∈ H onto the eigenvectors vk ∈ H,
+i=1
+k
+Using the kernel trick (see Section 11.3.2), the nonlinear principal com- ponent scores of x can be expressed as
+αki⟨Φ(xk),Φ(x)⟩, k = 1,2,...,n, (16.31) where the λ−1/2 term is included so that ⟨vk,vk⟩ = 1.
+− 1 / 2 􏰏n ⟨vk,Φ(x)⟩ = λk
+i=1
+αkiK(xi,x), k = 1,2,...,n. (16.32)
+16.5 Kernel PCA 611
+612 16. Nonlinear Dimensionality Reduction and Manifold Learning
+If we set x = xm in (16.32), we get that ⟨vk, Φ(xm)⟩ = λ−1/2 􏰊 αkiKim = ki
+λ−1/2 (Kαk )m = λ−1/2 (λk αk )m ∝ αkm , where (A)m stands for the mth kk
+row of A.
+16.5.2 Centering in Feature Space
+So far, we assumed that the Φ-images in feature space have been centered, and that, through (16.28), we can work with the matrix K. Although it may not be possible to do this in feature space, there is a way it can be accomplished back in the original input space. We do not actually need to have a centered Φ to work with, but we do need K.
+We can apply the following simple adjustment to the non-centered ver- sion of the matrix K,
+K􏰣 = HKH, (16.33) where H = In − n−1Jn is the centering matrix, Jn = 1n1τn is an (n × n)-
+matrix of all ones, and 1n is an n-vector of all ones. The resulting
+K􏰣 = K − K(n−1Jn) − (n−1Jn)K + (n−1Jn)K(n−1Jn) (16.34)
+corresponds to starting with a centered Φ as required by the above devel- opment (Scholkopf, Smola, and Muller, 1998).
+16.5.3 Example: Food Nutrition (Continued)
+Consider again the example in Section 7.2.1 on the nutritional value of food. Previously, we had computed the PCA of the data and displayed the scatterplot of the first two principal component scores. Here, we com- pute the kernel principal components for the data (n = 961,r = 6) us- ing a radial basis (Gaussian) function kernel with scale parameter σ. Fig- ure 16.5 displays the scatterplots of the first two kernel PC scores using σ = 0.005, 0.01, 0.1, and 0.5. The eigenvalues are
+σ λ1 λ2 0.005 0.0336 0.0033 0.01 0.0602 0.0066 0.1 0.2200 0.0820 0.5 0.2738 0.1139
+Notice that both eigenvalues increase in size as σ increases.
+We see that as we increase σ, the shape of the kernel PC plot changes significantly. The scatterplots for σ ≥ 0.01 show an obvious nonlinear con- figuration of points: for each of these three plots, there is a “head” and a “tail” to the “curve.” The head contains those points that have the largest
+￼￼￼
+16.6 Nonlinear Manifold Learning 613
+magnitudes for at least one of the six variables, whereas the tail contains only data with negligible values for all variables. In the curve for σ = 0.01, the head is on the left; in the curve for σ = 0.1, the head is at the top left; and in the plot for σ = 0.5, the head is at the center of the plot. There are a small number of stray points falling inside each of the σ = 0.01 and 0.1 curves; most of these points correspond to foods that are very high in cholesterol, and which become the head of the curve for σ = 0.5.
+In the scatterplot corresponding to σ = 0.5 (lower-right panel of Figure 16.5), the points having the largest magnitudes of each of the six variables are annotated with the dominating variable name. We see an ordering of the six variables along the nonlinear curve, starting at cholesterol, and continuing with saturated fat, fat/food energy, carbohydrates, and protein, in that order. There is very little difference between foods that are high in fat and those that are high in calories (food energy). This display provides a “food-nutrition ordering” similar in spirit to the classic “color wheel.” Similar interpretations can be obtained from the other three scatterplots.
+16.5.4 Kernel PCA and Metric MDS
+We note that kernel PCA with an isotropic kernel function is closely
+related to metric MDS (Williams, 2001). In feature space, we can compute
+the distance (i.e., dissimilarity), δ􏰣2 = ∥Φ(x ) − Φ(x )∥2. Expanding and ij i j
+using the kernel trick, we have that δ􏰣2 = 2(1 − K(x ,x )). The matrix ij ij
+A has ijth entry a = −1δ􏰣2 = K(x,x )−1, whence, A = K−J . ij 2ij ij n
+￼Furthermore, HAH = HKH, because HJn = 0.
+Thus, carrying out metric MDS on the kernel matrix K produces an
+equivalent configuration of points as the distances δ􏰣 = 􏰐2(1 − K(x , x )) ij ij
+￼computed in feature space. If the kernel K(xi,xj) is isotropic, it depends
+only on the distance, δij = ∥xi − xj∥, in input space, so that K(xi,xj) =
+k(δ ). It follows that δ􏰣 = 􏰐2(1 − k(δ )), which makes the feature-space ij ij ij
+￼distances δ􏰣2 a nonlinear function of the input-space distances δ . This ij ij
+shows that this formulation is a special case of metric MDS.
+16.6 Nonlinear Manifold Learning
+We now discuss some exciting new algorithmic techniques: Isomap, Lo- cal Linear Embedding, Laplacian Eigenmap, and Hessian Eigen- map. The goal of each of these algorithms is to recover the full low- dimensional representation of an unknown nonlinear manifold M embed-
+￼
+￼614 16. Nonlinear Dimensionality Reduction and Manifold Learning
+sigm a = 0.005
+sigm a = 0.01
+23
+18 135
+8 3 -2
+30 20 10
+0 -10 -20
+FIGURE 16.5. The nutritional value of food example. Scatterplots of first and second kernel principal component scores, computed using a radial basis (Gaussian) function kernel with scale parameter σ. Upper-left panel: σ = 0.005; upper-right panel: σ = 0.01; lower-left panel: σ = 0.1; lower-right panel: σ = 0.5.
+ded1 in some high-dimensional space, where it is important to retain the neighborhood structure of M. Although closely related to nonlinear dimen- sionality reduction, these algorithms are mainly concerned with recovering the manifold M. When M is highly nonlinear, such as the S-shaped man- ifold in the left panel of Figure 16.6, these algorithms have outperformed linear techniques. Each algorithm is designed to emphasize simplicity while avoiding optimization problems that could produce local minima.
+Although the algorithms use different philosophies for recovering non- linear manifolds, they each consist of a three-step approach. The first and third steps are common to all algorithms: the first step incorporates neigh-
+1A space A is said to be embedded in a bigger space B if the properties of B when restricted to A are identical to the properties of A.
+-5
+-20-15-10-505 -26-21-16-11-6-149
+1stKernelPC Score 1stKernelPC Score sigma=0.1 sigma=0.5
+-30 -20 -10 0 10 20 -0.10 -0.05 0.00 0.05 1stKernelPC Score 1stKernelPC Score
+10
+0
+0.2
+0.1
+0.0
+-0.1
+-0.2
+Protein
+Carbo- hydrates
+Cholesterol SaturatedFat
+Fat/FoodEnergy
+2ndKernelPCScore 2ndKernelPCScore
+2ndKernelPCScore 2ndKernelPCScore
+￼33
+2.5 2.5
+22
+1.5 1.5
+11
+0.5 0.5
+00
+−0.5 −0.5
+16.6 Nonlinear Manifold Learning 615
+55 −14−14
+−1 −0.5 23 −1 −0.5 23 00.51 00.51
+10 10
+FIGURE 16.6. Left panel: The S-curve, a two-dimensional S-shaped man- ifold embedded in three-dimensional space. Right panel: 2,000 data points randomly generated to lie on the surface of the S-shaped manifold.
+borhood information from each data point to construct a weighted graph having the data points as vertices, and the third step is an embedding step that involves an (n × n)-eigenequation computation. The second step is specific to the algorithm, taking the weighted neighborhood graph and transforming it into suitable input for the embedding step.
+Manifold learning involves concepts from differential geometry. So, before we describe these algorithms, we first discuss what we mean by a manifold and what it means for it to be embedded in a higher-dimensional space.
+16.6.1 Manifolds
+It is not easy to give a simple description of a “manifold” because of the complex mathematical notions involved in its definition. Even the great mathematician E ́lie Cartan wrote that “La notion g ́en ́erale de veri ́et ́e est assez difficile `a d ́efinir avec pr ́ecision”2 (Cartan, 1946, p. 56). However, we will try to give some of the flavor of its definition.
+Imagine an ant at a picnic, where there are all sorts of items from cups to doughnuts. The ant crawls all over the picnic items, but because of its diminutive size, the ant sees everything on a very small scale as flat and featureless. A manifold (also referred to as a topological manifold) can be thought of in similar terms, as a topological space that locally looks flat and featureless and behaves like Euclidean space. To prevent crazy, counter- intuitive situations, a manifold also satisfies certain topological conditions. A submanifold is just a manifold lying inside another manifold of higher dimension.
+In 1854, Georg Friedrich Bernhard Riemann (1826–1866) introduced the idea of a manifold where one could carry out differential and integral calcu- lus. If a topological manifold M is continuously differentiable to any order,
+2“The general notion of manifold is quite difficult to define with precision.”
+616 16. Nonlinear Dimensionality Reduction and Manifold Learning
+we call it a smooth (or differentiable) manifold. All smooth manifolds are topological manifolds, but the reverse is not necessarily true.
+If we endow a smooth manifold M with a metric dM, which calculates distances between points on M, we have a Riemannian manifold, (M, dM). If M is connected, it is a metric space and dM determines its structure. Let C(y,y′) denote the set of all differentiable curves in M that join up the points y and y′. We define the distance between y and y′ as
+dM(y,y′) = inf L(c), (16.35) c∈C(y,y′)
+where y,y′ ∈ M and L(c) is the arc-length of the curve c; see Section 16.3.1. Thus, dM finds the shortest curve (or geodesic) between any two points on M, and dM(y,y′) is the geodesic distance between the points y and y′. By Nash’s embedding theorem (Nash, 1965), we can embed a smooth manifold M into a high-dimensional Euclidean space X, which we take to be input space Rr.
+16.6.2 Data on Manifolds
+The methods we discuss in this section operate under the assumption that finitely many data points, {yi}, are randomly sampled from a smooth t-dimensional manifold M with metric given by geodesic distance dM; these points are then nonlinearly embedded by a smooth map ψ into high- dimensional input space X = Rr (t ≪ r) with Euclidean metric ∥ · ∥X . This embedding yields the input data {xi}; see, for example, the right panel of Figure 16.7, where 20,000 points in three dimensions are randomly gen- erated to lie on the surface of a two-dimensional S-shaped curve. Thus, ψ:M→X istheembeddingmap,andapointonthemanifold,y∈M, can be expressed as y = φ(x), x ∈ X, where φ = ψ−1. The goal is to recover M and find an implicit representation of the map ψ (and, hence, recover the {yi}), given only the input data points {xi} in X.
+Each of these algorithms computes estimates {y􏰡i} ⊂ Rt′ of the manifold data {yi} ⊂ Rt, for some t′. We consider such a reconstruction to be suc- cessful if t′ = t, the true dimensionality of M. Because t′ will most likely be too large for practical usage and because we require a low-dimensional dis- play for a visual representation of the solution, we take only the first two or three of the coordinate vectors and plot the corresponding elements of those vectors against each other to yield n points in two- or three-dimensional space.
+16.6.3 Isomap
+The isometric feature mapping (or Isomap) algorithm (Tenenbaum, de Silva, and Langford, 2000) assumes that the smooth manifold M is a convex
+￼16.6 Nonlinear Manifold Learning 617
+15 15 10 10 55 00 −5 −5
+−10 −10
+20 20
+−15 −15 −10010200−10010200
+FIGURE 16.7. Left panel: The Swiss Roll: a two-dimensional manifold embedded in three-dimensional space. Right panel: 20,000 data points lying on the surface of the swiss-roll manifold.
+region of Rt (t ≪ r) and that the embedding ψ : M → X is an isometry. This assumption has two key ingredients:
+• Isometry: The geodesic distance is invariant under the map ψ. For any pair of points on the manifold, y, y′ ∈ M, the geodesic distance between those points equals the Euclidean distance between their corresponding coordinates, x, x′ ∈ X ; i.e.,
+dM(y, y′) = ∥x − x′∥X , (16.36) where y = φ(x) and y′ = φ(x′).
+• Convexity: The manifold M is a convex subset of Rt.
+Thus, Isomap regards M as a convex region that may have been distorted in any of a number of ways (e.g., by folding or twisting). The so-called Swiss roll,3 which is a flat two-dimensional rectangular submanifold of R3, is one such example; see Figure 16.7. Isomap appears to work best for intrinsically flat submanifolds of X = Rr that look like rolled-up sheets of paper. In certain situations, the isometry assumption appears to be reason- able, while the convexity assumption may be too restrictive (Donoho and Grimes, 2003).
+Isomap uses the isometry and convexity assumptions to form a nonlin- ear generalization of multidimensional scaling (MDS). As we saw in Section 13.3, MDS searches for a low-dimensional subspace in which to embed input data while preserving the Euclidean interpoint distances. Isomap extends
+3 The Swiss roll is generated as follows: for y1 ∈ [3π/2, 9π/2] and y2 ∈ [0, 15], set x1 =y1cosy1,x2 =y1siny1,x3 =y2.
+618 16. Nonlinear Dimensionality Reduction and Manifold Learning
+the MDS paradigm by attempting to preserve the global geometric proper- ties of the underlying nonlinear manifold, and it does this by approximating all geodesic distances (i.e., lengths of the shortest paths) on the manifold. In this sense, Isomap gives a global approach to manifold learning.
+The Isomap algorithm consists of three steps:
+1. Neighborhood graph. Fix either an integer K or an ε > 0. Calculate the
+distances,
+dXij = dX(xi,xj) = ∥xi −xj∥X, (16.37)
+between all pairs of data points xi,xj ∈ X, i,j = 1,2,...,n. These are generally taken to be Euclidean distances but may be a different distance metric. Determine which data points are “neighbors” on the manifold M by connecting each point either to its K nearest neighbors or to all points lying within a ball of radius ε of that point. Choice of K or ε controls neighborhood size and also the success of Isomap.
+This gives us a weighted neighborhood graph G = G(V,E), where the set of vertices V = {x1. . . . , xn} are the input data points, and the set of edges E = {eij} indicate neighborhood relationships between the points. The edge eij that joins the neighboring points xi and xj has a weight wij associated with it, and that weight is given by the “distance” dXij between those points. If there is no edge present between a pair of points, the corresponding weight is zero.
+2. Compute graph distances. Estimate the unknown true geodesic distances, {dMij }, between pairs of points in M by graph distances, {dGij}, with respect to the graph G. The graph distances are the shortest path distances between all pairs of points in the graph G. Points that are not neighbors of each other are connected by a sequence of neighbor-to-neighbor links, and the length of this path (sum of the link weights) is taken to approximate the distance between its endpoints on the manifold.
+If the data points are sampled from a probability distribution that is supported by the entire manifold, then, asymptotically (as n → ∞), it turns out that the estimate dG converges to dM if the manifold is flat (Bernstein, de Silva, Langford, and Tenenbaum, 2001).
+An efficient algorithm for computing the shortest path between every pair of vertices in a graph is Floyd’s algorithm (Floyd, 1962), which works best with dense graphs (graphs with many edges).
+3. Embedding via multidimensional scaling. Let DG = (dGij) be the sym- metric (n × n)-matrix of graph distances. Apply “classical” MDS to DG
+to give the reconstructed data points in a t-dimensional feature space Y, so that the geodesic distances on M between data points are preserved as much as possible:
+16.6 Nonlinear Manifold Learning 619
+• Form the “doubly centered,” symmetric, (n × n)-matrix of squared graph distances,
+AGn = −1HSGH, (16.38) 2
+whereSG =([dGij]2),H=In−n−1Jn,andJn =1n1τn isan(n×n)- matrix of ones. The matrix AGn will be nonnegative-definite of rank t < n.
+• The embedding vectors {y􏰡i} are chosen to minimize ∥AGn − AYn ∥,
+where AYn is (16.38) with SY = ([dYij ]2 ) replacing SG , and dYij = ∥yi − yj ∥ is the Euclidean distance between yi and yj . The optimal solution is given by the eigenvectors v1,...,vt corresponding to the t largest (positive) eigenvalues, λ1 ≥ · · · ≥ λt , of AGn .
+• The graph G is embedded into Y by the (t × n)-matrix
+Y􏰡 = (y􏰡1,···,y􏰡n) = (􏰐λ1v1,···,􏰐λtvt)τ. (16.39)
+The ith column of Y􏰡 yields the embedding coordinates in Y of the ith data point. The Euclidean distances between the n t-dimensional columns of Y􏰡 are collected into the (n × n)-matrix DYt .
+The Isomap algorithm appears to work most efficiently with n ≤ 1, 000. Changes to the Isomap code (see below) enable us to work with much larger data sets.
+As a measure of how closely the Isomap t-dimensional solution matrix DYt approximates the matrix DG of graph distances, we plot 1−Rt2 against dimensionality t (i.e., t = 1, 2, . . . , t∗ , where t∗ is some integer such as 10), and Rt2 = [corr(DYt ,DG)]2 is the squared correlation coefficient of all corresponding pairs of entries in the matrices DYt and DG. The intrinsic dimensionality is taken to be that integer t at which an “elbow” appears in the plot.
+Consider, for example, the two-dimensional Swiss roll manifold embedded in three-dimensional space. Suppose we are given 20,000 points randomly drawn from the surface of that manifold.4 The 3D scatterplot of the data is given in the right panel of Figure 16.7. Using all 20,000 points as input to the Isomap algorithm proves to be computationally too big, and so we use only the first 1000 points for illustration. Taking n = 1, 000 and K = 7 neighborhood points, Figure 16.8 shows a plot of the values of 1−Rt2 against t for t = 1,2,...,10, where an elbow correctly shows t = 2; the 2D Isomap neighborhood-graph solution is given in Figure 16.9.
+4These 3D data, stored as a (3 × 20,000)-matrix, are available in the data file swiss roll data on the Isomap website isomap.stanford.edu.
+￼￼￼￼￼￼
+620 16. Nonlinear Dimensionality Reduction and Manifold Learning
+￼￼￼￼￼￼0.12
+0.08
+0.04
+0.00
+FIGURE 16.8. Isomap dimensionality plot for the n = 1,000 Swiss roll data points. The number of neighborhood points is K = 7. The plotted p o i n t s a r e ( t , 1 − R t2 ) , t = 1 , 2 , . . . , 1 0 .
+The Isomap algorithm has difficulty with manifolds that contain holes, have too much curvature, or are not convex. In the case of noisy data, it depends upon how the neighborhood size (either K or ε) is chosen; if K or ε are chosen neither too large (that it introduces false connections into G) nor too small (that G becomes too sparse to approximate geodesic paths accurately), then Isomap should be able to tolerate moderate amounts of noise in the data.
+Landmark Isomap
+When a data set is very large, the performance of the Isomap algorithm is significantly degraded by having to store in memory the complete (n×n)- matrix DG (step 2) and carry out an eigenanalysis of the (n×n)-matrix An for the MDS reconstruction (step 3). If the data are truly scattered around a low-dimensional manifold, then the vast majority of pairwise distances will be redundant; to speed up the MDS embedding step, we have to eliminate as many of the redundant distance calculations as we can.
+In Landmark Isomap, the researcher tries to eliminate such redun- dancy by specifying a landmark subset of m of the n data points (de Silva and Tenenbaum, 2003). For example, if xi is designated as one of the m landmark points, we calculate only those distances between each of the n points and xi. Input to the Landmark Isomap algorithm is, therefore, an (m × n)-matrix of distances. The landmark points may be selected by random sampling or by a judicious choice of “representative” points. The number of such landmark points is left to the researcher, but m = 50 works
+￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼￼0246810 Dimension
+LackofFit
+￼30
+20
+10
+0
+−10
+−20
+16.6 Nonlinear Manifold Learning 621
+Two−dimensionalIsomapembedding(withneighborhoodgraph).
+−30 −60−40−200204060
+FIGURE 16.9. Two-dimensional Isomap embedding, with neighborhood graph, of the n = 1,000 Swiss roll data points. The number of neighborhood points is K = 7.
+well. In the MDS embedding step, the object is to preserve only those dis- tances between all points and the subset of landmark points. Step 2 in Landmark Isomap uses Dijkstra’s algorithm (Dijkstra, 1959), which is faster than Floyd’s algorithm for computing graph distances and is gen- erally preferred when the graph is sparse. Dijkstra’s algorithm is also rec- ommended as a replacement for Floyd’s algorithm in the original Isomap algorithm.
+Applying Landmark Isomap to the n = 1,000 Swiss roll data points with K = 7 and the first m = 50 points taken to be landmark points results in an elbow at t = 2 in the dimensionality plot; the 2D Landmark Isomap neighborhood-graph solution is given in Figure 16.10. This is a much faster solution than the one we obtained using the original Isomap algorithm. The main differences between Figures 16.9 and 16.10 are roundoff error and a rotation due to sign changes.
+Because of the significant increase in computational speed, we can apply Landmark Isomap to all 20,000 points (using K = 7 and m = 50); an elbow again correctly appears at t = 2 in the dimensionality plot, and the resulting 2D Landmark Isomap neighborhood-graph solution is given in Figure 16.11.
+16.6.4 Local Linear Embedding
+The local linear embedding (LLE) algorithm (Roweis and Saul, 2000; Saul and Roweis, 2003) for nonlinear dimensionality reduction is similar
+￼622 16. Nonlinear Dimensionality Reduction and Manifold Learning
+15
+10
+5
+0
+−5
+−10
+Two−dimensionalIsomapembedding(withneighborhoodgraph).
+−15 −25−20−15−10−50510152025
+FIGURE 16.10. Two-dimensional Landmark Isomap embedding, with neighborhood graph, of the n = 1,000 Swiss roll data points. The number of neighborhood points is K = 7 and the number of landmark points is m = 50.
+in spirit to the Isomap algorithm, but because it attempts to preserve local neighborhood information on the (Riemannian) manifold (without estimating the true geodesic distances), we view LLE as a local approach rather than as the Isomap’s global approach.
+Like Isomap, the LLE algorithm also consists of three steps:
+1. Nearest neighbor search. Fix K ≪ r and let NiK denote the “neigh- borhood” of xi that contains only its K nearest points, as measured by Euclidean distance (K could be different for each point xi).
+The success of LLE depends (as does Isomap) upon the choice of K: it must be sufficiently large so that the points can be well-reconstructed but also sufficiently small for the manifold to have little curvature.
+The LLE algorithm is best served if the graph formed by linking each point to its neighbors is connected. If the graph is not connected, the LLE algorithm can be applied separately to each of the disconnected subgraphs.
+2. Constrained least-squares fits. Reconstruct xi by a linear function of its K nearest neighbors,
+x􏰡i =
+􏰏n j=1
+wijxj, (16.40) where wij is a scalar weight for xj with unit sum, 􏰊 wij = 1, for transla-
+j
+tion invariance; if xl ̸∈ NiK , then set wil = 0 in (16.40). Set W = (wij ) to
+￼6
+4
+2
+0
+−2
+−4
+W = arg min W
+i=1 subject to the invariance constraint
+∥xi − 􏰊
+(16.41)
+16.6 Nonlinear Manifold Learning 623
+Two−dimensionalIsomapembedding(withneighborhoodgraph).
+−6 −15−10−5051015
+FIGURE 16.11. Two-dimensional Landmark Isomap embedding, with neighborhood graph, of the complete set of n = 20,000 Swiss-Roll data points. The number of neighborhood points is K = 7, and the number of landmark points is m = 50.
+be a sparse (n×n)-matrix of weights (there are only nK nonzero elements). Find optimal weights {w􏰡ij} by solving
+􏰑 􏰏n 􏰏n
+j=1
+The matrix W􏰑 can be obtained as follows. For a given point xi, the summand of (16.41) can be written as
+􏰏
+j
+where wi = (wi1,···,win)τ, only K of which are non-zero, and G = (Gjk), Gjk =(xi−xj)τ(xi−xk),j,k∈NiK,isasymmetric,nonnegative-definite, (n × n)-matrix. Using the Lagrangean multiplier μ, we minimize the func- tion
+f ( w i ) = w iτ G w i − μ ( 1 τn w i − 1 ) .
+Differentiating f(wi) with respect to wi and setting the result equal to
+zero yields w􏰡i = μG−11n. Premultiplying this last result by 1τn gives us 2
+sparseness constraint wil = 0 if xl ̸∈ NiK .
+the optimal weights
+∥
+w i j ( x i − x j ) ∥ 2 = w iτ G w i , ( 1 6 . 4 2 )
+w􏰡 i = G − 1 1 n , 1τn G−1 1n
+wij xj ∥2,
+j wij = 1, i = 1,2,...,n, and the
+624 16. Nonlinear Dimensionality Reduction and Manifold Learning
+where it is understood that for xl ̸∈ NiK, the corresponding element, w􏰡il, ofw􏰡i iszero.NotethatwecanalsowriteG(2w􏰡i)=1n;so,thesameresult
+￼μ
+can be obtained by solving the linear system of n equations Gw􏰡i = 1n,
+where any xl ̸∈ NiK has weight w􏰡il = 0, and then rescaling the weights to sum to one. Collect the resulting optimal weights for each data point (and all other zero-weights) into a sparse (n × n)-matrix W􏰑 = (w􏰡ij ) having only nK nonzero elements.
+3. Eigenproblem. Fix the optimal weight matrix W􏰑 found at step 2. Find the (t × n)-matrix Y = (y1. · · · , yn), t ≪ r, of embedding coordinates that solves
+􏰡 􏰏n 􏰏n
+Y = a r g m i n ∥ y i − w􏰡 i j y j ∥ 2 , ( 1 6 . 4 3 )
+Y
+i=1 j=1
+subject to the constraints 􏰊 yi = Y1n = 0 and n−1 􏰊 yiyiτ = n−1YYτ =
+It.
+These constraints are imposed to fix the translation, rotation, and scale of the embedding coordinates so that the objective function will be invariant. We can show that (16.43) can be written as
+Y􏰡 = arg min tr{YMYτ } (16.44) Y
+where M is the sparse, symmetric, and nonnegative-definite (n×n)-matrix M=(In −W􏰑)τ(In −W􏰑).
+The objective function tr{YMYτ} in (16.44) has a unique global mini- mum given by the eigenvectors corresponding to the smallest t+1 eigenval- ues of M. The smallest eigenvalue of M is zero with corresponding eigen- vector vn = n−1/21n. Because the sum of coefficients of each of the other eigenvectors, which are orthogonal to n−1/21n, is zero, if we ignore the smallest eigenvalue (and associated eigenvector), this will constrain the embeddings to have mean zero. The optimal solution then sets the rows of the (t × n)-matrix Y􏰡 to be the t remaining n-dimensional eigenvectors of M,
+Y􏰡 = (y􏰡1,...,y􏰡n) = (vn−1,···,vn−t)τ, (16.45)
+where vn−j is the eigenvector corresponding to the (j + 1)st smallest eigen- value of M. The sparseness of M enables eigencomputations to be carried out very efficiently.
+Because LLE preserves local (rather than global) properties of the un- derlying manifold, it is less susceptible to introducing false connections in G and can successfully embed nonconvex manifolds. However, like Isomap, it has difficulty with manifolds that contain holes.
+ii
+16.6 Nonlinear Manifold Learning 625
+16.6.5 Laplacian Eigenmaps
+The Laplacian eigenmap algorithm (Belkin and Niyogi, 2002) also con- sists of three steps. The first and third steps of the Laplacian eigenmap algorithm are very similar to the first and third steps, respectively, of the LLE algorithm.
+1. Nearest-neighbor search. Fix an integer K or an ε > 0. The neighbor- hoods of each data point are symmetrically defined: for a K-neighborhood NiK ofthepointxi,letxj ∈NiK iffxi ∈NjK;similarly,foranε-neighborhood Niε, let xj ∈ Niε iff ∥xi − xj ∥ < ε, where the norm is Euclidean norm. In general, let Ni denote the neighborhood of xi.
+2. Weighted adjacency matrix. Let W = (wij ) be a symmetric (n × n) weighted adjacency matrix defined as follows:
+￼wij=
+􏰘 􏰦 ∥xi−xj∥2􏰧
+exp − 2σ2 , ifxj∈Ni; (16.46)
+0, otherwise.
+These weights are determined by the isotropic Gaussian kernel (also known as the heat kernel), with scale parameter σ. A simpler W is given by wij = 1 if xj ∈ Ni, and 0 otherwise. Denote the resulting weighted graph by G. If G is not connected, apply step 3 to each connected subgraph.
+3. Eigenproblem. Embed the graph G into the low-dimensional space Rt
+by the (t×n)-matrix Y = (y1,···,yn), where the ith column of Y yields
+the embedding coordinates of the ith point. Let D = (dij) be an (n×
+n) diagonal matrix with diagonal elements dii =
+􏰊
+j∈Ni wij = (W1n)i, graph Laplacian can be regarded as an approximation to the continuous
+i = 1,2,...,n. The (n × n) symmetric matrix L = D − W is known as
+the graph Laplacian for the graph G. Let y = (yi) be an n-vector. Then,
+yτLy = 1 􏰊n 􏰊n wij(yi −yj)2, so that L is nonnegative definite. The
+￼2 i=1 j=1
+Laplace–Beltrami operator Δ defined on the manifold M.
+The matrix Y is determined by minimizing the following objective func-
+tion:
+􏰏 􏰏 wij ∥yi − yj ∥2 = tr{YLYτ }. ij
+In other words, we seek the solution,
+Y􏰡 = arg min tr{YLYτ },
+YDYτ =It
+(16.47)
+(16.48)
+where we restrict Y such that YDYτ = It to prevent a collapse onto a subspace of fewer than t − 1 dimensions. This problem boils down to solving the generalized eigenequation, Lv = λDv, or, equivalently, finding the eigenvalues and eigenvectors of the matrix W􏰑 = D−1/2WD−1/2. The
+626 16. Nonlinear Dimensionality Reduction and Manifold Learning
+smallest eigenvalue, λn, of W􏰑 is zero. If we ignore the smallest eigenvalue (and its corresponding constant eigenvector vn = 1n), then the best em- bedding in Rt is similar to that given by LLE; that is, the rows of Y􏰡 are the eigenvectors,
+Y􏰡 = (y􏰡1,···,y􏰡n) = (vn−1,···,vn−t)τ, (16.49) corresponding to the next t smallest eigenvalues, λn−1 ≤ ··· ≤ λn−t, of W􏰑.
+16.6.6 Hessian Eigenmaps
+We noted earlier that, in certain situations, the convexity assumption for Isomap may be too restrictive. It may be more realistic in such situations to require instead that the manifold M be locally isometric to an open, con- nected subset of Rt. Examples include families of “articulated” images (i.e., translated or rotated images of the same object, possibly through time) that are selected from a high-dimensional, digitized-image library (e.g., faces, pictures, handwritten numbers or letters). If the pixel elements of each 64-pixel-by-64-pixel digitized image are represented as a 4,096-dimensional vector in “pixel space,” it can be very difficult to show that the images really live on a low-dimensional manifold, especially if that image manifold is unknown.
+Such images can be modeled using a vector of smoothly varying articu- lation parameters θ ∈ Θ. For example, digitized images of a person’s face that are varied by pose and illumination can be parameterized by two pose parameters (expression [happy, sad, sleepy, surprised, wink] and glasses–no glasses) and a lighting direction (centerlight, leftlight, rightlight, normal); similarly, handwritten “2”s appear to be parameterized essentially by two features, bottom loop and top arch (Tenenbaum, de Silva, and Langford, 2000; Roweis and Saul, 2000). To some extent, learning about an underly- ing image manifold depends upon data quality: are the images sufficiently scattered around the manifold to enable us to identify the manifold, and how good is the quality of digitization of each image?
+Hessian eigenmaps have been proposed for recovering manifolds of high- dimensional libraries of articulated images where the convexity assumption is often violated (Donoho and Grimes, 2003). Assume the parameter space isΘ⊂Rt andsupposethatφ:Θ→Rr,wheret<r.AssumeM=φ(Θ) is a smooth manifold of articulated images. The isometry and convexity requirements of Isomap are replaced by the following weaker requirements:
+• Local Isometry: φ is a locally isometric embedding of Θ into Rr. For any point x′ in a sufficiently small neighborhood around each point x on the manifold M, the geodesic distance equals the Euclidean distance between their corresponding parameter points θ,θ′ ∈ Θ;
+i.e.,
+where x = φ(θ) and x′ = φ(θ′).
+16.6 Nonlinear Manifold Learning 627
+dM(x, x′) = ∥θ − θ′∥Θ, (16.50) • Connectedness: The parameter space Θ is an open, connected subset
+of Rt.
+The goal is to recover the parameter vector θ (up to a rigid motion).
+First, consider the differentiable manifold M ⊂ Rr. Let Tx(M) be a tangent space of the point x ∈ M, where Tx(M) has the same number of dimensions as M itself. We endow Tx(M) with a (non-unique) system of orthonormal coordinates having the same inner product as Rr. We can view Tx(M) as an affine subspace of Rr that is spanned by vectors tangent to M and pass through the point x, with the origin 0 ∈ Tx(M) identified with x ∈ M. Let Nx be a neighborhood of x such that each point x′ ∈ Nx has a unique closest point ξ′ ∈ Tx(M); a point in Nx has local coordinates, ξ = ξ(x) = (ξ1(x),...,ξt(x))τ, say, and these coordinates are referred to as tangent coordinates.
+Suppose f : M → R is a C2-function (i.e., a function with two continuous derivatives) near x. If the point x′ ∈ Nx has local coordinates ξ = ξ(x) ∈ Rt, then the rule g(ξ) = f(x′) defines a C2-function g : U → R, where U is a neighborhood of 0 ∈ Rr. The tangent Hessian matrix, which measures the “curviness” of f at the point x ∈ M, is defined as the ordinary (t × t) Hessian matrix of g,
+􏰃 ∂ 2 g ( ξ ) 􏰮􏰮 􏰄 Htan(x) = 􏰮
+. (16.51) The average “curviness” of f over M is then the quadratic form,
+f ∂ξi∂ξj ξ=0 􏰞
+￼∥ Htan(x) ∥2 dx, fF
+H(f) =
+where ∥ H ∥2 = 􏰊 􏰊 H2 is the squared Frobenius norm of a square
+M
+F ijij
+matrix H = (Hij). Note that even if we define two different orthonormal
+coordinate systems for Tx(M), and hence two different tangent Hessian matrices, Hf and H′f , at x, they are related by H′f = UHf Uτ , where U is orthogonal, so that their Frobenius norms are equal and H(f) is well- defined.
+Donoho and Grimes showed that H(f) has a (t+1)-dimensional nullspace consisting of the constant function and a t-dimensional space of functions spanned by the original isometric coordinates, θ1, . . . , θt, which can be re- covered (up to a rigid motion) from the null space of H(f).
+The Hessian Locally Linear Embedding (HLLE) algorithm computes a discrete approximation to the functional H using the data lying on M.
+(16.52)
+628 16. Nonlinear Dimensionality Reduction and Manifold Learning
+There are, again, three steps to this algorithm, which essentially substitutes a quadratic form based upon the Hessian instead of one based upon the Laplacian.
+1. Nearest-Neighbor Search. We begin by identifying a neighborhood of each point as in Step 1 of the LLE algorithm. Fix an integer K and let NiK denote the K nearest neighbors of the data point xi using Euclidean distance.
+2. Estimate Tangent Hessian Matrices. Assuming local linearity of the
+manifold M in the region of the neighborhood NiK , form the (r × r) covari-
+ance matrix Mi of the K neighborhood-centered points xj − x ̄i, j ∈ NiK , −1 􏰊
+where x ̄i = n j∈NiK xj, and compute a PCA of the matrix Mi. As- suming K ≥ t, the first t eigenvectors of Mi yield the tangent coordinates of the K points in NiK and provide the best-fitting t-dimensional linear subspace corresponding to xi. Next, construct a LS estimate, H􏰡i, of the local Hessian matrix Hi as follows: build a matrix Zi by putting all squares and cross-products of the columns of Mi up to the tth order in its columns, including a column of 1s; so, Zi has 1 + t + t(t + 1)/2 columns and K rows. Then, apply a Gram–Schmidt orthonormalization to Zi. The estimated (t(t + 1)/2 × K ) tangent Hessian matrix H􏰡 i is given by the transpose of the last t(t + 1)/2 orthonormal columns of Zi.
+3.Eigenanalysis. TheestimatedlocalHessianmatrices,H􏰡i,i=1,2,...,n, are used to construct a sparse, symmetric, (r×r)-matrix H􏰡 = (H􏰡kl), where
+H􏰡kl =􏰏􏰏((H􏰡i)jk(H􏰡i)jl. (16.53) ij
+H􏰡 is a discrete approximation to the functional H. We now follow Step 3 of the LLE algorithm, this time performing an eigenanalysis of H􏰡. To obtain the low-dimensional representation that will minimize the curviness of the manifold, find the smallest t + 1 eigenvectors of H􏰡; the smallest eigenvalue will be zero, and its associated eigenvector will consist of constant functions; the remaining t eigenvectors provide the embedding coordinates for θ􏰡.
+16.6.7 Other Methods
+There are several other methods for nonlinear manifold learning, includ- ing an algorithm for “charting” manifolds (Brand, 2003), which uses para- metric density estimation and a Bayesian approach, and a local tangent space alignment algorithm (Zhang and Zha, 2004).
+16.6.8 Relationships to Kernel PCA
+The three algorithms of Isomap, LLE, and Laplacian eigenmaps have close connections with kernel PCA (Ham, Lee, Mika, and Scholkopf, 2003).
+√
+16.6 Nonlinear Manifold Learning 629
+For each algorithm, the individual elements of the kernel matrix depend upon all the input data, unlike traditional kernel matrices whose entries each depend only upon a pair of input points.
+Isomap For isotropic kernels, it can be shown that kernel PCA is closely related to metric MDS (Williams, 2001). Thus, Isomap is equivalent to kernel PCA if
+KIsomap = AGn (16.54)
+is used as the appropriate kernel matrix. However, AGn is not guaranteed to be nonnegative definite for finite n. It is nonnegative definite only in an asymptotic sense (i.e., as n → ∞).
+LLE If the largest eigenvalue of M is λ1, then the (n × n) Gram matrix
+KLLE = λ1In − M (16.55)
+is nonnegative definite, the eigenvector corresponding to the zero eigenvalue
+of KLLE is n−1/21n, and eigenvectors 2 through t + 1 of KLLE give the
+LLE embedding. Furthermore, the LLE embedding is equivalent (up to
+the scaling factors λk) to the kernel PCA scores based upon KLLE. The form of the kernel function K corresponding to KLLE is also not explicitly known.
+An alternative version of LLE uses a kernel representation of the input data. Instead of finding the K nearest neighbors of each point in input space, we can use kernel methods to find the nearest neighbors in feature space (DeCoste, 2001). The Euclidean distance between two points in fea- ture space is given by
+􏰐
+dij = ∥Φ(xi) − Φ(xj)∥ = Kii − 2Kij + Kjj. (16.56)
+Using this definition of distance in feature space, nearest neighbors of Φ(xi) can be found by using an efficient algorithm that supports such distances (e.g., Yianilos, 1998). Corresponding to the matrix G in step 2 of the algorithm, we can define the matrix G􏰣 = (G􏰣jk) in feature space, where, for a l l x j , x k ∈ N iK ,
+G􏰣jk = ⟨Φ(xi)−Φ(xj),Φ(xi)−Φ(xk)⟩
+= Kii − Kij − Kik + Kjk. (16.57)
+Replacing G by G􏰣 in step 2 of the LLE algorithm, we find the matrix of op- timal weights W􏰱 (replacing W) and the embedding vectors (corresponding to step 3).
+Laplacian Eigenmaps As we saw in step 3 of the algorithm, the embed- ding is obtained by finding the eigenvectors corresponding to the smallest
+￼￼
+630 16. Nonlinear Dimensionality Reduction and Manifold Learning
+eigenvalues of the graph Laplacian L. This solution can also be justified in terms of arguments involving heat flow and diffusion on a graph. Without going into details (which involve the notion of commute times of diffusion on a graph), it can be shown that if we take as kernel
+KLE = L−, (16.58) where L− is a generalized-inverse of L, then the embedding solution is
+equivalent to performing kernel PCA on the matrix KLE. 16.7 Software Packages
+The website www.iro.umontreal.ca/~kegl/research/pcurves gives a review of the area of principal curves and gives an introduction to algo- rithms and software. The S-Plus/R computer packages princurve and pcurve, both based on S-code originally written by Hastie, are available for fitting a principal curve to multivariate data. Matlab code for principal curves is available at lear.inrialpes.fr/~verbeek/software.
+There are several publicly available computer programs for performing kernel PCA; see, for example, the kcpa function included in the R package kernlab, which can be downloaded from CRAN.
+Matlab code for implementing Isomap, LLE, and HLLE is publicly available at the following websites:
+Isomap: isomap.stanford.edu
+LLE: www.cs.toronto.edu/~roweis/lle/
+Laplacian Eigenmaps: people.cs.uchicago.edu/~misha/ManifoldLearning/index.html HLLE: basis.stanford.edu/WWW/HLLE/frontdov.htm
+See Martinez and Martinez (2005, Section 3.2 and Appendix B). There is also a Matlab Toolbox for Dimensionality Reduction, which is down- loadable from the website
+www.cs.unimaas.nl/l.vandermaaten/Laurens van der Maaten
+and includes all the methods discussed in this chapter and many data sets. R code is available for Isomap (isomap in package vegan). There is, at present, no R code for LLE, Laplacian eigenmaps, or HLLE.
+Bibliographical Notes
+Much of our discussion of nonlinear dimensionality reduction and man- ifold learning has its roots in differential geometry. A text that gives an
+￼￼￼￼￼￼￼￼￼
+excellent panoramic view of the historical development of both Euclidean and Riemannian aspects of differential geometry is Berger (2003). Another useful book is Thorpe (1994).
+The website www.iro.umontreal.ca/~kegl/research/pcurves gives a
+list of references for principal curves. A detailed study of the concept of
+self-consistency is given by Tarpey and Flury (1996). Linear PCA can also
+be generalized by considering additive functions 􏰊 φi(Xi), where the {φi} i
+satisfy normalization and orthogonality conditions. This nonlinear general- ization is called additive principal components (Donnell, Buja, and Stuetzle, 1994). Another version of nonlinear PCA is given by Salinelli (1998). Our treatment of kernel PCA is based upon the work of Scholkopf, Smola, and Muller (1998). See also Scholkopf and Smola (2002).
+Exercises
+16.1 Generate n = 150 trivariate (r = 3) observations on (X1, X2, X3) so that they lie on the surface of the sphere X12 + X2 + X32 = 36. Compute the 2r + r(r − 1)/2 = 9 variables (X1, X2, X3, X12, X2, X32, X1X2, X1X3, X2X3) and carry out an error-free quadratic PCA of the extended vector. Then, add an independent Z ∼ N(0,0.25) variate to the X2 variable and carry out a noisy quadratic PCA of the extended vector.
+16.2 Using the kernels listed in Table 11.1, check whether (or not) they each have the property that [K (x, y)]2 ≤ K (x, x)K (y, y).
+16.3 Using the Food Nutrition data, compute the first two kernel principal component scores and plot them for different values of σ for the RBF kernel. In the scatterplot, identify which of the six variables dominates each point. Add another identification for points that have very low values for each variable. Replot the kernel PC scores using different colors for the seven classes. Comment on your findings.
+16.4 Using the pendigits data (Section 7.2.10), which consist of 10,992 handwritten digits (0, 1, 2, . . ., 9), compute the kernel PC scores and plot them for different values of σ for the RBF kernel. Use different colors for the 10 digits. Comment on your findings and compare your results with Figure 7.4.
+16.5 Generate n = 500 independent data values from the multivariate Gaussian distribution N4(0,R), where R is the correlation matrix,
+⎛1.0 0.5 0.7−0.6⎞ R=⎜ 0.5 1.0 0.3 −0.5 ⎟.
+⎝0.7 0.3 1.0−0.7⎠ −0.6 −0.5 −0.7 1.0
+16.7 Exercises 631
+￼
+632 16. Nonlinear Dimensionality Reduction and Manifold Learning
+Run these simulated data through a kernel PCA program and make a scatterplot of the first two kernel PC scores. Choose a range of values of σ for the RBF kernel and vary the values of the correlations in the matrix R. Comment on your findings.
+16.6 In kernel PCA and in MDS, we “double-center” a symmetric (n × n)- matrix A = (aij ) by the transformation,
+B = (In − n−1Jn)A(In − n−1Jn),
+where Jn = 1n1τn and 1n is an n-vector of all ones. Show that the ijth
+entry of B can be expressed as
+bij = aij − ai· − a·j + a··,
+where a dot-subscript indicates averaging over that subscript.
+16.7 In MDS, the matrix A = (aij ) in Ex. 16.6 is a dissimilarity matrix
+with aij = −1d2 , where dij is the interpoint distance (or dissimilarity). 2 ij
+Note: dij is a dissimilarity if dii = 0, dij ≥ 0, and dij = dji. Show that, for the MDS case, the matrix B in Ex. 16.6 (AGn in (16.38)) is nonnegative- definite.
+16.8 Show that (In − n−1Jn)1n = 0 and, hence, that B1n = 0, where B is given in Ex. 16.6. Let y ̄ = n−1Y􏰡 τ 1n, where Y􏰡 is the embedding matrix
+given by (16.39). Use the spectral decomposition of B, assuming B has rank t < n, to show that n2y ̄τy ̄ = 0 and, hence, that y ̄ = 0. Thus, the Isomap embeddings have mean zero.
+16.9 Download the helix.mat data set from the Matlab Toolbox for Dimensionality Reduction.
+Run PCA, kernel PCA, Isomap, LLE, Lapacian Eigenmaps, and HLLE algorithms on the helix data, report your results, and compare solutions.
+16.10 Download the COIL20 dataset from the Matlab Toolbox for Dimensionality Reduction.
+Run PCA, kernel PCA, Isomap, LLE, Lapacian Eigenmaps, and HLLE algorithms on the COIL20 data, report your results, and compare solutions.
+￼￼￼￼￼￼￼￼￼

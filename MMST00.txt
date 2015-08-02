@@ -1,0 +1,376 @@
+Springer Texts in Statistics
+Alan Julian Izenman
+Modern Multivariate Statistical Techniques Regression, Classification, and Manifold Learning
+
+Springer Texts in Statistics
+Series Editors:
+G. Casella S. Fienberg I. Olkin
+Springer Texts in Statistics
+For other titles published in this series, go to www.springer.com/series/417
+Alan Julian Izenman
+Modern Multivariate Statistical Techniques
+Regression, Classification, and Manifold Learning
+123
+Alan J. Izenman Department of Statistics Temple University Speakman Hall Philadelphia, PA 19122 USA
+alan@temple.edu
+Editorial Board
+George Casella
+Department of Statistics University of Florida Gainesville, FL 32611-8545 USA
+ISSN 1431-875X
+ISBN 978-0-387-78188-4
+DOI 10.1007/978-0-387-78189-1
+Springer New York Heidelberg Dordrecht London
+Library of Congress Control Number: 2008928720
+© Springer Science+Business Media New York 2008, Corrected at 2nd printing 2013
+This work is subject to copyright. All rights are reserved by the Publisher, whether the whole or part of the material is concerned, specifically the rights of translation, reprinting, reuse of illustrations, recitation, broadcasting, reproduction on microfilms or in any other physical way, and transmission or information storage and retrieval, electronic adaptation, computer software, or by similar or dissimilar methodology now known or hereafter developed. Exempted from this legal reservation are brief excerpts in connection with reviews or scholarly analysis or material supplied specifically for the purpose of being entered and executed on a computer system, for exclusive use by the purchaser of the work. Duplication of this publication or parts thereof is permitted only under the provisions of the Copyright Law of the Publisher’s location, in its current version, and permission for use must always be obtained from Springer. Permissions for use may be obtained through RightsLink at the Copyright Clearance Center. Violations are liable to prosecution under the respective Copyright Law.
+The use of general descriptive names, registered names, trademarks, service marks, etc. in this publication does not imply, even in the absence of a specific statement, that such names are exempt from the relevant protective laws and regulations and therefore free for general use.
+While the advice and information in this book are believed to be true and accurate at the date of publication, neither the authors nor the editors nor the publisher can accept any legal responsibility for any errors or omissions that may be made. The publisher makes no warranty, express or implied, with respect to the material contained herein.
+Printed on acid-free paper
+Springer is part of Springer Science+Business Media (www.springer.com)
+Stephen Fienberg Department of Statistics Carnegie Mellon University Pittsburgh, PA 15213-3890 USA
+Ingram Olkin Department of Statistics Stanford University Stanford, CA 94305 USA
+ISBN 978-0-387-78189-1 (eBook)
+This book is dedicated
+to the memory of my parents, Kitty and Larry,
+and to my family, Betty-Ann and Kayla
+Preface
+Not so long ago, multivariate analysis consisted solely of linear methods illustrated on small to medium-sized data sets. Moreover, statistical com- puting meant primarily batch processing (often using boxes of punched cards) carried out on a mainframe computer at a remote computer facil- ity. During the 1970s, interactive computing was just beginning to raise its head, and exploratory data analysis was a new idea. In the decades since then, we have witnessed a number of remarkable developments in local computing power and data storage. Huge quantities of data are being col- lected, stored, and efficiently managed, and interactive statistical software packages enable sophisticated data analyses to be carried out effortlessly. These advances enabled new disciplines called data mining and machine learning to be created and developed by researchers in computer science and statistics.
+As enormous data sets become the norm rather than the exception, statistics as a scientific discipline is changing to keep up with this de- velopment. Instead of the traditional heavy reliance on hypothesis testing, attention is now being focused on information or knowledge discovery. Ac- cordingly, some of the recent advances in multivariate analysis include tech- niques from computer science, artificial intelligence, and machine learning theory. Many of these new techniques are still in their infancy, waiting for statistical theory to catch up.
+The origins of some of these techniques are purely algorithmic, whereas the more traditional techniques were derived through modeling, optimiza-
+viii Preface
+tion, or probabilistic reasoning. As such algorithmic techniques mature, it becomes necessary to build a solid statistical framework within which to embed them. In some instances, it may not be at all obvious why a partic- ular technique (such as a complex algorithm) works as well as it does:
+When new ideas are being developed, the most fruitful approach is often to let rigor rest for a while, and let intuition reign — at least in the beginning. New methods may require new concepts and new approaches, in extreme cases even a new language, and it may then be impossible to describe such ideas precisely in the old language.
+— Inge S. Helland, 2000
+It is hoped that this book will be enjoyed by those who wish to under- stand the current state of multivariate statistical analysis in an age of high- speed computation and large data sets. This book mixes new algorithmic techniques for analyzing large multivariate data sets with some of the more classical multivariate techniques. Yet, even the classical methods are not given only standard treatments here; many of them are also derived as spe- cial cases of a common theoretical framework (multivariate reduced-rank regression) rather than separately through different approaches. Another major feature of this book is the novel data sets that are used as examples to illustrate the techniques.
+I have included as much statistical theory as I believed is necessary to understand the development of ideas, plus details of certain computational algorithms; historical notes on the various topics have also been added wherever possible (usually in the Bibliographical Notes at the end of each chapter) to help the reader gain some perspective on the subject matter. References at the end of the book should be considered as extensive without being exhaustive.
+Some common abbreviations used in this book should be noted: “iid” means independently and identically distributed; “wrt” means with respect to; “iff” means if and only if; and “lhs” and “rhs” mean left- and right-hand side, respectively.
+Audience
+This book is directed toward advanced undergraduate students, gradu- ate students, and researchers in statistics, computer science, artificial in- telligence, psychology, neural and cognitive sciences, business, medicine, bioinformatics, and engineering. As prerequisites, readers are expected to have had previous knowledge of probability, statistical theory and methods, multivariable calculus, and linear/matrix algebra. Because vectors and ma- trices play such a major role in multivariate analysis, Chapter 3 gives the matrix notation used in the book and many important advanced concepts
+in matrix theory. Along with a background in classical statistical theory and methods, it would also be helpful if the reader had some exposure to Bayesian ideas in statistics.
+There are various types of courses for which this book can be used, in- cluding data mining, machine learning, computational statistics, and for a traditional course in multivariate analysis. Sections of this book have been used at Temple University as the basis of lectures in a one-semester course in applied multivariate analysis to statistics and graduate business students (where technical derivations are skipped and emphasis is placed on the examples and computational algorithms) and a two-semester course in advanced topics in statistics given to graduate students from statistics, computer science, and engineering. I am grateful for their feedback (includ- ing spotting typos and inconsistencies).
+Although there is enough material in this book for a two-semester course, a one-semester course in traditional multivariate analysis can be drawn from the material in Sections 1.1–1.3, 2.1–2.3, 2.5, 2.6, 3.1–3.5, 5.1–5.7, 6.1– 6.3, 7.1–7.3, 8.1–8.7, 12.1–12.4, 13.1–13.9, 15.4, and 17.1–17.4; additional parts of the book can be used as appropriate.
+Software
+Software for computing the techniques described in this book is publicly available either through routines in major computer packages or through download from Internet websites. I have used primarily the R, S-Plus, and Matlab packages in writing this book. In the Software Packages section at the ends of certain chapters, I have listed the relevant R/S-Plus routines for the respective chapter as well as the appropriate toolboxes in Matlab. I have also tried to indicate other major packages wherever relevant.
+Data Sets
+The many data sets that illustrate the multivariate techniques presented in this book were obtained from a wide variety of sources and disciplines and will be made available through the book’s website. Disciplines from which the data were obtained include astronomy, bioinformatics, botany, chemo- metrics, criminology, food science, forensic science, genetics, geoscience, medicine, philately, physical anthropology, psychology, soil science, sports, and steganography. Part of the learning process for the reader is to become familiar with the classic data sets that are associated with each technique. In particular, data sets from popular data repositories are used to compare and contrast methodologies. Examples in the book involve small data sets (if a particular point or computation needs clarifying) and large data sets (to see the power of the techniques in question).
+Exercises
+At the end of every chapter (except Chapter 1), there is a number of exercises designed to make the reader (a) relate the problem to the text and
+Preface ix
+x Preface
+fill in the technical details omitted in the development of certain techniques, (b) illustrate the techniques described in the chapter with real data sets that can be downloaded from Internet websites, and (c) write software to carry out an algorithm described in the chapter. These exercises are an integral part of the learning experience. The exercises are not uniform in level of difficulty; some are much easier than others, and some are taken from research publications.
+Book Website
+The book’s website is located at:
+http://astro.temple.edu/~alan/MMST
+where additional materials and the latest information will be available, including data sets and R and S-Plus code for many of the examples in the book.
+Acknowledgments
+I would like to thank David R. Brillinger, who instilled in me a deep appreciation of the interplay between theory, data analysis, computation, and graphical techniques long before attention to their connections became fashionable.
+There are a number of people who have helped in the various draft stages of this book, either through editorial suggestions, technical discussions, or computational help. They include Bruce Conrad, Adele Cutler, Gene Fior- ini, Burt S. Holland, Anath Iyer, Vishwanath Iyer, Joseph Jupin, Chuck Miller, Donald Richards, Cynthia Rudin, Yan Shen, John Ulicny, Allison Watts, and Myra Wise. Special thanks go to Richard M. Heiberger for his invaluable advice and willingness to share his expertise in all matters com- putational. Thanks also go to Abraham “Adi” Wyner, whose conversations at Border’s Bookstore kept me fueled literally and figuratively. Thanks also go to the reviewers and to all the students who read through various drafts of this book. Individuals who were kind enough to allow me to use their data or with whom I had e-mail discussions to clarify the nature of the data are acknowledged in footnotes at the place the data are first used. I would also like to thank the Springer editor John Kimmel, who provided help and support during the writing of this book, and the Springer LATEXexpert Frank Ganz for his help.
+Finally, I thank my wife Betty-Ann and daughter Kayla whose patience and love these many years enabled this book to see the light of day.
+Alan Julian Izenman
+Philadelphia, Pennsylvania April 2008
+Contents
+Preface vii
+1 Introduction and Preview 1
+1.1 MultivariateAnalysis...................... 1
+1.2 DataMining .......................... 3
+1.2.1 FromEDAtoDataMining .............. 3
+1.2.2 WhatIsDataMining?....
+1.2.3 Knowledge Discovery . . . . .
+1.3 MachineLearning...........
+............. 5 ............. 8 ............. 9 ............. 9
+1.3.1 How Does a Machine Learn?
+1.3.2 PredictionAccuracy .................. 10
+1.3.3 Generalization ..................... 11
+1.3.4 GeneralizationError.................. 12
+1.3.5 Overfitting ....................... 13
+1.4 OverviewofChapters ..................... 14 BibliographicalNotes ........................ 16
+2 Data and Databases 17
+2.1 Introduction........................... 17
+xii
+Contents
+3
+2.2 Examples ............................ 18
+2.2.1 Example:DNAMicroarrayData . . . . . . . . . . . 18
+2.2.2 Example: Mixtures of Polyaromatic Hydrocarbons . 19
+2.2.3 Example:FaceRecognition .............. 22
+2.3 Databases............................ 24 2.3.1 DataTypes....................... 25 2.3.2 TrendsinDataStorage ................ 26 2.3.3 DatabasesontheInternet............... 27
+2.4 DatabaseManagement..................... 29
+2.4.1 ElementsofDatabaseSystems . . . . . . . . . . . . 29
+2.4.2 StructuredQueryLanguage(SQL) . . . . . . . . . . 30
+2.4.3 OLTPDatabases.................... 32
+2.4.4 Integrating Distributed Databases . . . . . . . . . . 32
+2.4.5 DataWarehousing ................... 33
+2.4.6 Decision Support Systems and OLAP . . . . . . . . 35
+2.4.7 StatisticalPackagesandDBMSs . . . . . . . . . . . 36
+2.5 DataQualityProblems..................... 36 2.5.1 DataInconsistencies .................. 37 2.5.2 Outliers ......................... 38 2.5.3 MissingData ...................... 39 2.5.4 More Variables than Observations . . . . . . . . . . 40
+2.6 TheCurseofDimensionality ................. 41
+BibliographicalNotes ........................ 42 Exercises ............................... 43
+Random Vectors and Matrices 45
+3.1 Introduction........................... 45
+3.2 VectorsandMatrices...................... 45
+3.2.1 Notation......................... 45
+3.2.2 BasicMatrixOperations................ 46
+3.2.3 VectoringandKroneckerProducts.......... 47
+3.2.4 Eigenanalysis for Square Matrices . . . . . . . . . . 48
+3.2.5 FunctionsofMatrices ................. 49
+3.2.6 Singular-ValueDecomposition. . . . . . . . . . . . . 50
+3.2.7 GeneralizedInverses .................. 50
+3.2.8 MatrixNorms...................... 51
+3.2.9 ConditionNumbersforMatrices . . . . . . . . . . . 52 3.2.10 EigenvalueInequalities................. 52 3.2.11 MatrixCalculus .................... 53
+3.3 RandomVectors ........................ 56
+3.3.1 MultivariateMoments ................. 57
+3.3.2 Multivariate Gaussian Distribution . . . . . . . . . . 59
+3.3.3 Conditional Gaussian Distributions . . . . . . . . . . 61
+3.4 RandomMatrices........................ 62 3.4.1 WishartDistribution.................. 63
+3.5 ML Estimation for the Gaussian Distribution . . . . . . . . 65
+3.5.1 Joint Distribution of Sample Mean and SampleCovarianceMatrix............... 67
+3.5.2 Admissibility ...................... 68
+3.5.3 James–Stein Estimator of the Mean Vector . . . . . 69
+BibliographicalNotes ........................ 72 Exercises ............................... 72
+4 Nonparametric Density Estimation 75
+4.1 Introduction........................... 75 4.1.1 Example:CoronaryHeartDisease . . . . . . . . . . 76
+4.2 Statistical Properties of Density Estimators . . . . . . . . . 77 4.2.1 Unbiasedness ...................... 77 4.2.2 Consistency....................... 78 4.2.3 BonaFideDensityEstimators . . . . . . . . . . . . 79
+4.3 TheHistogram ......................... 80 4.3.1 TheHistogramasanMLEstimator . . . . . . . . . 81 4.3.2 Asymptotics ...................... 82 4.3.3 EstimatingBinWidth................. 84 4.3.4 MultivariateHistograms................ 85
+4.4 MaximumPenalizedLikelihood................ 87
+4.5 KernelDensityEstimation................... 88
+4.5.1 ChoiceofKernel .................... 89
+4.5.2 Asymptotics ...................... 91
+4.5.3 Example: 1872 Hidalgo Postage Stamps of Mexico
+4.5.4 EstimatingtheWindowWidth . . . . . . . . . . .
+4.6 Projection Pursuit Density Estimation . . . . . . . . . . .
+. 93 . 95 . 100
+Contents xiii
+xiv
+Contents
+5
+4.6.1 ThePPDEParadigm ................. 100
+4.6.2 ProjectionIndexes ................... 102 4.7 AssessingMultimodality.................... 103 BibliographicalNotes ........................ 103 Exercises ............................... 104
+Model Assessment and Selection in
+Multiple Regression 107
+5.1 Introduction........................... 107
+5.2 The Regression Function and Least Squares . . . . . . . . . 108 5.2.1 Random-XCase .................... 109 5.2.2 Fixed-XCase...................... 111 5.2.3 Example:BodyfatData ................ 116
+5.3 Prediction Accuracy and Model Assessment . . . . . . . . . 117 5.3.1 Random-XCase .................... 119 5.3.2 Fixed-XCase...................... 119
+5.4 EstimatingPredictionError.................. 120 5.4.1 ApparentErrorRate.................. 120 5.4.2 Cross-Validation .................... 121 5.4.3 Bootstrap........................ 122
+5.5 InstabilityofLSEstimates .................. 127
+5.6 BiasedRegressionMethods .................. 129 5.6.1 Example: PET Yarns and NIR Spectra . . . . . . . 129 5.6.2 Principal Components Regression . . . . . . . . . . . 131 5.6.3 Partial Least-Squares Regression . . . . . . . . . . . 133 5.6.4 RidgeRegression.................... 136
+5.7 VariableSelection........................ 142 5.7.1 StepwiseMethods ................... 144 5.7.2 AllPossibleSubsets .................. 146 5.7.3 Forwards-Stagewise Regression . . . . . . . . . . . . 147 5.7.4 Least-AngleRegression ................ 149 5.7.5 Criticisms of Variable Selection Methods . . . . . . . 150
+5.8 RegularizedRegression..................... 150 5.8.1 TheLasso........................ 152 5.8.2 TheGarotte ...................... 153
+BibliographicalNotes ........................ 155
+Exercises ............................... 156
+6 Multivariate Regression 159
+6.1 Introduction........................... 159
+6.2 TheFixed-XCase ....................... 160
+6.2.1 Classical Multivariate Regression Model . . . . . . . 161
+6.2.2 Example: Norwegian Paper Quality . . . . . . . . . 166
+6.2.3 Separate and Multivariate Ridge Regressions . . . . 167
+6.2.4 Linear Constraints on the Regression Coefficients . . 168
+6.3 TheRandom-XCase...................... 175
+6.3.1 Classical Multivariate Regression Model . . . . . . . 175
+6.3.2 Multivariate Reduced-Rank Regression . . . . . . . . 176
+6.3.3 Example: Chemical Composition of Tobacco . . . . . 183
+6.3.4 Assessing the Effective Dimensionality . . . . . . . . 185
+6.3.5 Example: Mixtures of Polyaromatic Hydrocarbons . 188
+6.4 SoftwarePackages ....................... 189
+BibliographicalNotes ........................ 189 Exercises ............................... 191
+7 Linear Dimensionality Reduction 195
+7.1 Introduction........................... 195
+7.2 PrincipalComponentAnalysis ................ 196 7.2.1 Example: The Nutritional Value of Food . . . . . . . 196 7.2.2 Population Principal Components . . . . . . . . . . 199 7.2.3 Least-Squares Optimality of PCA . . . . . . . . . . 199 7.2.4 PCA as a Variance-Maximization Technique . . . . . 202 7.2.5 SamplePrincipalComponents . . . . . . . . . . . . 203 7.2.6 How Many Principal Components to Retain? . . . . 205 7.2.7 GraphicalDisplays................... 209 7.2.8 Example: Face Recognition Using Eigenfaces . . . . 209 7.2.9 InvarianceandScaling................. 210 7.2.10 Example: Pen-Based Handwritten Digit Recognition 211 7.2.11 FunctionalPCA .................... 212 7.2.12 WhatCanBeGainedfromUsingPCA? . . . . . . . 215
+7.3 Canonical Variate and Correlation Analysis . . . . . . . . . 215 7.3.1 Canonical Variates and Canonical Correlations . . . 215
+Contents xv
+xvi
+Contents
+8
+7.3.2 Example: COMBO-17 Galaxy Photometric Catalogue........................ 216
+7.3.3 Least-SquaresOptimalityofCVA. . . . . . . . . . . 219
+7.3.4 RelationshipofCVAtoRRR ............. 222
+7.3.5 CVA as a Correlation-Maximization Technique . . . 223
+7.3.6 SampleEstimates ................... 226
+7.3.7 Invariance........................ 227
+7.3.8 How Many Pairs of Canonical Variates to Retain? . 228
+7.4 ProjectionPursuit ....................... 228 7.4.1 ProjectionIndexes ................... 229 7.4.2 OptimizingtheProjectionIndex . . . . . . . . . . . 232
+7.5 Visualizing Projections Using Dynamic Graphics . . . . . . 232
+7.6 SoftwarePackages ....................... 233
+BibliographicalNotes ........................ 233 Exercises ............................... 234
+Linear Discriminant Analysis 237
+8.1 Introduction........................... 237 8.1.1 Example: Wisconsin Diagnostic Breast Cancer Data 238
+8.2 ClassesandFeatures...................... 240
+8.3 BinaryClassification...................... 241 8.3.1 Bayes’sRuleClassifier................. 241 8.3.2 Gaussian Linear Discriminant Analysis . . . . . . . . 242 8.3.3 LDAviaMultipleRegression ............. 247 8.3.4 VariableSelection ................... 249 8.3.5 LogisticDiscrimination ................ 250 8.3.6 Gaussian LDA or Logistic Discrimination? . . . . . . 256 8.3.7 Quadratic Discriminant Analysis . . . . . . . . . . . 257
+8.4 Examples of Binary Misclassification Rates . . . . . . . . . 258
+8.5 MulticlassLDA......................... 260 8.5.1 Bayes’sRuleClassifier................. 261 8.5.2 Multiclass Logistic Discrimination . . . . . . . . . . 265 8.5.3 LDA via Reduced-Rank Regression . . . . . . . . . . 266
+8.6 Example:GilgaiedSoil..................... 271
+8.7 Examples of Multiclass Misclassification Rates . . . . . . . 272
+8.8 SoftwarePackages ....................... 277
+BibliographicalNotes ........................ 277 Exercises ............................... 278
+9 Recursive Partitioning and
+Tree-Based Methods 281
+9.1 Introduction........................... 281
+9.2 ClassificationTrees....................... 282 9.2.1 Example: Cleveland Heart-Disease Data . . . . . . . 284 9.2.2 Tree-GrowingProcedure................ 285 9.2.3 SplittingStrategies................... 285 9.2.4 Example: Pima Indians Diabetes Study . . . . . . . 292 9.2.5 Estimating the Misclassification Rate . . . . . . . . 294 9.2.6 PruningtheTree.................... 295 9.2.7 ChoosingtheBestPrunedSubtree . . . . . . . . . . 298 9.2.8 Example:VehicleSilhouettes . . . . . . . . . . . . . 302
+9.3 RegressionTrees ........................ 303 9.3.1 TheTerminal-NodeValue............... 305 9.3.2 SplittingStrategy ................... 305 9.3.3 PruningtheTree.................... 306 9.3.4 SelectingtheBestPrunedSubtree . . . . . . . . . . 306 9.3.5 Example: 1992 Major League Baseball Salaries . . . 307
+9.4 ExtensionsandAdjustments ................. 309 9.4.1 MultivariateResponses ................ 309 9.4.2 SurvivalTrees...................... 310 9.4.3 MARS.......................... 311 9.4.4 MissingData ...................... 312
+9.5 SoftwarePackages ....................... 313
+BibliographicalNotes ........................ 313 Exercises ............................... 313
+10 Artificial Neural Networks 315
+10.1 10.2 10.3 10.4 10.5
+Introduction .......................... 315 TheBrainasaNeuralNetwork ............... 316 TheMcCulloch–PittsNeuron................. 318 HebbianLearningTheory................... 320 Single-LayerPerceptrons ................... 321
+10.5.1 Feedforward Single-Layer Networks . . . . . . . . . 322
+Contents xvii
+xviii
+Contents
+10.6 10.7
+10.5.2 ActivationFunctions ................. 323 10.5.3 Rosenblatt’s Single-Unit Perceptron . . . . . . . . . 325 10.5.4 ThePerceptronLearningRule . . . . . . . . . . . . 326 10.5.5 Perceptron Convergence Theorem . . . . . . . . . . 326 10.5.6 LimitationsofthePerceptron . . . . . . . . . . . . 328
+Artificial Intelligence and Expert Systems . . . . . . . . . . 329
+MultilayerPerceptrons .................... 330
+10.7.1 NetworkArchitecture................. 331
+10.7.2 ASingleHiddenLayer ................ 332
+10.7.3 ANNs Can Approximate Continuous Functions . . . 333
+10.7.4 MorethanOneHiddenLayer . . . . . . . . . . . . 334
+10.7.5 OptimalityCriteria .................. 335
+10.7.6 The Backpropagation-of-Errors Algorithm . . . . . 336
+10.7.7 ConvergenceandStopping .............. 340
+NetworkDesignConsiderations................ 341 10.8.1 LearningModes .................... 341 10.8.2 InputScaling...................... 342 10.8.3 How Many Hidden Nodes and Layers? . . . . . . . 343 10.8.4 InitializingtheWeights................ 343 10.8.5 Overfitting and Network Pruning . . . . . . . . . . 343
+10.8
+10.9
+10.10ExamplesofFittingNeuralNetworks . . . . . . . . . . . . 347 10.11RelatedStatisticalMethods.................. 348
+10.11.1 Projection Pursuit Regression . . . . . . . . . . . . 349
+10.11.2 GeneralizedAdditiveModels . . . . . . . . . . . . . 350 10.12BayesianLearningforANNModels . . . . . . . . . . . . . 352 10.12.1Laplace’sMethod ................... 353 10.12.2 Markov Chain Monte Carlo Methods . . . . . . . . 361 10.13SoftwarePackages....................... 364 BibliographicalNotes ........................ 364 Exercises ............................... 366
+11 Support Vector Machines 369
+11.1 Introduction .......................... 369 11.2 LinearSupportVectorMachines............... 370 11.2.1 TheLinearlySeparableCase . . . . . . . . . . . . . 371
+Example: Detecting Hidden Messages in Digital Images . . 344
+11.3
+. 378 11.3.1 NonlinearTransformations .............. 379 11.3.2 The“KernelTrick” .................. 379 11.3.3 KernelsandTheirProperties. . . . . . . . . . . . . 380 11.3.4 ExamplesofKernels.................. 380 11.3.5 OptimizinginFeatureSpace . . . . . . . . . . . . . 384 11.3.6 GridSearchforParameters. . . . . . . . . . . . . . 385 11.3.7 Example:E-mailorSpam?.............. 385
+11.4
+11.3.8 BinaryClassificationExamples. . . . . . . . . . 11.3.9 SVMasaRegularizationMethod . . . . . . . . MulticlassSupportVectorMachines . . . . . . . . . . .
+. . 387 . . 387 . . 390 .. 390
+11.2.2 TheLinearlyNonseparableCase . . . . . . . . . . NonlinearSupportVectorMachines . . . . . . . . . . . .
+. 376
+11.4.1 Multiclass SVM as a Series of Binary Problems
+11.4.2 ATrueMulticlassSVM................ 391 SupportVectorRegression .................. 397 11.5.1 ε-InsensitiveLossFunctions . . . . . . . . . . . . . 398 11.5.2 Optimization for Linear ε-Insensitive Loss . . . . . 398 11.5.3 Extensions ....................... 401 OptimizationAlgorithmsforSVMs . . . . . . . . . . . . . 401 SoftwarePackages....................... 403 BibliographicalNotes ........................ 404 Exercises ............................... 404
+11.5
+11.6 11.7
+12 Cluster Analysis 407
+12.1
+12.2 12.3
+12.4
+Introduction .......................... 407 12.1.1 WhatIsaCluster? .................. 408 12.1.2 Example: Old Faithful Geyser Eruptions . . . . . . 409
+ClusteringTasks........................ 409
+HierarchicalClustering .................... 411 12.3.1 Dendrogram ...................... 412 12.3.2 Dissimilarity...................... 412 12.3.3 Agglomerative Nesting (agnes) . . . . . . . . . . . 414 12.3.4 AWorkedExample .................. 414 12.3.5 DivisiveAnalysis(diana)............... 420 12.3.6 Example: Primate Scapular Shapes . . . . . . . . . 420
+Nonhierarchical or Partitioning Methods . . . . . . . . . . 422
+Contents
+xix
+xx Contents
+12.5
+12.6
+12.7 12.8
+12.9
+12.4.1 K-MeansClustering(kmeans) . . . . . . . . . . . . 423
+12.4.2 Partitioning Around Medoids (pam) . . . . . . . . . 424
+12.4.3 FuzzyAnalysis(fanny)................ 425
+12.4.4 SilhouettePlot..................... 426
+12.4.5 Example: Landsat Satellite Image Data . . . . . . . 428
+Self-OrganizingMaps(SOMs) ................ 431 12.5.1 TheSOMAlgorithm ................. 432 12.5.2 On-lineVersions.................... 433 12.5.3 BatchVersion ..................... 434 12.5.4 Unified-DistanceMatrix ............... 435 12.5.5 ComponentPlanes .................. 437
+ClusteringVariables...................... 439 12.6.1 GeneClustering .................... 439 12.6.2 Principal-Component Gene Shaving . . . . . . . . . 440 12.6.3 Example:ColonCancerData. . . . . . . . . . . . . 443
+BlockClustering........................ 443
+Two-Way Clustering of Microarray Data . . . . . . . . . . 446 12.8.1 Biclustering ...................... 447 12.8.2 PlaidModels...................... 449 12.8.3 Example: Leukemia (ALL/AML) Data . . . . . . . 451
+ClusteringBasedUponMixtureModels . . . . . . . . . . . 453 12.9.1 The EM Algorithm for Finite Mixtures . . . . . . . 456 12.9.2 HowManyComponents?............... 459
+12.10SoftwarePackages....................... 459 BibliographicalNotes ........................ 460 Exercises ............................... 461
+13 Multidimensional Scaling
+and Distance Geometry 463
+13.1 13.2
+13.3 13.4
+Introduction .......................... 463 13.1.1 Example:AirlineDistances.............. 464 TwoGoldenOldies ...................... 468 13.2.1 Example: Perceptions of Color in Human Vision . . 468 13.2.2 Example: Confusion of Morse-Code Signals . . . . . 469 ProximityMatrices ...................... 471 ComparingProteinSequences ................ 472
+. 472
+. 475 StringMatching ........................ 476 13.5.1 EditDistance ..................... 476 13.5.2 Example: Employee Careers at Lloyds Bank . . . . 477 Classical Scaling and Distance Geometry . . . . . . . . . . 478 13.6.1 From Dissimilarities to Principal Coordinates . . . 479 13.6.2 AssessingDimensionality............... 480 13.6.3 Example: Airline Distances (Continued) . . . . . . . 481 13.6.4 Example: Mapping the Protein Universe . . . . . . 484 DistanceScaling........................ 486 MetricDistanceScaling.................... 487 13.8.1 MetricLeast-SquaresScaling . . . . . . . . . . . . . 488 13.8.2 SammonMapping................... 488 13.8.3 Example: Lloyds Bank Employees . . . . . . . . . . 489 13.8.4 BayesianMDS..................... 489 NonmetricDistanceScaling.................. 492 13.9.1 Disparities ....................... 492 13.9.2 TheStressFunction.................. 497 13.9.3 Fitting Nonmetric Distance-Scaling Models . . . . . 499 13.9.4 HowGoodIsanMDSSolution? . . . . . . . . . . . 500 13.9.5 HowManyDimensions?................ 501 13.10SoftwarePackages....................... 501 BibliographicalNotes ........................ 502 Exercises ............................... 503
+14 Committee Machines 505
+13.5
+13.6
+13.7 13.8
+13.9
+14.1 14.2
+14.3
+Introduction .......................... 505
+Bagging............................. 506 14.2.1 BaggingTree-BasedClassifiers . . . . . . . . . . . . 507 14.2.2 Bagging Regression-Tree Predictors . . . . . . . . . 509
+Boosting ............................ 511 14.3.1 AdaBoost: Boosting by Reweighting . . . . . . . . 512 14.3.2 Example: Aqueous Solubility in Drug Discovery . . 514 14.3.3 Convergence Issues and Overfitting . . . . . . . . . 515 14.3.4 ClassificationMargins................. 518
+13.4.1 OptimalSequenceAlignment. . . . . . . . . . . . 13.4.2 Example: Two Hemoglobin Chains . . . . . . . . .
+Contents
+xxi
+xxii
+Contents
+14.4
+14.3.5 AdaBoostandMaximalMargins. . . . . . . . . . 519 14.3.6 A Statistical Interpretation of AdaBoost . . . . . 523 14.3.7 Some Questions About AdaBoost . . . . . . . . . 527 14.3.8 Gradient Boosting for Regression . . . . . . . . . . 530 14.3.9 OtherLossFunctions ................. 532 14.3.10Regularization..................... 533 14.3.11NoisyClassLabels .................. 535
+RandomForests ........................ 536
+14.4.1 Randomizing Tree Construction . . . . . . . . . . . 536
+14.4.2 GeneralizationError ................. 537
+14.4.3 An Upper Bound on Generalization Error . . . . . . 538
+14.4.4 Example: Diagnostic Classification of FourChildhoodTumors ............... 541
+14.4.5 AssessingVariableImportance . . . . . . . . . . . . 542
+14.4.6 Proximities for Classical Scaling . . . . . . . . . . . 544
+14.4.7 Identifying Multivariate Outliers . . . . . . . . . . . 545
+14.4.8 TreatingUnbalancedClasses . . . . . . . . . . . . . 547
+14.5
+BibliographicalNotes ........................ 548 Exercises ............................... 549
+15 Latent Variable Models for
+Blind Source Separation 551
+15.1 15.2
+15.3
+Introduction .......................... 551
+Blind Source Separation and
+theCocktail-PartyProblem ................. 552
+IndependentComponentAnalysis . . . . . . . . . . . . . . 553
+15.3.1 ApplicationsofICA.................. 553
+15.3.2 Example: Cutaneous Potential Recordings ofaPregnantWoman................. 554
+15.3.3 Connection to Projection Pursuit . . . . . . . . . . 556
+15.3.4 CenteringandSphering................ 557
+15.3.5 TheGeneralICAProblem .............. 558
+15.3.6 LinearMixing:NoiselessICA. . . . . . . . . . . . . 560
+15.3.7 IdentifiabilityAspects................. 560
+15.3.8 ObjectiveFunctions.................. 561
+15.3.9 Nonpolynomial-Based Approximations . . . . . . . 562
+SoftwarePackages....................... 548
+15.3.10MutualInformation.................. 564
+15.3.11TheFastICAAlgorithm................ 566
+15.3.12 Example: Identifying Artifacts inMEGRecordings.................. 569
+15.3.13Maximum-LikelihoodICA .............. 572 15.3.14KernelICA....................... 575 ExploratoryFactorAnalysis ................. 581 15.4.1 TheFactorAnalysisModel.............. 582 15.4.2 PrincipalComponentsFA .............. 583 15.4.3 Maximum-LikelihoodFA ............... 584 15.4.4 Example: Twenty-four Psychological Tests . . . . . 587 15.4.5 CritiquesofMLFA .................. 588 15.4.6 ConfirmatoryFactorAnalysis . . . . . . . . . . . . 590 IndependentFactorAnalysis ................. 590 SoftwarePackages....................... 594 BibliographicalNotes ........................ 594 Exercises ............................... 595
+16 Nonlinear Dimensionality Reduction
+and Manifold Learning 597
+15.4
+15.5 15.6
+16.1 16.2 16.3
+16.4
+16.5
+Introduction .......................... 597 PolynomialPCA........................ 598 PrincipalCurvesandSurfaces ................ 600
+16.3.1 CurvesandCurvature................. 601 16.3.2 PrincipalCurves.................... 603 16.3.3 Projection-Expectation Algorithm . . . . . . . . . . 604 16.3.4 BiasReduction .................... 605 16.3.5 PrincipalSurfaces................... 606
+Multilayer Autoassociative Neural Networks . . . . . . . . 607 16.4.1 MainFeaturesoftheNetwork . . . . . . . . . . . . 607 16.4.2 Relationship to Principal Curves . . . . . . . . . . . 608
+KernelPCA .......................... 609 16.5.1 PCAinFeatureSpace ................ 610 16.5.2 CenteringinFeatureSpace.............. 612 16.5.3 Example: Food Nutrition (Continued) . . . . . . . . 612 16.5.4 KernelPCAandMetricMDS ............ 613
+Contents xxiii
+xxiv
+Contents
+16.6
+NonlinearManifoldLearning................. 613 16.6.1 Manifolds........................ 615 16.6.2 DataonManifolds................... 616 16.6.3 Isomap......................... 616 16.6.4 LocalLinearEmbedding ............... 621 16.6.5 LaplacianEigenmaps ................. 625 16.6.6 HessianEigenmaps .................. 626 16.6.7 OtherMethods .................... 628 16.6.8 RelationshipstoKernelPCA. . . . . . . . . . . . . 628
+16.7
+BibliographicalNotes ........................ 630 Exercises ............................... 631
+17 Correspondence Analysis 633
+17.1 17.2
+Introduction .......................... 633 17.1.1 Example: Shoplifting in The Netherlands . . . . . . 634 SimpleCorrespondenceAnalysis............... 635
+17.2.1 Two-WayContingencyTables . . . . . . . . . . . . 635
+17.2.2 RowandColumnDummyVariables . . . . . . . . . 636
+17.2.3 Example:HairColorandEyeColor . . . . . . . . . 638
+17.2.4 Profiles,Masses,andCentroids. . . . . . . . . . . . 639
+17.2.5 Chi-squaredDistances................. 642
+17.2.6 Total Inertia and Its Decomposition . . . . . . . . . 644
+17.2.7 Principal Coordinates for Row and ColumnProfiles.................... 646
+17.2.8 GraphicalDisplays .................. 649
+Square Asymmetric Contingency Tables . . . . . . . . . . . 651 17.3.1 Example: Occupational Mobility in England . . . . 653 MultipleCorrespondenceAnalysis . . . . . . . . . . . . . . 658
+17.4.1 The Multivariate Indicator Matrix . . . . . . . . . . 658
+17.4.2 TheBurtMatrix.................... 659
+17.3 17.4
+SoftwarePackages....................... 630
+17.4.3 EquivalenceandanImplication . . . . . . . . .
+17.4.4 Example: Satisfaction with Housing Conditions
+17.4.5 A Weighted Least-Squares Approach . . . . . .
+. . 660 .. 660 . . 661
+17.5
+BibliographicalNotes ........................ 663
+SoftwarePackages....................... 663
+Exercises ............................... 663
+References 667 Index of Examples 709 Author Index 711 Subject Index 723
+Contents xxv
